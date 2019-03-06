@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="RunJFlex" basedir = ".">
+
+  <property file="JFlexAntBuild.properties"/>
+
+  <taskdef classname="jflex.anttask.JFlexTask" name="jflex" classpath="libraries/jflex-1.7.0/lib/jflex-full-1.7.0.jar" />
+
+  <target name="generate" >
+    <jflex file="${jflexLexerSpecificationPath}" destdir="src/" nobak="true" />
+  </target>
+
+  <target name="compile" depends="generate">
+    <javac
+            srcdir="src/Scanner/AutoGen"
+            destdir="src/"
+            includeantruntime="false"
+    />
+  </target>
+
+  <target name="jar" >
+    <mkdir dir="build/jar"/>
+    <mkdir dir="build/classes"/>
+    <jar destfile="build/jar/Yylex.jar" basedir="build/classes">
+      <manifest>
+        <attribute name="Main-Class" value="Yylex.java"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run" depends="compile">
+    <java fork = "true" failonerror = "yes" classpath="src/" classname = "Scanner.AutoGen.Yylex">
+      <arg value='${inputFilePath}' />
+    </java>
+  </target>
+
+</project>
