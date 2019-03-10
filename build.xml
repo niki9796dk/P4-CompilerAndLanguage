@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ScannerAndParser" basedir = "." default="run">
+
+    <property file="build.properties"/>
+
+    <taskdef classname="jflex.anttask.JFlexTask" name="jflex" classpath="libraries/jflex-full-1.7.0.jar" />
+    <taskdef name="cup" classname="java_cup.anttask.CUPTask" classpath="libraries/java-cup-11b.jar"/>
+
+    <path id="lib">
+        <fileset dir="libraries">
+            <include name="java-cup-11b-runtime.jar"/>
+        </fileset>
+    </path>
+
+    <target name="setup">
+        <mkdir dir="src/AutoGen"/>
+    </target>
+
+    <target name="clean">
+        <delete file="src/AutoGen/Lexer.class"/>
+        <delete file="src/AutoGen/Lexer.java"/>
+        <delete file="src/AutoGen/Parser.class"/>
+        <delete file="src/AutoGen/Parser.java"/>
+        <delete file="src/AutoGen/Parser$CUP$Parser$actions.class"/>
+        <delete file="src/AutoGen/sym.class"/>
+        <delete file="src/AutoGen/sym.java"/>
+        <delete file="src/AutoGen/MainParse.class"/>
+    </target>
+
+    <target name="generate lexer">
+        <jflex file="${jflexLexerSpecificationPath}"
+               destdir="src/"
+               nobak="true" />
+    </target>
+
+    <target name="generate parser" >
+        <cup srcfile="${cupParserSpecificationPath}"
+             destdir="src/AutoGen"
+             package="AutoGen" locations="true" interface="true" parser="Parser" xmlactions="true" force="true"  />
+    </target>
+
+    <target name="compile" depends="setup, generate parser, generate lexer">
+        <javac  srcdir="src/AutoGen"
+                destdir="src/"
+                includeantruntime="false">
+                <classpath refid="lib"/>
+        </javac>
+    </target>
+
+    <target name="run">
+        <java classname="AutoGen.MainParse">
+            <arg value='${inputFilePath}'/>
+            <classpath refid="lib"/>
+            <classpath location="src"/>
+        </java>
+    </target>
+
+</project>

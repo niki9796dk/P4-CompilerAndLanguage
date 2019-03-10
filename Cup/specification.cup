@@ -1,0 +1,184 @@
+/* Minijava Grammar */
+import java.io.*;
+import java_cup.runtime.*;
+import java.util.*;
+
+import javax.xml.transform.*;
+import javax.xml.transform.stream.*;
+import java_cup.runtime.XMLElement;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.ScannerBuffer;
+
+parser code {:
+
+    public void syntax_error(Symbol cur_token){
+    	System.err.println("Syntax error at "+cur_token);
+        }
+        public static void newScope(){
+    	typenames.push(new HashSet<String>());
+        }
+        public static void deleteScope(){
+    	typenames.pop();
+        }
+        public static boolean lookupType(String name){
+    	for (HashSet<String> scope: typenames)
+    	    if (scope.contains(name)) return true;
+    	return false;
+        }
+        public static void addType(String name){
+    	typenames.peek().add(name);
+        }
+        public static LinkedList<HashSet<String>> typenames = new LinkedList<HashSet<String>>();
+        public Parser(Lexer lex, ComplexSymbolFactory sf) {
+    	super(lex,sf);
+        }
+:};
+
+// TODO:  Fix dot and add size
+
+/* separators */
+terminal COMMA, SEMICOLON, LPAR, RPAR, LCURLY, RCURLY, ASSIGN, CONNECTION, LSQR, RSQR, DOT;
+
+/* keywords */
+terminal BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOUT, PROCEDURE, THIS;
+
+/* others */
+terminal ID, NUMCONST;
+
+non terminal block, definition, gatedeclarations, blueprint, procedures, type, buildtype, bluetype, gate, blueparam, blueparams,
+             content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
+             elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
+             elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement;
+
+// TODO: Add precedence and associativity
+
+/* The grammar rules */
+start with block;
+
+
+// BLOCK
+block 			    ::= BLOCK ID LCURLY definition:d RCURLY
+                      ;
+definition 		    ::= gatedeclarations:gd blueprint:bp procedures
+                      ;
+
+//definition          ::= gatedeclarations BLUEPRINT LPAR RPAR LCURLY content RCURLY;
+
+// GENERAL
+type				::= buildtype
+					  | bluetype
+					  | gate
+                      ;
+buildtype			::= BLOCK
+					  | OPERATION
+					  | SOURCE
+                      ;
+// GATES
+gatedeclarations	::= gate:g ID:id SEMICOLON gatedeclarations:gd
+					  |
+                      ;
+gate				::= GATEIN
+					  | GATEOUT
+                      ;
+// BLUEPRINT
+blueprint			::= BLUEPRINT LPAR blueparams:bp RPAR LCURLY content RCURLY
+                      ;
+blueparams		    ::= blueparam:b
+					  |
+                      ;
+blueparam			::= bluetype:bt ID:id blueextparams
+                      ;
+blueextparams		::= COMMA blueparam
+					  |
+                      ;
+// TODO: Add when ready: | SIZE
+bluetype 			::= BLUEPRINT
+                      ;
+// CONTENT
+content			    ::= statement SEMICOLON content
+					  |
+                      ;
+statement			::= declaration declstoporstay
+					  | ID optidstatement
+					  | LPAR optlparstatement
+					  |	THIS DOT ID optthisstatement
+					  | elementrest chain
+					  |
+                      ;
+procedurecall		::= LPAR elementliststart RPAR
+                      ;
+// OPTION SELECT FOR STATEMENTS
+optlparstatement	::= LPAR element RPAR groupcon
+					  | element parclosestatement
+                      ;
+parclosestatement	::= parchain
+					  | groupcon
+                      ;
+optidstatement	    ::= dotid chain
+					  | procedurecall
+					  | ASSIGN elementpar
+                      ;
+optthisstatement	::= procedurecall
+					  |
+                      ;
+// COLLECTIVE STATEMENTS
+chain				::= CONNECTION elementpar chainext
+                      ;
+parchain			::= RPAR CONNECTION elementpar chainext
+                      ;
+chainext			::= CONNECTION elementpar chainext
+					  |
+                      ;
+groupcon			::= elementlist RPAR CONNECTION elementpar chainext
+                      ;
+// ELEMENTS
+element			    ::= elementrest
+					  | declaration
+					  | ID dotid
+					  | THIS DOT ID
+                      ;
+// TODO: add when ready: | SIZELITERAL
+elementrest		    ::= BUILD ID LPAR elementliststart RPAR
+					  | DRAW ID
+                      ;
+dotid				::= DOT ID
+					  |
+                      ;
+elementpar		    ::= LPAR element RPAR
+					  | element
+                      ;
+// DECLARATION ELEMENT
+//TODO: add when ready: | SIZE idassign SIZELITERAL
+declaration		    ::= buildtype idassign BUILD elementpar
+					  | buildtype ID SEMICOLON
+					  | BLUEPRINT idassign DRAW elementpar
+					  | gate idassign elementpar
+                      ;
+idassign			::= ID ASSIGN
+                      ;
+declstoporstay		::= chain
+					  |
+                      ;
+// ELEMENTLIST
+elementliststart	::= elementpar elementlistext
+					  |
+                      ;
+elementlist		    ::= elementext elementlistext
+                      ;
+elementlistext	    ::= elementlist
+					  |
+                      ;
+elementext		    ::= COMMA elementpar
+                      ;
+// PROCEDURES
+procedures		    ::= PROCEDURE LPAR pparams RPAR LCURLY content RCURLY procedures
+					  |
+                      ;
+pparams			    ::= type ID pextparams
+					  |
+                      ;
+pextparams		    ::= COMMA pparams
+					  |
+                      ;
