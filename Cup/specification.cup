@@ -50,7 +50,8 @@ terminal ID, NUMCONST;
 non terminal block, definition, gatedeclarations, blueprint, procedures, type, buildtype, bluetype, gate, blueparam, blueparams,
              content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
-             elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement;
+             elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
+             buildelement, buildelementpar;
 
 // TODO: Add precedence and associativity
 
@@ -103,7 +104,7 @@ content			    ::= statement SEMICOLON content
 statement			::= declaration declstoporstay
 					  | ID optidstatement
 					  | LPAR optlparstatement
-					  |	THIS DOT ID optthisstatement
+					  |	THIS DOT ID optthisstatement declstoporstay
 					  | elementrest chain
 					  |
                       ;
@@ -118,7 +119,7 @@ parclosestatement	::= parchain
                       ;
 optidstatement	    ::= dotid chain
 					  | procedurecall
-					  | ASSIGN elementpar
+					  | ASSIGN elementpar declstoporstay
                       ;
 optthisstatement	::= procedurecall
 					  |
@@ -140,9 +141,16 @@ element			    ::= elementrest
 					  | THIS DOT ID
                       ;
 // TODO: add when ready: | SIZELITERAL
-elementrest		    ::= BUILD ID LPAR elementliststart RPAR
+elementrest		    ::= builddeclaration
 					  | DRAW ID
                       ;
+buildelement		::= builddeclaration
+					  | ID
+					  | LPAR buildelementpar
+					  ;
+buildelementpar		::= builddeclaration RPAR
+					  | ID RPAR
+					  ;
 dotid				::= DOT ID
 					  |
                       ;
@@ -155,6 +163,8 @@ declaration		    ::= buildtype idassign BUILD elementpar
 					  | buildtype ID SEMICOLON
 					  | BLUEPRINT idassign DRAW elementpar
 					  | gate idassign elementpar
+                      ;
+builddeclaration	::= BUILD ID LPAR elementliststart RPAR
                       ;
 idassign			::= ID ASSIGN
                       ;

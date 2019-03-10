@@ -6,6 +6,6 @@ block AnnLayer {
   gate:out out;
 
   blueprint(blueprint a){
-
+    this.in -> c -> this.out;
   }
 }
