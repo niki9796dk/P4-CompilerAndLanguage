@@ -20,7 +20,7 @@
 
 # Gradle
 .idea/**/gradle.xml
-.idea/**/libraries
+%libraries
 
 # CMake
 cmake-build-debug/
@@ -54,3 +54,4 @@ fabric.properties
 .idea/httpRequests
 
 .idea/
+!/libraries/

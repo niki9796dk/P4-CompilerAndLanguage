@@ -14,7 +14,7 @@ import java_cup.runtime.ScannerBuffer;
 parser code {:
 
     public void syntax_error(Symbol cur_token){
-    	System.err.println("Syntax error at "+cur_token);
+    	System.err.println("Syntax error at"+cur_token);
         }
         public static void newScope(){
     	typenames.push(new HashSet<String>());
@@ -42,7 +42,7 @@ parser code {:
 terminal COMMA, SEMICOLON, LPAR, RPAR, LCURLY, RCURLY, ASSIGN, CONNECTION, LSQR, RSQR, DOT;
 
 /* keywords */
-terminal BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOUT, PROCEDURE, THIS;
+terminal BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOUT, PROCEDURE, THIS, SIZE;
 
 /* others */
 terminal ID, NUMCONST;
@@ -84,9 +84,9 @@ gate				::= GATEIN
 					  | GATEOUT
                       ;
 // BLUEPRINT
-blueprint			::= BLUEPRINT LPAR blueparams:bp RPAR LCURLY content RCURLY
+blueprint			::= BLUEPRINT LPAR blueparams RPAR LCURLY content RCURLY
                       ;
-blueparams		    ::= blueparam:b
+blueparams		    ::= blueparam
 					  |
                       ;
 blueparam			::= bluetype:bt ID:id blueextparams

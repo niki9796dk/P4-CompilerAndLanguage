@@ -62,8 +62,9 @@ New_line =      \r|\n|\r\n;
 
 white_space =   {New_line} | [ \t\f]
 
-Comment =       "//" [^\r\n]* {New_line}
-
+Comment = {One_Line_Comment} | {Multi_Line_Comment}
+One_Line_Comment = "//"[^\r\n]* {New_line}
+Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 
 %%
 
@@ -82,6 +83,7 @@ Comment =       "//" [^\r\n]* {New_line}
 "gate:out"      {return symbol("gate:out" , GATEOUT,yytext()); }
 "procedure"     {return symbol("procedure", PROCEDURE,yytext()); }
 "this"          {return symbol("this"     , THIS,yytext()); }
+"size"          {return symbol("size"     , SIZE, yytext());}
 
 /* Identifier names */
 {Ident}         { return symbol("Identifier", ID, yytext()); }
@@ -105,7 +107,8 @@ Comment =       "//" [^\r\n]* {New_line}
 "."             { return symbol("." , DOT, "."); }
 
 {white_space}     { /* ignore */ }
-{Comment} =       { /* ignore */ }
+{Comment}         { /* ignore */ }
+
 }
 
 /* error fallback */
