@@ -1,0 +1,106 @@
+// Simpel declaration
+block decla_01 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build Test();
+	}
+}
+
+// Para
+block decla_02 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = (build Test());
+	}
+}
+
+// Reference
+block decla_03 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build Test();
+		block b = a;
+	}
+}
+
+// Reference
+block decla_04 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build Test();
+		block b = (a);
+	}
+}
+
+// Gate reference
+block decla_05 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		gate:in in = this.input;
+	}
+}
+
+// Blueprint
+block decla_06 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		blueprint blockBlueprint = draw Test;
+	}
+}
+
+// size
+block decla_07 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+        size s = [2, 5];
+	}
+}
+
+// size
+block decla_08 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		size s = ([2, 5]);
+	}
+}
+
+// dot gate
+block decla_09 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block b = build Test();
+	
+		gate:in s = (b.input);
+	}
+}
+
+// dot gate
+block decla_10 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block b = build Test();
+		b = build Abc();
+	
+		gate:in s = (this.input);
+	}
+}
