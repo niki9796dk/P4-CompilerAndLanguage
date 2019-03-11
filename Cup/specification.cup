@@ -45,7 +45,7 @@ terminal COMMA, SEMICOLON, LPAR, RPAR, LCURLY, RCURLY, ASSIGN, CONNECTION, LSQR,
 terminal BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOUT, PROCEDURE, THIS, SIZE;
 
 /* others */
-terminal ID, NUMCONST;
+terminal ID, NUMCONST, SIZECONST;
 
 non terminal block, definition, gatedeclarations, blueprint, procedures, type, buildtype, bluetype, gate, blueparam, blueparams,
              content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
@@ -60,7 +60,8 @@ start with block;
 
 
 // BLOCK
-block 			    ::= BLOCK ID LCURLY definition:d RCURLY
+block 			    ::= BLOCK ID LCURLY definition:d RCURLY block
+                      |
                       ;
 definition 		    ::= gatedeclarations:gd blueprint:bp procedures
                       ;
@@ -94,8 +95,9 @@ blueparam			::= bluetype:bt ID:id blueextparams
 blueextparams		::= COMMA blueparam
 					  |
                       ;
-// TODO: Add when ready: | SIZE
+// TODO: Add when ready:
 bluetype 			::= BLUEPRINT
+                      | SIZE
                       ;
 // CONTENT
 content			    ::= statement SEMICOLON content
@@ -140,9 +142,10 @@ element			    ::= elementrest
 					  | ID dotid
 					  | THIS DOT ID
                       ;
-// TODO: add when ready: | SIZELITERAL
+// TODO: add when ready:
 elementrest		    ::= builddeclaration
 					  | DRAW ID
+					  | SIZECONST
                       ;
 buildelement		::= builddeclaration
 					  | ID
@@ -158,11 +161,12 @@ elementpar		    ::= LPAR element RPAR
 					  | element
                       ;
 // DECLARATION ELEMENT
-//TODO: add when ready: | SIZE idassign SIZELITERAL
-declaration		    ::= buildtype idassign BUILD elementpar
+//TODO: add when ready:
+declaration		    ::= buildtype idassign buildelement
 					  | buildtype ID SEMICOLON
 					  | BLUEPRINT idassign DRAW elementpar
 					  | gate idassign elementpar
+					  | SIZE idassign SIZECONST
                       ;
 builddeclaration	::= BUILD ID LPAR elementliststart RPAR
                       ;
