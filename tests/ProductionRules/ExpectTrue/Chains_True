@@ -1,0 +1,191 @@
+// Test of simple multi chaining.
+block chain_01 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		a -> b -> c;
+	}
+}
+
+// Test of using gates in chains.
+block chain_02 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input -> a -> b -> c -> this.output;
+	}
+}
+
+// Test of multiple small chains.
+block chain_03 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input -> a;
+		a -> b;
+		b -> c;
+		c -> this.output;
+	}
+}
+
+// Test of group connections.
+block chain_04 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		operation c = build Multiplication();
+		
+		(this.input, a) -> c;
+	}
+}
+
+// Test of group connections with continued chaining.
+block chain_05 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		operation c = build Multiplication();
+		
+		(this.input, a) -> c -> b -> this.output;
+	}
+}
+
+// Test of group connections with building.
+block chain_06 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		this.input -> block a = build test();
+		block b = build test();
+		
+		(this.input, a) -> build Multiplication() -> b -> this.output;
+	}
+}
+
+// Test of group connections with building and delcarations.
+block chain_07 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {	
+		(this.input, build Source()) -> operation m = build Multiplication() -> block b = build test();
+		
+		(m, b) -> build Multiplication() -> this.output;
+	}
+}
+
+// Test of multi line chaining.
+block chain_08 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input
+		-> a
+		-> b
+		-> c
+		-> this.output;
+	}
+}
+
+// Test of multi line chaining.
+block chain_09 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input 
+		-> a
+		-> b -> c
+		-> this.output;
+	}
+}
+
+// Test of large group connections.
+block chain_10 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		this.input -> block b = build test();
+		
+		(this.input, build Source(), b, source s = build Source()) -> build LargeOpe() -> this.output;
+	}
+}
+
+// Test of gate access.
+block chain_11 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input -> a.in;
+		
+		a.out -> b.inputGate;
+		
+		b.outputGate -> c.swagIn;
+
+		c.swagOut -> this.output;
+	}
+}
+
+// Test of gate access groups.
+block chain_12 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		(a.out, b.out, c.out) -> build LargeOpe() -> this.output;
+	}
+}
+
+// Test of gate access groups.
+block chain_13 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		((a.out), b, (c.out)) -> build LargeOpe() -> (this.output);
+	}
+}

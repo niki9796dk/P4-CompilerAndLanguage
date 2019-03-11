@@ -1,0 +1,140 @@
+// Procedures and connections.
+block chain_01 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		(a, b, c) -> abc() -> this.output;
+	}
+	
+	procedure abc() {
+		
+	}
+}
+
+// Small groups
+block chain_02 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		
+		(a) -> b -> this.output;
+	}
+}
+
+// Unfished groups 1
+block chain_03 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		
+		(a, ) -> build test() -> this.output;
+	}
+}
+
+// Unfished groups 2
+block chain_04 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		
+		(a, b, ) -> build test() -> this.output;
+	}
+}
+
+// Unfished groups 3
+block chain_05 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		(a, b, c, ) -> build test() -> this.output;
+	}
+}
+
+// Uneven parentases
+block chain_06 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		(a), b, c) -> build test() -> this.output;
+	}
+}
+
+// Uneven parentases
+block chain_07 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		((a), b, c -> build test() -> this.output;
+	}
+}
+
+// No parentases
+block chain_08 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		a, b, c -> build test() -> this.output;
+	}
+}
+
+// Groups in chains
+block chain_09 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		a -> (b, c) -> build test() -> this.output;
+	}
+}
+
+// Groups to groups
+block chain_09 {
+	gate:in input;
+	gate:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		block d = build test();
+		
+		(b, c) -> (a, d) -> this.output;
+	}
+}
