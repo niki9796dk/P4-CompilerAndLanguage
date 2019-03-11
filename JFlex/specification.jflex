@@ -55,7 +55,7 @@ Ident =         [a-zA-Z_][a-zA-Z0-9_]*
 
 NumLiteral =    [0-9]+(\.[0-9]+)?
 
-SizeLiteral =   \[\s{NumLiteral}\s,\s{NumLiteral}\s\]
+SizeLiteral =   \[\s*{NumLiteral}\s*,\s*{NumLiteral}\s*\]
 
 New_line =      \r|\n|\r\n;
 
