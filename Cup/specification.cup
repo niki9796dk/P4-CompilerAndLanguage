@@ -144,7 +144,6 @@ element			    ::= elementrest
 					  | ID dotid
 					  | THIS DOT ID
                       ;
-// TODO: add when ready:
 elementrest		    ::= builddeclaration
 					  | DRAW ID
 					  | SIZECONST
@@ -167,7 +166,6 @@ sizepar             ::= SIZECONST
                       | LPAR SIZECONST RPAR
                       ;
 // DECLARATION ELEMENT
-//TODO: add when ready:
 declaration		    ::= buildtype idassign buildelement
 					  | buildtype ID SEMICOLON
 					  | BLUEPRINT idassign DRAW elementpar
