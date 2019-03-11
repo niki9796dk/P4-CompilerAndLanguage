@@ -1,0 +1,87 @@
+block gates_01 {
+	gate:in input1;
+	gate:out output;
+	gate:in input2;
+
+	blueprint() {
+
+	}
+}
+
+block gates_02 {
+	gate:in input1;
+	gate:in input2;
+	gate:out output;
+	gate:in input3;
+    gate:in input4;
+
+	blueprint() {
+
+	}
+}
+
+block gates_03 {
+	gate:in input1;
+	gate:in input2;
+	gate:out output1;
+    gate:out output2;
+	gate:in input3;
+    gate:in input4;
+
+	blueprint() {
+
+	}
+}
+
+block gates_04 {
+	gate:in input1;
+	gate:in input2;
+	gate:out output1;
+    gate:out output2;
+	gate:in input3;
+	gate:out output3;
+    gate:in input4;
+
+	blueprint() {
+
+	}
+}
+
+block gates_05 {
+    gate:out output4;
+	gate:in input1;
+	gate:in input2;
+	gate:out output1;
+    gate:out output2;
+	gate:in input3;
+	gate:out output3;
+    gate:in input4;
+
+	blueprint() {
+
+	}
+}
+
+block gates_06 {
+    gate:out output4;
+	gate:in input1;
+	gate:in input2;
+	gate:out output1;
+    gate:out output2;
+	gate:in input3;
+	gate:out output3;
+    gate:in input4;
+    gate:out output5;
+
+	blueprint() {
+
+	}
+}
+
+block gates_07 {
+	gate:out output;
+
+	blueprint() {
+
+	}
+}
