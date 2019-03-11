@@ -1,0 +1,11 @@
+// Test of legal char sequences
+block random_01 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		build test();
+
+		this.input -> this.output;
+	}
+}

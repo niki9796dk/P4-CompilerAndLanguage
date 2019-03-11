@@ -1,0 +1,17 @@
+// Procedures and connections.
+block chain_01 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+
+		(a, b, c) -> abc() -> this.output;
+	}
+
+	procedure abc() {
+
+	}
+}

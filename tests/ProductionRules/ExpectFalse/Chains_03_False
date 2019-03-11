@@ -1,0 +1,11 @@
+// Unfished groups 1
+block chain_03 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build test();
+
+		(a, ) -> build test() -> this.output;
+	}
+}

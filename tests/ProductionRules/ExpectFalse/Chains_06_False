@@ -1,0 +1,13 @@
+// Uneven parentases
+block chain_06 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+
+		(a), b, c) -> build test() -> this.output;
+	}
+}

@@ -1,0 +1,14 @@
+// Groups to groups
+block chain_10 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		block d = build test();
+
+		(b, c) -> (a, d) -> this.output;
+	}
+}

@@ -1,0 +1,13 @@
+// No parentases
+block chain_08 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+
+		a, b, c -> build test() -> this.output;
+	}
+}
