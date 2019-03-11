@@ -22,7 +22,7 @@ public class MainParse {
 
     }
 
-    public static void parseFile(String path) throws Exception{
+    public static boolean parseFile(String path) throws Exception {
         ComplexSymbolFactory csf = new ComplexSymbolFactory();
         // create a buffering scanner wrapper
         ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)),csf));
@@ -46,5 +46,8 @@ public class MainParse {
         Source text = new StreamSource(new File("tree/simple.xml"));
 
         transformer.transform(text, new StreamResult(new File("tree/output.html")));
+
+        // If an exception was not thrown, then return true to signal success.
+        return true;
     }
 }

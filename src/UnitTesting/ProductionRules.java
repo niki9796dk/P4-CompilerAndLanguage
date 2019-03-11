@@ -8,7 +8,7 @@ import java.util.Objects;
 public class ProductionRules {
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         MainParse.isTest = true;
 
         File trueFolder = new File("tests/ProductionRules/ExpectTrue/");

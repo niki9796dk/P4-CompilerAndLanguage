@@ -13,6 +13,7 @@ import java_cup.runtime.ScannerBuffer;
 
 parser code {:
 
+        /*
         public void syntax_error(Symbol cur_token){
             if (!MainParse.isTest) {
                 super.syntax_error(cur_token);
@@ -26,6 +27,7 @@ parser code {:
 
             throw new Exception("Could not recover");
         }
+        */
 
         public static void newScope(){
     	typenames.push(new HashSet<String>());
@@ -62,7 +64,7 @@ non terminal block, definition, gatedeclarations, blueprint, procedures, type, b
              content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
-             buildelement, buildelementpar, sizepar;
+             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration;
 
 // TODO: Add precedence and associativity
 
@@ -89,7 +91,14 @@ buildtype			::= BLOCK
 					  | SOURCE
                       ;
 // GATES
-gatedeclarations	::= gate:g ID:id SEMICOLON gatedeclarations:gd
+gatedeclarations    ::= ingatedeclaration outgatedeclaration inoutgatedeclaration
+                      ;
+ingatedeclaration   ::= GATEIN ID SEMICOLON ingatedeclaration
+                      |
+                      ;
+outgatedeclaration   ::= GATEOUT ID SEMICOLON
+                      ;
+inoutgatedeclaration ::= gate:g ID:id SEMICOLON inoutgatedeclaration:gd
 					  |
                       ;
 gate				::= GATEIN

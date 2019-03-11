@@ -26,7 +26,6 @@
         <delete file="src/AutoGen/sym.java"/>
         <delete file="src/AutoGen/MainParse.class"/>
     </target>
-
     <target name="generate lexer">
         <jflex file="${jflexLexerSpecificationPath}"
                destdir="src/"
@@ -46,11 +45,14 @@
                 <classpath refid="lib"/>
         </javac>
 
-        <javac  srcdir="src/UnitTesting"
-                destdir="src/"
-                includeantruntime="false">
-            <classpath refid="lib"/>
-        </javac>
+        <antcall target="clean precompiled files" />
+    </target>
+
+    <target name="clean precompiled files">
+        <delete file="src/AutoGen/Lexer.class"/>
+        <delete file="src/AutoGen/Parser.class"/>
+        <delete file="src/AutoGen/sym.class"/>
+        <delete file="src/AutoGen/MainParse.class"/>
     </target>
 
     <target name="run">
