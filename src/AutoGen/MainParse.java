@@ -14,6 +14,8 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.XMLElement;
 
 public class MainParse {
+    public static boolean isTest = false;
+
     public static void main(String args[]) throws Exception {
 
         parseFile(args[0]);
@@ -23,12 +25,12 @@ public class MainParse {
     public static void parseFile(String path) throws Exception{
         ComplexSymbolFactory csf = new ComplexSymbolFactory();
         // create a buffering scanner wrapper
-        ScannerBuffer lexer = new ScannerBuffer(new Lexer(new BufferedReader(new FileReader(path)),csf));
+        ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)),csf));
 
         // start parsing
-        Parser p = new Parser(lexer,csf);
+        AutoGen.Parser p = new AutoGen.Parser(lexer,csf);
         //System.out.println("Parser runs: ");
-        Parser.newScope();
+        AutoGen.Parser.newScope();
         XMLElement e = (XMLElement)p.parse().value;
 
         // create XML output file

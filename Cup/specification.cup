@@ -13,11 +13,20 @@ import java_cup.runtime.ScannerBuffer;
 
 parser code {:
 
-        //public void syntax_error(Symbol cur_token){
+        public void syntax_error(Symbol cur_token){
+            if (!MainParse.isTest) {
+                super.syntax_error(cur_token);
+            }
+        }
 
-       // }
-        //public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
-        //}
+        public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
+            if (!MainParse.isTest) {
+                super.unrecovered_syntax_error(cur_token);
+            }
+
+            throw new Exception("Could not recover");
+        }
+
         public static void newScope(){
     	typenames.push(new HashSet<String>());
         }
