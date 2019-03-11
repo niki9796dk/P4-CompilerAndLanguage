@@ -45,11 +45,24 @@
                 includeantruntime="false">
                 <classpath refid="lib"/>
         </javac>
+
+        <javac  srcdir="src/UnitTesting"
+                destdir="src/"
+                includeantruntime="false">
+            <classpath refid="lib"/>
+        </javac>
     </target>
 
     <target name="run">
         <java classname="AutoGen.MainParse">
             <arg value='${inputFilePath}'/>
+            <classpath refid="lib"/>
+            <classpath location="src"/>
+        </java>
+    </target>
+
+    <target name="unit testing">
+        <java classname="UnitTesting.ProductionRules">
             <classpath refid="lib"/>
             <classpath location="src"/>
         </java>

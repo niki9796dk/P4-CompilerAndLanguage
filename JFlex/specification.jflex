@@ -105,7 +105,7 @@ Comment =       "//" [^\r\n]* {New_line}
 "."             { return symbol("." , DOT, "."); }
 
 {white_space}     { /* ignore */ }
-{Comment} =       { /* ignore */ }
+{Comment}        { /* ignore */ }
 }
 
 /* error fallback */

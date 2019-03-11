@@ -60,7 +60,8 @@ start with block;
 
 
 // BLOCK
-block 			    ::= BLOCK ID LCURLY definition:d RCURLY
+block 			    ::= BLOCK ID LCURLY definition:d RCURLY block
+                      |
                       ;
 definition 		    ::= gatedeclarations:gd blueprint:bp procedures
                       ;
@@ -159,7 +160,7 @@ elementpar		    ::= LPAR element RPAR
                       ;
 // DECLARATION ELEMENT
 //TODO: add when ready: | SIZE idassign SIZELITERAL
-declaration		    ::= buildtype idassign BUILD elementpar
+declaration		    ::= buildtype idassign buildelement
 					  | buildtype ID SEMICOLON
 					  | BLUEPRINT idassign DRAW elementpar
 					  | gate idassign elementpar
