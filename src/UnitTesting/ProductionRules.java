@@ -26,18 +26,15 @@ public class ProductionRules {
 
     private static boolean parseFile(File file, boolean expectedParse){
         try {
-            System.out.print("Testing '" + file.getName() + "' ");
 
-            if (file.getName().length() > 15) {
-                System.out.print("\t\t");
-            } else {
-                System.out.print("\t");
-            }
 
             MainParse.parseFile(file.getPath());
-        } catch (Exception e) {
+            System.out.print("Testing '" + file.getName() + "' ");
 
-            printStatus(expectedParse);
+        } catch (Exception e) {
+            System.out.print("Testing '" + file.getName() + "' ");
+
+            printStatus(expectedParse, file);
 
             if (expectedParse) {
                 e.printStackTrace();
@@ -46,11 +43,17 @@ public class ProductionRules {
             return false;
         }
 
-        printStatus(!expectedParse);
+        printStatus(!expectedParse, file);
         return true;
     }
 
-    private static void printStatus(boolean failure){
+    private static void printStatus(boolean failure, File file){
+        if (file.getName().length() > 15) {
+            System.out.print("\t");
+        } else {
+            System.out.print("\t\t");
+        }
+
         if (failure) {
             failure();
         } else {
@@ -59,10 +62,10 @@ public class ProductionRules {
     }
 
     private static void success() {
-        System.out.println("SUCCESS.");
+        System.out.println("SUCCESS.\n");
     }
 
     private static void failure() {
-        System.out.println("FAILURE.");
+        System.out.println("FAILURE.\n");
     }
 }

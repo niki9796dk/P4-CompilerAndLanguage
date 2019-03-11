@@ -68,7 +68,7 @@ Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 
 %%
 
-// TODO: Add dot and size
+// TODO: Add dot and size[
 
 <YYINITIAL>{
 
@@ -88,8 +88,8 @@ Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 /* Identifier names */
 {Ident}         { return symbol("Identifier", ID, yytext()); }
 
-/* Literal numbers */
-{NumLiteral}    { return symbol("Number", NUMCONST, new Double(Double.parseDouble(yytext()))); }
+/* Literal numbers {NumLiteral}    { return symbol("Number", NUMCONST, new Double(Double.parseDouble(yytext()))); }*/
+
 {SizeLiteral}   { return symbol("Size", SIZECONST); }
 
 /*  {SizeLiteral}  */
@@ -103,8 +103,6 @@ Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 "}"             { return symbol("}" , RCURLY, "}"); }
 "="             { return symbol("=" , ASSIGN, "="); }
 "->"            { return symbol("->", CONNECTION, "->"); }
-"["             { return symbol("[" , LSQR, "["); }
-"]"             { return symbol("]" , RSQR, "]"); }
 "."             { return symbol("." , DOT, "."); }
 
 {white_space}     { /* ignore */ }

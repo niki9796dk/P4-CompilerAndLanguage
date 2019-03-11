@@ -13,9 +13,11 @@ import java_cup.runtime.ScannerBuffer;
 
 parser code {:
 
-    public void syntax_error(Symbol cur_token){
-    	System.err.println("Syntax error at"+cur_token);
-        }
+        //public void syntax_error(Symbol cur_token){
+
+       // }
+        //public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
+        //}
         public static void newScope(){
     	typenames.push(new HashSet<String>());
         }
@@ -51,7 +53,7 @@ non terminal block, definition, gatedeclarations, blueprint, procedures, type, b
              content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
-             buildelement, buildelementpar;
+             buildelement, buildelementpar, sizepar;
 
 // TODO: Add precedence and associativity
 
@@ -160,13 +162,17 @@ dotid				::= DOT ID
 elementpar		    ::= LPAR element RPAR
 					  | element
                       ;
+
+sizepar             ::= SIZECONST
+                      | LPAR SIZECONST RPAR
+                      ;
 // DECLARATION ELEMENT
 //TODO: add when ready:
 declaration		    ::= buildtype idassign buildelement
 					  | buildtype ID SEMICOLON
 					  | BLUEPRINT idassign DRAW elementpar
 					  | gate idassign elementpar
-					  | SIZE idassign SIZECONST
+					  | SIZE idassign sizepar
                       ;
 builddeclaration	::= BUILD ID LPAR elementliststart RPAR
                       ;
@@ -187,7 +193,7 @@ elementlistext	    ::= elementlist
 elementext		    ::= COMMA elementpar
                       ;
 // PROCEDURES
-procedures		    ::= PROCEDURE LPAR pparams RPAR LCURLY content RCURLY procedures
+procedures		    ::= PROCEDURE ID LPAR pparams RPAR LCURLY content RCURLY procedures
 					  |
                       ;
 pparams			    ::= type ID pextparams
