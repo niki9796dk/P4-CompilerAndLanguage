@@ -6,7 +6,6 @@ import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java.util.*;
 
-
 %%
 
 %public
@@ -56,7 +55,7 @@ Ident =         [a-zA-Z_][a-zA-Z0-9_]*
 
 NumLiteral =    [0-9]+(\.[0-9]+)?
 
-SizeLiteral =   \[[ ]*{NumLiteral}[ ]*,[ ]*{NumLiteral}[ ]*\]
+SizeLiteral =   \[\s{NumLiteral}\s,\s{NumLiteral}\s\]
 
 New_line =      \r|\n|\r\n;
 
