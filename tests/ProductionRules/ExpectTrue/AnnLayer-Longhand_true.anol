@@ -1,0 +1,33 @@
+block AnnLayer{
+	// Gates
+	gate:in in;
+	gate:out out;
+
+	// Blueprint
+	blueprint(){
+		// Declare sources and sizes
+		source weights = build Source();
+		source bias = build Source();
+
+		// Implement first operation: Multiplication
+		operation mult = build Multiplication();
+		
+		this.in -> mult.A;
+		this.weights -> mult.B; 
+
+		// Implement second operation: Addition
+		operation add = build Addition();
+
+		mult.out -> add.A;
+		this.bias -> add.B;
+
+		// Implement final operation: Sigmoid
+		operation sigmoid = build Sigmoid();
+
+		add -> sigmoid;
+
+		// Connect the final operation to the output of the block
+		sigmiod -> this.out;
+	}
+}
+
