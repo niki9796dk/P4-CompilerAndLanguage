@@ -30,22 +30,27 @@ parser code {:
         */
 
         public static void newScope(){
-    	typenames.push(new HashSet<String>());
+    	    typenames.push(new HashSet<String>());
         }
+
         public static void deleteScope(){
-    	typenames.pop();
+    	    typenames.pop();
         }
+
         public static boolean lookupType(String name){
     	for (HashSet<String> scope: typenames)
     	    if (scope.contains(name)) return true;
     	return false;
         }
+
         public static void addType(String name){
     	typenames.peek().add(name);
         }
+
         public static LinkedList<HashSet<String>> typenames = new LinkedList<HashSet<String>>();
+
         public Parser(Lexer lex, ComplexSymbolFactory sf) {
-    	super(lex,sf);
+    	    super(lex,sf);
         }
 
         class TemporaryNode extends AbstractNode {
