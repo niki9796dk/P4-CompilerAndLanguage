@@ -47,7 +47,6 @@
 
         </javac>
 
-        <antcall target="clean precompiled files" />
     </target>
 
     <target name="clean precompiled files">
@@ -57,12 +56,15 @@
 
     </target>
 
-    <target name="run">
+    <target name="run" depends="compile">
         <java classname="AutoGen.MainParse">
             <arg value='${inputFilePath}'/>
             <classpath refid="lib"/>
             <classpath location="src"/>
         </java>
+
+        <antcall target="clean precompiled files" />
+
     </target>
 
     <target name="build" depends="compile, run">
