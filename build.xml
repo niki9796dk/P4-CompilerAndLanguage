@@ -12,44 +12,25 @@
         </fileset>
     </path>
 
-    <target name="setup">
-        <mkdir dir="src/AutoGen"/>
-    </target>
-
-    <target name="clean">
-        <delete file="src/AutoGen/Lexer.class"/>
-        <delete file="src/AutoGen/Lexer.java"/>
-        <delete file="src/AutoGen/Parser.class"/>
-        <delete file="src/AutoGen/Parser.java"/>
-        <delete file="src/AutoGen/Parser$CUP$Parser$actions.class"/>
-        <delete file="src/AutoGen/sym.class"/>
-        <delete file="src/AutoGen/sym.java"/>
-        <delete file="src/AutoGen/MainParse.class"/>
-    </target>
-    <target name="generate lexer">
+    <target name="compile">
         <jflex file="${jflexLexerSpecificationPath}"
                destdir="src/"
                nobak="true" />
-    </target>
 
-    <target name="generate parser" >
         <cup srcfile="${cupParserSpecificationPath}"
              destdir="src/AutoGen"
              package="AutoGen" locations="true" interface="true" parser="Parser" xmlactions="false" force="true"  />
-    </target>
 
-    <target name="compile" depends="setup, generate parser, generate lexer">
         <javac  srcdir="src/AutoGen"
                 destdir="src/"
                 includeantruntime="false"
                 sourcepath="">
                 <classpath refid="lib"/>
-
         </javac>
 
     </target>
 
-    <target name="clean precompiled files">
+    <target name="clean">
         <delete>
             <fileset dir="src" includes="**/*.class"/>
         </delete>
@@ -63,18 +44,8 @@
             <classpath location="src"/>
         </java>
 
-        <antcall target="clean precompiled files" />
+        <antcall target="clean" />
 
-    </target>
-
-    <target name="build" depends="compile, run">
-    </target>
-
-    <target name="unit testing">
-        <java classname="UnitTesting.ProductionRules">
-            <classpath refid="lib"/>
-            <classpath location="src"/>
-        </java>
     </target>
 
 </project>
