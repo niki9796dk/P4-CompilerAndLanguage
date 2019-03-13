@@ -24,6 +24,7 @@
         <!--
         Dette compiler bare vores projekt, hvilket ikke er nødvendigt.
         Og dermed behøver vi heller ikke at slette alle .class filer.
+        
         <javac  srcdir="src/AutoGen"
                 destdir="src/"
                 includeantruntime="false"
@@ -40,6 +41,8 @@
     </target>
 
     <!--
+    Gamle metoder som KUN er her i tilfælde af at vi en dag skulle bruge dem igen...
+
     <target name="clean">
         <delete>
             <fileset dir="src" includes="**/*.class"/>
