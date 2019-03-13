@@ -98,7 +98,7 @@ prog                ::= blocks:bs
                      AbstractNode prog = makeNode("Program").adoptChildren(bs);
 
                      System.out.println("\nAST\n");
-                     prog.walkTree(new PrintTree(System.out) + "\n");
+                     prog.walkTree(new PrintTree(System.out));
                      :}
                     ;
 
