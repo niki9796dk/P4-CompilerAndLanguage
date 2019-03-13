@@ -189,3 +189,16 @@ block chain_13 {
 		((a.out), b, (c.out)) -> build LargeOpe() -> (this.output);
 	}
 }
+
+// Small groups
+block chain_02 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+
+		(a) -> b -> this.output;
+	}
+}

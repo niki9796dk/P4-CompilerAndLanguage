@@ -1,0 +1,9 @@
+block gates_06 {
+	gate:in input1;
+    gate:in input2;
+	gate:in input3;
+
+	blueprint() {
+
+	}
+}

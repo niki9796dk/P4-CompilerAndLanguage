@@ -1,0 +1,8 @@
+// No gates
+block random {
+
+    blueprint() {
+
+    }
+}
+

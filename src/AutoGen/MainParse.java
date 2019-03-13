@@ -27,6 +27,8 @@ class TemporaryNode extends AbstractNode {
 }
 
 public class MainParse {
+    public static boolean isTest = false;
+
     public static void main(String args[]) throws Exception {
 
         parseFile(args[0]);
@@ -34,27 +36,26 @@ public class MainParse {
 
     }
 
-    public static void parseFile(String path) throws Exception{
+    public static boolean parseFile(String path) throws Exception {
         ComplexSymbolFactory csf = new ComplexSymbolFactory();
         // create a buffering scanner wrapper
-        ScannerBuffer lexer = new ScannerBuffer(new Lexer(new BufferedReader(new FileReader(path)),csf));
+        ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)),csf));
 
         // start parsing
-        Parser p = new Parser(lexer,csf);
+        AutoGen.Parser p = new AutoGen.Parser(lexer,csf);
         //System.out.println("Parser runs: ");
-        Parser.newScope();
+        AutoGen.Parser.newScope();
         p.parse();
+
+        return true;
     }
 
     public static void testTree() {
         AbstractNode b = new TemporaryNode("block1");
         AbstractNode bs = new TemporaryNode("block2");
-
         AbstractNode prog = new TemporaryNode("Program").adoptChildren(bs);
         prog.makeSibling(bs);
-
         System.out.println("\nAST\n");
         prog.walkTree(new PrintTree(System.out));
-
     }
 }

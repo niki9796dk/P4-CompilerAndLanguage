@@ -89,3 +89,13 @@ block chain_02 {
 			;
     }
 }
+
+// Single out gate
+block random {
+    gate:out output;
+
+    blueprint() {
+
+    }
+}
+

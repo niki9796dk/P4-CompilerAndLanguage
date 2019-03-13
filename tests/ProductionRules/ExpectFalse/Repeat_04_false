@@ -1,0 +1,14 @@
+// Repeated blueprints.
+block repeat {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+
+	}
+
+	blueprint() {
+	
+    }
+}
+

@@ -1,0 +1,9 @@
+// Repeated build.
+block repeat_01 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build build test();
+	}
+}
