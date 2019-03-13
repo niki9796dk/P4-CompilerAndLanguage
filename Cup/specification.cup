@@ -116,6 +116,9 @@ blocks              ::= block:b
                     ;
 
 definition 		    ::= gatedeclarations:gd blueprint:bp procedures
+                    {:
+
+                    :}
                       ;
 
 //definition          ::= gatedeclarations BLUEPRINT LPAR RPAR LCURLY content RCURLY;
@@ -156,7 +159,8 @@ blueextparams		::= COMMA blueparam
                       ;
 // TODO: Add when ready:
 bluetype 			::= BLUEPRINT
-                      | SIZE
+                      | SIZE:s
+                      {::}
                       ;
 // CONTENT
 content			    ::= statement SEMICOLON content

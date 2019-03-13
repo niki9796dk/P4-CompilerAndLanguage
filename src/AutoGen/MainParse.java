@@ -14,17 +14,8 @@ import java_cup.runtime.ScannerBuffer;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.XMLElement;
 
-class TemporaryNode extends AbstractNode {
 
-    private String s;
 
-    public TemporaryNode(String s) {
-        this.s = s;
-    }
-
-    public String getName() { return s; }
-
-}
 
 public class MainParse {
     public static boolean isTest = false;
