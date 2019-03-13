@@ -65,8 +65,6 @@ parser code {:
 
        }
 
-
-
       //public AbstractNode makeNode(Symbol s) { return new TemporaryNode(symString.symToString[s.sym]); }
       public AbstractNode makeNode(String s) { return new TemporaryNode(s);   }
 
@@ -87,182 +85,184 @@ terminal String ID;
 terminal Integer NUMCONST;
 terminal SIZECONST;
 
-non terminal AbstractNode block, blocks, prog, definition, gatedeclarations, blueprint, procedures, type, buildtype, bluetype, gate, blueparam, blueparams,
+non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, blueparam, blueparams,
              content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration;
+
+non terminal StorageNode definition, gatedeclarations, blueprint, procedures;
 
 // TODO: Add precedence and associativity
 
 /* The grammar rules */
 start with prog;
 
-prog                ::= blocks:bs
-                    {:
-                     AbstractNode prog = makeNode("Program").adoptChildren(bs);
+prog                    ::= blocks:bs
+                        {:
+                         AbstractNode prog = makeNode("Program").adoptChildren(bs);
 
-                     System.out.println("\nAST\n");
-                     prog.walkTree(new PrintTree(System.out));
-                     :}
-                    ;
+                         System.out.println("\nAST\n");
+                         prog.walkTree(new PrintTree(System.out));
+                        :}
+                        ;
 
 // BLOCK
-block 			    ::= BLOCK ID:ident LCURLY definition:d RCURLY
-                    {:
-                        RESULT = new BlockNode(ident).adoptChildren(d);
-                    :}
-                    ;
+block 			        ::= BLOCK ID:ident LCURLY definition:d RCURLY
+                        {:
+                            RESULT = new BlockNode(ident).adoptChildren(d.getNodes()[0].getNodes());
+                        :}
+                        ;
 
-blocks              ::= block:b
-                    {: RESULT = b; :}
-                    | block:b blocks:bs
-                    {: RESULT = bs.makeSibling(b); :}
-                    ;
+blocks                  ::= block:b
+                        {: RESULT = b; :}
+                        | block:b blocks:bs
+                        {: RESULT = bs.makeSibling(b); :}
+                        ;
 
-definition 		    ::= gatedeclarations:gd blueprint:bp procedures
-                    {:
-
-                    :}
-                      ;
-
-//definition          ::= gatedeclarations BLUEPRINT LPAR RPAR LCURLY content RCURLY;
+definition 		        ::=  gatedeclarations:gds blueprint:bp procedures:pds
+                        {:
+                            RESULT = new StorageNode(gds, bp, pds);
+                        :}
+                        ;
 
 // GENERAL
-type				::= buildtype
-					  | bluetype
-					  | gate
-                      ;
-buildtype			::= BLOCK
-					  | OPERATION
-					  | SOURCE
-                      ;
+type				    ::= buildtype
+					    | bluetype
+					    | gate
+                        ;
+buildtype			    ::= BLOCK
+					    | OPERATION
+					    | SOURCE
+                        ;
 // GATES
-gatedeclarations    ::= ingatedeclaration outgatedeclaration inoutgatedeclaration
-                      ;
-ingatedeclaration   ::= GATEIN ID SEMICOLON ingatedeclaration
-                      |
-                      ;
-outgatedeclaration   ::= GATEOUT ID SEMICOLON
-                      ;
-inoutgatedeclaration ::= gate:g ID:id SEMICOLON inoutgatedeclaration:gd
-					  |
-                      ;
-gate				::= GATEIN
-					  | GATEOUT
-                      ;
+gatedeclarations        ::= ingatedeclaration:ind outgatedeclaration:outd inoutgatedeclaration:inoutd
+                        {: RESULT = new StorageNode(ind, outd, inoutd); :}
+                        ;
+ingatedeclaration       ::= GATEIN ID:id SEMICOLON ingatedeclaration:ind
+                        {: RESULT = (ind!=null) ? ind.makeSibling(new InGateNode(id)) : new InGateNode(id); :}
+                        |
+                        ;
+outgatedeclaration      ::= GATEOUT ID:id SEMICOLON
+                        ;
+inoutgatedeclaration    ::= gate:g ID:id SEMICOLON inoutgatedeclaration:gd
+					    |
+					    ;
+gate				    ::= GATEIN
+					    | GATEOUT
+                        ;
 // BLUEPRINT
-blueprint			::= BLUEPRINT LPAR blueparams RPAR LCURLY content RCURLY
-                      ;
-blueparams		    ::= blueparam
-					  |
-                      ;
-blueparam			::= bluetype:bt ID:id blueextparams
-                      ;
-blueextparams		::= COMMA blueparam
-					  |
-                      ;
+blueprint			    ::= BLUEPRINT LPAR blueparams:bps RPAR LCURLY content:cnt RCURLY
+                        ;
+blueparams		        ::= blueparam
+					    |
+                        ;
+blueparam			    ::= bluetype:bt ID:id blueextparams
+                        ;
+blueextparams		    ::= COMMA blueparam
+                        |
+                        ;
 // TODO: Add when ready:
-bluetype 			::= BLUEPRINT
-                      | SIZE:s
-                      {::}
-                      ;
+bluetype 			    ::= BLUEPRINT
+                        | SIZE:s
+                        {::}
+                        ;
 // CONTENT
-content			    ::= statement SEMICOLON content
-					  |
-                      ;
-statement			::= declaration declstoporstay
-					  | ID optidstatement
-					  | LPAR optlparstatement
-					  |	THIS DOT ID optthisstatement declstoporstay
-					  | elementrest chain
-					  |
-                      ;
-procedurecall		::= LPAR elementliststart RPAR
-                      ;
+content			        ::= statement SEMICOLON content
+					    |
+                        ;
+statement			    ::= declaration declstoporstay
+					    | ID optidstatement
+					    | LPAR optlparstatement
+					    |	THIS DOT ID optthisstatement declstoporstay
+					    | elementrest chain
+					    |
+                        ;
+procedurecall		    ::= LPAR elementliststart RPAR
+                        ;
 // OPTION SELECT FOR STATEMENTS
-optlparstatement	::= LPAR element RPAR groupcon
-					  | element parclosestatement
-                      ;
-parclosestatement	::= parchain
-					  | groupcon
-                      ;
-optidstatement	    ::= dotid chain
-					  | procedurecall
-					  | ASSIGN elementpar declstoporstay
-                      ;
-optthisstatement	::= procedurecall
-					  |
-                      ;
+optlparstatement	    ::= LPAR element RPAR groupcon
+					    | element parclosestatement
+                        ;
+parclosestatement	    ::= parchain
+					    | groupcon
+                        ;
+optidstatement	        ::= dotid chain
+					    | procedurecall
+					    | ASSIGN elementpar declstoporstay
+                        ;
+optthisstatement	    ::= procedurecall
+					    |
+                        ;
 // COLLECTIVE STATEMENTS
-chain				::= CONNECTION elementpar chainext
-                      ;
-parchain			::= RPAR CONNECTION elementpar chainext
-                      ;
-chainext			::= CONNECTION elementpar chainext
-					  |
-                      ;
-groupcon			::= elementlist RPAR CONNECTION elementpar chainext
-                      ;
+chain				    ::= CONNECTION elementpar chainext
+                        ;
+parchain			    ::= RPAR CONNECTION elementpar chainext
+                        ;
+chainext			    ::= CONNECTION elementpar chainext
+					    |
+                        ;
+groupcon			    ::= elementlist RPAR CONNECTION elementpar chainext
+                        ;
 // ELEMENTS
-element			    ::= elementrest
-					  | declaration
-					  | ID dotid
-					  | THIS DOT ID
-                      ;
-elementrest		    ::= builddeclaration
-					  | DRAW ID
-					  | SIZECONST
-                      ;
-buildelement		::= builddeclaration
-					  | ID
-					  | LPAR buildelementpar
-					  ;
-buildelementpar		::= builddeclaration RPAR
-					  | ID RPAR
-					  ;
-dotid				::= DOT ID
-					  |
-                      ;
-elementpar		    ::= LPAR element RPAR
-					  | element
-                      ;
+element			        ::= elementrest
+					    | declaration
+					    | ID dotid
+					    | THIS DOT ID
+                        ;
+elementrest		        ::= builddeclaration
+					    | DRAW ID
+					    | SIZECONST
+                        ;
+buildelement		    ::= builddeclaration
+					    | ID
+					    | LPAR buildelementpar
+					    ;
+buildelementpar		    ::= builddeclaration RPAR
+					    | ID RPAR
+					    ;
+dotid				    ::= DOT ID
+					    |
+                        ;
+elementpar		        ::= LPAR element RPAR
+					    | element
+                        ;
 
-sizepar             ::= SIZECONST
-                      | LPAR SIZECONST RPAR
-                      ;
+sizepar                 ::= SIZECONST
+                        | LPAR SIZECONST RPAR
+                        ;
 // DECLARATION ELEMENT
-declaration		    ::= buildtype idassign buildelement
-					  | buildtype ID SEMICOLON
-					  | BLUEPRINT idassign DRAW elementpar
-					  | gate idassign elementpar
-					  | SIZE idassign sizepar
-                      ;
-builddeclaration	::= BUILD ID LPAR elementliststart RPAR
-                      ;
-idassign			::= ID ASSIGN
-                      ;
-declstoporstay		::= chain
-					  |
-                      ;
+declaration		        ::= buildtype idassign buildelement
+					    | buildtype ID SEMICOLON
+					    | BLUEPRINT idassign DRAW elementpar
+					    | gate idassign elementpar
+					    | SIZE idassign sizepar
+                        ;
+builddeclaration	    ::= BUILD ID LPAR elementliststart RPAR
+                        ;
+idassign			    ::= ID ASSIGN
+                        ;
+declstoporstay		    ::= chain
+					    |
+                        ;
 // ELEMENTLIST
-elementliststart	::= elementpar elementlistext
-					  |
-                      ;
-elementlist		    ::= elementext elementlistext
-                      ;
-elementlistext	    ::= elementlist
-					  |
-                      ;
-elementext		    ::= COMMA elementpar
-                      ;
+elementliststart	    ::= elementpar elementlistext
+					    |
+                        ;
+elementlist		        ::= elementext elementlistext
+                        ;
+elementlistext	        ::= elementlist
+					    |
+                        ;
+elementext		        ::= COMMA elementpar
+                        ;
 // PROCEDURES
-procedures		    ::= PROCEDURE ID LPAR pparams RPAR LCURLY content RCURLY procedures
-					  |
-                      ;
-pparams			    ::= type ID pextparams
-					  |
-                      ;
-pextparams		    ::= COMMA pparams
-					  |
-                      ;
+procedures		        ::= PROCEDURE ID LPAR pparams RPAR LCURLY content RCURLY procedures
+					    |
+                        ;
+pparams			        ::= type ID pextparams
+					    |
+                        ;
+pextparams		        ::= COMMA pparams
+					    |
+                        ;

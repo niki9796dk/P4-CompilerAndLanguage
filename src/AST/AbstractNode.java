@@ -50,6 +50,17 @@ public abstract class AbstractNode {
       return this;
    }
 
+   public AbstractNode adoptChildren(AbstractNode[] nodes) {
+      for(AbstractNode n : nodes) {
+         if (n != null) {
+            if (this.child == null) this.child = n.firstSib;
+            else this.child.makeSibling(n);
+         }
+         for (AbstractNode c = this.child; c != null; c = c.mysib) c.parent = this;
+      }
+      return this;
+   }
+
    public AbstractNode orphan() {
       mysib = parent = null;
       firstSib = this;
@@ -97,6 +108,10 @@ public abstract class AbstractNode {
    }
    public void walkTree(Visitable v) {
       internWalk(0, v);
+   }
+
+   public AbstractNode[] getNodes() {
+      return null;
    }
 
 }
