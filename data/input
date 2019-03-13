@@ -1,7 +1,14 @@
-
-
 block AnnLayer {
 
+  gate:in in;
+  gate:out out;
+
+  blueprint(blueprint a){
+    this.in -> c -> this.out;
+  }
+}
+
+block Abs {
   gate:in in;
   gate:out out;
 

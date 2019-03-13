@@ -1,4 +1,4 @@
-import lab7.*;
+import AST.*;
 import java.io.*;
 import java_cup.runtime.*;
 import java.util.*;
@@ -49,8 +49,11 @@ parser code {:
 
        }
 
+
+
       //public AbstractNode makeNode(Symbol s) { return new TemporaryNode(symString.symToString[s.sym]); }
       public AbstractNode makeNode(String s) { return new TemporaryNode(s);   }
+
       //public AbstractNode makeNode(Integer i) { return new IntegerNode(i);   }
 
 :};
@@ -68,7 +71,7 @@ terminal String ID;
 terminal Integer NUMCONST;
 terminal SIZECONST;
 
-non terminal AbstractNode block, definition, gatedeclarations, blueprint, procedures, type, buildtype, bluetype, gate, blueparam, blueparams,
+non terminal AbstractNode block, blocks, prog, definition, gatedeclarations, blueprint, procedures, type, buildtype, bluetype, gate, blueparam, blueparams,
              content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
@@ -77,17 +80,30 @@ non terminal AbstractNode block, definition, gatedeclarations, blueprint, proced
 // TODO: Add precedence and associativity
 
 /* The grammar rules */
-start with block;
+start with prog;
 
+prog                ::= blocks:bs
+                    {:
+                     AbstractNode prog = makeNode("Program").adoptChildren(bs);
+
+                     System.out.println("\nAST\n");
+                     prog.walkTree(new PrintTree(System.out) + "\n");
+                     :}
+                    ;
 
 // BLOCK
-block 			    ::= BLOCK ID:ident LCURLY definition:d RCURLY block
-                    {: AbstractNode prog = makeNode("Program").adoptChildren(makeNode(ident));
-                       System.out.println("\nAST\n");
-                       prog.walkTree(new PrintTree(System.out));
+block 			    ::= BLOCK ID:ident LCURLY definition:d RCURLY
+                    {:
+                        RESULT = new BlockNode(ident).adoptChildren(d);
                     :}
-                      |
-                      ;
+                    ;
+
+blocks              ::= block:b
+                    {: RESULT = b; :}
+                    | block:b blocks:bs
+                    {: RESULT = bs.makeSibling(b); :}
+                    ;
+
 definition 		    ::= gatedeclarations:gd blueprint:bp procedures
                       ;
 

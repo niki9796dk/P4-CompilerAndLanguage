@@ -63,6 +63,9 @@
         </java>
     </target>
 
+    <target name="build" depends="compile, run">
+    </target>
+
     <target name="unit testing">
         <java classname="UnitTesting.ProductionRules">
             <classpath refid="lib"/>

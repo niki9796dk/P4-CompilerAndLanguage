@@ -1,5 +1,6 @@
 package AutoGen;
 
+import AST.*;
 import java.io.*;
 import java_cup.runtime.*;
 import java.util.*;
@@ -13,10 +14,23 @@ import java_cup.runtime.ScannerBuffer;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.XMLElement;
 
+class TemporaryNode extends AbstractNode {
+
+    private String s;
+
+    public TemporaryNode(String s) {
+        this.s = s;
+    }
+
+    public String getName() { return s; }
+
+}
+
 public class MainParse {
     public static void main(String args[]) throws Exception {
 
         parseFile(args[0]);
+        //testTree();
 
     }
 
@@ -30,6 +44,17 @@ public class MainParse {
         //System.out.println("Parser runs: ");
         Parser.newScope();
         p.parse();
+    }
+
+    public static void testTree() {
+        AbstractNode b = new TemporaryNode("block1");
+        AbstractNode bs = new TemporaryNode("block2");
+
+        AbstractNode prog = new TemporaryNode("Program").adoptChildren(bs);
+        prog.makeSibling(bs);
+
+        System.out.println("\nAST\n");
+        prog.walkTree(new PrintTree(System.out));
 
     }
 }
