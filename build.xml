@@ -36,14 +36,16 @@
     <target name="generate parser" >
         <cup srcfile="${cupParserSpecificationPath}"
              destdir="src/AutoGen"
-             package="AutoGen" locations="true" interface="true" parser="Parser" xmlactions="true" force="true"  />
+             package="AutoGen" locations="true" interface="true" parser="Parser" xmlactions="false" force="true"  />
     </target>
 
     <target name="compile" depends="setup, generate parser, generate lexer">
         <javac  srcdir="src/AutoGen"
                 destdir="src/"
-                includeantruntime="false">
+                includeantruntime="false"
+                sourcepath="">
                 <classpath refid="lib"/>
+
         </javac>
 
         <javac  srcdir="src/UnitTesting"

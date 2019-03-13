@@ -1,4 +1,4 @@
-/* Minijava Grammar */
+import lab7.*;
 import java.io.*;
 import java_cup.runtime.*;
 import java.util.*;
@@ -36,20 +36,39 @@ parser code {:
         public Parser(Lexer lex, ComplexSymbolFactory sf) {
     	super(lex,sf);
         }
+
+        class TemporaryNode extends AbstractNode {
+
+             private String s;
+
+             public TemporaryNode(String s) {
+               this.s = s;
+             }
+
+             public String getName() { return s; }
+
+       }
+
+      //public AbstractNode makeNode(Symbol s) { return new TemporaryNode(symString.symToString[s.sym]); }
+      public AbstractNode makeNode(String s) { return new TemporaryNode(s);   }
+      //public AbstractNode makeNode(Integer i) { return new IntegerNode(i);   }
+
 :};
 
 // TODO:  Fix dot and add size
 
 /* separators */
-terminal COMMA, SEMICOLON, LPAR, RPAR, LCURLY, RCURLY, ASSIGN, CONNECTION, LSQR, RSQR, DOT;
+terminal Symbol COMMA, SEMICOLON, LPAR, RPAR, LCURLY, RCURLY, ASSIGN, CONNECTION, LSQR, RSQR, DOT;
 
 /* keywords */
-terminal BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOUT, PROCEDURE, THIS, SIZE;
+terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOUT, PROCEDURE, THIS, SIZE;
 
 /* others */
-terminal ID, NUMCONST, SIZECONST;
+terminal String ID;
+terminal Integer NUMCONST;
+terminal SIZECONST;
 
-non terminal block, definition, gatedeclarations, blueprint, procedures, type, buildtype, bluetype, gate, blueparam, blueparams,
+non terminal AbstractNode block, definition, gatedeclarations, blueprint, procedures, type, buildtype, bluetype, gate, blueparam, blueparams,
              content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
@@ -62,7 +81,11 @@ start with block;
 
 
 // BLOCK
-block 			    ::= BLOCK ID LCURLY definition:d RCURLY block
+block 			    ::= BLOCK ID:ident LCURLY definition:d RCURLY block
+                    {: AbstractNode prog = makeNode("Program").adoptChildren(makeNode(ident));
+                       System.out.println("\nAST\n");
+                       prog.walkTree(new PrintTree(System.out));
+                    :}
                       |
                       ;
 definition 		    ::= gatedeclarations:gd blueprint:bp procedures

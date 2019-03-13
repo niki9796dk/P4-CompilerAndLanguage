@@ -44,7 +44,7 @@ import java.util.*;
       System.out.println("Error at line "+(yyline+1)+", column "+(yycolumn+1)+" : "+message);
   }
 
-%}
+%}yytext()
 
 %eofval{
      return symbolFactory.newSymbol("EOF", EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1));
