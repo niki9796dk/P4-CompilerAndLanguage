@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ScannerAndParser" basedir = "." default="run">
+<project name="ScannerAndParser" basedir = "." default="compile">
 
     <property file="build.properties"/>
 
@@ -28,14 +28,20 @@
                 <classpath refid="lib"/>
         </javac>
 
+        <delete>
+            <fileset dir="src" includes="**/*.class"/>
+        </delete>
+
     </target>
 
+    <!--
     <target name="clean">
         <delete>
             <fileset dir="src" includes="**/*.class"/>
         </delete>
 
     </target>
+
 
     <target name="run" depends="compile">
         <java classname="AutoGen.MainParse">
@@ -47,5 +53,6 @@
         <antcall target="clean" />
 
     </target>
+    -->
 
 </project>

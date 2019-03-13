@@ -1,10 +1,11 @@
 block AnnLayer {
 
   gate:in in1;
-  gate:in in2;
   gate:out out1;
+  gate:in in2;
+  gate:out out2;
 
-  blueprint(blueprint a){
+  blueprint(size si, blueprint blue){
     this.in -> c -> this.out;
   }
 }
@@ -13,7 +14,7 @@ block Abs {
   gate:in in;
   gate:out out;
 
-  blueprint(blueprint a){
+  blueprint(blueprint blue, size si){
     this.in -> c -> this.out;
   }
 }

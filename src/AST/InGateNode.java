@@ -1,6 +1,6 @@
 package AST;
 
-public class InGateNode extends AbstractNode{
+public class InGateNode extends AbstractNode implements TypeNode{
     private String name;
     private String id;
 
@@ -15,5 +15,12 @@ public class InGateNode extends AbstractNode{
 
     public String toString() {
         return(getName() + " " + this.id);
+    }
+
+    @Override
+    public AbstractNode setId(String id) {
+        this.id = id;
+
+        return this;
     }
 }

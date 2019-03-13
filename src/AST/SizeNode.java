@@ -1,13 +1,13 @@
 package AST;
 
-public class OutGateNode extends AbstractNode implements TypeNode {
-    private String id;
+public class SizeNode extends AbstractNode implements TypeNode {
     private String name;
+    private String id;
+    private String value; // TODO: Change this to two different ints
 
-
-    public OutGateNode(String id) {
+    public SizeNode(String id) {
         this.id = id;
-        this.name = "OutGate";
+        this.name = "SizeType";
     }
 
     public String getName() { return name; }

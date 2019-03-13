@@ -91,7 +91,9 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, 
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration;
 
-non terminal StorageNode definition, gatedeclarations, blueprint, procedures;
+non terminal AbstractNode blueprint;
+
+non terminal StorageNode definition, gatedeclarations, procedures;
 
 // TODO: Add precedence and associativity
 
@@ -110,7 +112,10 @@ prog                    ::= blocks:bs
 // BLOCK
 block 			        ::= BLOCK ID:ident LCURLY definition:d RCURLY
                         {:
-                            RESULT = new BlockNode(ident).adoptChildren(d.getNodes()[0].getNodes());
+                            RESULT = new BlockNode(ident)
+                                            .adoptChildren(d.getNodes()[0].getNodes())  // GateDeclarations (Multiple)
+                                            .adoptChildren(d.getNodes()[1]);             // Blueprint        (Single)
+                                            //.adoptChildren(d.getNodes()[2].getNodes()); // Procedures       (Multiple)
                         :}
                         ;
 
@@ -144,28 +149,51 @@ ingatedeclaration       ::= GATEIN ID:id SEMICOLON ingatedeclaration:ind
                         |
                         ;
 outgatedeclaration      ::= GATEOUT ID:id SEMICOLON
+                        {: RESULT = new OutGateNode(id); :}
                         ;
 inoutgatedeclaration    ::= gate:g ID:id SEMICOLON inoutgatedeclaration:gd
+                        {:
+                           AbstractNode gateNode = ((TypeNode) g).setId(id);
+                           RESULT = (gd != null) ? gd.makeSibling(gateNode) :  gateNode; :}
 					    |
 					    ;
 gate				    ::= GATEIN
+                        {: RESULT = new InGateNode("NoIden"); :}
 					    | GATEOUT
+					    {: RESULT = new OutGateNode("NoIden"); :}
                         ;
 // BLUEPRINT
 blueprint			    ::= BLUEPRINT LPAR blueparams:bps RPAR LCURLY content:cnt RCURLY
+                        {:
+                           AbstractNode blueprintNode = new BlueprintNode();
+                           if (bps != null) {
+                                blueprintNode.adoptChildren(bps);
+                           }
+                           if (cnt != null) {
+                               blueprintNode.adoptChildren(cnt);
+                           }
+                           RESULT = blueprintNode;
+                        :}
                         ;
-blueparams		        ::= blueparam
+blueparams		        ::= blueparam:bp
+                        {: RESULT = ((new ParamsNode()).adoptChildren(bp)); :}
 					    |
                         ;
-blueparam			    ::= bluetype:bt ID:id blueextparams
+blueparam			    ::= bluetype:bt ID:id blueextparams:btx
+                        {:
+                           AbstractNode typeNode = ((TypeNode) bt).setId(id);
+                           RESULT = (btx != null) ? (btx.makeSibling(typeNode)) : (typeNode);
+                        :}
                         ;
-blueextparams		    ::= COMMA blueparam
+blueextparams		    ::= COMMA blueparam:bp
+                        {: RESULT = bp;:}
                         |
                         ;
 // TODO: Add when ready:
 bluetype 			    ::= BLUEPRINT
-                        | SIZE:s
-                        {::}
+                        {: RESULT = new BlueprintTypeNode("NoIden"); :}
+                        | SIZE
+                        {: RESULT = new SizeNode("NoIden"); :}
                         ;
 // CONTENT
 content			        ::= statement SEMICOLON content

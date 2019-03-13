@@ -22,7 +22,13 @@ public class MainParse {
 
     public static void main(String args[]) throws Exception {
 
-        parseFile(args[0]);
+        if (args.length != 1) {
+            parseFile("data/input");
+        } else {
+
+            parseFile(args[0]);
+        }
+
         //testTree();
 
     }

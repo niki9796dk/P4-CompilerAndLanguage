@@ -1,13 +1,12 @@
 package AST;
 
-public class OutGateNode extends AbstractNode implements TypeNode {
-    private String id;
+public class BlueprintTypeNode extends AbstractNode implements TypeNode {
     private String name;
+    private String id;
 
-
-    public OutGateNode(String id) {
+    public BlueprintTypeNode(String id) {
         this.id = id;
-        this.name = "OutGate";
+        this.name = "BlueprintType";
     }
 
     public String getName() { return name; }

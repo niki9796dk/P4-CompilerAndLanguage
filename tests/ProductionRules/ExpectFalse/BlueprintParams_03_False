@@ -1,0 +1,8 @@
+block b1 {
+	gate:in input;
+	gate:out output;
+
+	blueprint(operation abc) {
+
+	}
+}
