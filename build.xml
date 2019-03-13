@@ -21,6 +21,9 @@
              destdir="src/AutoGen"
              package="AutoGen" locations="true" interface="true" parser="Parser" xmlactions="false" force="true"  />
 
+        <!--
+        Dette compiler bare vores projekt, hvilket ikke er nødvendigt.
+        Og dermed behøver vi heller ikke at slette alle .class filer.
         <javac  srcdir="src/AutoGen"
                 destdir="src/"
                 includeantruntime="false"
@@ -28,9 +31,11 @@
                 <classpath refid="lib"/>
         </javac>
 
+
         <delete>
             <fileset dir="src" includes="**/*.class"/>
         </delete>
+        -->
 
     </target>
 
