@@ -86,10 +86,11 @@ terminal Integer NUMCONST;
 terminal SIZECONST;
 
 non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, blueparam, blueparams,
-             content, blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
+             blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
-             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration;
+             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
+             content;
 
 non terminal AbstractNode blueprint;
 
@@ -196,13 +197,16 @@ bluetype 			    ::= BLUEPRINT
                         {: RESULT = new SizeNode("NoIden"); :}
                         ;
 // CONTENT
-content			        ::= statement SEMICOLON content
+content			        ::= statement:st SEMICOLON content:ct
+                        {: // TODO: Fix this future me. (Expand to if else chain)
+                           RESULT = (st != null && ct != null) ? ct.makeSibling(st) : ((st != null) ? (st) : (ct)); :}
 					    |
                         ;
 statement			    ::= declaration declstoporstay
-					    | ID optidstatement
+					    | ID:id optidstatement
+					    {: RESULT = new TemporaryNode("ID optID " + id); :}
 					    | LPAR optlparstatement
-					    |	THIS DOT ID optthisstatement declstoporstay
+					    | THIS DOT ID optthisstatement
 					    | elementrest chain
 					    |
                         ;
@@ -220,6 +224,7 @@ optidstatement	        ::= dotid chain
 					    | ASSIGN elementpar declstoporstay
                         ;
 optthisstatement	    ::= procedurecall
+                        | declstoporstay
 					    |
                         ;
 // COLLECTIVE STATEMENTS
