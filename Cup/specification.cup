@@ -206,7 +206,8 @@ statement			    ::= declaration declstoporstay
 					    | ID:id optidstatement:st
 					    {: RESULT = st.adoptChildren(new SelectorNode(id, false)); :}
 					    | LPAR optlparstatement
-					    | THIS DOT ID optthisstatement
+					    | THIS DOT ID:id optthisstatement:st
+					    {: RESULT = st.adoptChildren(new SelectorNode(id, true)); :}
 					    | elementrest chain
 					    |
                         ;
