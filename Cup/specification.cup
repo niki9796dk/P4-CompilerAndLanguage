@@ -225,7 +225,6 @@ optidstatement	        ::= dotid chain
                         ;
 optthisstatement	    ::= procedurecall
                         | declstoporstay
-					    |
                         ;
 // COLLECTIVE STATEMENTS
 chain				    ::= CONNECTION elementpar chainext

@@ -67,7 +67,7 @@ Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 
 %%
 
-// TODO: Add dot and size[
+// TODO: Add size[
 
 <YYINITIAL>{
 
