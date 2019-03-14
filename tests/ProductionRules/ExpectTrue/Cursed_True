@@ -1,0 +1,67 @@
+// Test of legal but cursed sequences
+block cursed_01 {
+gate:in
+input;gate:out output;
+blueprint
+(
+)
+{
+block
+a
+=
+build
+test
+(
+)
+;
+this
+.
+input
+->
+a
+->
+this
+.
+output
+;}
+}
+
+block cursed_02{
+	gate:in in1																																						;
+	gate:in in2;
+	gate:in in3;
+	gate:in in4;
+	gate:in in5;
+	gate:in in6;
+	gate:out out;
+	
+	blueprint(){
+		(in1, build Source([13,4])) -> operation add1 = build Add()																									;
+		(in2, build Source([13,4])) -> operation add2 = build Add()																									;
+		(in3, build Source([13,4])) -> operation add3 = build Add()																									;
+		(in4, build Source([13,4])) -> operation add4 = build Add()																									;
+		(in5, build Source([13,4])) -> operation add5 = build Add()																									;
+		(in6, build Source([13,4])) -> operation add6 = build Add()																									;
+		
+		(add1, add2, add3, add4, add5, add6) -> build Add() -> this										.										output				;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -57,7 +57,7 @@ NumLiteral =    [0-9]+(\.[0-9]+)?
 
 SizeLiteral =   \[\s*{NumLiteral}\s*,\s*{NumLiteral}\s*\]
 
-New_line =      \r|\n|\r\n;
+New_line =      \r|\n|\r\n|\n\r;
 
 white_space =   {New_line} | [ \t\f]
 
