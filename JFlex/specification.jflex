@@ -55,9 +55,7 @@ Ident =         [a-zA-Z_][a-zA-Z0-9_]*
 
 NumLiteral =    [0-9]+(\.[0-9]+)?
 
-SizeLiteral =   \[\s*{NumLiteral}\s*,\s*{NumLiteral}\s*\]
-
-New_line =      \r|\n|\r\n;
+New_line =      \r | \n | \r\n | \n\r;
 
 white_space =   {New_line} | [ \t\f]
 
@@ -87,11 +85,8 @@ Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 /* Identifier names */
 {Ident}         { return symbol("Identifier", ID, yytext()); }
 
-/* Literal numbers {NumLiteral}    { return symbol("Number", NUMCONST, new Double(Double.parseDouble(yytext()))); }*/
-
-{SizeLiteral}   { return symbol("Size", SIZECONST); }
-
-/*  {SizeLiteral}  */
+/* Literal numbers*/
+ NumLiteral}    { return symbol("Number", NUMCONST, new Double(Double.parseDouble(yytext()))); }
 
 /* separators */
 ","             { return symbol("," , COMMA, ","); }
