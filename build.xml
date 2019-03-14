@@ -13,6 +13,12 @@
     </path>
 
     <target name="compile">
+        <!-- Clean all previous files -->
+        <delete file="src/AutoGen/Lexer.java" />
+        <delete file="src/AutoGen/Parser.java" />
+        <delete file="src/AutoGen/sym.java" />
+
+        <!-- Generate new lexer and parser -->
         <jflex file="${jflexLexerSpecificationPath}"
                destdir="src/"
                nobak="true" />
