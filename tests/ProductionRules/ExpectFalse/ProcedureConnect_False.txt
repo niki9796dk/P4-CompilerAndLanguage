@@ -1,0 +1,12 @@
+block cursed_03{
+	
+	gate:out out;
+	
+	blueprint(){
+		this.adsas() -> this.out;
+	}
+	
+	procedure adsas(){
+		build FixedSource(1) -> build ElementwiseMultiply();
+	}
+}
