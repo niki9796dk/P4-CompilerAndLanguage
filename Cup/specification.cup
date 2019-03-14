@@ -83,19 +83,18 @@ terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOU
 /* others */
 terminal String ID;
 terminal Integer NUMCONST;
-terminal SIZECONST;
 
 non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, blueparam, blueparams,
              blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
-             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
-             content;
+             buildelement, buildelementpar, sizepar, sizeconst, ingatedeclaration, outgatedeclaration, inoutgatedeclaration;
 
 non terminal AbstractNode blueprint;
 
 non terminal StorageNode definition, gatedeclarations, procedures;
 
+non terminal DoublePair sizeconst;
 // TODO: Add precedence and associativity
 
 /* The grammar rules */
@@ -256,7 +255,7 @@ element			        ::= elementrest
                         ;
 elementrest		        ::= builddeclaration
 					    | DRAW ID
-					    | SIZECONST
+					    | sizeconst
                         ;
 buildelement		    ::= builddeclaration
 					    | ID
@@ -274,8 +273,12 @@ elementpar		        ::= LPAR element:elem RPAR
 					    {: RESULT = elem; :}
                         ;
 
-sizepar                 ::= SIZECONST
-                        | LPAR SIZECONST RPAR
+sizepar                 ::= sizeconst
+                        | LPAR sizeconst RPAR
+                        ;
+
+sizeconst               ::= LSQR NUMCONST:n1 COMMA NUMCONST:n2 RSQR
+                        {: RESULT = new DoublePair(n1, n2); :}
                         ;
 // DECLARATION ELEMENT
 declaration		        ::= buildtype idassign buildelement
