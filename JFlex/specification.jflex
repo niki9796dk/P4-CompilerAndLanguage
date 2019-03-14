@@ -53,9 +53,11 @@ import java.util.*;
 
 Ident =         [a-zA-Z_][a-zA-Z0-9_]*
 
-NumLiteral =    [0-9]+(\.[0-9]+)?
+NumLiteral =    {IntLiteral}+(\.{IntLiteral}+)?
 
-New_line =      \r | \n | \r\n | \n\r;
+IntLiteral =    [0-9]
+
+New_line =      \r | \n | \r\n | \n\r
 
 white_space =   {New_line} | [ \t\f]
 
@@ -86,7 +88,8 @@ Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 {Ident}         { return symbol("Identifier", ID, yytext()); }
 
 /* Literal numbers*/
- NumLiteral}    { return symbol("Number", NUMCONST, new Double(Double.parseDouble(yytext()))); }
+ {NumLiteral}    { return symbol("Number", NUMCONST, new Double(Double.parseDouble(yytext()))); }
+  IntLiteral}    { return symbol("Number", INTCONST, new Integer(Integer.parseInt(yytext()))); }
 
 /* separators */
 ","             { return symbol("," , COMMA, ","); }

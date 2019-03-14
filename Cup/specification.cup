@@ -82,15 +82,16 @@ terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOU
 
 /* others */
 terminal String ID;
-terminal Integer NUMCONST;
+terminal Double NUMCONST;
+terminal Integer INTCONST;
 
 non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, blueparam, blueparams,
              blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
-             buildelement, buildelementpar, sizepar, sizeconst, ingatedeclaration, outgatedeclaration, inoutgatedeclaration;
+             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration;
 
-non terminal AbstractNode blueprint;
+non terminal AbstractNode blueprint, content;
 
 non terminal StorageNode definition, gatedeclarations, procedures;
 
@@ -203,7 +204,7 @@ content			        ::= statement:st SEMICOLON content:ct
                         ;
 statement			    ::= declaration declstoporstay
 					    | ID:id optidstatement:st
-					    {: RESULT = (((IdNode) st).setId(id)); :}
+					    {: RESULT = st.adoptChildren(new SelectorNode(id, false)); :}
 					    | LPAR optlparstatement
 					    | THIS DOT ID optthisstatement
 					    | elementrest chain
@@ -211,7 +212,7 @@ statement			    ::= declaration declstoporstay
                         ;
 procedurecall		    ::= LPAR elementliststart:paras RPAR
                         {:
-                            AbstractNode procedure = new ProcedureCallNode("NoIden");
+                            AbstractNode procedure = new ProcedureCallNode();
 
                             if (paras != null) {
                                 procedure.adoptChildren((new ParamsNode()).adoptChildren(paras));
@@ -234,7 +235,8 @@ optidstatement	        ::= dotid chain
 					    | ASSIGN elementpar declstoporstay
 					    {: :}
                         ;
-optthisstatement	    ::= procedurecall
+optthisstatement	    ::= procedurecall:pdc
+                        {: RESULT = pdc; :}
                         | declstoporstay
                         ;
 // COLLECTIVE STATEMENTS
@@ -277,7 +279,7 @@ sizepar                 ::= sizeconst
                         | LPAR sizeconst RPAR
                         ;
 
-sizeconst               ::= LSQR NUMCONST:n1 COMMA NUMCONST:n2 RSQR
+sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
                         {: RESULT = new DoublePair(n1, n2); :}
                         ;
 // DECLARATION ELEMENT

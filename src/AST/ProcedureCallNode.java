@@ -1,12 +1,11 @@
 package AST;
 
-public class ProcedureCallNode extends AbstractNode implements IdNode{
+public class ProcedureCallNode extends AbstractNode {
     private String name;
     private String id;
 
-    public ProcedureCallNode(String id) {
+    public ProcedureCallNode() {
         this.name = "ProcedureCall";
-        this.id = id;
     }
 
     public String getName() { return name; }
@@ -15,10 +14,4 @@ public class ProcedureCallNode extends AbstractNode implements IdNode{
         return(getName() + " " + id);
     }
 
-    @Override
-    public AbstractNode setId(String id) {
-        this.id = id;
-
-        return this;
-    }
 }

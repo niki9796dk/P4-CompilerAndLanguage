@@ -1,10 +1,12 @@
+package AST;
+
 import java.util.Objects;
 
 public class DoublePair {
-    public final Double first;
-    public final Double second;
+    public final Integer first;
+    public final Integer second;
 
-    public DoublePair(Double first, Double second) {
+    public DoublePair(Integer first, Integer second) {
         this.first = first;
         this.second = second;
     }
