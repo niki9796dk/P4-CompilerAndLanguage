@@ -1,23 +1,18 @@
 package AST;
 
-public class InGateNode extends AbstractNode implements IdNode{
+public class ProcedureCallNode extends AbstractNode implements IdNode{
     private String name;
     private String id;
 
-
-    public InGateNode(String id) {
+    public ProcedureCallNode(String id) {
+        this.name = "ProcedureCall";
         this.id = id;
-        this.name = "InGate";
     }
 
     public String getName() { return name; }
 
     public String toString() {
-        return(getName() + " " + this.id);
-    }
-
-    public String getId() {
-        return id;
+        return(getName() + " " + id);
     }
 
     @Override

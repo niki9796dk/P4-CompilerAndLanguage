@@ -1,6 +1,5 @@
 package AST;
 
-
-public interface TypeNode {
+public interface IdNode {
     AbstractNode setId(String id);
 }

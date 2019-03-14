@@ -6,10 +6,11 @@ block AnnLayer {
   gate:out out2;
 
   blueprint(size si, blueprint blue){
-    ;;in1 -> out1;
-    in1 -> out1;;;;
-    ;;;in1 -> out1;;;
-    in1 -> out1;;
+    abc();
+  }
+
+  procedure abc() {
+
   }
 }
 

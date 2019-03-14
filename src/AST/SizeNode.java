@@ -1,6 +1,6 @@
 package AST;
 
-public class SizeNode extends AbstractNode implements TypeNode {
+public class SizeNode extends AbstractNode implements IdNode {
     private String name;
     private String id;
     private String value; // TODO: Change this to two different ints
@@ -11,7 +11,10 @@ public class SizeNode extends AbstractNode implements TypeNode {
     }
 
     public String getName() { return name; }
-    public String getId() { return id; }
+
+    public String getId() {
+        return id;
+    }
 
     public String toString() {
         return(getName() + " " + this.id);

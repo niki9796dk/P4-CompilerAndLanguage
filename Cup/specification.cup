@@ -154,7 +154,7 @@ outgatedeclaration      ::= GATEOUT ID:id SEMICOLON
                         ;
 inoutgatedeclaration    ::= gate:g ID:id SEMICOLON inoutgatedeclaration:gd
                         {:
-                           AbstractNode gateNode = ((TypeNode) g).setId(id);
+                           AbstractNode gateNode = ((IdNode) g).setId(id);
                            RESULT = (gd != null) ? gd.makeSibling(gateNode) :  gateNode; :}
 					    |
 					    ;
@@ -182,7 +182,7 @@ blueparams		        ::= blueparam:bp
                         ;
 blueparam			    ::= bluetype:bt ID:id blueextparams:btx
                         {:
-                           AbstractNode typeNode = ((TypeNode) bt).setId(id);
+                           AbstractNode typeNode = ((IdNode) bt).setId(id);
                            RESULT = (btx != null) ? (btx.makeSibling(typeNode)) : (typeNode);
                         :}
                         ;
@@ -203,14 +203,23 @@ content			        ::= statement:st SEMICOLON content:ct
 					    |
                         ;
 statement			    ::= declaration declstoporstay
-					    | ID:id optidstatement
-					    {: RESULT = new TemporaryNode("ID optID " + id); :}
+					    | ID:id optidstatement:st
+					    {: RESULT = (((IdNode) st).setId(id)); :}
 					    | LPAR optlparstatement
 					    | THIS DOT ID optthisstatement
 					    | elementrest chain
 					    |
                         ;
-procedurecall		    ::= LPAR elementliststart RPAR
+procedurecall		    ::= LPAR elementliststart:paras RPAR
+                        {:
+                            AbstractNode procedure = new ProcedureCallNode("NoIden");
+
+                            if (paras != null) {
+                                procedure.adoptChildren((new ParamsNode()).adoptChildren(paras));
+                            }
+
+                            RESULT = procedure;
+                        :}
                         ;
 // OPTION SELECT FOR STATEMENTS
 optlparstatement	    ::= LPAR element RPAR groupcon
@@ -220,8 +229,11 @@ parclosestatement	    ::= parchain
 					    | groupcon
                         ;
 optidstatement	        ::= dotid chain
-					    | procedurecall
+                        {: :}
+					    | procedurecall:pdc
+					    {: RESULT = pdc; :}
 					    | ASSIGN elementpar declstoporstay
+					    {: :}
                         ;
 optthisstatement	    ::= procedurecall
                         | declstoporstay
@@ -256,8 +268,10 @@ buildelementpar		    ::= builddeclaration RPAR
 dotid				    ::= DOT ID
 					    |
                         ;
-elementpar		        ::= LPAR element RPAR
-					    | element
+elementpar		        ::= LPAR element:elem RPAR
+                        {: RESULT = elem; :}
+					    | element:elem
+					    {: RESULT = elem; :}
                         ;
 
 sizepar                 ::= SIZECONST
