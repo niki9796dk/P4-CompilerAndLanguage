@@ -7,9 +7,13 @@ block AnnLayer {
 
   blueprint(size si, blueprint blue){
     abc();
+
+    block a;
+
+    a = build diller() -> (b) -> c -> d;
   }
 
-  procedure abc() {
+  procedure abc(block abc, blueprint blue123) {
 
   }
 }

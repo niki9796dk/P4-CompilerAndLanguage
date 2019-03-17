@@ -1,5 +1,6 @@
 package AutoGen;
 
+import jflex.ScannerException;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -47,7 +48,7 @@ class MainParseTest {
 
         return trueFiles.stream()
                 .map(file -> DynamicTest.dynamicTest("Testing: '" + file.getName() + "'",
-                        () -> assertThrows(Exception.class, () -> assertTrue(MainParse.parseFile(file.getPath())))));
+                        () -> assertThrows(AutoGen.ScannerException.class, () -> assertTrue(MainParse.parseFile(file.getPath())))));
     }
 }
 

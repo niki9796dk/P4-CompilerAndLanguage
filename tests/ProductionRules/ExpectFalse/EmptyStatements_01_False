@@ -1,0 +1,9 @@
+block state {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		a;
+	}
+}
+

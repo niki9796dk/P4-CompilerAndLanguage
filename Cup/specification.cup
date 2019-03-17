@@ -19,15 +19,18 @@ parser code {:
                 super.syntax_error(cur_token);
             }
         }
-
-        public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
-            if (!MainParse.isTest) {
-                super.unrecovered_syntax_error(cur_token);
-            }
-
-            throw new Exception("Could not recover");
-        }
         */
+
+        // ##### IMPORTANT IMPLEMENTATION - THE "ScannerException" CLASS IS USED IN TESTING!!! #####
+        public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
+            try {
+                // Call original method implementation
+                super.unrecovered_syntax_error(cur_token);
+            } catch (Exception e) {
+                // Rethrow exception as a ScannerException instead of a generic "Exception", to identify in testing.
+                throw new AutoGen.ScannerException(e);
+            }
+        }
 
         public static void newScope(){
     	    typenames.push(new HashSet<String>());
@@ -89,11 +92,12 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, 
              blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
-             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration;
+             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
+             emptydeclaration, fulldeclaration;
 
-non terminal AbstractNode blueprint, content;
+non terminal AbstractNode blueprint, content, procedures;
 
-non terminal StorageNode definition, gatedeclarations, procedures;
+non terminal StorageNode definition, gatedeclarations;
 
 non terminal DoublePair sizeconst;
 // TODO: Add precedence and associativity
@@ -115,8 +119,8 @@ block 			        ::= BLOCK ID:ident LCURLY definition:d RCURLY
                         {:
                             RESULT = new BlockNode(ident)
                                             .adoptChildren(d.getNodes()[0].getNodes())  // GateDeclarations (Multiple)
-                                            .adoptChildren(d.getNodes()[1]);             // Blueprint        (Single)
-                                            //.adoptChildren(d.getNodes()[2].getNodes()); // Procedures       (Multiple)
+                                            .adoptChildren(d.getNodes()[1])             // Blueprint        (Single)
+                                            .adoptChildren(d.getNodes()[2]);            // Procedures       (Multiple singles)
                         :}
                         ;
 
@@ -133,13 +137,19 @@ definition 		        ::=  gatedeclarations:gds blueprint:bp procedures:pds
                         ;
 
 // GENERAL
-type				    ::= buildtype
-					    | bluetype
-					    | gate
+type				    ::= buildtype:type
+                        {: RESULT = type; :}
+					    | bluetype:type
+					    {: RESULT = type; :}
+					    | gate:gate
+					    {: RESULT = gate; :}
                         ;
 buildtype			    ::= BLOCK
+                        {: RESULT = new BlockTypeNode("NoIden"); :}
 					    | OPERATION
+					    {: RESULT = new OperationTypeNode("NoIden"); :}
 					    | SOURCE
+					    {: RESULT = new SourceTypeNode("NoIden"); :}
                         ;
 // GATES
 gatedeclarations        ::= ingatedeclaration:ind outgatedeclaration:outd inoutgatedeclaration:inoutd
@@ -202,9 +212,35 @@ content			        ::= statement:st SEMICOLON content:ct
                            RESULT = (st != null && ct != null) ? ct.makeSibling(st) : ((st != null) ? (st) : (ct)); :}
 					    |
                         ;
-statement			    ::= declaration declstoporstay
+statement			    ::= emptydeclaration
+                        | fulldeclaration declstoporstay
 					    | ID:id optidstatement:st
-					    {: RESULT = st.adoptChildren(new SelectorNode(id, false)); :}
+					    {:
+					        // Chain
+					        if (st instanceof StorageNode) {
+					            String storageName = st.getName();
+
+					            if ("Chain".equals(storageName)) {
+					                AbstractNode chainNode = st.getNodes()[1];
+                                    AbstractNode idSelector = new SelectorNode(id, false);
+
+                                    idSelector.adoptChildren(st.getNodes()[0]);
+
+                                    RESULT = chainNode.adoptChildren(idSelector);
+					            } else if ("Assign".equals(storageName)) {
+					                AbstractNode assignNode = st.getNodes()[0].adoptChildren(new SelectorNode(id, false));
+					                AbstractNode chainNode = st.getNodes()[1];
+
+					                RESULT = (chainNode != null) ? chainNode.adoptChildren(assignNode) : assignNode;
+
+					            } else {
+					                // Security check, should never happen - But helps with development.
+					                throw new RuntimeException("No such name case");
+					            }
+					        } else {
+					            RESULT = st.adoptChildren(new SelectorNode(id, false));
+					        }
+					    :}
 					    | LPAR optlparstatement
 					    | THIS DOT ID:id optthisstatement:st
 					    {: RESULT = st.adoptChildren(new SelectorNode(id, true)); :}
@@ -229,45 +265,64 @@ optlparstatement	    ::= LPAR element RPAR groupcon
 parclosestatement	    ::= parchain
 					    | groupcon
                         ;
-optidstatement	        ::= dotid chain
-                        {: :}
+optidstatement	        ::= dotid:did chain:c
+                        {: RESULT = new StorageNode("Chain", did, c); :}
 					    | procedurecall:pdc
 					    {: RESULT = pdc; :}
-					    | ASSIGN elementpar declstoporstay
-					    {: :}
+					    | ASSIGN elementpar:elem declstoporstay:chain
+					    {: RESULT = new StorageNode("Assign", new AssignNode().adoptChildren(elem), chain); :}
                         ;
 optthisstatement	    ::= procedurecall:pdc
                         {: RESULT = pdc; :}
-                        | declstoporstay
+                        | chain:chain
+                        {: RESULT = chain; :}
                         ;
 // COLLECTIVE STATEMENTS
-chain				    ::= CONNECTION elementpar chainext
+chain				    ::= CONNECTION elementpar:elem chainext:next
+                        {:
+                            RESULT = (next != null) ? next.adoptChildren(elem) : new ChainNode().adoptChildren(elem);
+                         :}
                         ;
-parchain			    ::= RPAR CONNECTION elementpar chainext
+parchain			    ::= RPAR chain:chain
+                        {: RESULT = chain; :}
                         ;
-chainext			    ::= CONNECTION elementpar chainext
+chainext			    ::= chain:chain
+                        {: RESULT = chain; :}
 					    |
                         ;
 groupcon			    ::= elementlist RPAR CONNECTION elementpar chainext
                         ;
 // ELEMENTS
-element			        ::= elementrest
-					    | declaration
-					    | ID dotid
-					    | THIS DOT ID
+element			        ::= elementrest:elem
+                        {: RESULT = elem; :}
+					    | fulldeclaration
+					    | ID:id dotid:did
+					    {: RESULT = (new SelectorNode(id, false)).adoptChildren(did); :}
+					    | THIS DOT ID:id
+					    {: RESULT = new SelectorNode(id, true); :}
                         ;
-elementrest		        ::= builddeclaration
-					    | DRAW ID
-					    | sizeconst
+
+elementrest		        ::= builddeclaration:build
+                        {: RESULT = build; :}
+					    | DRAW ID:id
+					    {: RESULT = new DrawNode(id); :}
+					    | sizeconst:sc
+					    {: RESULT = sc; :}
                         ;
-buildelement		    ::= builddeclaration
-					    | ID
-					    | LPAR buildelementpar
+buildelement		    ::= builddeclaration:build
+                        {: RESULT = build; :}
+					    | ID:id
+					    {: RESULT = new SelectorNode(id, false); :}
+					    | LPAR buildelementpar:belem
+					    {: RESULT = belem; :}
 					    ;
-buildelementpar		    ::= builddeclaration RPAR
-					    | ID RPAR
+buildelementpar		    ::= builddeclaration:build RPAR
+                        {: RESULT = build; :}
+					    | ID:id RPAR
+                        {: RESULT = new SelectorNode(id, false); :}
 					    ;
-dotid				    ::= DOT ID
+dotid				    ::= DOT ID:id
+                        {: RESULT = new SelectorNode(id, false); :}
 					    |
                         ;
 elementpar		        ::= LPAR element:elem RPAR
@@ -284,13 +339,22 @@ sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
                         {: RESULT = new DoublePair(n1, n2); :}
                         ;
 // DECLARATION ELEMENT
-declaration		        ::= buildtype idassign buildelement
-					    | buildtype ID SEMICOLON
+declaration             ::= fulldeclaration
+                        | emptydeclaration
+                        ;
+
+
+fulldeclaration		    ::= buildtype idassign buildelement
 					    | BLUEPRINT idassign DRAW elementpar
 					    | gate idassign elementpar
 					    | SIZE idassign sizepar
                         ;
-builddeclaration	    ::= BUILD ID LPAR elementliststart RPAR
+
+emptydeclaration        ::= buildtype ID SEMICOLON
+                        ;
+
+builddeclaration	    ::= BUILD ID:id LPAR elementliststart:elemlist RPAR
+                        {: RESULT = new BuildNode(id).adoptChildren((new ParamsNode()).adoptChildren(elemlist)); :}
                         ;
 idassign			    ::= ID ASSIGN
                         ;
@@ -298,23 +362,42 @@ declstoporstay		    ::= chain
 					    |
                         ;
 // ELEMENTLIST
-elementliststart	    ::= elementpar elementlistext
+elementliststart	    ::= elementpar:elem elementlistext:next
+                        {: RESULT = (next != null) ? next.makeSibling(elem) : elem; :}
 					    |
                         ;
-elementlist		        ::= elementext elementlistext
+elementlist		        ::= elementext:elem elementlistext:next
+                        {: RESULT = (next != null) ? next.makeSibling(elem) : elem; :}
                         ;
-elementlistext	        ::= elementlist
+elementlistext	        ::= elementlist:elemlist
+                        {: RESULT = elemlist; :}
 					    |
                         ;
-elementext		        ::= COMMA elementpar
+elementext		        ::= COMMA elementpar:elem
+                        {: RESULT = elem; :}
                         ;
 // PROCEDURES
-procedures		        ::= PROCEDURE ID LPAR pparams RPAR LCURLY content RCURLY procedures
+procedures		        ::= PROCEDURE ID:id LPAR pparams:params RPAR LCURLY content:ct RCURLY procedures:next
+                        {:
+                            AbstractNode procedure = new ProcedureNode(id);
+                            if (params != null) {
+                                procedure.adoptChildren(new ParamsNode().adoptChildren(params));
+                            }
+                            procedure.adoptChildren(ct);
+
+                            RESULT = (next != null) ? next.makeSibling(procedure) : procedure;
+                        :}
 					    |
                         ;
-pparams			        ::= type ID pextparams
+pparams			        ::= type:type ID:id pextparams:next
+                        {:
+                            AbstractNode param = ((IdNode) type).setId(id);
+
+                            RESULT = (next != null) ? next.makeSibling(param) : param;
+                         :}
 					    |
                         ;
-pextparams		        ::= COMMA pparams
+pextparams		        ::= COMMA pparams:par
+                        {: RESULT = par; :}
 					    |
                         ;

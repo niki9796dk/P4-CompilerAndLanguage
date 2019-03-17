@@ -1,14 +1,13 @@
 package AST;
 
-public class BlockNode extends AbstractNode {
-
+public class DrawNode extends AbstractNode {
     private String name;
     private String id;
 
 
-    public BlockNode(String id) {
+    public DrawNode(String id) {
         this.id = id;
-        this.name = "Block";
+        this.name = "Draw";
     }
 
     public String getName() { return name; }
@@ -16,6 +15,5 @@ public class BlockNode extends AbstractNode {
     public String toString() {
         return(getName() + " " + this.id);
     }
-
 
 }

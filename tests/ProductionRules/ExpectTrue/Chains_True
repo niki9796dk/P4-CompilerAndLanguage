@@ -202,3 +202,29 @@ block chain_02 {
 		(a) -> b -> this.output;
 	}
 }
+
+// Operations
+block chain_15 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+
+		(a) -> operation abc = build test() -> this.output;
+	}
+}
+
+// Blocks
+block chain_15 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+
+		(a) -> block abc = build test() -> this.output;
+	}
+}

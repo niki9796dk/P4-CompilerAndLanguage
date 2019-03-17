@@ -2,11 +2,13 @@ package AST;
 
 import java.util.Objects;
 
-public class DoublePair {
+public class DoublePair extends AbstractNode {
+    private String name;
     public final Integer first;
     public final Integer second;
 
     public DoublePair(Integer first, Integer second) {
+        this.name = "Size";
         this.first = first;
         this.second = second;
     }
@@ -27,9 +29,6 @@ public class DoublePair {
 
     @Override
     public String toString() {
-        return "DoublePair{" +
-                "first=" + first +
-                ", second=" + second +
-                '}';
+        return name + " [" + first + " " + second + "]";
     }
 }

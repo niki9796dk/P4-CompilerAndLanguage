@@ -1,14 +1,14 @@
 package AST;
 
-public class BlockNode extends AbstractNode {
+public class ProcedureNode extends AbstractNode {
 
     private String name;
     private String id;
 
 
-    public BlockNode(String id) {
+    public ProcedureNode(String id) {
         this.id = id;
-        this.name = "Block";
+        this.name = "Procedure";
     }
 
     public String getName() { return name; }
