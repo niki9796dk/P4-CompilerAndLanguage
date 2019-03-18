@@ -91,14 +91,12 @@ terminal Integer INTCONST;
 non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, blueparam, blueparams,
              blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
-             elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
+             elementlist, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
-             gateassign, buildassign, blueprintassignopt, sizeassignopt, gateassignopt, buildassignopt, builddecla;
+             gateassign, buildassign, blueprintassignopt, sizeassignopt, gateassignopt, builddecla;
 
-non terminal AbstractNode blueprint, content, procedures;
-
-non terminal StorageNode definition, gatedeclarations;
+non terminal AbstractNode blueprint, content, procedures, definition, gatedeclarations;
 
 non terminal DoublePair sizeconst;
 // TODO: Add precedence and associativity
@@ -108,20 +106,17 @@ start with prog;
 
 prog                    ::= blocks:bs
                         {:
-                         AbstractNode prog = makeNode("Program").adoptChildren(bs);
+                            AbstractNode prog = makeNode("Program").adoptChildren(bs);
 
-                         System.out.println("\nAST\n");
-                         prog.walkTree(new PrintTree(System.out));
+                            System.out.println("\nAST\n");
+                            prog.walkTree(new PrintTree(System.out));
                         :}
                         ;
 
 // BLOCK
-block 			        ::= BLOCK ID:ident LCURLY definition:d RCURLY
+block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
                         {:
-                            RESULT = new BlockNode(ident)
-                                            .adoptChildren(d.getNodes()[0].getNodes())  // GateDeclarations (Multiple)
-                                            .adoptChildren(d.getNodes()[1])             // Blueprint        (Single)
-                                            .adoptChildren(d.getNodes()[2]);            // Procedures       (Multiple singles)
+                            RESULT = new BlockNode(ident).adoptChildren(def);
                         :}
                         ;
 
@@ -133,7 +128,7 @@ blocks                  ::= block:b
 
 definition 		        ::= gatedeclarations:gds blueprint:bp procedures:pds
                         {:
-                            RESULT = new StorageNode(gds, bp, pds);
+                            RESULT = (pds != null) ? gds.makeSibling(bp).makeSibling(pds) : gds.makeSibling(bp);
                         :}
                         ;
 
@@ -154,7 +149,11 @@ buildtype			    ::= BLOCK
                         ;
 // GATES
 gatedeclarations        ::= ingatedeclaration:ind outgatedeclaration:outd inoutgatedeclaration:inoutd
-                        {: RESULT = new StorageNode(ind, outd, inoutd); :}
+                        {:
+                            if (ind != null) outd.makeSibling(ind);
+                            if (inoutd != null) outd.makeSibling(inoutd);
+                            RESULT = outd;
+                        :}
                         ;
 ingatedeclaration       ::= GATEIN ID:id SEMICOLON ingatedeclaration:ind
                         {: RESULT = (ind!=null) ? ind.makeSibling(new InGateNode(id)) : new InGateNode(id); :}
@@ -242,10 +241,12 @@ statement			    ::= declaration:decl
 					            RESULT = st.adoptChildren(new SelectorNode(id));
 					        }
 					    :}
-					    | LPAR optlparstatement
+					    | LPAR optlparstatement:statement
+					    {: RESULT = statement; :}
 					    | THIS DOT ID:id optthisstatement:st
 					    {: RESULT = st.adoptChildren(new SelectorNode("this").adoptChildren(new SelectorNode(id))); :}
-					    | builddeclaration chain
+					    | builddeclaration:bdecl chain:chain
+					    {: RESULT = chain.adoptChildren(bdecl); :}
 					    |
                         ;
 procedurecall		    ::= LPAR elementliststart:paras RPAR
@@ -260,11 +261,35 @@ procedurecall		    ::= LPAR elementliststart:paras RPAR
                         :}
                         ;
 // OPTION SELECT FOR STATEMENTS
-optlparstatement	    ::= LPAR element RPAR groupcon
-					    | element parclosestatement
+optlparstatement	    ::= LPAR element:elem RPAR groupcon:groupcon
+					    {:
+					        // Group connection
+                            AbstractNode group = groupcon.getNodes()[0];
+                            AbstractNode chain = groupcon.getNodes()[1];
+
+                            group.adoptChildren(elem);
+
+                            RESULT = chain;
+					     :}
+					    | element:elem parclosestatement:chainorgroup
+					    {:
+					        // Group connection
+    					    if (chainorgroup instanceof StorageNode) {
+    					        AbstractNode group = chainorgroup.getNodes()[0];
+                                AbstractNode chain = chainorgroup.getNodes()[1];
+
+    					        group.adoptChildren(elem);
+
+    					        RESULT = chain;
+    					    } else {
+    					        RESULT = chainorgroup.adoptChildren(elem);
+    					    }
+					     :}
                         ;
-parclosestatement	    ::= parchain
-					    | groupcon
+parclosestatement	    ::= parchain:chain
+                        {: RESULT = chain; :}
+					    | groupcon:group
+					    {: RESULT = group; :}
                         ;
 optidstatement	        ::= dotid:did chain:c
                         {: RESULT = new StorageNode("Chain", did, c); :}
@@ -291,7 +316,18 @@ chainext			    ::= chain:chain
                         {: RESULT = chain; :}
 					    |
                         ;
-groupcon			    ::= elementlist RPAR CONNECTION elementpar chainext
+groupcon			    ::= elementlist:elemlist RPAR CONNECTION elementpar:elem chainext:chain
+                        {:
+                            AbstractNode group = new GroupNode().adoptChildren(elemlist);
+
+                            if (chain != null) {
+                                chain.adoptChildren(elem, group);
+                                RESULT = new StorageNode(group, chain);
+                            } else {
+                                AbstractNode conn = new ChainNode().adoptChildren(elem, group);
+                                RESULT = new StorageNode(group, conn);
+                            }
+                         :}
                         ;
 // ELEMENTS
 element			        ::= elementrest:elem
@@ -358,22 +394,58 @@ sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
                         {: RESULT = new DoublePair(n1, n2); :}
                         ;
 // DECLARATION ELEMENT
-nodedeclaration         ::= buildtype ID buildassign
+nodedeclaration         ::= buildtype:type ID:id buildassign:assign
+                        {: RESULT = assign.adoptChildren(((IdNode) type).setId(id)); :}
                         ;
 
-nonnodedeclaration      ::= BLUEPRINT ID blueprintassign
-                        | SIZE ID sizeassign
-                        | gate ID gateassign
+nonnodedeclaration      ::= BLUEPRINT ID:id blueprintassign:assign
+                        {: RESULT = assign.adoptChildren(new BlueprintTypeNode(id)); :}
+                        | SIZE ID:id sizeassign:assign
+                        {: RESULT = assign.adoptChildren(new SizeNode(id)); :}
+                        | gate:type ID:id gateassign:assign
+                        {: RESULT = assign.adoptChildren(((IdNode) type).setId(id)); :}
                         ;
 
-declaration             ::= BLUEPRINT ID blueprintassignopt:assign
-                        {:  :}
-                        | SIZE ID sizeassignopt:assign
-                        | gate ID gateassignopt:assign
-                        | buildtype ID builddecla:assign
+declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
+                        {:
+                            AbstractNode typeNode = new BlueprintTypeNode(id);
+                            RESULT = (assign != null) ? assign.adoptChildren(typeNode) : typeNode;
+                        :}
+                        | SIZE ID:id sizeassignopt:assign
+                        {:
+                            AbstractNode typeNode = new SizeNode(id);
+                            RESULT = (assign != null) ? assign.adoptChildren(typeNode) : typeNode;
+                        :}
+                        | gate:gate ID:id gateassignopt:assign
+                        {:
+                            AbstractNode typeNode = (((IdNode) gate).setId(id));
+                            RESULT = (assign != null) ? assign.adoptChildren(typeNode) : typeNode;
+                        :}
+                        | buildtype:type ID:id builddecla:decla
+                        {:
+                            AbstractNode typeNode = (((IdNode) type).setId(id));
+
+                            if (decla != null) {
+                                AbstractNode assign = decla.getNodes()[0];
+                                AbstractNode chain = decla.getNodes()[1];
+
+                                assign.adoptChildren(typeNode);
+
+                                if (chain != null) {
+                                    chain.adoptChildren(assign);
+
+                                    RESULT = chain;
+                                } else {
+                                    RESULT = assign;
+                                }
+                            } else {
+                                RESULT = typeNode;
+                            }
+                        :}
                         ;
 
-builddecla              ::= buildassign declstoporstay
+builddecla              ::= buildassign:assign declstoporstay:chain
+                        {: RESULT = new StorageNode(assign, chain); :}
                         |
                         ;
 
@@ -403,9 +475,13 @@ gateassignopt           ::= gateassign:assign
                         ;
 
 builddeclaration	    ::= BUILD ID:id LPAR elementliststart:elemlist RPAR
-                        {: RESULT = new BuildNode(id).adoptChildren((new ParamsNode()).adoptChildren(elemlist)); :}
+                        {:
+                            AbstractNode buildNode = new BuildNode(id);
+                            RESULT = (elemlist != null) ? buildNode.adoptChildren((new ParamsNode()).adoptChildren(elemlist)) : buildNode;
+                        :}
                         ;
-declstoporstay		    ::= chain
+declstoporstay		    ::= chain:chain
+                        {: RESULT = chain; :}
 					    |
                         ;
 // ELEMENTLIST

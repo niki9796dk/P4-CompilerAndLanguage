@@ -50,7 +50,7 @@ public abstract class AbstractNode {
       return this;
    }
 
-   public AbstractNode adoptChildren(AbstractNode[] nodes) {
+   public AbstractNode adoptChildren(AbstractNode ... nodes) {
       for(AbstractNode n : nodes) {
          if (n != null) {
             if (this.child == null) this.child = n.firstSib;

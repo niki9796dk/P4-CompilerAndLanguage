@@ -167,3 +167,12 @@ block decla_17 {
 		source abc;
 	}
 }
+
+block decla_18 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		(source abc = build Source());
+	}
+}
