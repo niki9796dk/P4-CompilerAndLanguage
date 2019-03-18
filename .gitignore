@@ -55,3 +55,8 @@ fabric.properties
 
 .idea/
 !/libraries/
+
+# Custom
+src/AutoGen/Lexer.java
+src/AutoGen/Parser.java
+src/AutoGen/sym.java
