@@ -213,7 +213,8 @@ content			        ::= statement:st SEMICOLON content:ct
                            RESULT = (st != null && ct != null) ? ct.makeSibling(st) : ((st != null) ? (st) : (ct)); :}
 					    |
                         ;
-statement			    ::= declaration
+statement			    ::= declaration:decl
+                        {: RESULT = decl; :}
 					    | ID:id optidstatement:st
 					    {:
 					        // Chain
@@ -222,13 +223,13 @@ statement			    ::= declaration
 
 					            if ("Chain".equals(storageName)) {
 					                AbstractNode chainNode = st.getNodes()[1];
-                                    AbstractNode idSelector = new SelectorNode(id, false);
+                                    AbstractNode idSelector = new SelectorNode(id);
 
                                     idSelector.adoptChildren(st.getNodes()[0]);
 
                                     RESULT = chainNode.adoptChildren(idSelector);
 					            } else if ("Assign".equals(storageName)) {
-					                AbstractNode assignNode = st.getNodes()[0].adoptChildren(new SelectorNode(id, false));
+					                AbstractNode assignNode = st.getNodes()[0].adoptChildren(new SelectorNode(id));
 					                AbstractNode chainNode = st.getNodes()[1];
 
 					                RESULT = (chainNode != null) ? chainNode.adoptChildren(assignNode) : assignNode;
@@ -238,12 +239,12 @@ statement			    ::= declaration
 					                throw new RuntimeException("No such name case");
 					            }
 					        } else {
-					            RESULT = st.adoptChildren(new SelectorNode(id, false));
+					            RESULT = st.adoptChildren(new SelectorNode(id));
 					        }
 					    :}
 					    | LPAR optlparstatement
 					    | THIS DOT ID:id optthisstatement:st
-					    {: RESULT = st.adoptChildren(new SelectorNode(id, true)); :}
+					    {: RESULT = st.adoptChildren(new SelectorNode("this").adoptChildren(new SelectorNode(id))); :}
 					    | builddeclaration chain
 					    |
                         ;
@@ -306,9 +307,9 @@ element			        ::= elementrest:elem
 nodeelement             ::= nodedeclaration:elem
                         {: RESULT = elem; :}
                         | ID:id dotid:did
-                        {: RESULT = (new SelectorNode(id, false)).adoptChildren(did); :}
+                        {: RESULT = (new SelectorNode(id)).adoptChildren(did); :}
                         | THIS DOT ID:id
-                        {: RESULT = new SelectorNode(id, true); :}
+                        {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
                         | builddeclaration:build
                         {: RESULT = build; :}
                         ;
@@ -322,17 +323,17 @@ nonnodeelement          ::= DRAW ID:id
 buildelement		    ::= builddeclaration:build
                         {: RESULT = build; :}
 					    | ID:id
-					    {: RESULT = new SelectorNode(id, false); :}
+					    {: RESULT = new SelectorNode(id); :}
 					    | LPAR buildelementpar:belem
 					    {: RESULT = belem; :}
 					    ;
 buildelementpar		    ::= builddeclaration:build RPAR
                         {: RESULT = build; :}
 					    | ID:id RPAR
-                        {: RESULT = new SelectorNode(id, false); :}
+                        {: RESULT = new SelectorNode(id); :}
 					    ;
 dotid				    ::= DOT ID:id
-                        {: RESULT = new SelectorNode(id, false); :}
+                        {: RESULT = new SelectorNode(id); :}
 					    |
                         ;
 elementpar		        ::= LPAR element:elem RPAR
@@ -347,8 +348,10 @@ nodeelementpar          ::= LPAR nodeelement:elem RPAR
                         {: RESULT = elem; :}
                         ;
 
-sizepar                 ::= sizeconst
-                        | LPAR sizeconst RPAR
+sizepar                 ::= sizeconst:size
+                        {: RESULT = size; :}
+                        | LPAR sizeconst:size RPAR
+                        {: RESULT = size; :}
                         ;
 
 sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
@@ -363,31 +366,39 @@ nonnodedeclaration      ::= BLUEPRINT ID blueprintassign
                         | gate ID gateassign
                         ;
 
-declaration             ::= BLUEPRINT ID blueprintassignopt
-                        | SIZE ID sizeassignopt
-                        | gate ID gateassignopt
-                        | buildtype ID builddecla
+declaration             ::= BLUEPRINT ID blueprintassignopt:assign
+                        {:  :}
+                        | SIZE ID sizeassignopt:assign
+                        | gate ID gateassignopt:assign
+                        | buildtype ID builddecla:assign
                         ;
 
 builddecla              ::= buildassign declstoporstay
                         |
                         ;
 
-blueprintassign         ::= ASSIGN DRAW elementpar
+blueprintassign         ::= ASSIGN DRAW elementpar:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-sizeassign              ::= ASSIGN sizepar
+sizeassign              ::= ASSIGN sizepar:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-gateassign              ::= ASSIGN elementpar
+gateassign              ::= ASSIGN elementpar:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-buildassign             ::= ASSIGN buildelement
+buildassign             ::= ASSIGN buildelement:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-blueprintassignopt      ::= blueprintassign
+blueprintassignopt      ::= blueprintassign:assign
+                        {: RESULT = assign; :}
                         |
                         ;
-sizeassignopt           ::= sizeassign
+sizeassignopt           ::= sizeassign:assign
+                        {: RESULT = assign; :}
                         |
                         ;
-gateassignopt           ::= gateassign
+gateassignopt           ::= gateassign:assign
+                        {: RESULT = assign; :}
                         |
                         ;
 

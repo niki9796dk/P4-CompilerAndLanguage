@@ -3,8 +3,8 @@ package AST;
 public class SelectorNode extends IdentifierNode {
     private String name;
 
-    public SelectorNode(String id, boolean isThis) {
-        super(id, isThis);
+    public SelectorNode(String id) {
+        super(id);
         name = "Selector";
     }
 
