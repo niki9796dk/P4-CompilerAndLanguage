@@ -104,3 +104,66 @@ block decla_10 {
 		gate:in s = (this.input);
 	}
 }
+
+block decla_11 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		size abc;
+	}
+}
+
+block decla_12 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		blueprint abc;
+	}
+}
+
+block decla_13 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		gate:in abc;
+	}
+}
+
+block decla_14 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		gate:out abc;
+	}
+}
+
+block decla_15 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block abc;
+	}
+}
+
+block decla_16 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		operation abc;
+	}
+}
+
+block decla_17 {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		source abc;
+	}
+}

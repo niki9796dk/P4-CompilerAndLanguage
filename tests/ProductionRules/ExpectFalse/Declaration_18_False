@@ -1,0 +1,9 @@
+block decla {
+	gate:in input;
+	gate:out output;
+
+	blueprint() {
+		block abc -> this.input -> this.output;
+	}
+}
+

@@ -93,7 +93,7 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, 
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
-             emptydeclaration, fulldeclaration;
+             emptydeclaration, fulldeclaration, nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar;
 
 non terminal AbstractNode blueprint, content, procedures;
 
@@ -213,7 +213,8 @@ content			        ::= statement:st SEMICOLON content:ct
 					    |
                         ;
 statement			    ::= emptydeclaration
-                        | fulldeclaration declstoporstay
+                        | nonnodedeclaration
+                        | nodedeclaration declstoporstay
 					    | ID:id optidstatement:st
 					    {:
 					        // Chain
@@ -244,7 +245,7 @@ statement			    ::= emptydeclaration
 					    | LPAR optlparstatement
 					    | THIS DOT ID:id optthisstatement:st
 					    {: RESULT = st.adoptChildren(new SelectorNode(id, true)); :}
-					    | elementrest chain
+					    | builddeclaration chain
 					    |
                         ;
 procedurecall		    ::= LPAR elementliststart:paras RPAR
@@ -278,7 +279,7 @@ optthisstatement	    ::= procedurecall:pdc
                         {: RESULT = chain; :}
                         ;
 // COLLECTIVE STATEMENTS
-chain				    ::= CONNECTION elementpar:elem chainext:next
+chain				    ::= CONNECTION nodeelementpar:elem chainext:next
                         {:
                             RESULT = (next != null) ? next.adoptChildren(elem) : new ChainNode().adoptChildren(elem);
                          :}
@@ -295,20 +296,30 @@ groupcon			    ::= elementlist RPAR CONNECTION elementpar chainext
 // ELEMENTS
 element			        ::= elementrest:elem
                         {: RESULT = elem; :}
-					    | fulldeclaration
-					    | ID:id dotid:did
-					    {: RESULT = (new SelectorNode(id, false)).adoptChildren(did); :}
-					    | THIS DOT ID:id
-					    {: RESULT = new SelectorNode(id, true); :}
+					    | nodeelement:elem
+					    {: RESULT = elem; :}
+					    | nonnodeelement:elem
+					    {: RESULT = elem; :}
+					    | nonnodedeclaration:elem
+					    {: RESULT = elem; :}
                         ;
 
-elementrest		        ::= builddeclaration:build
+nodeelement             ::= nodedeclaration:elem
+                        {: RESULT = elem; :}
+                        | ID:id dotid:did
+                        {: RESULT = (new SelectorNode(id, false)).adoptChildren(did); :}
+                        | THIS DOT ID:id
+                        {: RESULT = new SelectorNode(id, true); :}
+                        | builddeclaration:build
                         {: RESULT = build; :}
-					    | DRAW ID:id
-					    {: RESULT = new DrawNode(id); :}
-					    | sizeconst:sc
-					    {: RESULT = sc; :}
                         ;
+
+nonnodeelement          ::= DRAW ID:id
+                        {: RESULT = new DrawNode(id); :}
+                        | sizeconst:sc
+                        {: RESULT = sc; :}
+                        ;
+
 buildelement		    ::= builddeclaration:build
                         {: RESULT = build; :}
 					    | ID:id
@@ -331,6 +342,12 @@ elementpar		        ::= LPAR element:elem RPAR
 					    {: RESULT = elem; :}
                         ;
 
+nodeelementpar          ::= LPAR nodeelement:elem RPAR
+                        {: RESULT = elem; :}
+                        | nodeelement:elem
+                        {: RESULT = elem; :}
+                        ;
+
 sizepar                 ::= sizeconst
                         | LPAR sizeconst RPAR
                         ;
@@ -339,18 +356,19 @@ sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
                         {: RESULT = new DoublePair(n1, n2); :}
                         ;
 // DECLARATION ELEMENT
-declaration             ::= fulldeclaration
-                        | emptydeclaration
+nodedeclaration         ::= buildtype idassign buildelement
                         ;
 
-
-fulldeclaration		    ::= buildtype idassign buildelement
-					    | BLUEPRINT idassign DRAW elementpar
-					    | gate idassign elementpar
-					    | SIZE idassign sizepar
+nonnodedeclaration      ::= gate idassign elementpar
+                        | SIZE idassign sizepar
+                        | BLUEPRINT idassign DRAW elementpar
                         ;
 
-emptydeclaration        ::= buildtype ID SEMICOLON
+blueprintassign         ::= ASSIGN DRAW elementpar
+                        |
+                        ;
+
+emptydeclaration        ::= type ID
                         ;
 
 builddeclaration	    ::= BUILD ID:id LPAR elementliststart:elemlist RPAR
