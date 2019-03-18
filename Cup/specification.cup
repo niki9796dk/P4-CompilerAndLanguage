@@ -93,8 +93,8 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, 
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, idassign, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
-             emptydeclaration, fulldeclaration, nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar,
-             blueprintassign, sizeassign, gateassign, buildassign, blueprintassignopt, sizeassignopt, gateassignopt, buildassignopt;
+             nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
+             gateassign, buildassign, blueprintassignopt, sizeassignopt, gateassignopt, buildassignopt, builddecla;
 
 non terminal AbstractNode blueprint, content, procedures;
 
@@ -214,7 +214,6 @@ content			        ::= statement:st SEMICOLON content:ct
 					    |
                         ;
 statement			    ::= declaration
-                        | nodedeclaration declstoporstay
 					    | ID:id optidstatement:st
 					    {:
 					        // Chain
@@ -367,7 +366,11 @@ nonnodedeclaration      ::= BLUEPRINT ID blueprintassign
 declaration             ::= BLUEPRINT ID blueprintassignopt
                         | SIZE ID sizeassignopt
                         | gate ID gateassignopt
-                        | buildtype ID buildassignopt
+                        | buildtype ID builddecla
+                        ;
+
+builddecla              ::= buildassign declstoporstay
+                        |
                         ;
 
 blueprintassign         ::= ASSIGN DRAW elementpar
@@ -387,14 +390,9 @@ sizeassignopt           ::= sizeassign
 gateassignopt           ::= gateassign
                         |
                         ;
-buildassignopt          ::= buildassign
-                        |
-                        ;
 
 builddeclaration	    ::= BUILD ID:id LPAR elementliststart:elemlist RPAR
                         {: RESULT = new BuildNode(id).adoptChildren((new ParamsNode()).adoptChildren(elemlist)); :}
-                        ;
-idassign			    ::= ID ASSIGN
                         ;
 declstoporstay		    ::= chain
 					    |
