@@ -364,10 +364,6 @@ nonnodedeclaration      ::= gate idassign elementpar
                         | BLUEPRINT idassign DRAW elementpar
                         ;
 
-blueprintassign         ::= ASSIGN DRAW elementpar
-                        |
-                        ;
-
 emptydeclaration        ::= type ID
                         ;
 
