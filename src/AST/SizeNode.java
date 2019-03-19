@@ -17,7 +17,7 @@ public class SizeNode extends AbstractNode implements IdNode {
     }
 
     public String toString() {
-        return(getName() + " " + this.id);
+        return(getName() + "," + this.id);
     }
 
     @Override

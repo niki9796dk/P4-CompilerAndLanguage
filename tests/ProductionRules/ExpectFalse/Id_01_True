@@ -1,0 +1,10 @@
+block id_01{
+	gate:out output;
+
+	blueprint() {
+		block a = build Test();
+		block b = build Test();
+
+		a = b;
+	}
+}

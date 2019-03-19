@@ -1,0 +1,7 @@
+block bad_pars_02{
+    gate:out output;
+
+    blueprint() {
+        block a = build Test;
+    }
+}
