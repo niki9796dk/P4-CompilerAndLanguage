@@ -1,0 +1,10 @@
+block cursed_05{
+    gate:out output;
+
+    blueprint() {
+        block abc = build Test();
+        gate:in a = abc.go;
+
+        gate:in schiphol1 = draw BobRoss;
+    }
+}
