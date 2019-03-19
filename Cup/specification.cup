@@ -94,7 +94,7 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, 
              elementlist, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
-             gateassign, buildassign, blueprintassignopt, sizeassignopt, gateassignopt, builddecla;
+             gateassign, buildassign, blueprintassignopt, sizeassignopt, gateassignopt, builddecla, gateelementspar, gateelement, idpar;
 
 non terminal AbstractNode blueprint, content, procedures, definition, gatedeclarations;
 
@@ -393,6 +393,25 @@ sizepar                 ::= sizeconst:size
 sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
                         {: RESULT = new DoublePair(n1, n2); :}
                         ;
+
+gateelementspar         ::= LPAR gateelement:elem RPAR
+                        {: RESULT = elem; :}
+                        | gateelement:elem
+                        {: RESULT = elem; :}
+                        ;
+
+gateelement             ::= THIS DOT ID:id
+                        {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
+                        | ID:id dotid:dotid
+                        {: RESULT = new SelectorNode(id).adoptChildren(dotid); :}
+                        ;
+
+idpar                   ::= LPAR ID:id RPAR
+                        {: RESULT = new SelectorNode(id); :}
+                        | ID:id
+                        {: RESULT = new SelectorNode(id); :}
+                        ;
+
 // DECLARATION ELEMENT
 nodedeclaration         ::= buildtype:type ID:id buildassign:assign
                         {: RESULT = assign.adoptChildren(((IdNode) type).setId(id)); :}
@@ -449,13 +468,13 @@ builddecla              ::= buildassign:assign declstoporstay:chain
                         |
                         ;
 
-blueprintassign         ::= ASSIGN DRAW elementpar:elem
+blueprintassign         ::= ASSIGN DRAW idpar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 sizeassign              ::= ASSIGN sizepar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-gateassign              ::= ASSIGN elementpar:elem
+gateassign              ::= ASSIGN gateelementspar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 buildassign             ::= ASSIGN buildelement:elem
@@ -499,6 +518,7 @@ elementlistext	        ::= elementlist:elemlist
 elementext		        ::= COMMA elementpar:elem
                         {: RESULT = elem; :}
                         ;
+
 // PROCEDURES
 procedures		        ::= PROCEDURE ID:id LPAR pparams:params RPAR LCURLY content:ct RCURLY procedures:next
                         {:
