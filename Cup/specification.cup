@@ -12,7 +12,7 @@ import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
 action code {:
-    HashMap root = new HashMap();
+
 :};
 
 parser code {:
@@ -121,7 +121,6 @@ prog                    ::= blocks:bs
 block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
                         {:
                             RESULT = new BlockNode(ident).adoptChildren(def);
-                            root.put(ident, RESULT);
                         :}
                         ;
 
