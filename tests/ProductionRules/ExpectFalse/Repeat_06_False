@@ -1,0 +1,9 @@
+// Repeated draw.
+block repeat_02 {
+	gate:in input;
+	gate:out output;
+
+	blueprint(blueprint test) {
+		blueprint a = draw draw test;
+	}
+}
