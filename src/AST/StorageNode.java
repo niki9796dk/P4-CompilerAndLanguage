@@ -4,7 +4,6 @@ public class StorageNode extends AbstractNode {
     private AbstractNode[] nodes;
     private String name;
 
-
     public StorageNode(AbstractNode ... nodes) {
         this("NoName", nodes);
     }

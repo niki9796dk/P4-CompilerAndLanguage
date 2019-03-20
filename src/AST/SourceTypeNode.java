@@ -4,7 +4,6 @@ public class SourceTypeNode extends AbstractNode implements IdNode{
     private String name;
     private String id;
 
-
     public SourceTypeNode(String id) {
         this.id = id;
         this.name = "Source";

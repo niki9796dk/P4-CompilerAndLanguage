@@ -4,7 +4,6 @@ public class InGateNode extends AbstractNode implements IdNode{
     private String name;
     private String id;
 
-
     public InGateNode(String id) {
         this.id = id;
         this.name = "InGate";
