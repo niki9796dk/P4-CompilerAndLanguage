@@ -473,6 +473,8 @@ blueprintassign         ::= ASSIGN DRAW idpar:elem
                         ;
 sizeassign              ::= ASSIGN sizepar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
+                        | ASSIGN idpar:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 channelassign              ::= ASSIGN channelelementspar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
