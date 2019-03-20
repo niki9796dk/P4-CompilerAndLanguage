@@ -1,9 +1,9 @@
 block AnnLayer {
 
-  gate:in in1;
-  gate:out out1;
-  gate:in in2;
-  gate:out out2;
+  channel:in in1;
+  channel:out out1;
+  channel:in in2;
+  channel:out out2;
 
   blueprint(size si, blueprint blue){
     abc();
@@ -19,8 +19,8 @@ block AnnLayer {
 }
 
 block Abs {
-  gate:in in;
-  gate:out out;
+  channel:in in;
+  channel:out out;
 
   blueprint(blueprint blue, size si){
     ;;;;;
