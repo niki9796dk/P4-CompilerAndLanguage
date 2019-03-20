@@ -1,13 +1,13 @@
 package AST;
 
-public class InGateNode extends AbstractNode implements IdNode{
+public class InChannelNode extends AbstractNode implements IdNode{
     private String name;
     private String id;
 
 
-    public InGateNode(String id) {
+    public InChannelNode(String id) {
         this.id = id;
-        this.name = "InGate";
+        this.name = "InChannel";
     }
 
     public String getName() { return name; }

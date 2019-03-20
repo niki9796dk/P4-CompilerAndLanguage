@@ -2,8 +2,8 @@
 
 // Repeated draw.
 block repeat_03 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint(blueprint test) {
 		blueprint a = draw build test();

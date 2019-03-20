@@ -81,22 +81,22 @@ parser code {:
 terminal Symbol COMMA, SEMICOLON, LPAR, RPAR, LCURLY, RCURLY, ASSIGN, CONNECTION, LSQR, RSQR, DOT;
 
 /* keywords */
-terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOUT, PROCEDURE, THIS, SIZE;
+terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, CHANNELIN, CHANNELOUT, PROCEDURE, THIS, SIZE;
 
 /* others */
 terminal String ID;
 terminal Double NUMCONST;
 terminal Integer INTCONST;
 
-non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, blueparam, blueparams,
+non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channel, blueparam, blueparams,
              blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
-             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
+             buildelement, buildelementpar, sizepar, inchanneldeclaration, outchanneldeclaration, inoutchanneldeclaration,
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
-             gateassign, buildassign, blueprintassignopt, sizeassignopt, gateassignopt, builddecla, gateelementspar, gateelement, idpar;
+             channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, builddecla, channelelementspar, channelelement, idpar;
 
-non terminal AbstractNode blueprint, content, procedures, definition, gatedeclarations;
+non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
 non terminal DoublePair sizeconst;
 // TODO: Add precedence and associativity
@@ -126,7 +126,7 @@ blocks                  ::= block:b
                         {: RESULT = bs.makeSibling(b); :}
                         ;
 
-definition 		        ::= gatedeclarations:gds blueprint:bp procedures:pds
+definition 		        ::= channeldeclarations:gds blueprint:bp procedures:pds
                         {:
                             RESULT = (pds != null) ? gds.makeSibling(bp).makeSibling(pds) : gds.makeSibling(bp);
                         :}
@@ -137,8 +137,8 @@ type				    ::= buildtype:type
                         {: RESULT = type; :}
 					    | bluetype:type
 					    {: RESULT = type; :}
-					    | gate:gate
-					    {: RESULT = gate; :}
+					    | channel:channel
+					    {: RESULT = channel; :}
                         ;
 buildtype			    ::= BLOCK
                         {: RESULT = new BlockTypeNode("NoIden"); :}
@@ -147,31 +147,31 @@ buildtype			    ::= BLOCK
 					    | SOURCE
 					    {: RESULT = new SourceTypeNode("NoIden"); :}
                         ;
-// GATES
-gatedeclarations        ::= ingatedeclaration:ind outgatedeclaration:outd inoutgatedeclaration:inoutd
+// CHANNELS
+channeldeclarations        ::= inchanneldeclaration:ind outchanneldeclaration:outd inoutchanneldeclaration:inoutd
                         {:
                             if (ind != null) outd.makeSibling(ind);
                             if (inoutd != null) outd.makeSibling(inoutd);
                             RESULT = outd;
                         :}
                         ;
-ingatedeclaration       ::= GATEIN ID:id SEMICOLON ingatedeclaration:ind
-                        {: RESULT = (ind!=null) ? ind.makeSibling(new InGateNode(id)) : new InGateNode(id); :}
+inchanneldeclaration       ::= CHANNELIN ID:id SEMICOLON inchanneldeclaration:ind
+                        {: RESULT = (ind!=null) ? ind.makeSibling(new InChannelNode(id)) : new InChannelNode(id); :}
                         |
                         ;
-outgatedeclaration      ::= GATEOUT ID:id SEMICOLON
-                        {: RESULT = new OutGateNode(id); :}
+outchanneldeclaration      ::= CHANNELOUT ID:id SEMICOLON
+                        {: RESULT = new OutChannelNode(id); :}
                         ;
-inoutgatedeclaration    ::= gate:g ID:id SEMICOLON inoutgatedeclaration:gd
+inoutchanneldeclaration    ::= channel:g ID:id SEMICOLON inoutchanneldeclaration:gd
                         {:
-                           AbstractNode gateNode = ((IdNode) g).setId(id);
-                           RESULT = (gd != null) ? gd.makeSibling(gateNode) :  gateNode; :}
+                           AbstractNode channelNode = ((IdNode) g).setId(id);
+                           RESULT = (gd != null) ? gd.makeSibling(channelNode) :  channelNode; :}
 					    |
 					    ;
-gate				    ::= GATEIN
-                        {: RESULT = new InGateNode("NoIden"); :}
-					    | GATEOUT
-					    {: RESULT = new OutGateNode("NoIden"); :}
+channel				    ::= CHANNELIN
+                        {: RESULT = new InChannelNode("NoIden"); :}
+					    | CHANNELOUT
+					    {: RESULT = new OutChannelNode("NoIden"); :}
                         ;
 // BLUEPRINT
 blueprint			    ::= BLUEPRINT LPAR blueparams:bps RPAR LCURLY content:cnt RCURLY
@@ -394,13 +394,13 @@ sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
                         {: RESULT = new DoublePair(n1, n2); :}
                         ;
 
-gateelementspar         ::= LPAR gateelement:elem RPAR
+channelelementspar         ::= LPAR channelelement:elem RPAR
                         {: RESULT = elem; :}
-                        | gateelement:elem
+                        | channelelement:elem
                         {: RESULT = elem; :}
                         ;
 
-gateelement             ::= THIS DOT ID:id
+channelelement             ::= THIS DOT ID:id
                         {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
                         | ID:id dotid:dotid
                         {: RESULT = new SelectorNode(id).adoptChildren(dotid); :}
@@ -421,7 +421,7 @@ nonnodedeclaration      ::= BLUEPRINT ID:id blueprintassign:assign
                         {: RESULT = assign.adoptChildren(new BlueprintTypeNode(id)); :}
                         | SIZE ID:id sizeassign:assign
                         {: RESULT = assign.adoptChildren(new SizeNode(id)); :}
-                        | gate:type ID:id gateassign:assign
+                        | channel:type ID:id channelassign:assign
                         {: RESULT = assign.adoptChildren(((IdNode) type).setId(id)); :}
                         ;
 
@@ -435,9 +435,9 @@ declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
                             AbstractNode typeNode = new SizeNode(id);
                             RESULT = (assign != null) ? assign.adoptChildren(typeNode) : typeNode;
                         :}
-                        | gate:gate ID:id gateassignopt:assign
+                        | channel:channel ID:id channelassignopt:assign
                         {:
-                            AbstractNode typeNode = (((IdNode) gate).setId(id));
+                            AbstractNode typeNode = (((IdNode) channel).setId(id));
                             RESULT = (assign != null) ? assign.adoptChildren(typeNode) : typeNode;
                         :}
                         | buildtype:type ID:id builddecla:decla
@@ -474,7 +474,7 @@ blueprintassign         ::= ASSIGN DRAW idpar:elem
 sizeassign              ::= ASSIGN sizepar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-gateassign              ::= ASSIGN gateelementspar:elem
+channelassign              ::= ASSIGN channelelementspar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 buildassign             ::= ASSIGN buildelement:elem
@@ -488,7 +488,7 @@ sizeassignopt           ::= sizeassign:assign
                         {: RESULT = assign; :}
                         |
                         ;
-gateassignopt           ::= gateassign:assign
+channelassignopt           ::= channelassign:assign
                         {: RESULT = assign; :}
                         |
                         ;

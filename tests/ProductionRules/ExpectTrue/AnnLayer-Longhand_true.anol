@@ -1,7 +1,7 @@
 block AnnLayer{
 	// Gates
-	gate:in in;
-	gate:out out;
+	channel:in in;
+	channel:out out;
 
 	// Blueprint
 	blueprint(){

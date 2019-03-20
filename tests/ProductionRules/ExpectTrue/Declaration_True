@@ -1,7 +1,7 @@
 // Simpel declaration
 block decla_01 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		block a = build Test();
@@ -10,8 +10,8 @@ block decla_01 {
 
 // Para
 block decla_02 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		block a = (build Test());
@@ -20,8 +20,8 @@ block decla_02 {
 
 // Reference
 block decla_03 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		block a = build Test();
@@ -31,8 +31,8 @@ block decla_03 {
 
 // Reference
 block decla_04 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		block a = build Test();
@@ -42,18 +42,18 @@ block decla_04 {
 
 // Gate reference
 block decla_05 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
-		gate:in in = this.input;
+		channel:in in = this.input;
 	}
 }
 
 // Blueprint
 block decla_06 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		blueprint blockBlueprint = draw Test;
@@ -62,8 +62,8 @@ block decla_06 {
 
 // size
 block decla_07 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
         size s = [2 , 5];
@@ -72,42 +72,42 @@ block decla_07 {
 
 // size
 block decla_08 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		size s = ([ 2 ,5]);
 	}
 }
 
-// dot gate
+// dot channel
 block decla_09 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		block b = build Test();
 	
-		gate:in s = (b.input);
+		channel:in s = (b.input);
 	}
 }
 
-// dot gate
+// dot channel
 block decla_10 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		block b = build Test();
 		b = build Abc();
 	
-		gate:in s = (this.input);
+		channel:in s = (this.input);
 	}
 }
 
 block decla_11 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
 		size abc;
@@ -115,8 +115,8 @@ block decla_11 {
 }
 
 block decla_12 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
 		blueprint abc;
@@ -124,26 +124,26 @@ block decla_12 {
 }
 
 block decla_13 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
-		gate:in abc;
+		channel:in abc;
 	}
 }
 
 block decla_14 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
-		gate:out abc;
+		channel:out abc;
 	}
 }
 
 block decla_15 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
 		block abc;
@@ -151,8 +151,8 @@ block decla_15 {
 }
 
 block decla_16 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
 		operation abc;
@@ -160,8 +160,8 @@ block decla_16 {
 }
 
 block decla_17 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
 		source abc;
