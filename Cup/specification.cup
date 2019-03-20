@@ -200,7 +200,6 @@ blueextparams		    ::= COMMA blueparam:bp
                         {: RESULT = bp;:}
                         |
                         ;
-// TODO: Add when ready:
 bluetype 			    ::= BLUEPRINT
                         {: RESULT = new BlueprintTypeNode("NoIden"); :}
                         | SIZE
@@ -394,13 +393,13 @@ sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
                         {: RESULT = new DoublePair(n1, n2); :}
                         ;
 
-channelelementspar         ::= LPAR channelelement:elem RPAR
+channelelementspar      ::= LPAR channelelement:elem RPAR
                         {: RESULT = elem; :}
                         | channelelement:elem
                         {: RESULT = elem; :}
                         ;
 
-channelelement             ::= THIS DOT ID:id
+channelelement          ::= THIS DOT ID:id
                         {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
                         | ID:id dotid:dotid
                         {: RESULT = new SelectorNode(id).adoptChildren(dotid); :}
