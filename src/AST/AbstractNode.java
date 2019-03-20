@@ -2,7 +2,6 @@ package AST;
 
 import java_cup.runtime.*;
 
-
 /** All AST nodes are subclasses of this node.  This node knows how to
   * link itself with other siblings and adopt children.
   * Each node gets a node number to help identify it distinctly in an AST.

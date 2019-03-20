@@ -5,7 +5,6 @@ public class BuildNode extends AbstractNode {
     private String name;
     private String id;
 
-
     public BuildNode(String id) {
         this.id = id;
         this.name = "Block";

@@ -4,7 +4,6 @@ public class OperationTypeNode extends AbstractNode implements IdNode{
     private String name;
     private String id;
 
-
     public OperationTypeNode(String id) {
         this.id = id;
         this.name = "Operation";

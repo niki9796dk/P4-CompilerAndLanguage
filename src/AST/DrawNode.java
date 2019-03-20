@@ -4,7 +4,6 @@ public class DrawNode extends AbstractNode {
     private String name;
     private String id;
 
-
     public DrawNode(String id) {
         this.id = id;
         this.name = "Draw";

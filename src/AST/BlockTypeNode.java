@@ -4,7 +4,6 @@ public class BlockTypeNode extends AbstractNode implements IdNode{
     private String name;
     private String id;
 
-
     public BlockTypeNode(String id) {
         this.id = id;
         this.name = "BlockType";

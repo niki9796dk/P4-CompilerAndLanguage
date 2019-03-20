@@ -4,7 +4,6 @@ public class InChannelNode extends AbstractNode implements IdNode{
     private String name;
     private String id;
 
-
     public InChannelNode(String id) {
         this.id = id;
         this.name = "InChannel";

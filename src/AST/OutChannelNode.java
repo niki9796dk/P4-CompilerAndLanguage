@@ -4,7 +4,6 @@ public class OutChannelNode extends AbstractNode implements IdNode {
     private String name;
     private String id;
 
-
     public OutChannelNode(String id) {
         this.id = id;
         this.name = "OutChannel";

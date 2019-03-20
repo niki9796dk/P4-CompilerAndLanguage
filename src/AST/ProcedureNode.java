@@ -5,7 +5,6 @@ public class ProcedureNode extends AbstractNode {
     private String name;
     private String id;
 
-
     public ProcedureNode(String id) {
         this.id = id;
         this.name = "Procedure";
