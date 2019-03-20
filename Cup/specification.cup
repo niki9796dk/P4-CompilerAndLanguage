@@ -13,7 +13,6 @@ import java_cup.runtime.ScannerBuffer;
 
 action code {:
     HashMap root = new HashMap();
-    HashMap root = new HashMap();
 :};
 
 parser code {:
@@ -46,9 +45,9 @@ parser code {:
         }
 
         public static boolean lookupType(String name){
-    	for (HashSet<String> scope: typenames)
-    	    if (scope.contains(name)) return true;
-    	return false;
+            for (HashSet<String> scope: typenames)
+                if (scope.contains(name)) return true;
+            return false;
         }
 
         public static void addType(String name){
@@ -135,9 +134,6 @@ blocks                  ::= block:b
 definition 		        ::= channeldeclarations:gds blueprint:bp procedures:pds
                         {:
                             RESULT = (pds != null) ? gds.makeSibling(bp).makeSibling(pds) : gds.makeSibling(bp);
-                            for (String block : root.keys()) {
-
-                            }
                         :}
                         ;
 
