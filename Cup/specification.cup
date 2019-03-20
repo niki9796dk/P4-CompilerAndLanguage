@@ -11,6 +11,10 @@ import javax.xml.stream.XMLStreamWriter;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
+action code {:
+    Hashtable root = new Hashtable();
+:};
+
 parser code {:
 
         /*
@@ -117,6 +121,7 @@ prog                    ::= blocks:bs
 block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
                         {:
                             RESULT = new BlockNode(ident).adoptChildren(def);
+                            root.put(ident, RESULT);
                         :}
                         ;
 
