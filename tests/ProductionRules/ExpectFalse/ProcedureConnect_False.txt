@@ -1,6 +1,6 @@
 block cursed_03{
 	
-	gate:out out;
+	channel:out out;
 	
 	blueprint(){
 		this.adsas() -> this.out;

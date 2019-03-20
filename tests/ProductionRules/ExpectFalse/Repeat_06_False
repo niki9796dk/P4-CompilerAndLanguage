@@ -1,10 +1,9 @@
 // Repeated draw.
-block repeat_05 {
+block repeat_02 {
 	channel:in input;
 	channel:out output;
 
 	blueprint(blueprint test) {
-		block a = build (draw test)();
+		blueprint a = draw draw test;
 	}
 }
-

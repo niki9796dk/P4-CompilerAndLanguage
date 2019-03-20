@@ -1,7 +1,7 @@
 // Uneven parentases
 block chain_07 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
 		block a = build test();

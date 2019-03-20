@@ -1,6 +1,6 @@
 block decla {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
 		operation abc -> this.input -> this.output;

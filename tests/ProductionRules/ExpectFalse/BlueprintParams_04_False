@@ -1,8 +1,8 @@
 block b1 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
-	blueprint(gate:in abc) {
+	blueprint(channel:in abc) {
 
 	}
 }

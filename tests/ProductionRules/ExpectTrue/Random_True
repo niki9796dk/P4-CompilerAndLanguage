@@ -1,7 +1,7 @@
 // Test of legal char sequences
 block random_01 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		block a = build test();;;;;;;;;
@@ -15,8 +15,8 @@ block random_01 {
 
 // Test of legal char sequences
 block random_02 {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 	
 	blueprint() {
 		abcde();
@@ -36,8 +36,8 @@ block random_02 {
 
 // Test of legal but ugly syntax.
 block chain_01 {
-    gate:in input;
-    gate:out output;
+    channel:in input;
+    channel:out output;
     
     blueprint() {
         block a = build test();
@@ -58,9 +58,9 @@ block chain_01 {
 
 // Test of legal but ugly syntax.
 block chain_02 {
-    gate:in input
+    channel:in input
 	;
-    gate:out output
+    channel:out output
 	;
     
     blueprint() {
@@ -90,9 +90,9 @@ block chain_02 {
     }
 }
 
-// Single out gate
+// Single out channel
 block random {
-    gate:out output;
+    channel:out output;
 
     blueprint() {
 

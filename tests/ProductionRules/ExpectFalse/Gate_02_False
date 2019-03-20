@@ -1,7 +1,7 @@
-block gates_06 {
-	gate:in input1;
-    gate:in input2;
-	gate:in input3;
+block channels_06 {
+	channel:in input1;
+    channel:in input2;
+	channel:in input3;
 
 	blueprint() {
 

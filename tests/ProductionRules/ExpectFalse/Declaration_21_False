@@ -1,10 +1,10 @@
 block cursed_05{
-    gate:out output;
+    channel:out output;
 
     blueprint() {
         block abc = build Test();
-        gate:in a = abc.go;
+        channel:in a = abc.go;
 
-        gate:in heathrow2 = [2,1];
+        channel:in heathrow2 = [2,1];
     }
 }

@@ -1,8 +1,8 @@
 block cursed_05{
-    gate:out output;
+    channel:out output;
 
     blueprint() {
         block abc = build Test();
-        gate:in a = abc.size;    // Note, size here is a gate's name!
+        channel:in a = abc.size;    // Note, size here is a channel's name!
     }
 }

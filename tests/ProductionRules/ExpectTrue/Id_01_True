@@ -1,5 +1,5 @@
 block id_01{
-	gate:out output;
+	channel:out output;
 
 	blueprint() {
 		block a = build Test();

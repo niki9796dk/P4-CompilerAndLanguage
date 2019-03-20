@@ -1,4 +1,4 @@
-// Procedure before gates
+// Procedure before channels
 block random_03 {
 	blueprint() {
 
@@ -8,6 +8,6 @@ block random_03 {
 
     }
 
-    gate:in input;
-    gate:out output;
+    channel:in input;
+    channel:out output;
 }
