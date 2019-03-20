@@ -11,6 +11,11 @@ import javax.xml.stream.XMLStreamWriter;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
+action code {:
+    HashMap root = new HashMap();
+    HashMap root = new HashMap();
+:};
+
 parser code {:
 
         /*
@@ -117,6 +122,7 @@ prog                    ::= blocks:bs
 block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
                         {:
                             RESULT = new BlockNode(ident).adoptChildren(def);
+                            root.put(ident, RESULT);
                         :}
                         ;
 
@@ -129,6 +135,9 @@ blocks                  ::= block:b
 definition 		        ::= gatedeclarations:gds blueprint:bp procedures:pds
                         {:
                             RESULT = (pds != null) ? gds.makeSibling(bp).makeSibling(pds) : gds.makeSibling(bp);
+                            for (String block : root.keys()) {
+
+                            }
                         :}
                         ;
 
