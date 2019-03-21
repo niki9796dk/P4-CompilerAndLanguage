@@ -1,7 +1,7 @@
 package SymbolTable.Entries;
 
+import SymbolTable.Entries.EntryContents.SymbolType;
 import SymbolTable.Exceptions.InvalidEntryCastingException;
-import SymbolTable.SymbolType;
 
 public class VariableEntry implements TableEntry {
 

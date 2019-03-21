@@ -1,4 +1,4 @@
-package SymbolTable;
+package SymbolTable.Entries.EntryContents;
 
 import SymbolTable.Exceptions.NoSymbolParentException;
 
