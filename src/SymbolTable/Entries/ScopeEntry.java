@@ -1,8 +1,9 @@
-package SymbolTable;
+package SymbolTable.Entries;
 
 import AST.AbstractNode;
+import SymbolTable.Tables.Table;
 
-public class ScopeEntry {
+public class ScopeEntry implements TableEntry{
 
     private String id;
     private Table scope;
