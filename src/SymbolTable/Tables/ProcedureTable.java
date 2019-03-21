@@ -1,7 +1,7 @@
 package SymbolTable.Tables;
 
 import SymbolTable.Entries.VariableEntry;
-import SymbolTable.SymbolType;
+import SymbolTable.Entries.EntryContents.SymbolType;
 
 import java.util.HashMap;
 

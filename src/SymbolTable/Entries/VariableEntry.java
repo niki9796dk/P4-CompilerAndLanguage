@@ -1,8 +1,8 @@
 package SymbolTable.Entries;
 
 import AST.AbstractNode;
-import SymbolTable.SymbolType;
-import SymbolTable.Tables.Table;
+import SymbolTable.Entries.EntryContents.SymbolType;
+import SymbolTable.Exceptions.InvalidEntryCastingException;
 
 public class VariableEntry implements TableEntry {
 
@@ -26,5 +26,15 @@ public class VariableEntry implements TableEntry {
 
     public AbstractNode getNode() {
         return node;
+    }
+
+    @Override
+    public ScopeEntry specifyAsScopeEntry() throws InvalidEntryCastingException {
+        throw new InvalidEntryCastingException("Can not specify a VariableEntry as a ScopeEntry");
+    }
+
+    @Override
+    public VariableEntry specifyAsVariableEntry() {
+        return this;
     }
 }
