@@ -14,18 +14,18 @@ public class BlockTable implements Table {
         this.table = new HashMap<>();
     }
 
-    public void setChannelScope(String id, AbstractNode node) {
-        ScopeEntry entry = new ScopeEntry(id, new ChannelTable(), node);
+    public void setChannelScope(String id) {
+        ScopeEntry entry = new ScopeEntry(id, new ChannelTable());
         this.table.put(id, entry);
     }
 
-    public void setBlueprintscope(String id, AbstractNode node) {
-        ScopeEntry entry = new ScopeEntry(id, new ChannelTable(), node);
+    public void setBlueprintscope(String id) {
+        ScopeEntry entry = new ScopeEntry(id, new ChannelTable());
         this.table.put(id, entry);
     }
 
-    public void setNewProcedureScope(String id, AbstractNode node) {
-        ScopeEntry entry = new ScopeEntry(id, new ProcedureTable(), node);
+    public void setNewProcedureScope(String id) {
+        ScopeEntry entry = new ScopeEntry(id, new ProcedureTable());
         this.table.put(id, entry);
         this.newEntry = entry;
     }

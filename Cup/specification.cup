@@ -12,7 +12,7 @@ import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
 action code {:
-
+    RootTable root = new RootTable();
 :};
 
 parser code {:
@@ -121,6 +121,8 @@ prog                    ::= blocks:bs
 block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
                         {:
                             RESULT = new BlockNode(ident).adoptChildren(def);
+                            root.setNewEntry(ident, RESULT);
+                            root.getNewEntry().getScope().setChannelScope();
                         :}
                         ;
 
@@ -160,7 +162,11 @@ channeldeclarations        ::= inchanneldeclaration:ind outchanneldeclaration:ou
                         :}
                         ;
 inchanneldeclaration       ::= CHANNELIN ID:id SEMICOLON inchanneldeclaration:ind
-                        {: RESULT = (ind!=null) ? ind.makeSibling(new InChannelNode(id)) : new InChannelNode(id); :}
+                        {:
+                        AbstractNode channelNode = new InChannelNode(id);
+                        RESULT = (ind!=null) ? ind.makeSibling(channelNode) : channelNode;
+                        root.getChannelScope().setNewEntry(id, new SymbolType(SymbolType.CHANNELIN), channelNode);
+                        :}
                         |
                         ;
 outchanneldeclaration      ::= CHANNELOUT ID:id SEMICOLON
