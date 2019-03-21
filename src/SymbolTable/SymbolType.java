@@ -14,6 +14,7 @@ public class SymbolType {
     public static final SymbolType OPERATION = new SymbolType("operation", NODE);
 
     public static final SymbolType SIZE = new SymbolType("size", NONNODE);
+    public static final SymbolType BLUEPRINT = new SymbolType("blueprint", NONNODE);
 
     //Make it a class hierachy so we can know both the specific type as well as the downcast?
     private String key;
