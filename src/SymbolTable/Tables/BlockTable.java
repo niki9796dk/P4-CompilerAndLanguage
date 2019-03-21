@@ -1,6 +1,7 @@
-package SymbolTable;
+package SymbolTable.Tables;
 
 import AST.AbstractNode;
+import SymbolTable.Entries.ScopeEntry;
 
 import java.util.HashMap;
 
