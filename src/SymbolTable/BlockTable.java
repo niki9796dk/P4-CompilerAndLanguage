@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class BlockTable implements Table {
 
     private HashMap<String, ScopeEntry> table;
-    private ScopeEntry newProcedure;
+    private ScopeEntry newEntry;
 
     public BlockTable() {
         this.table = new HashMap<>();
@@ -26,11 +26,11 @@ public class BlockTable implements Table {
     public void setNewProcedureScope(String id, AbstractNode node) {
         ScopeEntry entry = new ScopeEntry(id, new ProcedureTable(), node);
         this.table.put(id, entry);
-        this.newProcedure = entry;
+        this.newEntry = entry;
     }
 
-    public ScopeEntry getNewProcedure() {
-        return this.newProcedure;
+    public ScopeEntry getNewEntry() {
+        return this.newEntry;
     }
 
 }
