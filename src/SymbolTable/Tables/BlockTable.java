@@ -1,6 +1,5 @@
 package SymbolTable.Tables;
 
-import AST.AbstractNode;
 import SymbolTable.Entries.ScopeEntry;
 
 import java.util.HashMap;
@@ -24,10 +23,18 @@ public class BlockTable implements Table {
         this.table.put(id, entry);
     }
 
-    public void setNewProcedureScope(String id) {
+    public void setProcedureScope(String id) {
         ScopeEntry entry = new ScopeEntry(id, new ProcedureTable());
         this.table.put(id, entry);
         this.newEntry = entry;
+    }
+
+    public ChannelTable getChannelScope() {
+        return this.table.get("Channels").getChannelScope();
+    }
+
+    public BlueprintTable getBlueprintScope() {
+        return this.table.get("Blueprint").getBlueprintScope();
     }
 
     public ScopeEntry getNewEntry() {

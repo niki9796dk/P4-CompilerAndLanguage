@@ -2,6 +2,9 @@ package SymbolTable.Entries;
 
 import AST.AbstractNode;
 import SymbolTable.Exceptions.InvalidEntryCastingException;
+import SymbolTable.Tables.BlueprintTable;
+import SymbolTable.Tables.ChannelTable;
+import SymbolTable.Tables.ProcedureTable;
 import SymbolTable.Tables.Table;
 
 public class ScopeEntry implements TableEntry{
@@ -18,12 +21,16 @@ public class ScopeEntry implements TableEntry{
         return id;
     }
 
-    public Table getScope() {
-        return scope;
+    public ChannelTable getChannelScope() {
+        return (ChannelTable) scope;
     }
 
-    public AbstractNode getNode() {
-        return node;
+    public BlueprintTable getBlueprintScope() {
+        return (BlueprintTable) scope;
+    }
+
+    public ProcedureTable getProcedureScope() {
+        return (ProcedureTable) scope;
     }
 
     @Override

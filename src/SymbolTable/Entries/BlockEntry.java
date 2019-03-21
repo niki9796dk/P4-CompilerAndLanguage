@@ -1,7 +1,8 @@
 package SymbolTable.Entries;
 
 import AST.AbstractNode;
-import SymbolTable.Tables.Table;
+import SymbolTable.Exceptions.InvalidEntryCastingException;
+import SymbolTable.Tables.*;
 
 public class BlockEntry implements TableEntry {
     private String id;
@@ -18,11 +19,21 @@ public class BlockEntry implements TableEntry {
         return id;
     }
 
-    public Table getScope() {
-        return scope;
+    public BlockTable getScope() {
+        return (BlockTable) scope;
     }
 
     public AbstractNode getNode() {
         return node;
+    }
+
+    @Override
+    public ScopeEntry specifyAsScopeEntry() throws InvalidEntryCastingException {
+        return null;
+    }
+
+    @Override
+    public VariableEntry specifyAsVariableEntry() throws InvalidEntryCastingException {
+        return null;
     }
 }

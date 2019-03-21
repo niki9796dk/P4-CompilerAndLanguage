@@ -1,5 +1,6 @@
 package SymbolTable.Tables;
 
+import AST.AbstractNode;
 import SymbolTable.Entries.VariableEntry;
 import SymbolTable.Entries.EntryContents.SymbolType;
 

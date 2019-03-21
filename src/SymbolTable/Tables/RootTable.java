@@ -19,13 +19,16 @@ public class RootTable implements Table{
         BlockEntry entry = new BlockEntry(id, new BlockTable(), node);
         this.table.put(id, entry);
         this.newEntry = entry;
+        entry.getScope().setChannelScope("Channels");
+        entry.getScope().setBlueprintscope("Blueprint");
     }
 
     public BlockEntry getNewEntry() {
+        System.out.println("New entry: ");
         return this.newEntry;
     }
 
-    public Table getChannelScope() {
-        return this.getNewEntry().getScope();
+    public ChannelTable getChannelScope() {
+        return this.getNewEntry().getScope().getChannelScope();
     }
 }
