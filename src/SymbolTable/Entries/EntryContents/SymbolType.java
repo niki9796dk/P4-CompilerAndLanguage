@@ -19,7 +19,7 @@ public class SymbolType {
     //Make it a class hierachy so we can know both the specific type as well as the downcast?
     private SymbolType parent;
 
-    SymbolType() {
+    private SymbolType() {
         parent = null;
     }
 
