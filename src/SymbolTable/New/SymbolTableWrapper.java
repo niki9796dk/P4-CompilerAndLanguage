@@ -2,6 +2,7 @@ package SymbolTable.New;
 
 import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
+import Enums.AnsiColor;
 
 public class SymbolTableWrapper implements SymbolTableInterface {
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
@@ -51,6 +52,9 @@ public class SymbolTableWrapper implements SymbolTableInterface {
 
     @Override
     public String toString() {
-        return "SymbolTable: \n\n" + this.blockTable.toString();
+        return AnsiColor.CYAN.toString()
+                + AnsiColor.FONT_UNDERLINE.toString()
+                + AnsiColor.FONT_BOLD
+                + "SymbolTable:" + AnsiColor.RESET + "\n\n" + this.blockTable.toString();
     }
 }

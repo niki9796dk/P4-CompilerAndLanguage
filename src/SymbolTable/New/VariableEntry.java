@@ -3,6 +3,7 @@ package SymbolTable.New;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
+import Enums.AnsiColor;
 
 public class VariableEntry {
     private String subType;
@@ -35,6 +36,9 @@ public class VariableEntry {
 
     @Override
     public String toString() {
-        return "\t\t\tEntry: " + this.getId() + " -> " + this.getSuperType() + "_" + this.getSubType() + " #" + this.getNode();
+        return "\t\t\tEntry: "      + AnsiColor.YELLOW  +   this.getId()         +  AnsiColor.RESET
+                + " | SuperType: "  + AnsiColor.PURPLE  +   this.getSuperType()  +  AnsiColor.RESET
+                + " | SubType: "    + AnsiColor.PURPLE  +   this.getSubType()    +  AnsiColor.RESET
+                + " | Node: "       + AnsiColor.PURPLE  +   this.getNode()       +  AnsiColor.RESET;
     }
 }

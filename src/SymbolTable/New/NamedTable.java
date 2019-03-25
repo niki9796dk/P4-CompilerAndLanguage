@@ -1,5 +1,7 @@
 package SymbolTable.New;
 
+import Enums.AnsiColor;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,15 +24,19 @@ public class NamedTable<T> {
 
     @Override
     public String toString() {
+        if (this.table.size() == 0) {
+            return AnsiColor.RED + "\t\t\tEmpty" + AnsiColor.RESET;
+        }
+
         StringBuilder builder = new StringBuilder();
 
         for (Map.Entry<String, T> mapEntry : this.table.entrySet()) {
             String key = mapEntry.getKey();
             T value = mapEntry.getValue();
 
-            builder.append(key)
-                    .append(": ")
-                    .append(value.toString());
+            builder
+                    .append(value.toString())
+                    .append("\n");
         }
 
         return builder.toString();

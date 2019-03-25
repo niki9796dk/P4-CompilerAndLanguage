@@ -3,17 +3,19 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.AbstractNode;
 import AST.Nodes.AbstractNodes.NamedNode;
 import AST.Visitor;
+import Enums.AnsiColor;
 import SymbolTable.New.SymbolTableInterface;
+import SymbolTable.New.SymbolTableWrapper;
 import SymbolTable.Tables.RootTable;
 
 public class SymbolTableVisitor implements Visitor {
 
     private RootTable rootTable;
-    private SymbolTableInterface symbolTableInterface;
+    public SymbolTableInterface symbolTableInterface = new SymbolTableWrapper();
 
     @Override
     public void pre(int i, AbstractNode abstractNode) {
-       NamedNode node = (NamedNode) abstractNode;
+        NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {
             // No action enums

@@ -7,6 +7,7 @@ import AST.Nodes.SpecialNodes.TemporaryNode;
 import AST.TreeWalks.NumberTree;
 import AST.TreeWalks.PrintTree;
 import AST.TreeWalks.SymbolTableVisitor;
+import SymbolTable.New.SymbolTableInterface;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
@@ -44,7 +45,13 @@ public class MainParse {
         AbstractNode prog = p.getRootNode();
         prog.walkTree(new NumberTree());
 
-        prog.walkTree(new SymbolTableVisitor());
+        SymbolTableVisitor visitor = new SymbolTableVisitor();
+
+        prog.walkTree(visitor);
+
+        SymbolTableInterface symbolTableInterface = visitor.symbolTableInterface;
+
+        System.out.println(symbolTableInterface.toString());
 
         //prog.walkTree(new PrintTree(System.out));
 

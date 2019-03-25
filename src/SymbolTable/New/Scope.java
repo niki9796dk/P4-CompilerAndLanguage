@@ -3,6 +3,7 @@ package SymbolTable.New;
 import AST.Nodes.AbstractNodes.AbstractNode;
 import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
+import Enums.AnsiColor;
 import SymbolTable.Entries.ScopeEntry;
 import SymbolTable.Entries.TableEntry;
 import SymbolTable.Entries.VariableEntry;
@@ -38,6 +39,6 @@ public class Scope {
 
     @Override
     public String toString() {
-        return "\t\tScope " + id + ": \n\t\t\t" + this.scope.toString();
+        return AnsiColor.BLUE + "Scope " + id + AnsiColor.RESET + ": \n" + this.scope.toString();
     }
 }

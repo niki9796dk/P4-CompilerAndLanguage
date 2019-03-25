@@ -3,11 +3,12 @@ package SymbolTable.New;
 import AST.Nodes.AbstractNodes.AbstractNode;
 import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
+import Enums.AnsiColor;
 
 public class BlockScope {
-    public static final String PROCEDURE_PREFIX        = "PROC_";
-    public static final String CHANNELS = "ChannelDeclaration";
-    public static final String BLUEPRINT               = "Blueprint";
+    public static final String PROCEDURE_PREFIX = "PROC_";
+    public static final String CHANNELS         = "ChannelDeclaration";
+    public static final String BLUEPRINT        = "Blueprint";
 
     private String id;
     private NamedTable<Scope> scope;
@@ -53,6 +54,6 @@ public class BlockScope {
 
     @Override
     public String toString() {
-        return "\t" + this.id + "\n\t\t" + this.getScope().toString();
+        return AnsiColor.GREEN + "BlockScope " + this.id + AnsiColor.RESET + ":\n" + this.getScope().toString();
     }
 }
