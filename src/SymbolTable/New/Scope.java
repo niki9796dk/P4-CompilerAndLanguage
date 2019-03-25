@@ -39,6 +39,6 @@ public class Scope {
 
     @Override
     public String toString() {
-        return AnsiColor.BLUE + "Scope " + id + AnsiColor.RESET + ": \n" + this.scope.toString();
+        return AnsiColor.BLUE + "SubScope " + id + AnsiColor.RESET + ": \n" + this.scope.toString();
     }
 }
