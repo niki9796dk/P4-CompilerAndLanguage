@@ -1,8 +1,7 @@
 package SymbolTable.Tables;
 
-import AST.AbstractNode;
+import AST.Nodes.AbstractNodes.AbstractNode;
 import SymbolTable.Entries.BlockEntry;
-import SymbolTable.Entries.ScopeEntry;
 
 import java.util.HashMap;
 
@@ -19,12 +18,10 @@ public class RootTable implements Table{
         BlockEntry entry = new BlockEntry(id, new BlockTable(), node);
         this.table.put(id, entry);
         this.newEntry = entry;
-        entry.getScope().setChannelScope("Channels");
-        entry.getScope().setBlueprintscope("Blueprint");
     }
 
     public BlockEntry getNewEntry() {
-        System.out.println("New entry: ");
+        System.out.println("New entry: " + this.newEntry.toString());
         return this.newEntry;
     }
 

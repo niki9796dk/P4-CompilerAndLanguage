@@ -27,7 +27,7 @@ block AnnLayer{
 		add -> sigmoid;
 
 		// Connect the final operation to the output of the block
-		sigmiod -> this.out;
+		sigmoid -> this.out;
 	}
 }
 

@@ -1,6 +1,5 @@
 package SymbolTable.Entries;
 
-import AST.AbstractNode;
 import SymbolTable.Exceptions.InvalidEntryCastingException;
 import SymbolTable.Tables.BlueprintTable;
 import SymbolTable.Tables.ChannelTable;

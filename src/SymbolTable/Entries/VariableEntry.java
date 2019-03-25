@@ -1,6 +1,6 @@
 package SymbolTable.Entries;
 
-import AST.AbstractNode;
+import AST.Nodes.AbstractNodes.AbstractNode;
 import SymbolTable.Entries.EntryContents.SymbolType;
 import SymbolTable.Exceptions.InvalidEntryCastingException;
 

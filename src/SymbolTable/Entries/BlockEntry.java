@@ -1,18 +1,20 @@
 package SymbolTable.Entries;
 
-import AST.AbstractNode;
+import AST.Nodes.AbstractNodes.AbstractNode;
 import SymbolTable.Exceptions.InvalidEntryCastingException;
 import SymbolTable.Tables.*;
 
 public class BlockEntry implements TableEntry {
     private String id;
-    private Table scope;
+    private BlockTable scope;
     private AbstractNode node;
 
-    public BlockEntry(String id, Table scope, AbstractNode node) {
+    public BlockEntry(String id, BlockTable scope, AbstractNode node) {
         this.id = id;
         this.scope = scope;
         this.node = node;
+        this.getScope().setChannelScope();
+        this.getScope().setBlueprintscope();
     }
 
     public String getId() {
@@ -20,7 +22,7 @@ public class BlockEntry implements TableEntry {
     }
 
     public BlockTable getScope() {
-        return (BlockTable) scope;
+        return scope;
     }
 
     public AbstractNode getNode() {

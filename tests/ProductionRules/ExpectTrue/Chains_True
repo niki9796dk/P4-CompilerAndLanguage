@@ -191,7 +191,7 @@ block chain_13 {
 }
 
 // Small groups
-block chain_02 {
+block chain_14 {
 	channel:in input;
 	channel:out output;
 
@@ -217,7 +217,7 @@ block chain_15 {
 }
 
 // Blocks
-block chain_15 {
+block chain_16 {
 	channel:in input;
 	channel:out output;
 
