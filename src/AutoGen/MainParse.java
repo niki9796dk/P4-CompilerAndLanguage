@@ -1,20 +1,16 @@
 package AutoGen;
 
-import AST.*;
 import java.io.*;
+
+import AST.Nodes.AbstractNodes.AbstractNode;
+import AST.Nodes.SpecialNodes.TemporaryNode;
+import AST.TreeWalks.NumberTree;
+import AST.TreeWalks.PrintTree;
+import AST.TreeWalks.SymbolTableVisitor;
+import SymbolTable.New.SymbolTableInterface;
 import java_cup.runtime.*;
-import java.util.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import java_cup.runtime.XMLElement;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
-import java_cup.runtime.ComplexSymbolFactory.Location;
-import java_cup.runtime.XMLElement;
-
-
 
 
 public class MainParse {
@@ -23,7 +19,8 @@ public class MainParse {
     public static void main(String args[]) throws Exception {
 
         if (args.length != 1) {
-            parseFile("data/input");
+            //parseFile("data/input");
+            parseFile("tests/ProductionRules/ExpectTrue/Random_True");
         } else {
 
             parseFile(args[0]);
@@ -42,7 +39,21 @@ public class MainParse {
         AutoGen.Parser p = new AutoGen.Parser(lexer,csf);
         //System.out.println("Parser runs: ");
         AutoGen.Parser.newScope();
-        p.parse();
+        Symbol symbol = p.parse();
+
+        System.out.println("##################################");
+        AbstractNode prog = p.getRootNode();
+        prog.walkTree(new NumberTree());
+
+        SymbolTableVisitor visitor = new SymbolTableVisitor();
+
+        prog.walkTree(visitor);
+
+        SymbolTableInterface symbolTableInterface = visitor.symbolTableInterface;
+
+        System.out.println(symbolTableInterface.toString());
+
+        //prog.walkTree(new PrintTree(System.out));
 
         return true;
     }
@@ -52,7 +63,9 @@ public class MainParse {
         AbstractNode bs = new TemporaryNode("block2");
         AbstractNode prog = new TemporaryNode("Program").adoptChildren(bs);
         prog.makeSibling(bs);
+
         System.out.println("\nAST\n");
+        prog.walkTree(new NumberTree());
         prog.walkTree(new PrintTree(System.out));
     }
 }
