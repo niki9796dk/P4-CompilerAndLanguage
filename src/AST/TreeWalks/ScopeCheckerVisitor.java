@@ -74,6 +74,8 @@ public class ScopeCheckerVisitor implements Visitor {
                 break;
 
             case SELECTOR:
+                boolean ignoreSelector = node.getParent() instanceof ProcedureCallNode;
+
                 if ("this".equals(id)) {
                     try {
                         this.verifyChannelVariable(childId);
@@ -81,7 +83,7 @@ public class ScopeCheckerVisitor implements Visitor {
                         this.verifyCurrentScopeVariable(childId);
                     }
                     
-                } else if (node.getParent() instanceof ProcedureCallNode || node.getParent() instanceof DrawNode) {
+                } else if (ignoreSelector) {
                     // Do nothing.
 
                 } else if (!(node.getParent() instanceof SelectorNode)) {
@@ -124,6 +126,7 @@ public class ScopeCheckerVisitor implements Visitor {
             case CHANNEL_DECLARATIONS:
             case ASSIGN:
                 break;
+
             default:
                 throw new RuntimeException("Unexpected Node");
         }
