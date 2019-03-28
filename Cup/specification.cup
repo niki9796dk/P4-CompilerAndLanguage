@@ -1,18 +1,19 @@
 import AST.*;
-import AST.Nodes.*;
 import AST.Nodes.AbstractNodes.*;
+import AST.Nodes.AbstractNodes.Nodes.*;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.*;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.*;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.*;
+import AST.Nodes.NodeClasses.NamedNodes.*;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.SpecialNodes.*;
 import AST.Enums.*;
 import AST.TreeWalks.*;
+import AST.TreeWalks.Exceptions.*;
 import java.io.*;
 import java_cup.runtime.*;
 import java.util.*;
 
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import java_cup.runtime.XMLElement;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
