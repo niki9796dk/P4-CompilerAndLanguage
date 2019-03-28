@@ -1,5 +1,5 @@
 package AST.TreeWalks;
-import AST.Nodes.AbstractNodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Visitor;
 
 import java.io.PrintStream;

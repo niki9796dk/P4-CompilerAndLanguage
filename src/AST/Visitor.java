@@ -1,6 +1,6 @@
 package AST;
 
-import AST.Nodes.AbstractNodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 
 public interface Visitor {
     public void pre(int i, AbstractNode a);

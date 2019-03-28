@@ -1,7 +1,7 @@
-package AST.Nodes;
+package AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes;
 
 import AST.Enums.NodeEnum;
-import AST.Nodes.AbstractNodes.NamedIdNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 
 public class BuildNode extends NamedIdNode {
     public BuildNode(String id) {

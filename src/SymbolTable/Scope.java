@@ -1,8 +1,8 @@
 package SymbolTable;
 
-import AST.Nodes.AbstractNodes.AbstractNode;
-import AST.Nodes.AbstractNodes.NamedIdNode;
-import AST.Nodes.AbstractNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import Enums.AnsiColor;
 
 public class Scope {

@@ -2,7 +2,7 @@ package AutoGen;
 
 import java.io.*;
 
-import AST.Nodes.AbstractNodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.SpecialNodes.TemporaryNode;
 import AST.TreeWalks.NumberTree;
 import AST.TreeWalks.PrintTree;

@@ -1,6 +1,7 @@
-package AST.Nodes.AbstractNodes;
+package AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes;
 
 import AST.Enums.NodeEnum;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 
 public abstract class NamedNode extends NumberedNode {
     private String name;

@@ -1,7 +1,7 @@
-package AST.Nodes.AbstractNodes;
+package AST.Nodes.AbstractNodes.Nodes.AbstractNodes;
 
 import AST.Enums.NodeEnum;
-import AST.Nodes.AbstractNodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 
 public abstract class NumberedNode extends AbstractNode {
     private int number = -1;
@@ -31,6 +31,6 @@ public abstract class NumberedNode extends AbstractNode {
 
     @Override
     public String toString() {
-        return "[" + Integer.toString(this.number) + "]";
+        return "[" + this.number + "]";
     }
 }
