@@ -10,6 +10,8 @@ block AnnLayer {
 
     block a = build Abs();
     block b = build Abs();
+    block a = build Hmmm();
+
     a = build Abs();
     b = a;
     a = build Abs();
@@ -21,6 +23,16 @@ block AnnLayer {
 }
 
 block Abs {
+  channel:in in;
+  channel:out out;
+
+  blueprint(blueprint blue, size si){
+    ;;;;;
+  }
+}
+
+
+block Hmmm {
   channel:in in;
   channel:out out;
 

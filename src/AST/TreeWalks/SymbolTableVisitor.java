@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.Visitor;
+import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.VariableEntry;
@@ -105,9 +106,10 @@ public class SymbolTableVisitor implements Visitor {
     }
 
     private void checkIfVariableIsDefined(String id) {
-        VariableEntry variable = this.symbolTableInterface.getLatestBlockScope().getLatestSubScope().getVariable(id);
+        Scope latestSubScope = this.symbolTableInterface.getLatestBlockScope().getLatestSubScope();
+        VariableEntry variable = latestSubScope.getVariable(id);
         if (variable != null) {
-            throw new ScopeBoundsViolationException("Variable already declared in scope: " + id);
+            throw new ScopeBoundsViolationException("Variable \"" + id + "\" already declared in scope: " + latestSubScope.getId());
         }
     }
 }
