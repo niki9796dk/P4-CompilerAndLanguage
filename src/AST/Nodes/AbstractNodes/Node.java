@@ -23,7 +23,7 @@ public interface Node {
 
     AbstractNode getChild();
 
-    //AbstractNode getFirst();
+    AbstractNode getFirstSib();
 
     String getName();
 
