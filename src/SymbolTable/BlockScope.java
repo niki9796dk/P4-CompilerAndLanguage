@@ -1,7 +1,6 @@
-package SymbolTable.New;
+package SymbolTable;
 
 import AST.Nodes.AbstractNodes.AbstractNode;
-import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
 import Enums.AnsiColor;
 

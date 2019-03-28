@@ -1,4 +1,4 @@
-package SymbolTable.New;
+package SymbolTable;
 
 import Enums.AnsiColor;
 

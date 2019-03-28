@@ -3,15 +3,16 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.AbstractNode;
 import AST.Nodes.AbstractNodes.NamedNode;
 import AST.Visitor;
-import Enums.AnsiColor;
-import SymbolTable.New.SymbolTableInterface;
-import SymbolTable.New.SymbolTableWrapper;
-import SymbolTable.Tables.RootTable;
+import SymbolTable.SymbolTableInterface;
+import SymbolTable.SymbolTableWrapper;
 
 public class SymbolTableVisitor implements Visitor {
 
-    private RootTable rootTable;
-    public SymbolTableInterface symbolTableInterface = new SymbolTableWrapper();
+    private SymbolTableInterface symbolTableInterface = new SymbolTableWrapper();
+
+    public SymbolTableInterface getSymbolTableInterface() {
+        return symbolTableInterface;
+    }
 
     @Override
     public void pre(int i, AbstractNode abstractNode) {

@@ -1,4 +1,4 @@
-package SymbolTable.New;
+package SymbolTable;
 
 import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
@@ -47,7 +47,29 @@ public class SymbolTableWrapper implements SymbolTableInterface {
 
     @Override
     public void reassignVariable(NamedNode assignNode) {
+        NamedIdNode leftSide = (NamedIdNode) assignNode.getChild();
+        NamedNode rightSide = (NamedNode) leftSide.getSib();
 
+        String leftSideId = leftSide.getId();
+
+        VariableEntry variableEntry =
+                this.blockTable.getLatest().getScope()       // Get latest block scope
+                    .getLatest().getVariable(leftSideId);    // Get latest subscope and the specific variable
+
+        switch (rightSide.getNodeEnum()) {
+            case DRAW:
+            case BUILD:
+            case SELECTOR:
+                variableEntry.setSubType(((NamedIdNode) rightSide));    // Set the subtype of that variable.
+                break;
+
+            case SIZE:
+                // Do nothing.
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unexpected node.");
+        }
     }
 
     @Override
