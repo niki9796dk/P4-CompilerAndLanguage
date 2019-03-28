@@ -132,10 +132,12 @@ public abstract class AbstractNode implements Node {
 
    private void internWalk(int level, Visitor v) {
       v.pre(level, this);
+
       for (AbstractNode c = child; c != null; c=c.mysib)
          c.internWalk(level+1, v);
       v.post(level, this);
    }
+
    public void walkTree(Visitor v) {
       internWalk(0, v);
    }

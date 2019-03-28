@@ -1,4 +1,4 @@
-package SymbolTable;
+package SymbolTableImplementation;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;

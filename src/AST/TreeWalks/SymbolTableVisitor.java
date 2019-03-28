@@ -5,13 +5,13 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.Visitor;
-import SymbolTable.SymbolTableInterface;
-import SymbolTable.SymbolTableWrapper;
-import SymbolTable.VariableEntry;
+import SymbolTableImplementation.SymbolTableInterface;
+import SymbolTableImplementation.SymbolTable;
+import SymbolTableImplementation.VariableEntry;
 
 public class SymbolTableVisitor implements Visitor {
 
-    private SymbolTableInterface symbolTableInterface = new SymbolTableWrapper();
+    private SymbolTableInterface symbolTableInterface = new SymbolTable();
 
     public SymbolTableInterface getSymbolTableInterface() {
         return symbolTableInterface;

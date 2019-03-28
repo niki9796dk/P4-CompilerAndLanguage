@@ -3,12 +3,11 @@ package AutoGen;
 import java.io.*;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.Nodes.SpecialNodes.TemporaryNode;
 import AST.TreeWalks.NumberTree;
 import AST.TreeWalks.PrintTree;
 import AST.TreeWalks.ScopeCheckerVisitor;
 import AST.TreeWalks.SymbolTableVisitor;
-import SymbolTable.SymbolTableInterface;
+import SymbolTableImplementation.SymbolTableInterface;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
@@ -61,16 +60,5 @@ public class MainParse {
         prog.walkTree(new ScopeCheckerVisitor(symbolTableInterface));
 
         return true;
-    }
-
-    public static void testTree() {
-        AbstractNode b = new TemporaryNode("block1");
-        AbstractNode bs = new TemporaryNode("block2");
-        AbstractNode prog = new TemporaryNode("Program").adoptChildren(bs);
-        prog.makeSibling(bs);
-
-        System.out.println("\nAST\n");
-        prog.walkTree(new NumberTree());
-        prog.walkTree(new PrintTree(System.out));
     }
 }

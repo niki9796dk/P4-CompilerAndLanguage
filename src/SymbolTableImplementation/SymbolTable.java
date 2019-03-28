@@ -1,4 +1,4 @@
-package SymbolTable;
+package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
@@ -6,12 +6,12 @@ import Enums.AnsiColor;
 
 import java.util.*;
 
-public class SymbolTableWrapper implements SymbolTableInterface {
+public class SymbolTable implements SymbolTableInterface {
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
 
     // List of predefined operations
     private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
-            // Arithmetic operations
+            // Matrix arithmetic operations
             "Addition", "Multiplication", "Subtraction",
             // Unitwise Arithmetic operations
             "_Addition", "_Multiplication", "_Subtraction", "_Division",
@@ -105,6 +105,6 @@ public class SymbolTableWrapper implements SymbolTableInterface {
         return AnsiColor.CYAN.toString()
                 + AnsiColor.FONT_UNDERLINE.toString()
                 + AnsiColor.FONT_BOLD
-                + "SymbolTable:" + AnsiColor.RESET + "\n\n" + this.blockTable.toString();
+                + "SymbolTableImplementation:" + AnsiColor.RESET + "\n\n" + this.blockTable.toString();
     }
 }

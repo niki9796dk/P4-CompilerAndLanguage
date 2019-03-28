@@ -72,11 +72,6 @@ parser code {:
     	    super(lex,sf);
         }
 
-      //public AbstractNode makeNode(Symbol s) { return new TemporaryNode(symString.symToString[s.sym]); }
-      public AbstractNode makeNode(String s) { return new TemporaryNode(s);   }
-
-      //public AbstractNode makeNode(Integer i) { return new IntegerNode(i);   }
-
 :};
 
 /* separators */

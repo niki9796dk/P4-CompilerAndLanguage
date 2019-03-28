@@ -1,4 +1,4 @@
-package SymbolTable;
+package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
