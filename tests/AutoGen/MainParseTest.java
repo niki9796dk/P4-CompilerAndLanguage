@@ -1,6 +1,5 @@
 package AutoGen;
 
-import jflex.ScannerException;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
