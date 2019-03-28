@@ -74,15 +74,20 @@ public class ScopeCheckerVisitor implements Visitor {
 
             case SELECTOR:
                 if ("this".equals(id)) {
-                    this.verifyChannelVariable(childId);
+                    try {
+                        this.verifyChannelVariable(childId);
+                    } catch (ScopeBoundsViolationException e) {
+                        this.verifyCurrentScopeVariable(childId);
+                    }
+                    
                 } else if (node.getParent() instanceof ProcedureCallNode) {
                     // Do nothing.
 
                 } else if (!(node.getParent() instanceof SelectorNode)) {
                     try {
-                        verifyCurrentScopeVariable(id);
+                        this.verifyCurrentScopeVariable(id);
                     } catch (ScopeBoundsViolationException e) {
-                        verifyChannelVariable(id);
+                        this.verifyChannelVariable(id);
                     }
                 }
                 break;
