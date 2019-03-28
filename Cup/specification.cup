@@ -474,14 +474,14 @@ builddecla              ::= buildassign:assign declstoporstay:chain
                         ;
 
 blueprintassign         ::= ASSIGN DRAW idpar:elem
-                        {: RESULT = new AssignNode().adoptChildren(elem); :}
+                        {: RESULT = new AssignNode().adoptChildren(new DrawNode(((NamedIdNode) elem).getId())); :}
                         ;
 sizeassign              ::= ASSIGN sizepar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         | ASSIGN idpar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-channelassign              ::= ASSIGN channelelementspar:elem
+channelassign           ::= ASSIGN channelelementspar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 buildassign             ::= ASSIGN buildelement:elem
