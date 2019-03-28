@@ -1,7 +1,7 @@
 package SymbolTable;
 
-import AST.Nodes.AbstractNodes.AbstractNode;
-import AST.Nodes.AbstractNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import Enums.AnsiColor;
 
 public class BlockScope {

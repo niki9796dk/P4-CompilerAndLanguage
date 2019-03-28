@@ -1,6 +1,6 @@
 package SymbolTable;
 
-import AST.Nodes.AbstractNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 
 public interface SymbolTableInterface {
     void openBlockScope(NamedNode node);           // Adds a block table to the symbol table

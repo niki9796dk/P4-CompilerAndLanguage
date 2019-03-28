@@ -1,11 +1,10 @@
 package AST.TreeWalks;
 
-import AST.Nodes.AbstractNodes.AbstractNode;
-import AST.Nodes.AbstractNodes.NamedIdNode;
-import AST.Nodes.AbstractNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.Visitor;
-import SymbolTable.BlockScope;
 import SymbolTable.SymbolTableInterface;
 import SymbolTable.SymbolTableWrapper;
 import SymbolTable.VariableEntry;

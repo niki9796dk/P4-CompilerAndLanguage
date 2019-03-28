@@ -1,25 +1,21 @@
 package AST.Nodes.AbstractNodes;
 
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Visitor;
 
-interface Node {
+public interface Node {
 
     AbstractNode makeSibling(AbstractNode sib);
 
-    /**
-     * Adopt the supplied node and all of its siblings under this node
-     */
     AbstractNode adoptChildren(AbstractNode n);
 
     AbstractNode adoptChildren(AbstractNode... nodes);
 
-    // Insert child in the front of the child list
     AbstractNode adoptAsFirstChild(AbstractNode node);
 
     AbstractNode orphan();
 
     AbstractNode abandonChildren();
-
 
     AbstractNode getParent();
 

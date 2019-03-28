@@ -1,11 +1,9 @@
 package SymbolTable;
 
 import AST.Enums.NodeEnum;
-import AST.Nodes.AbstractNodes.NamedIdNode;
-import AST.Nodes.AbstractNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import Enums.AnsiColor;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

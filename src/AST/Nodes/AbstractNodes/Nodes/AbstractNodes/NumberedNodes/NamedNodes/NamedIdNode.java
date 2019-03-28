@@ -1,6 +1,8 @@
-package AST.Nodes.AbstractNodes;
+package AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes;
 
 import AST.Enums.NodeEnum;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 
 public abstract class NamedIdNode extends NamedNode {
     private String id;

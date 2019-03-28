@@ -1,7 +1,7 @@
 package AST.TreeWalks;
 
-import AST.Nodes.AbstractNodes.AbstractNode;
-import AST.Nodes.AbstractNodes.NumberedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Visitor;
 
 public class NumberTree implements Visitor {

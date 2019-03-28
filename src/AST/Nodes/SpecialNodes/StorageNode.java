@@ -1,6 +1,6 @@
 package AST.Nodes.SpecialNodes;
 
-import AST.Nodes.AbstractNodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 
 public class StorageNode extends AbstractNode {
     private AbstractNode[] nodes;
