@@ -55,12 +55,9 @@ public abstract class AbstractNode implements Node {
 
    public AbstractNode adoptChildren(AbstractNode ... nodes) {
       for(AbstractNode n : nodes) {
-         if (n != null) {
-            if (this.child == null) this.child = n.firstSib;
-            else this.child.makeSibling(n);
-         }
-         for (AbstractNode c = this.child; c != null; c = c.mysib) c.parent = this;
+         adoptChildren(n);
       }
+
       return this;
    }
 
@@ -121,7 +118,7 @@ public abstract class AbstractNode implements Node {
       return(child);
    }
 
-   public AbstractNode getFirst() {
+   public AbstractNode getFirstSib() {
       return(firstSib);
    }
 

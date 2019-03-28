@@ -45,6 +45,8 @@ public class ScopeCheckerVisitor implements Visitor {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
+            case DRAW:
+            case BUILD:
                 break;
 
             case BLOCK:
@@ -68,20 +70,6 @@ public class ScopeCheckerVisitor implements Visitor {
 
             case CHANNEL_DECLARATIONS:
                 this.currentSubScope = this.currentBlockScope.getChannelDeclarationScope();
-                break;
-
-
-            case DRAW:
-                if (!this.symbolTableInterface.isPredefinedOperation(id)) {
-                    throw new ScopeBoundsViolationException("No such operation defined: " + id);
-                }
-                break;
-
-            case BUILD:
-                BlockScope blockScope = this.symbolTableInterface.getBlockScope(id);
-                if (blockScope == null) {
-                    throw new ScopeBoundsViolationException("No such block defined: " + id);
-                }
                 break;
 
             case SELECTOR:
