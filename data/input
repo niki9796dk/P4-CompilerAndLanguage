@@ -9,8 +9,8 @@ block AnnLayer {
     abc();
 
     block a = build Abs();
+
     block b = build Abs();
-    block a = build Hmmm();
 
     a = build Abs();
     b = a;

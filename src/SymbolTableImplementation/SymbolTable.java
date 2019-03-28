@@ -105,6 +105,6 @@ public class SymbolTable implements SymbolTableInterface {
         return AnsiColor.CYAN.toString()
                 + AnsiColor.FONT_UNDERLINE.toString()
                 + AnsiColor.FONT_BOLD
-                + "SymbolTableImplementation:" + AnsiColor.RESET + "\n\n" + this.blockTable.toString();
+                + "Symbol Table:" + AnsiColor.RESET + "\n\n" + this.blockTable.toString();
     }
 }
