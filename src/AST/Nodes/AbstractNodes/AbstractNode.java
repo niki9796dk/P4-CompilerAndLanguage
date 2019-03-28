@@ -9,7 +9,7 @@ import java.util.List;
   * link itself with other siblings and adopt children.
   * Each node gets a node number to help identify it distinctly in an AST.
   */
-public abstract class AbstractNode {
+public abstract class AbstractNode implements Node{
    private static int nodeNums = 0;
    private int nodeNum;
    private AbstractNode mysib;

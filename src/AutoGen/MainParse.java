@@ -6,8 +6,9 @@ import AST.Nodes.AbstractNodes.AbstractNode;
 import AST.Nodes.SpecialNodes.TemporaryNode;
 import AST.TreeWalks.NumberTree;
 import AST.TreeWalks.PrintTree;
+import AST.TreeWalks.ScopeCheckerVisitor;
 import AST.TreeWalks.SymbolTableVisitor;
-import SymbolTable.New.SymbolTableInterface;
+import SymbolTable.SymbolTableInterface;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
@@ -20,7 +21,7 @@ public class MainParse {
 
         if (args.length != 1) {
             //parseFile("data/input");
-            parseFile("tests/ProductionRules/ExpectTrue/Random_True");
+            parseFile("data/input");
         } else {
 
             parseFile(args[0]);
@@ -45,15 +46,19 @@ public class MainParse {
         AbstractNode prog = p.getRootNode();
         prog.walkTree(new NumberTree());
 
-        SymbolTableVisitor visitor = new SymbolTableVisitor();
+        SymbolTableVisitor symbolTableVisitor = new SymbolTableVisitor();
 
-        prog.walkTree(visitor);
+        prog.walkTree(symbolTableVisitor);
 
-        SymbolTableInterface symbolTableInterface = visitor.symbolTableInterface;
+        SymbolTableInterface symbolTableInterface = symbolTableVisitor.getSymbolTableInterface();
 
         System.out.println(symbolTableInterface.toString());
 
-        //prog.walkTree(new PrintTree(System.out));
+        System.out.println("\n");
+
+        prog.walkTree(new PrintTree(System.out));
+
+        prog.walkTree(new ScopeCheckerVisitor(symbolTableInterface));
 
         return true;
     }

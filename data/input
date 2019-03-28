@@ -8,10 +8,11 @@ block AnnLayer {
   blueprint(size si, blueprint blue){
     abc();
 
-    block a = build diller();
-    operation benis = build vagina();
-
-    (this.in1, this.in2) -> a -> benis;
+    block a = build Abs();
+    block b = build Abs();
+    a = build Abs();
+    b = a;
+    a = build Abs();
   }
 
   procedure abc(block abc, blueprint blue123) {

@@ -1,17 +1,22 @@
 package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.AbstractNode;
+import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
+import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.Visitor;
-import Enums.AnsiColor;
-import SymbolTable.New.SymbolTableInterface;
-import SymbolTable.New.SymbolTableWrapper;
-import SymbolTable.Tables.RootTable;
+import SymbolTable.BlockScope;
+import SymbolTable.SymbolTableInterface;
+import SymbolTable.SymbolTableWrapper;
+import SymbolTable.VariableEntry;
 
 public class SymbolTableVisitor implements Visitor {
 
-    private RootTable rootTable;
-    public SymbolTableInterface symbolTableInterface = new SymbolTableWrapper();
+    private SymbolTableInterface symbolTableInterface = new SymbolTableWrapper();
+
+    public SymbolTableInterface getSymbolTableInterface() {
+        return symbolTableInterface;
+    }
 
     @Override
     public void pre(int i, AbstractNode abstractNode) {
@@ -52,6 +57,7 @@ public class SymbolTableVisitor implements Visitor {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
+                checkIfVariableIsDefined(((NamedIdNode) node).getId());
                 symbolTableInterface.insertVariable(node);
                 break;
 
@@ -96,6 +102,13 @@ public class SymbolTableVisitor implements Visitor {
 
             default:
                 throw new RuntimeException("Unexpected Node");
+        }
+    }
+
+    private void checkIfVariableIsDefined(String id) {
+        VariableEntry variable = this.symbolTableInterface.getLatestBlockScope().getLatestSubScope().getVariable(id);
+        if (variable != null) {
+            throw new ScopeBoundsViolationException("Variable already declared in scope: " + id);
         }
     }
 }
