@@ -8,11 +8,11 @@ block AnnLayer {
   blueprint(size si, blueprint blue){
     abc();
 
-    block a = build Diller();
-    block b = build Cake();
-    a = build Benis();
+    block a = build Abs();
+    block b = build Abs();
+    a = build Abs();
     b = a;
-    a = build Vagina();
+    a = build Abs();
   }
 
   procedure abc(block abc, blueprint blue123) {

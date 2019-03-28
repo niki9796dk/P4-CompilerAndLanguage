@@ -4,8 +4,21 @@ import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
 import Enums.AnsiColor;
 
+import java.util.*;
+
 public class SymbolTableWrapper implements SymbolTableInterface {
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
+
+    // List of predefined operations
+    private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
+            // Arithmetic operations
+            "Addition", "Multiplication", "Subtraction",
+            // Unitwise Arithmetic operations
+            "_Addition", "_Multiplication", "_Subtraction", "_Division",
+            // Activation functions
+            "_Sigmoid", "_Tanh", "_Relu",
+            // Matrix operations
+            "Transpose"));
 
     @Override
     public void openBlockScope(NamedNode node) {
@@ -21,6 +34,11 @@ public class SymbolTableWrapper implements SymbolTableInterface {
         String scopeName = this.getScopeNameFromNode(node);
 
         this.blockTable.getLatest().openScope(scopeName, node);
+    }
+
+    @Override
+    public BlockScope getBlockScope(String id) {
+        return this.blockTable.getEntry(id);
     }
 
     private String getScopeNameFromNode(NamedNode node) {
@@ -70,6 +88,16 @@ public class SymbolTableWrapper implements SymbolTableInterface {
             default:
                 throw new IllegalArgumentException("Unexpected node.");
         }
+    }
+
+    @Override
+    public BlockScope getLatestBlockScope() {
+        return this.blockTable.getLatest();
+    }
+
+    @Override
+    public boolean isPredefinedOperation(String operation) {
+        return OPERATIONS.contains(operation);
     }
 
     @Override

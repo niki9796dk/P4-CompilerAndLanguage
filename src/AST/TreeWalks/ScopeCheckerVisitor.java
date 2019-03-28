@@ -3,6 +3,7 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.AbstractNode;
 import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
+import AST.Nodes.ProcedureCallNode;
 import AST.Nodes.SelectorNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.Visitor;
@@ -23,29 +24,20 @@ public class ScopeCheckerVisitor implements Visitor {
     @Override
     public void pre(int i, AbstractNode abstractNode) {
         NamedNode node = (NamedNode) abstractNode;
+        NamedNode childNode = (NamedNode) node.getChild();
+
+        // If needed, typecast
+        String id = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : "";
+
+        String childId = (childNode instanceof NamedIdNode) ? ((NamedIdNode) childNode).getId() : "";
 
         switch (node.getNodeEnum()) {
             case ROOT:
             case GROUP:
             case CHAIN:
-            case PROCEDURE_CALL:
             case PARAMS:
-            case DRAW:
-            case BUILD:
             case SIZE:
             case ASSIGN:
-                break;
-
-            case BLUEPRINT:
-            case PROCEDURE:
-            case CHANNEL_DECLARATIONS:
-                this.currentSubScope = this.currentBlockScope.getScope().getEntry(((NamedIdNode) node).getId());
-                break;
-
-            case BLOCK:
-                this.currentBlockScope = this.symbolTableInterface.getBlockScope(((NamedIdNode) node).getId());
-                break;
-
             case CHANNEL_IN:
             case CHANNEL_OUT:
             case SIZE_TYPE:
@@ -55,13 +47,55 @@ public class ScopeCheckerVisitor implements Visitor {
             case OPERATION_TYPE:
                 break;
 
-            case SELECTOR:
-                String id = ((NamedIdNode) node).getId();
-                if ("this".equals(id)) {
-                    String childId = ((NamedIdNode) node.getChild()).getId();
-                    this.verifyChannelVariable(childId);
-                } else if (!(node.getParent() instanceof SelectorNode)) {
+            case BLOCK:
+                this.currentBlockScope = this.symbolTableInterface.getBlockScope(id);
+                break;
 
+            case PROCEDURE:
+                this.currentSubScope = this.currentBlockScope.getProcedureScope(id);
+                break;
+
+            case PROCEDURE_CALL:
+                Scope scope = this.currentBlockScope.getProcedureScope(childId);
+                if (scope == null) {
+                    throw new ScopeBoundsViolationException("No such procedure: " + childId);
+                }
+                break;
+
+            case BLUEPRINT:
+                this.currentSubScope = this.currentBlockScope.getBlueprintScope();
+                break;
+
+            case CHANNEL_DECLARATIONS:
+                this.currentSubScope = this.currentBlockScope.getChannelDeclarationScope();
+                break;
+
+
+            case DRAW:
+                if (!this.symbolTableInterface.isPredefinedOperation(id)) {
+                    throw new ScopeBoundsViolationException("No such operation defined: " + id);
+                }
+                break;
+
+            case BUILD:
+                BlockScope blockScope = this.symbolTableInterface.getBlockScope(id);
+                if (blockScope == null) {
+                    throw new ScopeBoundsViolationException("No such block defined: " + id);
+                }
+                break;
+
+            case SELECTOR:
+                if ("this".equals(id)) {
+                    this.verifyChannelVariable(childId);
+                } else if (node.getParent() instanceof ProcedureCallNode) {
+                    // Do nothing.
+
+                } else if (!(node.getParent() instanceof SelectorNode)) {
+                    try {
+                        verifyCurrentScopeVariable(id);
+                    } catch (ScopeBoundsViolationException e) {
+                        verifyChannelVariable(id);
+                    }
                 }
                 break;
             default:
@@ -95,6 +129,7 @@ public class ScopeCheckerVisitor implements Visitor {
             case OPERATION_TYPE:
             case CHANNEL_DECLARATIONS:
             case ASSIGN:
+                break;
             default:
                 throw new RuntimeException("Unexpected Node");
         }

@@ -1,10 +1,14 @@
 package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.AbstractNode;
+import AST.Nodes.AbstractNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.NamedNode;
+import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.Visitor;
+import SymbolTable.BlockScope;
 import SymbolTable.SymbolTableInterface;
 import SymbolTable.SymbolTableWrapper;
+import SymbolTable.VariableEntry;
 
 public class SymbolTableVisitor implements Visitor {
 
@@ -53,6 +57,7 @@ public class SymbolTableVisitor implements Visitor {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
+                checkIfVariableIsDefined(((NamedIdNode) node).getId());
                 symbolTableInterface.insertVariable(node);
                 break;
 
@@ -97,6 +102,13 @@ public class SymbolTableVisitor implements Visitor {
 
             default:
                 throw new RuntimeException("Unexpected Node");
+        }
+    }
+
+    private void checkIfVariableIsDefined(String id) {
+        VariableEntry variable = this.symbolTableInterface.getLatestBlockScope().getLatestSubScope().getVariable(id);
+        if (variable != null) {
+            throw new ScopeBoundsViolationException("Variable already declared in scope: " + id);
         }
     }
 }
