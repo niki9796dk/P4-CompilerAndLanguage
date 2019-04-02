@@ -1,10 +1,12 @@
 package SymbolTableImplementation;
 
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import Enums.AnsiColor;
+import SymbolTableImplementation.Exceptions.EmptySymboltableException;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class SymbolTable implements SymbolTableInterface {
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
@@ -72,7 +74,7 @@ public class SymbolTable implements SymbolTableInterface {
 
         VariableEntry variableEntry =
                 this.blockTable.getLatest().getScope()       // Get latest block scope
-                    .getLatest().getVariable(leftSideId);    // Get latest subscope and the specific variable
+                        .getLatest().getVariable(leftSideId);    // Get latest subscope and the specific variable
 
         switch (rightSide.getNodeEnum()) {
             case DRAW:
@@ -92,6 +94,9 @@ public class SymbolTable implements SymbolTableInterface {
 
     @Override
     public BlockScope getLatestBlockScope() {
+        BlockScope b = this.blockTable.getLatest();
+        if (b == null)
+            throw new EmptySymboltableException();
         return this.blockTable.getLatest();
     }
 

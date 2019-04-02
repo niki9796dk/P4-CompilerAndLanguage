@@ -1,6 +1,7 @@
 package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import SymbolTableImplementation.Exceptions.EmptySymboltableException;
 
 /**
  * The essential methods for any symboltable implementation.
@@ -30,7 +31,8 @@ public interface SymbolTableInterface {
 
     /**
      * Returns the latest block scope
-     * @return the most recently added block scope, or null if no blockscopes has been put in the symbol table.
+     * @return the most recently added block scope.
+     * @throws EmptySymboltableException If the table is empty and therefor has no recently added blockscopes to return.
      */
     BlockScope getLatestBlockScope();
 
