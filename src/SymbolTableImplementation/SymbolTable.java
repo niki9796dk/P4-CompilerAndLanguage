@@ -3,6 +3,7 @@ package SymbolTableImplementation;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import Enums.AnsiColor;
+import SymbolTableImplementation.Enums.Operation;
 import SymbolTableImplementation.Exceptions.EmptySymboltableException;
 import SymbolTableImplementation.Exceptions.NoSuchSymbolException;
 
@@ -12,6 +13,7 @@ import java.util.HashSet;
 public class SymbolTable implements SymbolTableInterface {
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
 
+    /*
     // List of predefined operations
     private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
             // Matrix arithmetic operations
@@ -22,6 +24,7 @@ public class SymbolTable implements SymbolTableInterface {
             "_Sigmoid", "_Tanh", "_Relu",
             // Matrix operations
             "Transpose"));
+            */
 
     @Override
     public void openBlockScope(NamedNode node) {
@@ -106,7 +109,7 @@ public class SymbolTable implements SymbolTableInterface {
 
     @Override
     public boolean isPredefinedOperation(String operation) {
-        return OPERATIONS.contains(operation);
+        return Operation.isValid(operation);
     }
 
     @Override
