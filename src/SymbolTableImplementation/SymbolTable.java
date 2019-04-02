@@ -4,6 +4,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import Enums.AnsiColor;
 import SymbolTableImplementation.Exceptions.EmptySymboltableException;
+import SymbolTableImplementation.Exceptions.NoSuchSymbolException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,7 +41,10 @@ public class SymbolTable implements SymbolTableInterface {
 
     @Override
     public BlockScope getBlockScope(String id) {
-        return this.blockTable.getEntry(id);
+        BlockScope b = this.blockTable.getEntry(id);
+        if(b == null)
+            throw new NoSuchSymbolException();
+        return b;
     }
 
     private String getScopeNameFromNode(NamedNode node) {

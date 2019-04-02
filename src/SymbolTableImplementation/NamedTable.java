@@ -2,10 +2,12 @@ package SymbolTableImplementation;
 
 import Enums.AnsiColor;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-public class NamedTable<T> {
+public class NamedTable<T>  {
     private Map<String, T> table = new HashMap<>();
     private String latestName = null;
 

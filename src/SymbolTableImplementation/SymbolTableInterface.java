@@ -2,6 +2,7 @@ package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import SymbolTableImplementation.Exceptions.EmptySymboltableException;
+import SymbolTableImplementation.Exceptions.NoSuchSymbolException;
 
 /**
  * The essential methods for any symboltable implementation.
@@ -24,7 +25,8 @@ public interface SymbolTableInterface {
     /**
      * Gets a specific BlockScope from an id
      * @param id The id of the desired blockscope.
-     * @return The blockscope with the id, or null if this symbol table contains no such blockscope.
+     * @return The blockscope with the id
+     * @throws NoSuchSymbolException  If this symbol table contains no such blockscope.
      */
     BlockScope getBlockScope(String id);
 
