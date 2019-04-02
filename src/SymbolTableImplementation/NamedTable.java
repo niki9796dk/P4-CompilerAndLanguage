@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class NamedTable<T>  {
     private MapLatest<String, T> table = new HashMapLatest<>();
-    private String latestName = null;
+    //private String latestName = null;
 
     public T getEntry(String name) {
         return table.get(name);
