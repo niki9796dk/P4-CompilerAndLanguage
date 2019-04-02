@@ -26,20 +26,26 @@ public abstract class AbstractNode implements Node {
       nodeNum = ++nodeNums;
    }
 
-   /** Join the end of this sibling's list with the supplied sibling's list */
+
    public AbstractNode makeSibling(AbstractNode sib) {
       if (sib == null) throw new Error("Call to makeSibling supplied null-valued parameter");
+
+      /* appendAt.mysib = first sibling of this*/
       AbstractNode appendAt = this;
       while (appendAt.mysib != null) appendAt = appendAt.mysib;
       appendAt.mysib = sib.firstSib;
 
 
+      /* ans is set to be the input's (first sibling). Then the (first sibling) of ans is set to the (first sibling) of this' (first sibling).
+       * ans is iterated until it no longer has a sibling. At each iteration, the input's siblings (first sibling) is set to the this' (first sibling) */
       AbstractNode ans = sib.firstSib;
       ans.firstSib = appendAt.firstSib;
       while (ans.mysib != null) {
          ans = ans.mysib;
          ans.firstSib = appendAt.firstSib;
       }
+
+      /* return the last sibling of the input */
       return(ans);
    }
 
