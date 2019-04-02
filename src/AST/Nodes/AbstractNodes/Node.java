@@ -10,7 +10,7 @@ public interface Node {
 
     /** Join the end of this sibling's list with the supplied sibling's list
      * @param sib The sibling to add to the end of the list.
-     * @return
+     * @return The last sibling of the input parameter "sib"
      */
     AbstractNode makeSibling(AbstractNode sib);
 
