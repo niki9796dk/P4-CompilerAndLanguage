@@ -1,6 +1,8 @@
 package SymbolTableImplementation;
 
 import Enums.AnsiColor;
+import SymbolTableImplementation.Datastructures.HashMapLatest;
+import SymbolTableImplementation.Datastructures.MapLatest;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,13 +10,22 @@ import java.util.Map;
 import java.util.Set;
 
 public class NamedTable<T>  {
-    private Map<String, T> table = new HashMap<>();
+    private MapLatest<String, T> table = new HashMapLatest<>();
     private String latestName = null;
 
     public T getEntry(String name) {
         return table.get(name);
     }
 
+    public T getLatest() {
+        return this.table.getLatest();
+    }
+
+    public T setEntry(String name, T entry) {
+        return this.table.put(name, entry);
+    }
+
+    /*
     public T getLatest() {
         return this.getEntry(this.latestName);
     }
@@ -23,6 +34,7 @@ public class NamedTable<T>  {
         this.latestName = name;
         return table.put(name, entry);
     }
+    */
 
     @Override
     public String toString() {
