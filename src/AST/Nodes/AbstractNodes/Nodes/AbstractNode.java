@@ -27,6 +27,7 @@ public abstract class AbstractNode implements Node {
    }
 
 
+   @Override
    public AbstractNode makeSibling(AbstractNode sib) {
       if (sib == null) throw new Error("Call to makeSibling supplied null-valued parameter");
 
@@ -50,6 +51,7 @@ public abstract class AbstractNode implements Node {
    }
 
    /** Adopt the supplied node and all of its siblings under this node */
+   @Override
    public AbstractNode adoptChildren(AbstractNode n) {
       if (n != null) {
          if (this.child == null) this.child = n.firstSib;
@@ -68,6 +70,7 @@ public abstract class AbstractNode implements Node {
    }
 
    // Insert child in the front of the child list
+   @Override
    public AbstractNode adoptAsFirstChild(AbstractNode node) {
       if (this.child == null) return this.adoptChildren(node);
 
@@ -77,6 +80,7 @@ public abstract class AbstractNode implements Node {
       return this.adoptChildren(myChildren);
    }
 
+   @Override
    public AbstractNode orphan() {
       mysib = parent = null;
       firstSib = this;
@@ -91,6 +95,7 @@ public abstract class AbstractNode implements Node {
       return children;
    }
 
+   @Override
    public AbstractNode abandonChildren() {
       child = null;
       return this;
@@ -112,28 +117,35 @@ public abstract class AbstractNode implements Node {
       this.parent = p;
    }
 
+   @Override
    public AbstractNode getParent() {
       return(parent);
    }
 
+   @Override
    public AbstractNode getSib() {
       return(mysib);
    }
 
+   @Override
    public AbstractNode getChild() {
       return(child);
    }
 
+   @Override
    public AbstractNode getFirstSib() {
       return(firstSib);
    }
 
+   @Override
    public String getName() { return ""; }
-   
+
+   @Override
    public String toString() {
       return("" + getName());
    }
 
+   @Override
    public int getNodeNum() { return nodeNum; }
 
    private void internWalk(int level, Visitor v) {
@@ -144,10 +156,12 @@ public abstract class AbstractNode implements Node {
       v.post(level, this);
    }
 
+   @Override
    public void walkTree(Visitor v) {
       internWalk(0, v);
    }
 
+   @Override
    public AbstractNode[] getNodes() {
       return null;
    }
