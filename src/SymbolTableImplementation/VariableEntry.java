@@ -8,11 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class VariableEntry {
-    private String subType;
     private NamedIdNode node;
     private List<NamedIdNode> subTypes;
-
-    private static final String SUB_TYPE_STANDARD = "NONE";
 
     public VariableEntry(NamedIdNode node) {
         this.node = node;
@@ -47,9 +44,9 @@ public class VariableEntry {
 
     @Override
     public String toString() {
-        return "\t\t\tEntry: "      + AnsiColor.YELLOW  +   this.getId()         +  AnsiColor.RESET
-                + " | SuperType: "  + AnsiColor.PURPLE  +   this.getSuperType()  +  AnsiColor.RESET
-                + " | Node: "       + AnsiColor.PURPLE  +   this.getNode()       +  AnsiColor.RESET
+        return "\t\t\tEntry: " + AnsiColor.YELLOW + this.getId() + AnsiColor.RESET
+                + " | SuperType: " + AnsiColor.PURPLE + this.getSuperType() + AnsiColor.RESET
+                + " | Node: " + AnsiColor.PURPLE + this.getNode() + AnsiColor.RESET
                 + "\n" + getSubTypeToString();
     }
 
