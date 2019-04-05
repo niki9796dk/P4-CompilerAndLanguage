@@ -34,16 +34,4 @@ public enum Operation {
     public static boolean isValid(String keyword){
         return Operation.operations.containsKey(keyword);
     }
-
-    /*
-    *
-            // Matrix arithmetic operations
-            "Addition", "Multiplication", "Subtraction",
-            // Unitwise Arithmetic operations
-            "_Addition", "_Multiplication", "_Subtraction", "_Division",
-            // Activation functions
-            "_Sigmoid", "_Tanh", "_Relu",
-            // Matrix operations
-            "Transpose"));
-    * */
 }
