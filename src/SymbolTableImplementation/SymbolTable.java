@@ -69,17 +69,11 @@ public class SymbolTable implements SymbolTableInterface {
         NamedIdNode leftSide = (NamedIdNode) assignNode.getChild();
         NamedNode rightSide = (NamedNode) leftSide.getSib();
 
-        if(rightSide == null)
-            throw new NullPointerException();
-
         String leftSideId = leftSide.getId();
 
         VariableEntry variableEntry =
                 this.blockTable.getLatest().getScope()       // Get latest block scope
                         .getLatest().getVariable(leftSideId);    // Get latest subscope and the specific variable
-
-        if(variableEntry == null)
-            throw new NullPointerException();
 
         switch (rightSide.getNodeEnum()) {
             case DRAW:
