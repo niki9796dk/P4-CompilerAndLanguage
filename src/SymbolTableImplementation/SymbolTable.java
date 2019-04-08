@@ -3,15 +3,23 @@ package SymbolTableImplementation;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import Enums.AnsiColor;
-import SymbolTableImplementation.Enums.Operation;
-import SymbolTableImplementation.Exceptions.EmptySymboltableException;
-import SymbolTableImplementation.Exceptions.NoSuchSymbolException;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
 public class SymbolTable implements SymbolTableInterface {
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
+
+    // List of predefined operations
+    private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
+            // Matrix arithmetic operations
+            "Addition", "Multiplication", "Subtraction",
+            // Unitwise Arithmetic operations
+            "_Addition", "_Multiplication", "_Subtraction", "_Division",
+            // Activation functions
+            "_Sigmoid", "_Tanh", "_Relu",
+            // Matrix operations
+            "Transpose"));
 
     @Override
     public void openBlockScope(NamedNode node) {
@@ -31,10 +39,7 @@ public class SymbolTable implements SymbolTableInterface {
 
     @Override
     public BlockScope getBlockScope(String id) {
-        BlockScope b = this.blockTable.getEntry(id);
-        if(b == null)
-            throw new NoSuchSymbolException();
-        return b;
+        return this.blockTable.getEntry(id);
     }
 
     private String getScopeNameFromNode(NamedNode node) {
@@ -88,15 +93,12 @@ public class SymbolTable implements SymbolTableInterface {
 
     @Override
     public BlockScope getLatestBlockScope() {
-        BlockScope b = this.blockTable.getLatest();
-        if (b == null)
-            throw new EmptySymboltableException();
         return this.blockTable.getLatest();
     }
 
     @Override
     public boolean isPredefinedOperation(String operation) {
-        return Operation.isValid(operation);
+        return OPERATIONS.contains(operation);
     }
 
     @Override
