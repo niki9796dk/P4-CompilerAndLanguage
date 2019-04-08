@@ -3,9 +3,12 @@ package SymbolTableImplementation;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.AssignNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
+import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SizeTypeNode;
+import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import Enums.AnsiColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +45,15 @@ class SymbolTableTest {
     void openSubScope() {
         s.openBlockScope(n);
         s.openSubScope(bn);
+
+        ChannelDeclarationsNode cdNode = new ChannelDeclarationsNode();
+        ProcedureNode pNode = new ProcedureNode("pNode");
+        SizeNode sNode = new SizeNode(0, 2);
+
+        s.openSubScope(cdNode);
+        s.openSubScope(pNode);
+        assertThrows(IllegalArgumentException.class, () -> s.openSubScope(sNode));
+
     }
 
     @Test
@@ -74,6 +86,41 @@ class SymbolTableTest {
         s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
         s.reassignVariable(assignNode);
     }
+
+    @Test
+    void reassignVariable001() {
+        s.openBlockScope(n);
+        s.openSubScope(bn);
+        s.insertVariable(n2);
+
+        AssignNode assignNode = new AssignNode();
+
+        assignNode.adoptChildren(
+                new SelectorNode("SelectorNode"),
+                new SizeNode(0, 100)
+        );
+
+        s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
+        s.reassignVariable(assignNode);
+    }
+
+    @Test
+    void reassignVariable002() {
+        s.openBlockScope(n);
+        s.openSubScope(bn);
+        s.insertVariable(n2);
+
+        AssignNode assignNode = new AssignNode();
+
+        assignNode.adoptChildren(
+                new SelectorNode("SelectorNode"),
+                new SizeTypeNode("SizeTypeNode")
+        );
+
+        s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
+        assertThrows(IllegalArgumentException.class, () -> s.reassignVariable(assignNode));
+    }
+
 
     @Test
     void getLatestBlockScope() {
