@@ -14,7 +14,7 @@ public interface SymbolTableInterface {
      * Adds a block table to the symbol table
      * @param node The node to add to the symbol table.
      */
-    void openBlockScope(NamedNode node);
+    <T extends NamedNode> void openBlockScope(T node);
 
     /**
      * Opens a sub scope within the latest block scope
