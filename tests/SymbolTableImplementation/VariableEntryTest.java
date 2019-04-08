@@ -67,6 +67,10 @@ class VariableEntryTest {
                         + " | Node: "
                         + AnsiColor.RED + "NONE" + AnsiColor.RESET
                         + "\n");
-
+        v.setSubType(new BuildNode("buildNode"));
+        assertEquals(AnsiColor.removeColor(v.toString()),
+                "\t\t\tEntry: id | SuperType: BUILD | Node: [-1] Build id\n" +
+                        "\t\t\t\t\tSubtype: buildNode | Node: [-1] Build buildNode\n"
+        );
     }
 }
