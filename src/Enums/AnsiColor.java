@@ -30,7 +30,7 @@ public enum AnsiColor {
 
     public static String removeColor(String s) {
         for (AnsiColor c : AnsiColor.values()) {
-            s = s.replaceAll(c.colorCode,"");
+            s = s.replace(c.colorCode,"");
         }
         return s;
     }

@@ -1,13 +1,12 @@
 package SymbolTableImplementation;
 
-import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.AssignNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockTypeNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SizeTypeNode;
+import Enums.AnsiColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,7 @@ class SymbolTableTest {
      * Param: The node to add to the symbol table.
      */
     @BeforeEach
-    void beforeEach(){
+    void beforeEach() {
         s = new SymbolTable();
         n = new SizeTypeNode("n");
         n2 = new SizeTypeNode("n2");
@@ -48,7 +47,7 @@ class SymbolTableTest {
     @Test
     void getBlockScope() {
         s.openBlockScope(n);
-        assertSame(n,s.getBlockScope("n").getNode());
+        assertSame(n, s.getBlockScope("n").getNode());
     }
 
     @Test
@@ -72,14 +71,14 @@ class SymbolTableTest {
                 new BuildNode("BuildNode")
         );
 
-        s.getLatestBlockScope().getLatestSubScope().setVariable( new SelectorNode("SelectorNode"));
+        s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
         s.reassignVariable(assignNode);
     }
 
     @Test
     void getLatestBlockScope() {
         s.openBlockScope(n);
-        assertSame(s.getLatestBlockScope().getNode(),n);
+        assertSame(s.getLatestBlockScope().getNode(), n);
     }
 
     @Test
@@ -107,6 +106,16 @@ class SymbolTableTest {
         s.openBlockScope(n);
         s.openSubScope(bn);
         s.insertVariable(n2);
-        System.out.println(s.toString());
+        assertEquals(AnsiColor.removeColor(s.toString()),
+                "Symbol Table:\n" +
+                        "\n" +
+                        "BlockScope n:\n" +
+                        "\tSubScope Blueprint: \n" +
+                        "\t\t\tEntry: n2 | SuperType: SIZE_TYPE | Node: [-1] SizeType n2\n" +
+                        "\t\t\t\t\tSubtype: NONE | Node: NONE\n" +
+                        "\n" +
+                        "\n" +
+                        "\n"
+        );
     }
 }
