@@ -2,6 +2,7 @@ package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import Enums.AnsiColor;
 
 import java.util.Arrays;
@@ -22,11 +23,10 @@ public class SymbolTable implements SymbolTableInterface {
             "Transpose"));
 
     @Override
-    public void openBlockScope(NamedNode node) {
-        NamedIdNode blockIdNode = ((NamedIdNode) node);
-        String blockId = blockIdNode.getId();
+    public void openBlockScope(BlockNode node) {
+        String blockId = node.getId();
 
-        this.blockTable.setEntry(blockId, new BlockScope(blockId, blockIdNode));
+        this.blockTable.setEntry(blockId, new BlockScope(blockId, node));
     }
 
     @Override
