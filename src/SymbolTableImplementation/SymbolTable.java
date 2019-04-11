@@ -8,6 +8,9 @@ import Enums.AnsiColor;
 import java.util.Arrays;
 import java.util.HashSet;
 
+/**
+ * An implementation of a SymbolTable, which contains the scopes of blocks.
+ */
 public class SymbolTable implements SymbolTableInterface {
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
 

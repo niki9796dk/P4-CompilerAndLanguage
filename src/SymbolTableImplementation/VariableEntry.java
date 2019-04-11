@@ -7,23 +7,39 @@ import Enums.AnsiColor;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ *
+ */
 public class VariableEntry {
     private NamedIdNode node;
     private List<NamedIdNode> subTypes;
 
+    /**
+     * @param node
+     */
     public VariableEntry(NamedIdNode node) {
         this.node = node;
         this.subTypes = new LinkedList<>();
     }
 
+    /**
+     * @return
+     */
     public String getId() {
         return this.getNode().getId();
     }
 
+    /**
+     * @return
+     */
     public NodeEnum getSuperType() {
         return this.getNode().getNodeEnum(); // TODO: Ændre til en anden klasse af enums... Så vi også kan have primitive med.
     }
 
+    /**
+     * @param number
+     * @return
+     */
     // Returns null if unassigned
     public NamedIdNode getSubType(int number) {
         NamedIdNode last = null;
@@ -34,10 +50,16 @@ public class VariableEntry {
         return last;
     }
 
+    /**
+     * @return
+     */
     public NamedIdNode getNode() {
         return node;
     }
 
+    /**
+     * @param subNode
+     */
     public void setSubType(NamedIdNode subNode) {
         this.subTypes.add(subNode);
     }

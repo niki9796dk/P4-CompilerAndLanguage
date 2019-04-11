@@ -4,10 +4,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.NodeClasses.NamedNodes.AssignNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SizeTypeNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import Enums.AnsiColor;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SymbolTableTest {
 
     SymbolTable s;
-    NamedIdNode n;
+    BlockNode n;
     NamedIdNode n2;
     NamedIdNode n3;
     BlueprintNode bn;
@@ -30,7 +27,7 @@ class SymbolTableTest {
     @BeforeEach
     void beforeEach() {
         s = new SymbolTable();
-        n = new SizeTypeNode("n");
+        n = new BlockNode("n");
         n2 = new SizeTypeNode("n2");
         n3 = new SizeTypeNode("n3");
         bn = new BlueprintNode();

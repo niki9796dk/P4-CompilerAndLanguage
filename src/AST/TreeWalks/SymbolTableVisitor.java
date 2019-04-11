@@ -3,6 +3,7 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.Visitor;
 import SymbolTableImplementation.Scope;
@@ -39,7 +40,7 @@ public class SymbolTableVisitor implements Visitor {
 
                 // Open block scope
             case BLOCK:
-                symbolTableInterface.openBlockScope(node);
+                symbolTableInterface.openBlockScope((BlockNode) node);
                 break;
 
                 // Open sub scopes
