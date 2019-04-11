@@ -8,14 +8,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
+ * A scope entry representing a variable.
  */
 public class VariableEntry {
     private NamedIdNode node;
     private List<NamedIdNode> subTypes;
 
     /**
-     * @param node
+     * @param node Create a new variable entry for a specific NamedIdNode
      */
     public VariableEntry(NamedIdNode node) {
         this.node = node;
@@ -23,22 +23,26 @@ public class VariableEntry {
     }
 
     /**
-     * @return
+     * Retrieves the id of the Variable Entry, which is the id of the node it represents.
+     * @return The id of the node as a string.
      */
     public String getId() {
         return this.getNode().getId();
     }
 
     /**
-     * @return
-     */
+     * Retrieve the appropriate enum for the variable entry's node.
+     * @return The Enum representing the node
+     * */
     public NodeEnum getSuperType() {
         return this.getNode().getNodeEnum(); // TODO: Ændre til en anden klasse af enums... Så vi også kan have primitive med.
     }
 
     /**
-     * @param number
-     * @return
+     * Returns the correct node for a certain node number. This is useful for when a variable is reassigned, and the value appropriate for a specific node is required.
+     * In simple terms; A nodes number is used to find the correct assignment of the variable at that time.
+     * @param number The node number of the current point of the node value request.
+     * @return The value of the variable assigned at that point, or null if it is unassigned.
      */
     // Returns null if unassigned
     public NamedIdNode getSubType(int number) {
