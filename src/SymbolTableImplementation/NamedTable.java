@@ -12,6 +12,13 @@ import java.util.Map;
  * @param <T> The type of mapped values
  */
 public class NamedTable<T> {
+
+    /**
+     * Constructs an empty {@code NamedTable} with the default initial capacity
+     */
+    public NamedTable() {
+    }
+
     private MapLatest<String, T> table = new HashMapLatest<>();
 
     /**

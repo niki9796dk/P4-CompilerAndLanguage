@@ -12,6 +12,12 @@ import java.util.HashMap;
  */
 public class HashMapLatest<K, V> extends HashMap<K, V> implements MapLatest<K, V> {
 
+    /**
+     *
+     */
+    public HashMapLatest() {
+    }
+
     V latest = null;
 
     @Override

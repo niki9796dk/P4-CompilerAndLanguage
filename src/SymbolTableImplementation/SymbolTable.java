@@ -11,6 +11,12 @@ import java.util.HashSet;
 public class SymbolTable implements SymbolTableInterface {
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
 
+    /**
+     * Constructs an empty {@code SymbolTable} with the default initial capacity
+     */
+    public SymbolTable() {
+    }
+
     // List of predefined operations
     private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
             // Matrix arithmetic operations
