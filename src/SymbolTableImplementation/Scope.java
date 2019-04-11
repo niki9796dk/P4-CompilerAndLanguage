@@ -6,7 +6,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import Enums.AnsiColor;
 
 /**
- *
+ * Keeps track of what variables are within the scope of a node.
  */
 public class Scope {
     private String id;
