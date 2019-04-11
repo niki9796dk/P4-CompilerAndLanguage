@@ -14,13 +14,13 @@ public class BlockScope {
 
     private String id;
     private NamedTable<Scope> scope;
-    private AbstractNode node;
+    private BlockScope node;
 
     /**
      * @param id The identifying ID of the block scope.
      * @param node The node which
      */
-    public BlockScope(String id, AbstractNode node) {
+    public BlockScope(String id, BlockScope node) {
         this.id = id;
         this.scope = new NamedTable<>();
         this.node = node;
