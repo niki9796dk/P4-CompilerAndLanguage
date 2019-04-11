@@ -14,8 +14,9 @@ public class Scope {
     private AbstractNode node;
 
     /**
-     * @param id
-     * @param node
+     * Creates a new scope with specified id and representing the specified node. The scope will be empty.
+     * @param id The unique id identifier.
+     * @param node The node of which the scope object is a scope of.
      */
     public Scope(String id, NamedNode node) {
         this.id = id;
@@ -24,29 +25,30 @@ public class Scope {
     }
 
     /**
-     * @return
+     * @return Returns the unique id of the scope.
      */
     public String getId() {
         return id;
     }
 
     /**
-     * @param node
+     * @param node Returns the node of which this is a scope of.
      */
     public void setVariable(NamedIdNode node) {
         this.scope.setEntry(node.getId(), new VariableEntry(node));
     }
 
     /**
-     * @param id
-     * @return
+     * Retrieve a variable entry within the id
+     * @param id The id of the variable.
+     * @return The variable entry with the specified id, or Null if no such entry exists.
      */
     public VariableEntry getVariable(String id) {
         return this.scope.getEntry(id);
     }
 
     /**
-     * @return
+     * @return The node of which the object is a scope of.
      */
     public AbstractNode getNode() {
         return node;
