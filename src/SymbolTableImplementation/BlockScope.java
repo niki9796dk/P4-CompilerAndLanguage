@@ -2,6 +2,7 @@ package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import Enums.AnsiColor;
 
 /**
@@ -14,13 +15,13 @@ public class BlockScope {
 
     private String id;
     private NamedTable<Scope> scope;
-    private BlockScope node;
+    private BlockNode node;
 
     /**
      * @param id The identifying ID of the block scope.
      * @param node The node which
      */
-    public BlockScope(String id, BlockScope node) {
+    public BlockScope(String id, BlockNode node) {
         this.id = id;
         this.scope = new NamedTable<>();
         this.node = node;
