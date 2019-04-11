@@ -55,14 +55,14 @@ public class VariableEntry {
     }
 
     /**
-     * @return
+     * @return the node for the variable entry.
      */
     public NamedIdNode getNode() {
         return node;
     }
 
     /**
-     * @param subNode
+     * @param subNode Add a new assignment of the variable.
      */
     public void setSubType(NamedIdNode subNode) {
         this.subTypes.add(subNode);
