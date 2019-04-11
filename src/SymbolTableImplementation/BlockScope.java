@@ -10,15 +10,15 @@ import Enums.AnsiColor;
  */
 public class BlockScope {
     public static final String PROCEDURE_PREFIX = "PROC_";
-    public static final String CHANNELS         = "ChannelDeclaration";
-    public static final String BLUEPRINT        = "Blueprint";
+    public static final String CHANNELS = "ChannelDeclaration";
+    public static final String BLUEPRINT = "Blueprint";
 
     private String id;
     private NamedTable<Scope> scope;
     private BlockNode node;
 
     /**
-     * @param id The identifying ID of the block scope.
+     * @param id   The identifying ID of the block scope.
      * @param node The node which
      */
     public BlockScope(String id, BlockNode node) {

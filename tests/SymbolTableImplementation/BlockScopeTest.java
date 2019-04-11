@@ -2,6 +2,7 @@ package SymbolTableImplementation;
 
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DrawNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
@@ -14,11 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class BlockScopeTest {
 
     BlockScope b;
-    BuildNode node;
+    BlockNode node;
 
     @BeforeEach
     void beforeEach(){
-        node = new BuildNode("BuildNode");
+        node = new BlockNode("BuildNode");
         b = new BlockScope("b",node);
     }
 
