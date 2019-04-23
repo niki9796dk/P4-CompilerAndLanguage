@@ -216,19 +216,20 @@ statement			    ::= declaration:decl
 					    {:
 					        // Chain
 					        if (st instanceof StorageNode) {
-					            String storageName = st.getName();
+					            StorageNode storageNode = (StorageNode) st; 
+					            String storageName = storageNode.getName();
 
 					            if ("Chain".equals(storageName)) {
-					                AbstractNode dotId = st.getNodes()[0];
-					                AbstractNode chainNode = st.getNodes()[1];
+					                AbstractNode dotId = storageNode.getNodes()[0];
+					                AbstractNode chainNode = storageNode.getNodes()[1];
                                     AbstractNode idSelector = new SelectorNode(id);
 
                                     idSelector.adoptChildren(dotId);
 
                                     RESULT = chainNode.adoptAsFirstChild(idSelector);
 					            } else if ("Assign".equals(storageName)) {
-					                AbstractNode assignNode = st.getNodes()[0].adoptAsFirstChild(new SelectorNode(id));
-					                AbstractNode chainNode = st.getNodes()[1];
+					                AbstractNode assignNode = storageNode.getNodes()[0].adoptAsFirstChild(new SelectorNode(id));
+					                AbstractNode chainNode = storageNode.getNodes()[1];
 
 					                RESULT = (chainNode != null) ? chainNode.adoptAsFirstChild(assignNode) : assignNode;
 
@@ -237,7 +238,7 @@ statement			    ::= declaration:decl
 					                throw new RuntimeException("No such name case");
 					            }
 					        } else {
-					            RESULT = st.adoptChildren(new SelectorNode(id));
+					            RESULT = storageNode.adoptChildren(new SelectorNode(id));
 					        }
 					    :}
 					    | LPAR optlparstatement:statement

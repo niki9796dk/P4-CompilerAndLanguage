@@ -37,6 +37,4 @@ public interface Node {
     int getNodeNum();
 
     void walkTree(Visitor v);
-
-    AbstractNode[] getNodes();
 }

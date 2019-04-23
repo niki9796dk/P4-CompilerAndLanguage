@@ -202,25 +202,24 @@ public abstract class AbstractNode implements Node {
 
     /**
      * Internally walk through the tree of children.
-     * @param level
-     * @param v
+     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param v The visitor object to use.
      */
-   private void internWalk(int level, Visitor v) {
-      v.pre(level, this);
+   private void internWalk(int printLevel, Visitor v) {
+      v.pre(printLevel, this);
 
       for (AbstractNode c = child; c != null; c=c.mysib)
-         c.internWalk(level+1, v);
-      v.post(level, this);
+         c.internWalk(printLevel+1, v);
+      v.post(printLevel, this);
    }
 
+    /**
+     * Walk the tree of child nodes using a visitor.
+     * @param v the visitor object to use.
+     */
    @Override
    public void walkTree(Visitor v) {
       internWalk(0, v);
-   }
-
-   @Override
-   public AbstractNode[] getNodes() {
-      return null;
    }
 
 }
