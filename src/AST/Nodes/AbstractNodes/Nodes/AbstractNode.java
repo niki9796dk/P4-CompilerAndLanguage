@@ -71,7 +71,7 @@ public abstract class AbstractNode implements Node {
    }
 
    /**
-    * Adopt the supplied nodes and all of their siblings under this nod
+    * Adopt the supplied nodes and all of their siblings under this node
     * @param nodes An array of nodes to adopt.
     * @return  a reference to this object.
     */
