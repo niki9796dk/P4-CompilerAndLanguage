@@ -9,10 +9,10 @@ public class PrintTree implements Visitor {
     public PrintTree(PrintStream ps) {
        this.ps = ps;
    }
-    public void pre(int level,  AbstractNode n) {
+    public void pre(int printLevel, AbstractNode n) {
        String tab = "";
-       for (int i=1; i <= level; ++i) tab += "  ";
+       for (int i = 1; i <= printLevel; ++i) tab += "  ";
        ps.println(tab + n.toString());
     }
-    public void post(int i, AbstractNode a) {}
+    public void post(int printLevel, AbstractNode a) {}
 }

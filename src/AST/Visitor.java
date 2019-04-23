@@ -2,7 +2,19 @@ package AST;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 
+/**
+ *
+ */
 public interface Visitor {
-    public void pre(int i, AbstractNode a);
-    public void post(int i, AbstractNode a);
+    /**
+     * @param printLevel
+     * @param a
+     */
+    public void pre(int printLevel, AbstractNode a);
+
+    /**
+     * @param printLevel
+     * @param a
+     */
+    public void post(int printLevel, AbstractNode a);
 }

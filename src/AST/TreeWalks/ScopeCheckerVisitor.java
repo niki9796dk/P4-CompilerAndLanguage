@@ -22,7 +22,7 @@ public class ScopeCheckerVisitor implements Visitor {
     }
 
     @Override
-    public void pre(int i, AbstractNode abstractNode) {
+    public void pre(int printLevel, AbstractNode abstractNode) {
         NamedNode node = (NamedNode) abstractNode;
         NamedNode childNode = (NamedNode) node.getChild();
 
@@ -99,7 +99,7 @@ public class ScopeCheckerVisitor implements Visitor {
     }
 
     @Override
-    public void post(int i, AbstractNode abstractNode) {
+    public void post(int printLevel, AbstractNode abstractNode) {
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {

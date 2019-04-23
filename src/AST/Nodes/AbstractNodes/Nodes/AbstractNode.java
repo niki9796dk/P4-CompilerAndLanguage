@@ -109,12 +109,17 @@ public abstract class AbstractNode implements Node {
       return this;
    }
 
+    /**
+     * Nullify the reference to the child node.
+     * @return  a reference to this object.
+     */
    @Override
    public AbstractNode abandonChildren() {
       child = null;
       return this;
    }
 
+   /* private & unused
    private List<AbstractNode> getChildrenAsList() {
       if (this.child == null) return null;
 
@@ -126,42 +131,80 @@ public abstract class AbstractNode implements Node {
 
       return children;
    }
+   */
 
+    /**
+     * Set the parent of the node.
+     * @param p The node to set as a parent.
+     */
    private void setParent(AbstractNode p) {
       this.parent = p;
    }
 
+    /**
+     * Get the parent of the node.
+     * @return parent of the node.
+     */
    @Override
    public AbstractNode getParent() {
       return(parent);
    }
 
+    /**
+     * Get the sibling of the node.
+     * @return sibling of the node.
+     */
    @Override
    public AbstractNode getSib() {
       return(mysib);
    }
 
+    /**
+     * Get the child of the node.
+     * @return the child of the node.
+     */
    @Override
    public AbstractNode getChild() {
       return(child);
    }
 
+    /**
+     * Get the first sibling of the node.
+     * @return the first sibling of the node.
+     */
    @Override
    public AbstractNode getFirstSib() {
       return(firstSib);
    }
 
+    /**
+     * Returns the empty name of the node.
+     * @return an empty string.
+     */
    @Override
    public String getName() { return ""; }
 
+    /**
+     * Returns the name of the node.
+     * @return the nodes name as a string.
+     */
    @Override
    public String toString() {
-      return("" + getName());
+      return(getName());
    }
 
+    /**
+     * Get the number of the node, which is based on the amount of nodes created before the node,
+     * @return the number of the node.
+     */
    @Override
    public int getNodeNum() { return nodeNum; }
 
+    /**
+     * Internally walk through the tree of children.
+     * @param level
+     * @param v
+     */
    private void internWalk(int level, Visitor v) {
       v.pre(level, this);
 
