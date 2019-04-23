@@ -264,8 +264,8 @@ procedurecall		    ::= LPAR elementliststart:paras RPAR
 optlparstatement	    ::= LPAR element:elem RPAR groupcon:groupcon
 					    {:
 					        // Group connection
-                            AbstractNode group = groupcon.getNodes()[0];
-                            AbstractNode chain = groupcon.getNodes()[1];
+                            AbstractNode group = ((StorageNode) groupcon).getNodes()[0];
+                            AbstractNode chain = ((StorageNode) groupcon).getNodes()[1];
 
                             group.adoptAsFirstChild(elem);
 
@@ -275,8 +275,8 @@ optlparstatement	    ::= LPAR element:elem RPAR groupcon:groupcon
 					    {:
 					        // Group connection
     					    if (chainorgroup instanceof StorageNode) {
-    					        AbstractNode group = chainorgroup.getNodes()[0];
-                                AbstractNode chain = chainorgroup.getNodes()[1];
+    					        AbstractNode group = ((StorageNode) chainorgroup).getNodes()[0];
+                                AbstractNode chain = ((StorageNode) chainorgroup).getNodes()[1];
 
     					        group.adoptAsFirstChild(elem);
 
@@ -446,8 +446,8 @@ declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
                             AbstractNode typeNode = (((NamedIdNode) type).setId(id));
 
                             if (decla != null) {
-                                AbstractNode assign = decla.getNodes()[0];
-                                AbstractNode chain = decla.getNodes()[1];
+                                AbstractNode assign = ((StorageNode) decla).getNodes()[0];
+                                AbstractNode chain = ((StorageNode) decla).getNodes()[1];
 
                                 assign.adoptAsFirstChild(typeNode);
 
