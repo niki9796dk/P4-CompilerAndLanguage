@@ -27,6 +27,10 @@ public abstract class AbstractNode implements Node {
    }
 
 
+   /** Join the end of this sibling's list with the supplied sibling's list
+    * @param sib The sibling to add to the end of the list.
+    * @return The last sibling of the input parameter "sib"
+    */
    @Override
    public AbstractNode makeSibling(AbstractNode sib) {
       if (sib == null) throw new Error("Call to makeSibling supplied null-valued parameter");
@@ -50,9 +54,14 @@ public abstract class AbstractNode implements Node {
       return(ans);
    }
 
-   /** Adopt the supplied node and all of its siblings under this node */
+   /**
+    * Adopt the supplied node and all of its siblings under this nod
+    * @param n The node to adopt.
+    * @return  a reference to this object.
+    */
    @Override
    public AbstractNode adoptChildren(AbstractNode n) {
+
       if (n != null) {
          if (this.child == null) this.child = n.firstSib;
          else this.child.makeSibling(n);
@@ -61,6 +70,11 @@ public abstract class AbstractNode implements Node {
       return this;
    }
 
+   /**
+    * Adopt the supplied nodes and all of their siblings under this nod
+    * @param nodes An array of nodes to adopt.
+    * @return  a reference to this object.
+    */
    public AbstractNode adoptChildren(AbstractNode ... nodes) {
       for(AbstractNode n : nodes) {
          adoptChildren(n);
@@ -69,7 +83,11 @@ public abstract class AbstractNode implements Node {
       return this;
    }
 
-   // Insert child in the front of the child list
+   /**
+    * Insert child in the front of the child list
+    * @param node The child to add.
+    * @return  a reference to this object.
+    */
    @Override
    public AbstractNode adoptAsFirstChild(AbstractNode node) {
       if (this.child == null) return this.adoptChildren(node);
@@ -80,19 +98,15 @@ public abstract class AbstractNode implements Node {
       return this.adoptChildren(myChildren);
    }
 
+   /**
+    * Turn the child into an orphan.
+    * @return  a reference to this object.
+    */
    @Override
    public AbstractNode orphan() {
       mysib = parent = null;
       firstSib = this;
       return this;
-   }
-
-   private List<AbstractNode> orphanChildList(List<AbstractNode> children) {
-      for (AbstractNode child : children) {
-         child.orphan();
-      }
-
-      return children;
    }
 
    @Override
