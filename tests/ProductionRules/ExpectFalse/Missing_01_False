@@ -1,0 +1,9 @@
+// No blueprint
+block random_03 {
+    channel:in input;
+    channel:out output;
+
+    procedure abc() {
+
+    }
+}

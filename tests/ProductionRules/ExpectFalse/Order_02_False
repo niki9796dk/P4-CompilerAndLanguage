@@ -1,0 +1,13 @@
+// Procedure before channels
+block random_03 {
+	blueprint() {
+
+	}
+
+	procedure abc() {
+
+    }
+
+    channel:in input;
+    channel:out output;
+}

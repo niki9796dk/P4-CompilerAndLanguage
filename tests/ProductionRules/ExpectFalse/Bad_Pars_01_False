@@ -1,8 +1,0 @@
- block bad_pars_01{
- 	gate:out output;
-
- 	blueprint() {
- 		size a = [2,3];
- 		size b = a;
- 	}
- }

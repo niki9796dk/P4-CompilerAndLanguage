@@ -67,22 +67,22 @@ Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 
 %%
 
-// TODO: Add size[
+// TODO: Add size
 
 <YYINITIAL>{
 
 /* keywords */
-"block"         {return symbol("block"    , BLOCK,yytext()); }
-"blueprint"     {return symbol("blueprint", BLUEPRINT,yytext()); }
-"build"         {return symbol("build"    , BUILD,yytext()); }
-"draw"          {return symbol("draw"     , DRAW,yytext()); }
-"source"        {return symbol("source"   , SOURCE,yytext()); }
-"operation"     {return symbol("operation", OPERATION,yytext()); }
-"gate:in"       {return symbol("gate:in"  , GATEIN,yytext()); }
-"gate:out"      {return symbol("gate:out" , GATEOUT,yytext()); }
-"procedure"     {return symbol("procedure", PROCEDURE,yytext()); }
-"this"          {return symbol("this"     , THIS,yytext()); }
-"size"          {return symbol("size"     , SIZE, yytext());}
+"block"         {return symbol("block"      , BLOCK,yytext()); }
+"blueprint"     {return symbol("blueprint"  , BLUEPRINT,yytext()); }
+"build"         {return symbol("build"      , BUILD,yytext()); }
+"draw"          {return symbol("draw"       , DRAW,yytext()); }
+"source"        {return symbol("source"     , SOURCE,yytext()); }
+"operation"     {return symbol("operation"  , OPERATION,yytext()); }
+"channel:in"    {return symbol("channel:in" , CHANNELIN,yytext()); }
+"channel:out"   {return symbol("channel:out", CHANNELOUT,yytext()); }
+"procedure"     {return symbol("procedure"  , PROCEDURE,yytext()); }
+"this"          {return symbol("this"       , THIS,yytext()); }
+"size"          {return symbol("size"       , SIZE, yytext());}
 
 /* Identifier names */
 {Ident}         { return symbol("Identifier", ID, yytext()); }

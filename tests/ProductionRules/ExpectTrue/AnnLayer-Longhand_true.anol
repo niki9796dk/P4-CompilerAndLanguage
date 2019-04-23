@@ -1,7 +1,7 @@
 block AnnLayer{
 	// Gates
-	gate:in in;
-	gate:out out;
+	channel:in in;
+	channel:out out;
 
 	// Blueprint
 	blueprint(){
@@ -27,7 +27,7 @@ block AnnLayer{
 		add -> sigmoid;
 
 		// Connect the final operation to the output of the block
-		sigmiod -> this.out;
+		sigmoid -> this.out;
 	}
 }
 

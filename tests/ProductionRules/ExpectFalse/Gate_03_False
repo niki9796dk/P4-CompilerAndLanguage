@@ -1,4 +1,4 @@
-// No gates
+// No channels
 block random {
 
     blueprint() {

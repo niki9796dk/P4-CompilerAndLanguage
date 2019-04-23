@@ -1,85 +1,85 @@
-block gates_01 {
-	gate:in input1;
-	gate:out output;
-	gate:in input2;
+block channels_01 {
+	channel:in input1;
+	channel:out output;
+	channel:in input2;
 
 	blueprint() {
 
 	}
 }
 
-block gates_02 {
-	gate:in input1;
-	gate:in input2;
-	gate:out output;
-	gate:in input3;
-    gate:in input4;
+block channels_02 {
+	channel:in input1;
+	channel:in input2;
+	channel:out output;
+	channel:in input3;
+    channel:in input4;
 
 	blueprint() {
 
 	}
 }
 
-block gates_03 {
-	gate:in input1;
-	gate:in input2;
-	gate:out output1;
-    gate:out output2;
-	gate:in input3;
-    gate:in input4;
+block channels_03 {
+	channel:in input1;
+	channel:in input2;
+	channel:out output1;
+    channel:out output2;
+	channel:in input3;
+    channel:in input4;
 
 	blueprint() {
 
 	}
 }
 
-block gates_04 {
-	gate:in input1;
-	gate:in input2;
-	gate:out output1;
-    gate:out output2;
-	gate:in input3;
-	gate:out output3;
-    gate:in input4;
+block channels_04 {
+	channel:in input1;
+	channel:in input2;
+	channel:out output1;
+    channel:out output2;
+	channel:in input3;
+	channel:out output3;
+    channel:in input4;
 
 	blueprint() {
 
 	}
 }
 
-block gates_05 {
-    gate:out output4;
-	gate:in input1;
-	gate:in input2;
-	gate:out output1;
-    gate:out output2;
-	gate:in input3;
-	gate:out output3;
-    gate:in input4;
+block channels_05 {
+    channel:out output4;
+	channel:in input1;
+	channel:in input2;
+	channel:out output1;
+    channel:out output2;
+	channel:in input3;
+	channel:out output3;
+    channel:in input4;
 
 	blueprint() {
 
 	}
 }
 
-block gates_06 {
-    gate:out output4;
-	gate:in input1;
-	gate:in input2;
-	gate:out output1;
-    gate:out output2;
-	gate:in input3;
-	gate:out output3;
-    gate:in input4;
-    gate:out output5;
+block channels_06 {
+    channel:out output4;
+	channel:in input1;
+	channel:in input2;
+	channel:out output1;
+    channel:out output2;
+	channel:in input3;
+	channel:out output3;
+    channel:in input4;
+    channel:out output5;
 
 	blueprint() {
 
 	}
 }
 
-block gates_07 {
-	gate:out output;
+block channels_07 {
+	channel:out output;
 
 	blueprint() {
 

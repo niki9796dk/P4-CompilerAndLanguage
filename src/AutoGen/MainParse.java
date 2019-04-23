@@ -1,20 +1,16 @@
 package AutoGen;
 
-import AST.*;
 import java.io.*;
+
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.TreeWalks.NumberTree;
+import AST.TreeWalks.PrintTree;
+import AST.TreeWalks.ScopeCheckerVisitor;
+import AST.TreeWalks.SymbolTableVisitor;
+import SymbolTableImplementation.SymbolTableInterface;
 import java_cup.runtime.*;
-import java.util.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import java_cup.runtime.XMLElement;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
-import java_cup.runtime.ComplexSymbolFactory.Location;
-import java_cup.runtime.XMLElement;
-
-
 
 
 public class MainParse {
@@ -23,6 +19,7 @@ public class MainParse {
     public static void main(String args[]) throws Exception {
 
         if (args.length != 1) {
+            //parseFile("data/input");
             parseFile("data/input");
         } else {
 
@@ -42,17 +39,26 @@ public class MainParse {
         AutoGen.Parser p = new AutoGen.Parser(lexer,csf);
         //System.out.println("Parser runs: ");
         AutoGen.Parser.newScope();
-        p.parse();
+        Symbol symbol = p.parse();
+
+        System.out.println("##################################");
+        AbstractNode prog = p.getRootNode();
+        prog.walkTree(new NumberTree());
+
+        SymbolTableVisitor symbolTableVisitor = new SymbolTableVisitor();
+
+        prog.walkTree(symbolTableVisitor);
+
+        SymbolTableInterface symbolTableInterface = symbolTableVisitor.getSymbolTableInterface();
+
+        System.out.println(symbolTableInterface.toString());
+
+        System.out.println("\n");
+
+        prog.walkTree(new PrintTree(System.out));
+
+        prog.walkTree(new ScopeCheckerVisitor(symbolTableInterface));
 
         return true;
-    }
-
-    public static void testTree() {
-        AbstractNode b = new TemporaryNode("block1");
-        AbstractNode bs = new TemporaryNode("block2");
-        AbstractNode prog = new TemporaryNode("Program").adoptChildren(bs);
-        prog.makeSibling(bs);
-        System.out.println("\nAST\n");
-        prog.walkTree(new PrintTree(System.out));
     }
 }

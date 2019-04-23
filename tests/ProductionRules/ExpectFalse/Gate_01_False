@@ -1,5 +1,5 @@
-block gates_06 {
-	gate:in input1;
+block channels_06 {
+	channel:in input1;
 
 	blueprint() {
 

@@ -1,7 +1,7 @@
 // Repeated blueprints.
 block repeat {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
 
@@ -9,6 +9,6 @@ block repeat {
 
 	blueprint() {
 	
-    }
+ }
 }
 

@@ -1,9 +1,0 @@
-// No blueprint
-block random_03 {
-    gate:in input;
-    gate:out output;
-
-    procedure abc() {
-
-    }
-}

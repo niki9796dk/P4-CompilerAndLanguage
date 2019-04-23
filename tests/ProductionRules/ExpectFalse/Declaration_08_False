@@ -1,9 +1,9 @@
 block decla {
-	gate:in input;
-	gate:out output;
+	channel:in input;
+	channel:out output;
 
 	blueprint() {
-		this.input -> gate:out out = this.output -> this.output;
+		this.input -> channel:out out = this.output -> this.output;
 	}
 }
 

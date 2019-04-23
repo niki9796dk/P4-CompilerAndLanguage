@@ -1,13 +1,19 @@
 import AST.*;
+import AST.Nodes.AbstractNodes.*;
+import AST.Nodes.AbstractNodes.Nodes.*;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.*;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.*;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.*;
+import AST.Nodes.NodeClasses.NamedNodes.*;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
+import AST.Nodes.SpecialNodes.*;
+import AST.Enums.*;
+import AST.TreeWalks.*;
+import AST.TreeWalks.Exceptions.*;
 import java.io.*;
 import java_cup.runtime.*;
 import java.util.*;
 
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import java_cup.runtime.XMLElement;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
@@ -16,6 +22,16 @@ action code {:
 :};
 
 parser code {:
+        private AbstractNode rootNode;
+
+        public AbstractNode createRootNode() {
+            this.rootNode = new RootNode();
+            return this.rootNode;
+        }
+
+        public AbstractNode getRootNode() {
+            return this.rootNode;
+        }
 
         /*
         public void syntax_error(Symbol cur_token){
@@ -45,13 +61,13 @@ parser code {:
         }
 
         public static boolean lookupType(String name){
-    	for (HashSet<String> scope: typenames)
-    	    if (scope.contains(name)) return true;
-    	return false;
+            for (HashSet<String> scope: typenames)
+                if (scope.contains(name)) return true;
+            return false;
         }
 
         public static void addType(String name){
-    	typenames.peek().add(name);
+    	    typenames.peek().add(name);
         }
 
         public static LinkedList<HashSet<String>> typenames = new LinkedList<HashSet<String>>();
@@ -60,49 +76,30 @@ parser code {:
     	    super(lex,sf);
         }
 
-        class TemporaryNode extends AbstractNode {
-
-             private String s;
-
-             public TemporaryNode(String s) {
-               this.s = s;
-             }
-
-             public String getName() { return s; }
-
-       }
-
-      //public AbstractNode makeNode(Symbol s) { return new TemporaryNode(symString.symToString[s.sym]); }
-      public AbstractNode makeNode(String s) { return new TemporaryNode(s);   }
-
-      //public AbstractNode makeNode(Integer i) { return new IntegerNode(i);   }
-
 :};
-
-// TODO:  Fix dot and add size
 
 /* separators */
 terminal Symbol COMMA, SEMICOLON, LPAR, RPAR, LCURLY, RCURLY, ASSIGN, CONNECTION, LSQR, RSQR, DOT;
 
 /* keywords */
-terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, GATEIN, GATEOUT, PROCEDURE, THIS, SIZE;
+terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, CHANNELIN, CHANNELOUT, PROCEDURE, THIS, SIZE;
 
 /* others */
 terminal String ID;
 terminal Double NUMCONST;
 terminal Integer INTCONST;
 
-non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, gate, blueparam, blueparams,
+non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channel, blueparam, blueparams,
              blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
              elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
-             buildelement, buildelementpar, sizepar, ingatedeclaration, outgatedeclaration, inoutgatedeclaration,
+             buildelement, buildelementpar, sizepar, inchanneldeclaration, outchanneldeclaration, inoutchanneldeclaration,
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
-             gateassign, buildassign, blueprintassignopt, sizeassignopt, gateassignopt, builddecla, gateelementspar, gateelement, idpar;
+             channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, builddecla, channelelementspar, channelelement, idpar;
 
-non terminal AbstractNode blueprint, content, procedures, definition, gatedeclarations;
+non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
-non terminal DoublePair sizeconst;
+non terminal SizeNode sizeconst;
 // TODO: Add precedence and associativity
 
 /* The grammar rules */
@@ -110,10 +107,10 @@ start with prog;
 
 prog                    ::= blocks:bs
                         {:
-                            AbstractNode prog = makeNode("Program").adoptChildren(bs);
+                            AbstractNode prog = createRootNode().adoptChildren(bs);
 
-                            System.out.println("\nAST\n");
-                            prog.walkTree(new PrintTree(System.out));
+                            //System.out.println("\nAST\n");
+                            //prog.walkTree(new PrintTree(System.out));
                         :}
                         ;
 
@@ -128,10 +125,10 @@ block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
 blocks                  ::= block:b
                         {: RESULT = b; :}
                         | block:b blocks:bs
-                        {: RESULT = bs.makeSibling(b); :}
+                        {: RESULT = b.makeSibling(bs); :}
                         ;
 
-definition 		        ::= gatedeclarations:gds blueprint:bp procedures:pds
+definition 		        ::= channeldeclarations:gds blueprint:bp procedures:pds
                         {:
                             RESULT = (pds != null) ? gds.makeSibling(bp).makeSibling(pds) : gds.makeSibling(bp);
                         :}
@@ -142,8 +139,8 @@ type				    ::= buildtype:type
                         {: RESULT = type; :}
 					    | bluetype:type
 					    {: RESULT = type; :}
-					    | gate:gate
-					    {: RESULT = gate; :}
+					    | channel:channel
+					    {: RESULT = channel; :}
                         ;
 buildtype			    ::= BLOCK
                         {: RESULT = new BlockTypeNode("NoIden"); :}
@@ -152,31 +149,32 @@ buildtype			    ::= BLOCK
 					    | SOURCE
 					    {: RESULT = new SourceTypeNode("NoIden"); :}
                         ;
-// GATES
-gatedeclarations        ::= ingatedeclaration:ind outgatedeclaration:outd inoutgatedeclaration:inoutd
+// CHANNELS
+channeldeclarations        ::= inchanneldeclaration:ind outchanneldeclaration:outd inoutchanneldeclaration:inoutd
                         {:
-                            if (ind != null) outd.makeSibling(ind);
-                            if (inoutd != null) outd.makeSibling(inoutd);
-                            RESULT = outd;
+                            RESULT = new ChannelDeclarationsNode().adoptChildren(ind, outd, inoutd);
                         :}
                         ;
-ingatedeclaration       ::= GATEIN ID:id SEMICOLON ingatedeclaration:ind
-                        {: RESULT = (ind!=null) ? ind.makeSibling(new InGateNode(id)) : new InGateNode(id); :}
+inchanneldeclaration       ::= CHANNELIN ID:id SEMICOLON inchanneldeclaration:ind
+                        {:
+                        AbstractNode channelNode = new InChannelNode(id);
+                        RESULT = (ind!=null) ? channelNode.makeSibling(ind) : channelNode;
+                        :}
                         |
                         ;
-outgatedeclaration      ::= GATEOUT ID:id SEMICOLON
-                        {: RESULT = new OutGateNode(id); :}
+outchanneldeclaration      ::= CHANNELOUT ID:id SEMICOLON
+                        {: RESULT = new OutChannelNode(id); :}
                         ;
-inoutgatedeclaration    ::= gate:g ID:id SEMICOLON inoutgatedeclaration:gd
+inoutchanneldeclaration    ::= channel:g ID:id SEMICOLON inoutchanneldeclaration:gd
                         {:
-                           AbstractNode gateNode = ((IdNode) g).setId(id);
-                           RESULT = (gd != null) ? gd.makeSibling(gateNode) :  gateNode; :}
+                           AbstractNode channelNode = ((NamedIdNode) g).setId(id);
+                           RESULT = (gd != null) ? channelNode.makeSibling(gd) :  channelNode; :}
 					    |
 					    ;
-gate				    ::= GATEIN
-                        {: RESULT = new InGateNode("NoIden"); :}
-					    | GATEOUT
-					    {: RESULT = new OutGateNode("NoIden"); :}
+channel				    ::= CHANNELIN
+                        {: RESULT = new InChannelNode("NoIden"); :}
+					    | CHANNELOUT
+					    {: RESULT = new OutChannelNode("NoIden"); :}
                         ;
 // BLUEPRINT
 blueprint			    ::= BLUEPRINT LPAR blueparams:bps RPAR LCURLY content:cnt RCURLY
@@ -197,24 +195,24 @@ blueparams		        ::= blueparam:bp
                         ;
 blueparam			    ::= bluetype:bt ID:id blueextparams:btx
                         {:
-                           AbstractNode typeNode = ((IdNode) bt).setId(id);
-                           RESULT = (btx != null) ? (btx.makeSibling(typeNode)) : (typeNode);
+                           AbstractNode typeNode = ((NamedIdNode) bt).setId(id);
+                           RESULT = (btx != null) ? (typeNode.makeSibling(btx)) : (typeNode);
                         :}
                         ;
 blueextparams		    ::= COMMA blueparam:bp
                         {: RESULT = bp;:}
                         |
                         ;
-// TODO: Add when ready:
+
 bluetype 			    ::= BLUEPRINT
                         {: RESULT = new BlueprintTypeNode("NoIden"); :}
                         | SIZE
-                        {: RESULT = new SizeNode("NoIden"); :}
+                        {: RESULT = new SizeTypeNode("NoIden"); :}
                         ;
 // CONTENT
 content			        ::= statement:st SEMICOLON content:ct
                         {: // TODO: Fix this future me. (Expand to if else chain)
-                           RESULT = (st != null && ct != null) ? ct.makeSibling(st) : ((st != null) ? (st) : (ct)); :}
+                           RESULT = (st != null && ct != null) ? st.makeSibling(ct) : ((st != null) ? (st) : (ct)); :}
 					    |
                         ;
 statement			    ::= declaration:decl
@@ -223,20 +221,22 @@ statement			    ::= declaration:decl
 					    {:
 					        // Chain
 					        if (st instanceof StorageNode) {
-					            String storageName = st.getName();
+					            StorageNode storageNode = (StorageNode) st; 
+					            String storageName = storageNode.getName();
 
 					            if ("Chain".equals(storageName)) {
-					                AbstractNode chainNode = st.getNodes()[1];
+					                AbstractNode dotId = storageNode.getNodes()[0];
+					                AbstractNode chainNode = storageNode.getNodes()[1];
                                     AbstractNode idSelector = new SelectorNode(id);
 
-                                    idSelector.adoptChildren(st.getNodes()[0]);
+                                    idSelector.adoptChildren(dotId);
 
-                                    RESULT = chainNode.adoptChildren(idSelector);
+                                    RESULT = chainNode.adoptAsFirstChild(idSelector);
 					            } else if ("Assign".equals(storageName)) {
-					                AbstractNode assignNode = st.getNodes()[0].adoptChildren(new SelectorNode(id));
-					                AbstractNode chainNode = st.getNodes()[1];
+					                AbstractNode assignNode = storageNode.getNodes()[0].adoptAsFirstChild(new SelectorNode(id));
+					                AbstractNode chainNode = storageNode.getNodes()[1];
 
-					                RESULT = (chainNode != null) ? chainNode.adoptChildren(assignNode) : assignNode;
+					                RESULT = (chainNode != null) ? chainNode.adoptAsFirstChild(assignNode) : assignNode;
 
 					            } else {
 					                // Security check, should never happen - But helps with development.
@@ -249,9 +249,9 @@ statement			    ::= declaration:decl
 					    | LPAR optlparstatement:statement
 					    {: RESULT = statement; :}
 					    | THIS DOT ID:id optthisstatement:st
-					    {: RESULT = st.adoptChildren(new SelectorNode("this").adoptChildren(new SelectorNode(id))); :}
+					    {: RESULT = st.adoptAsFirstChild(new SelectorNode("this").adoptChildren(new SelectorNode(id))); :}
 					    | builddeclaration:bdecl chain:chain
-					    {: RESULT = chain.adoptChildren(bdecl); :}
+					    {: RESULT = chain.adoptAsFirstChild(bdecl); :}
 					    |
                         ;
 procedurecall		    ::= LPAR elementliststart:paras RPAR
@@ -269,10 +269,10 @@ procedurecall		    ::= LPAR elementliststart:paras RPAR
 optlparstatement	    ::= LPAR element:elem RPAR groupcon:groupcon
 					    {:
 					        // Group connection
-                            AbstractNode group = groupcon.getNodes()[0];
-                            AbstractNode chain = groupcon.getNodes()[1];
+                            AbstractNode group = ((StorageNode) groupcon).getNodes()[0];
+                            AbstractNode chain = ((StorageNode) groupcon).getNodes()[1];
 
-                            group.adoptChildren(elem);
+                            group.adoptAsFirstChild(elem);
 
                             RESULT = chain;
 					     :}
@@ -280,14 +280,14 @@ optlparstatement	    ::= LPAR element:elem RPAR groupcon:groupcon
 					    {:
 					        // Group connection
     					    if (chainorgroup instanceof StorageNode) {
-    					        AbstractNode group = chainorgroup.getNodes()[0];
-                                AbstractNode chain = chainorgroup.getNodes()[1];
+    					        AbstractNode group = ((StorageNode) chainorgroup).getNodes()[0];
+                                AbstractNode chain = ((StorageNode) chainorgroup).getNodes()[1];
 
-    					        group.adoptChildren(elem);
+    					        group.adoptAsFirstChild(elem);
 
     					        RESULT = chain;
     					    } else {
-    					        RESULT = chainorgroup.adoptChildren(elem);
+    					        RESULT = chainorgroup.adoptAsFirstChild(elem);
     					    }
 					     :}
                         ;
@@ -311,7 +311,7 @@ optthisstatement	    ::= procedurecall:pdc
 // COLLECTIVE STATEMENTS
 chain				    ::= CONNECTION nodeelementpar:elem chainext:next
                         {:
-                            RESULT = (next != null) ? next.adoptChildren(elem) : new ChainNode().adoptChildren(elem);
+                            RESULT = (next != null) ? next.adoptAsFirstChild(elem) : new ChainNode().adoptChildren(elem);
                          :}
                         ;
 parchain			    ::= RPAR chain:chain
@@ -326,10 +326,11 @@ groupcon			    ::= elementlist:elemlist RPAR CONNECTION elementpar:elem chainext
                             AbstractNode group = new GroupNode().adoptChildren(elemlist);
 
                             if (chain != null) {
-                                chain.adoptChildren(elem, group);
+                                group.makeSibling(elem);
+                                chain.adoptAsFirstChild(group);
                                 RESULT = new StorageNode(group, chain);
                             } else {
-                                AbstractNode conn = new ChainNode().adoptChildren(elem, group);
+                                AbstractNode conn = new ChainNode().adoptChildren(group, elem);
                                 RESULT = new StorageNode(group, conn);
                             }
                          :}
@@ -396,16 +397,16 @@ sizepar                 ::= sizeconst:size
                         ;
 
 sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
-                        {: RESULT = new DoublePair(n1, n2); :}
+                        {: RESULT = new SizeNode(n1, n2); :}
                         ;
 
-gateelementspar         ::= LPAR gateelement:elem RPAR
+channelelementspar         ::= LPAR channelelement:elem RPAR
                         {: RESULT = elem; :}
-                        | gateelement:elem
+                        | channelelement:elem
                         {: RESULT = elem; :}
                         ;
 
-gateelement             ::= THIS DOT ID:id
+channelelement             ::= THIS DOT ID:id
                         {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
                         | ID:id dotid:dotid
                         {: RESULT = new SelectorNode(id).adoptChildren(dotid); :}
@@ -419,44 +420,44 @@ idpar                   ::= LPAR ID:id RPAR
 
 // DECLARATION ELEMENT
 nodedeclaration         ::= buildtype:type ID:id buildassign:assign
-                        {: RESULT = assign.adoptChildren(((IdNode) type).setId(id)); :}
+                        {: RESULT = assign.adoptAsFirstChild(((NamedIdNode) type).setId(id)); :}
                         ;
 
 nonnodedeclaration      ::= BLUEPRINT ID:id blueprintassign:assign
-                        {: RESULT = assign.adoptChildren(new BlueprintTypeNode(id)); :}
+                        {: RESULT = assign.adoptAsFirstChild(new BlueprintTypeNode(id)); :}
                         | SIZE ID:id sizeassign:assign
-                        {: RESULT = assign.adoptChildren(new SizeNode(id)); :}
-                        | gate:type ID:id gateassign:assign
-                        {: RESULT = assign.adoptChildren(((IdNode) type).setId(id)); :}
+                        {: RESULT = assign.adoptAsFirstChild(new SizeTypeNode(id)); :}
+                        | channel:type ID:id channelassign:assign
+                        {: RESULT = assign.adoptAsFirstChild(((NamedIdNode) type).setId(id)); :}
                         ;
 
 declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
                         {:
                             AbstractNode typeNode = new BlueprintTypeNode(id);
-                            RESULT = (assign != null) ? assign.adoptChildren(typeNode) : typeNode;
+                            RESULT = (assign != null) ? assign.adoptAsFirstChild(typeNode) : typeNode;
                         :}
                         | SIZE ID:id sizeassignopt:assign
                         {:
-                            AbstractNode typeNode = new SizeNode(id);
-                            RESULT = (assign != null) ? assign.adoptChildren(typeNode) : typeNode;
+                            AbstractNode typeNode = new SizeTypeNode(id);
+                            RESULT = (assign != null) ? assign.adoptAsFirstChild(typeNode) : typeNode;
                         :}
-                        | gate:gate ID:id gateassignopt:assign
+                        | channel:channel ID:id channelassignopt:assign
                         {:
-                            AbstractNode typeNode = (((IdNode) gate).setId(id));
-                            RESULT = (assign != null) ? assign.adoptChildren(typeNode) : typeNode;
+                            AbstractNode typeNode = (((NamedIdNode) channel).setId(id));
+                            RESULT = (assign != null) ? assign.adoptAsFirstChild(typeNode) : typeNode;
                         :}
                         | buildtype:type ID:id builddecla:decla
                         {:
-                            AbstractNode typeNode = (((IdNode) type).setId(id));
+                            AbstractNode typeNode = (((NamedIdNode) type).setId(id));
 
                             if (decla != null) {
-                                AbstractNode assign = decla.getNodes()[0];
-                                AbstractNode chain = decla.getNodes()[1];
+                                AbstractNode assign = ((StorageNode) decla).getNodes()[0];
+                                AbstractNode chain = ((StorageNode) decla).getNodes()[1];
 
-                                assign.adoptChildren(typeNode);
+                                assign.adoptAsFirstChild(typeNode);
 
                                 if (chain != null) {
-                                    chain.adoptChildren(assign);
+                                    chain.adoptAsFirstChild(assign);
 
                                     RESULT = chain;
                                 } else {
@@ -474,12 +475,14 @@ builddecla              ::= buildassign:assign declstoporstay:chain
                         ;
 
 blueprintassign         ::= ASSIGN DRAW idpar:elem
-                        {: RESULT = new AssignNode().adoptChildren(elem); :}
+                        {: RESULT = new AssignNode().adoptChildren(new DrawNode(((NamedIdNode) elem).getId())); :}
                         ;
 sizeassign              ::= ASSIGN sizepar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
+                        | ASSIGN idpar:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-gateassign              ::= ASSIGN gateelementspar:elem
+channelassign           ::= ASSIGN channelelementspar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 buildassign             ::= ASSIGN buildelement:elem
@@ -493,7 +496,7 @@ sizeassignopt           ::= sizeassign:assign
                         {: RESULT = assign; :}
                         |
                         ;
-gateassignopt           ::= gateassign:assign
+channelassignopt           ::= channelassign:assign
                         {: RESULT = assign; :}
                         |
                         ;
@@ -510,11 +513,11 @@ declstoporstay		    ::= chain:chain
                         ;
 // ELEMENTLIST
 elementliststart	    ::= elementpar:elem elementlistext:next
-                        {: RESULT = (next != null) ? next.makeSibling(elem) : elem; :}
+                        {: RESULT = (next != null) ? elem.makeSibling(next) : elem; :}
 					    |
                         ;
 elementlist		        ::= elementext:elem elementlistext:next
-                        {: RESULT = (next != null) ? next.makeSibling(elem) : elem; :}
+                        {: RESULT = (next != null) ? elem.makeSibling(next) : elem; :}
                         ;
 elementlistext	        ::= elementlist:elemlist
                         {: RESULT = elemlist; :}
@@ -533,15 +536,15 @@ procedures		        ::= PROCEDURE ID:id LPAR pparams:params RPAR LCURLY content:
                             }
                             procedure.adoptChildren(ct);
 
-                            RESULT = (next != null) ? next.makeSibling(procedure) : procedure;
+                            RESULT = (next != null) ? procedure.makeSibling(next) : procedure;
                         :}
 					    |
                         ;
 pparams			        ::= type:type ID:id pextparams:next
                         {:
-                            AbstractNode param = ((IdNode) type).setId(id);
+                            AbstractNode param = ((NamedIdNode) type).setId(id);
 
-                            RESULT = (next != null) ? next.makeSibling(param) : param;
+                            RESULT = (next != null) ? param.makeSibling(next) : param;
                          :}
 					    |
                         ;
