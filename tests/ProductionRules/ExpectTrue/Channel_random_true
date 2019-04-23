@@ -1,0 +1,9 @@
+block hej {
+    channel:out out;
+    channel:in in1;
+    channel:in in2;
+
+    blueprint() {
+
+    }
+}

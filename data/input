@@ -1,16 +1,20 @@
 block AnnLayer {
 
-  gate:in in1;
-  gate:out out1;
-  gate:in in2;
-  gate:out out2;
+  channel:in in1;
+  channel:out out1;
+  channel:in in2;
+  channel:out out2;
 
   blueprint(size si, blueprint blue){
     abc();
 
-    block a;
+    block a = build Abs();
 
-    a = build diller() -> (b) -> c -> d;
+    block b = build Abs();
+
+    a = build Abs();
+    b = a;
+    a = build Abs();
   }
 
   procedure abc(block abc, blueprint blue123) {
@@ -19,8 +23,18 @@ block AnnLayer {
 }
 
 block Abs {
-  gate:in in;
-  gate:out out;
+  channel:in in;
+  channel:out out;
+
+  blueprint(blueprint blue, size si){
+    ;;;;;
+  }
+}
+
+
+block Hmmm {
+  channel:in in;
+  channel:out out;
 
   blueprint(blueprint blue, size si){
     ;;;;;

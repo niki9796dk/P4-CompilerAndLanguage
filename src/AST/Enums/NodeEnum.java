@@ -1,0 +1,25 @@
+package AST.Enums;
+
+public enum NodeEnum {
+    ASSIGN,
+    BLOCK,
+    BLOCK_TYPE,
+    BLUEPRINT,
+    BLUEPRINT_TYPE,
+    BUILD,
+    CHAIN,
+    CHANNEL_DECLARATIONS,
+    DRAW,
+    GROUP,
+    CHANNEL_IN,
+    OPERATION_TYPE,
+    CHANNEL_OUT,
+    PARAMS,
+    PROCEDURE_CALL,
+    PROCEDURE,
+    ROOT,
+    SELECTOR,
+    SIZE,
+    SIZE_TYPE,
+    SOURCE_TYPE
+}
