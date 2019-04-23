@@ -1,33 +1,51 @@
 package Enums;
 
+/**
+ * Enums for Ansi color codes. Used by stringbuilders and implicitly appended to strings.
+ */
 public enum AnsiColor {
-    RESET("\u001B[0m"),
-    BLACK("\u001B[30m"),
-    RED("\u001B[31m"),
-    GREEN("\u001B[32m"),
-    YELLOW("\u001B[33m"),
-    BLUE("\u001B[34m"),
-    PURPLE("\u001B[35m"),
-    CYAN("\u001B[36m"),
-    WHITE("\u001B[37m"),
-    BG_GREEN("\u001B[42m"),
-    BG_BLUE("\u001B[44m"),
-    BG_RESET("\u001B[49m"),
-    BG_WHITE("\u001B[37m"),
-    FONT_BOLD("\u001B[1m"),
-    FONT_UNDERLINE("\u001B[4m");
+    RESET("0m"),
+    BLACK("30m"),
+    RED("31m"),
+    GREEN("32m"),
+    YELLOW("33m"),
+    BLUE("34m"),
+    PURPLE("35m"),
+    CYAN("36m"),
+    WHITE("37m"),
+    BG_GREEN("42m"),
+    BG_BLUE("44m"),
+    BG_RESET("49m"),
+    BG_WHITE("47m"),
+    FONT_BOLD("1m"),
+    FONT_UNDERLINE("4m");
 
+    /**
+     * The colors escape code string.
+     */
     private String colorCode;
 
+    /**
+     * Construct a new AnsiColor using a color code.
+     * @param colorCode The color code without the escape code.
+     */
     AnsiColor(String colorCode) {
-        this.colorCode = colorCode;
+        this.colorCode = "\u001B[" +colorCode;
     }
 
+    /**
+     * @return the escape color code of the enum.
+     */
     @Override
     public String toString() {
         return this.colorCode;
     }
 
+    /**
+     * A static method to remove all color codes from a string.
+     * @param s The string to remove color codes from.
+     * @return The input string without any color codes.
+     */
     public static String removeColor(String s) {
         for (AnsiColor c : AnsiColor.values()) {
             s = s.replace(c.colorCode,"");
