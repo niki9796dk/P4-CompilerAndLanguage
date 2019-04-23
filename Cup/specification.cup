@@ -238,7 +238,7 @@ statement			    ::= declaration:decl
 					                throw new RuntimeException("No such name case");
 					            }
 					        } else {
-					            RESULT = storageNode.adoptChildren(new SelectorNode(id));
+					            RESULT = st.adoptChildren(new SelectorNode(id));
 					        }
 					    :}
 					    | LPAR optlparstatement:statement
