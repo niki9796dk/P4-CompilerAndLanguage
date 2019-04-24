@@ -2,14 +2,9 @@ package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.Visitor;
-import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
-import SymbolTableImplementation.VariableEntry;
 
 public class TypeCheckerVisitor implements Visitor {
 
@@ -34,17 +29,17 @@ public class TypeCheckerVisitor implements Visitor {
                 AbstractNode childNode = node.getChild();
 
                 // Verify it's type as an input node
-                this.verifyInput(childNode);
+                this.verifyInputType(childNode);
 
                 // Loop all middle children and verify them as an element node
                 childNode = childNode.getSib();
                 while (childNode.getSib() != null) {
-                    this.verifyElement(childNode);
+                    this.verifyMiddleType(childNode);
                     childNode = childNode.getSib();
                 }
 
                 // Verify the last node as an output node
-                this.verifyOutput(childNode);
+                this.verifyOutputType(childNode);
                 break;
 
             case PROCEDURE_CALL:
@@ -104,15 +99,15 @@ public class TypeCheckerVisitor implements Visitor {
         }
     }
 
-    private void verifyInput(AbstractNode node) {
+    private void verifyInputType(AbstractNode node) {
 
     }
 
-    private void verifyElement(AbstractNode node) {
+    private void verifyMiddleType(AbstractNode node) {
 
     }
 
-    private void verifyOutput(AbstractNode node) {
+    private void verifyOutputType(AbstractNode node) {
 
     }
 }
