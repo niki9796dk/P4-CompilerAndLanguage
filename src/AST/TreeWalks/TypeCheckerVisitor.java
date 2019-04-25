@@ -1,18 +1,22 @@
 package AST.TreeWalks;
 
+import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
+import TypeChecker.TypeSystem;
 
 public class TypeCheckerVisitor implements Visitor {
 
-    private SymbolTableInterface symbolTableInterface = new SymbolTable();
+    private TypeSystem typeSystem;
+    private String currentBlockScope;
+    private String currentSubScope;
 
-    public SymbolTableInterface getSymbolTableInterface() {
-        return symbolTableInterface;
+    public TypeCheckerVisitor(SymbolTableInterface symbolTableInterface) {
+        this.typeSystem = new TypeSystem(symbolTableInterface);
     }
 
     @Override
@@ -101,7 +105,7 @@ public class TypeCheckerVisitor implements Visitor {
     }
 
     private void verifyInputType(AbstractNode node) {
-
+        NodeEnum nodeType = this.typeSystem.getTypeOfNode(node)
     }
 
     private void verifyMiddleType(AbstractNode node) {
