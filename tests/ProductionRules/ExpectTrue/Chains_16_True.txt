@@ -1,0 +1,12 @@
+// Blocks
+block chain_16 {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+
+		(a) -> block abc = build test() -> this.output;
+	}
+}

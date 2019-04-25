@@ -1,0 +1,17 @@
+
+
+block channels_06 {
+    channel:out output4;
+	channel:in input1;
+	channel:in input2;
+	channel:out output1;
+    channel:out output2;
+	channel:in input3;
+	channel:out output3;
+    channel:in input4;
+    channel:out output5;
+
+	blueprint() {
+
+	}
+}

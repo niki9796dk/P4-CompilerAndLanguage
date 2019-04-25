@@ -1,0 +1,8 @@
+// Single out channel
+block random_5 {
+    channel:out output;
+
+    blueprint() {
+
+    }
+}

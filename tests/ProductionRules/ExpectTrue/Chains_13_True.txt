@@ -1,0 +1,13 @@
+// Test of channel access groups.
+block chain_13 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		((a.out), b, (c.out)) -> build LargeOpe() -> (this.output);
+	}
+}

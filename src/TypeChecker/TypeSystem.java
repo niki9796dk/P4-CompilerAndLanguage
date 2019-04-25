@@ -3,7 +3,6 @@ package TypeChecker;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.SymbolTable;
@@ -54,8 +53,7 @@ public class TypeSystem {
                 BlockScope blockScope = this.symbolTable.getBlockScope(blockScopeId);
 
                 return blockScope
-                        .getScope()
-                        .getEntry(subScopeId)
+                        .getSubscope(subScopeId)
                         .getVariable(namedIdNode.getId())
                         .getSuperType();
 
@@ -63,6 +61,10 @@ public class TypeSystem {
                 throw new RuntimeException("Unexpected Node");
         }
 
+        return null;
+    }
+
+    private NodeEnum getTypeFromGlobal(NamedIdNode namedIdNode, String blockScopeId) {
         return null;
     }
 }

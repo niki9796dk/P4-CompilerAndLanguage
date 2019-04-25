@@ -1,0 +1,17 @@
+// Test of legal but cursed sequences
+
+ block cursed_04{
+     channel:out output;
+
+     blueprint() {
+         size a = [2,3];
+         size b =
+         [
+         2
+         ,
+         3
+         ]
+         ;
+         size c = [1234567890,0987654321];
+     }
+ }

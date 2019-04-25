@@ -1,0 +1,11 @@
+block channels_02 {
+	channel:in input1;
+	channel:in input2;
+	channel:out output;
+	channel:in input3;
+    channel:in input4;
+
+	blueprint() {
+
+	}
+}

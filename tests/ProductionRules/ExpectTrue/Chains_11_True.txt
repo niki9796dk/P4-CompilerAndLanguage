@@ -1,0 +1,19 @@
+// Test of channel access.
+block chain_11 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input -> a.in;
+		
+		a.out -> b.inputGate;
+		
+		b.outputGate -> c.swagIn;
+
+		c.swagOut -> this.output;
+	}
+}

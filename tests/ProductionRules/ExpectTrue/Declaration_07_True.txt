@@ -1,0 +1,10 @@
+// size
+block decla_07 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+        size s = [2 , 5];
+	}
+}
+

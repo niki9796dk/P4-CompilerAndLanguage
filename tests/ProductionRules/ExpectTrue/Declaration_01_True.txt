@@ -1,0 +1,10 @@
+// Simpel declaration
+block decla_01 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build Test();
+	}
+}
+
