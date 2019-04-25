@@ -14,9 +14,9 @@ public abstract class NamedIdNode extends NamedNode {
     private String id;
 
     /**
-     * Con
-     * @param name
-     * @param id
+     * Construct a node with a name, id, and an appropriate class enum.
+     * @param name The name of the node.
+     * @param id The unique id of the node.
      * @param nodeEnum An enum appropriate for a non-abstract class extending this class.
      */
     public NamedIdNode(String name, String id, NodeEnum nodeEnum) {
@@ -25,15 +25,17 @@ public abstract class NamedIdNode extends NamedNode {
     }
 
     /**
-     * @return
+     * Get the unique id of the node as a string.
+     * @return The id as a string.
      */
     public String getId() {
         return id;
     }
 
     /**
-     * @param id
-     * @return
+     * Set the unique id of the node using a string.
+     * @param id What to set the unique ID as using a string.
+     * @return  a reference to this object.
      */
     public AbstractNode setId(String id) {
         this.id = id;

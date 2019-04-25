@@ -6,6 +6,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
+import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.*;
 
@@ -94,7 +95,7 @@ public class ScopeCheckerVisitor implements Visitor {
                 }
                 break;
             default:
-                throw new RuntimeException("Unexpected Node");
+                throw new UnexpectedNodeException(node);
         }
     }
 
@@ -127,7 +128,7 @@ public class ScopeCheckerVisitor implements Visitor {
                 break;
 
             default:
-                throw new RuntimeException("Unexpected Node");
+                throw new UnexpectedNodeException(node);
         }
     }
 
