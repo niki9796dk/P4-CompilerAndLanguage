@@ -103,7 +103,7 @@ public class SymbolTableVisitor implements Visitor {
                 break;
 
             default:
-                throw new RuntimeException("Unexpected Node");
+                throw new UnexpectedNodeException(node);
         }
     }
 
