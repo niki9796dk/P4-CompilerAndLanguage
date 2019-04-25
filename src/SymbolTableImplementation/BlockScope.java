@@ -51,6 +51,14 @@ public class BlockScope {
         return this.scope;
     }
 
+
+    /**
+     * @return Returns an subscope from the scope with the scope entry name.
+     */
+    public Scope getSubscope(String s) {
+        return this.scope.getEntry(s);
+    }
+
     /**
      * @return Returns the BlockNode of which the object is a scope of.
      */
