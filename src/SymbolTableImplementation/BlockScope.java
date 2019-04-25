@@ -47,7 +47,7 @@ public class BlockScope {
     /**
      * @return Returns the NamedTable containing all the scopes within the block.
      */
-    private NamedTable<Scope> getScope() {
+    NamedTable<Scope> getScope() {
         return this.scope;
     }
 
