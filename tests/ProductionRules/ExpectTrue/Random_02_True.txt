@@ -1,0 +1,21 @@
+// Test of legal char sequences
+block random_02 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		abcde();
+	}
+	
+	procedure abc() { }
+	
+	procedure abcd() {
+	;;;
+	}
+	
+	procedure abcde() {
+		;;;
+		abc();
+	}
+}
+

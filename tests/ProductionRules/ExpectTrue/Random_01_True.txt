@@ -1,0 +1,14 @@
+// Test of legal char sequences
+block random_01 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();;;;;;;;;
+		;;;
+		;;;;;;
+		;;;
+		
+		;;;this.input -> a -> this.output;;;;
+	}
+}

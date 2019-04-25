@@ -1,0 +1,27 @@
+// Test of legal but cursed sequences
+block cursed_01 {
+channel:in
+input;channel:out output;
+blueprint
+(
+)
+{
+block
+a
+=
+build
+test
+(
+)
+;
+this
+.
+input
+->
+a
+->
+this
+.
+output
+;}
+}
