@@ -15,7 +15,7 @@ public abstract class NamedNode extends NumberedNode {
     /**
      * Construct a node with a name and an appropriate class enum.
      * @param name The name of the node.
-     * @param nodeEnum An enum appropriate for its class.
+     * @param nodeEnum An enum appropriate for a non-abstract class extending this class.
      */
     public NamedNode(String name, NodeEnum nodeEnum) {
         super(nodeEnum);

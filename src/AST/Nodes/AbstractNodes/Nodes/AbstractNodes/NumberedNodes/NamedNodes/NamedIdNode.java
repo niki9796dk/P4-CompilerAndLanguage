@@ -14,10 +14,10 @@ public abstract class NamedIdNode extends NamedNode {
     private String id;
 
     /**
-     *
+     * Con
      * @param name
      * @param id
-     * @param nodeEnum
+     * @param nodeEnum An enum appropriate for a non-abstract class extending this class.
      */
     public NamedIdNode(String name, String id, NodeEnum nodeEnum) {
         super(name, nodeEnum);
