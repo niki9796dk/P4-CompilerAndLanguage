@@ -1,0 +1,10 @@
+// Blueprint
+block decla_06 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		blueprint blockBlueprint = draw Test;
+	}
+}
+

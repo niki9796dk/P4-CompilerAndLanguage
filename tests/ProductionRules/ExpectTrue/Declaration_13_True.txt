@@ -1,0 +1,9 @@
+block decla_13 {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+		channel:in abc;
+	}
+}
+

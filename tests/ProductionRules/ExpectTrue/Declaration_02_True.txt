@@ -1,0 +1,10 @@
+// Para
+block decla_02 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = (build Test());
+	}
+}
+
