@@ -39,6 +39,12 @@ public interface SymbolTableInterface {
      */
     BlockScope getLatestBlockScope();
 
+    /**
+     * Get the specified sub scope of the specified scope.
+     *
+     * @return the sub scope of the specified scope with the input id's, or null if no such scope or sub scope exists.
+     */
+    Scope getSubScope(String scopeId, String subscopeId);
 
     /**
      * Inserts a variable into the most recent scope
