@@ -3,9 +3,6 @@ package AST.Nodes.AbstractNodes.Nodes;
 import AST.Nodes.AbstractNodes.Node;
 import AST.Visitor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /** All AST nodes are subclasses of this node.  This node knows how to
   * link itself with other siblings and adopt children.
   * Each node gets a node number to help identify it distinctly in an AST.
@@ -71,7 +68,7 @@ public abstract class AbstractNode implements Node {
    }
 
    /**
-    * Adopt the supplied nodes and all of their siblings under this nod
+    * Adopt the supplied nodes and all of their siblings under this node
     * @param nodes An array of nodes to adopt.
     * @return  a reference to this object.
     */

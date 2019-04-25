@@ -47,8 +47,16 @@ public class BlockScope {
     /**
      * @return Returns the NamedTable containing all the scopes within the block.
      */
-    public NamedTable<Scope> getScope() {
+    NamedTable<Scope> getScope() {
         return this.scope;
+    }
+
+
+    /**
+     * @return Returns an subscope from the scope with the scope entry name.
+     */
+    public Scope getSubscope(String s) {
+        return this.getScope().getEntry(s);
     }
 
     /**

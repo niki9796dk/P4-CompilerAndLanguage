@@ -1,8 +1,9 @@
 package SymbolTableImplementation;
 
+import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import Enums.AnsiColor;
 
 /**
@@ -15,7 +16,8 @@ public class Scope {
 
     /**
      * Creates a new scope with specified id and representing the specified node. The scope will be empty.
-     * @param id The unique id identifier.
+     *
+     * @param id   The unique id identifier.
      * @param node The node of which the scope object is a scope of.
      */
     public Scope(String id, NamedNode node) {
@@ -40,11 +42,32 @@ public class Scope {
 
     /**
      * Retrieve a variable entry within the id
+     *
      * @param id The id of the variable.
      * @return The variable entry with the specified id, or Null if no such entry exists.
      */
     public VariableEntry getVariable(String id) {
         return this.scope.getEntry(id);
+    }
+
+    /**
+     * Retrieve a variable entry within the id of the input node.
+     * @param node A namedIdNode
+     * @return The variable entry with the specified id, or Null if no such entry exists.
+     */
+    public VariableEntry getVariable(NamedIdNode node) {
+        return this.getVariable(node.getId());
+    }
+
+    /**
+     * Retrieve a variable entry within the id of the input node. This method will typecast the node into a NamedIdNode.
+     * @param node A node.
+     * @return The variable entry with the specified id, or Null if no such entry exists.
+     */
+    public VariableEntry getVariable(Node node) {
+        if (node instanceof NamedIdNode)
+            return this.getVariable(((NamedIdNode) node).getId());
+        throw new IllegalArgumentException("Input \"node\" must be subclass of NamedIdNode");
     }
 
     /**
