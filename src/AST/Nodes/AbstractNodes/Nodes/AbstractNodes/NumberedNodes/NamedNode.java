@@ -4,17 +4,18 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 
 /**
- *
+ * A node which can be labelled using a String containing its name.
  */
 public abstract class NamedNode extends NumberedNode {
     /**
-     *
+     * The name of the node as a string.
      */
     private String name;
 
     /**
-     * @param name
-     * @param nodeEnum
+     * Construct a node with a name and an appropriate class enum.
+     * @param name The name of the node.
+     * @param nodeEnum An enum appropriate for its class.
      */
     public NamedNode(String name, NodeEnum nodeEnum) {
         super(nodeEnum);
@@ -22,7 +23,8 @@ public abstract class NamedNode extends NumberedNode {
     }
 
     /**
-     * @return
+     * Get the name of the node.
+     * @return the name of the node.
      */
     public String getName() {
         return name;
