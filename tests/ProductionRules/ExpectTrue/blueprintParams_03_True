@@ -1,0 +1,8 @@
+block b3 {
+	channel:in input;
+	channel:out output;
+
+	blueprint(size abc1, blueprint abc2) {
+
+	}
+}

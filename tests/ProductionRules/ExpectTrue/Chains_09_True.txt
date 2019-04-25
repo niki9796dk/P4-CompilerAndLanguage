@@ -1,0 +1,16 @@
+// Test of multi line chaining.
+block chain_09 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input 
+		-> a
+		-> b -> c
+		-> this.output;
+	}
+}

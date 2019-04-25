@@ -1,0 +1,19 @@
+// Test of legal but cursed sequences
+
+block cursed_05{
+    channel:out output;
+
+    blueprint() {
+        block abc = build Test();
+        channel:in a = abc.sizzle;
+        channel:in k = abc.shizzle;
+
+        size qq = [2,3];
+        source bb = build Source(qq) -> a;
+        source jj = build Source(qq) -> build Transpose() -> k;
+        abc.benis -> output;
+    }
+}
+
+
+

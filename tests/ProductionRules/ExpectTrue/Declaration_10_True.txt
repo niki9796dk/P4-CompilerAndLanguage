@@ -1,0 +1,13 @@
+// dot channel
+block decla_10 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block b = build Test();
+		b = build Abc();
+	
+		channel:in s = (this.input);
+	}
+}
+

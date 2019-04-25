@@ -1,0 +1,11 @@
+// Reference
+block decla_03 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build Test();
+		block b = a;
+	}
+}
+

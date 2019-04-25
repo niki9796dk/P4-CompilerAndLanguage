@@ -1,0 +1,21 @@
+// Test of legal but ugly syntax.
+block random_03 {
+    channel:in input;
+    channel:out output;
+    
+    blueprint() {
+        block a = build test();
+        block b = build test();
+        block c = build test();
+        
+        this.input
+        -> 
+        a
+        -> 
+        b
+        -> 
+        c
+        -> 
+        this.output;
+    }
+}

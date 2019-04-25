@@ -1,0 +1,12 @@
+// Test of group connections.
+block chain_04 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();
+		operation c = build Multiplication();
+		
+		(this.input, a) -> c;
+	}
+}
