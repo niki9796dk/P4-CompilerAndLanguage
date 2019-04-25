@@ -2,6 +2,7 @@ package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
@@ -62,7 +63,7 @@ public class TypeCheckerVisitor implements Visitor {
             case OPERATION_TYPE:
 
             default:
-                throw new RuntimeException("Unexpected Node");
+                throw new UnexpectedNodeException(node);
         }
     }
 
@@ -95,7 +96,7 @@ public class TypeCheckerVisitor implements Visitor {
             case OPERATION_TYPE:
 
             default:
-                throw new RuntimeException("Unexpected Node");
+                throw new UnexpectedNodeException(node);
         }
     }
 

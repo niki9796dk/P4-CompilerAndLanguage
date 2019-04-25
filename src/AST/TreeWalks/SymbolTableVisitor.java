@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
+import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
@@ -63,7 +64,7 @@ public class SymbolTableVisitor implements Visitor {
                 break;
 
             default:
-                throw new RuntimeException("Unexpected Node");
+                throw new UnexpectedNodeException(node);
         }
     }
 
@@ -102,7 +103,7 @@ public class SymbolTableVisitor implements Visitor {
                 break;
 
             default:
-                throw new RuntimeException("Unexpected Node");
+                throw new UnexpectedNodeException(node);
         }
     }
 
