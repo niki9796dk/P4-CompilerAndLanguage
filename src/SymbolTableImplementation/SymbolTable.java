@@ -51,6 +51,10 @@ public class SymbolTable implements SymbolTableInterface {
         return this.blockTable.getEntry(id);
     }
 
+    public Scope getSubScope(String scopeId, String subscopeId){
+        return this.blockTable.getEntry(scopeId).getSubscope(subscopeId);
+    }
+
     private String getScopeNameFromNode(NamedNode node) {
         switch (node.getNodeEnum()) {
             case CHANNEL_DECLARATIONS:
