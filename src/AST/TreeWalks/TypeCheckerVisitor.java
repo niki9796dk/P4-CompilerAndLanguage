@@ -62,6 +62,9 @@ public class TypeCheckerVisitor implements Visitor {
                 this.verifyOutputType(childNode);
                 break;
 
+            case GROUP:
+                verifyInputType(node);
+                break;
 
             case PROCEDURE_CALL:
             case PARAMS:
@@ -74,7 +77,6 @@ public class TypeCheckerVisitor implements Visitor {
 
 
             case ROOT:
-            case GROUP:
             case CHANNEL_IN:
             case CHANNEL_OUT:
             case CHANNEL_IN_TYPE:
