@@ -1,0 +1,12 @@
+// Small groups
+block chain_14 {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+
+		(a) -> b -> this.output;
+	}
+}

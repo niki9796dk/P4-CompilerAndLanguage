@@ -1,0 +1,11 @@
+// Test of group connections with building and delcarations.
+block chain_07 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {	
+		(this.input, build Source()) -> operation m = build Multiplication() -> block b = build test();
+		
+		(m, b) -> build Multiplication() -> this.output;
+	}
+}

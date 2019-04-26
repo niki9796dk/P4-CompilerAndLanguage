@@ -1,0 +1,10 @@
+// Gate reference
+block decla_05 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		channel:in in = this.input;
+	}
+}
+

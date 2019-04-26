@@ -1,0 +1,13 @@
+// Test of group connections with continued chaining.
+block chain_05 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		operation c = build Multiplication();
+		
+		(this.input, a) -> c -> b -> this.output;
+	}
+}

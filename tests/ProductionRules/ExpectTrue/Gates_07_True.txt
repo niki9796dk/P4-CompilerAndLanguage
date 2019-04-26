@@ -1,0 +1,9 @@
+
+
+block channels_07 {
+	channel:out output;
+
+	blueprint() {
+
+	}
+}

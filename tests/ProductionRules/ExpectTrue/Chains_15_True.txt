@@ -1,0 +1,12 @@
+// Operations
+block chain_15 {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+		block a = build test();
+		block b = build test();
+
+		(a) -> operation abc = build test() -> this.output;
+	}
+}

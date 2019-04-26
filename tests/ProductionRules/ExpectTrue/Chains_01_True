@@ -1,0 +1,13 @@
+// Test of simple multi chaining.
+block chain_01 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		a -> b -> c;
+	}
+}

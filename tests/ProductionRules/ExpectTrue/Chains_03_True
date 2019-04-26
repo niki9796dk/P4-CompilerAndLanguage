@@ -1,0 +1,16 @@
+// Test of multiple small chains.
+block chain_03 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input -> a;
+		a -> b;
+		b -> c;
+		c -> this.output;
+	}
+}

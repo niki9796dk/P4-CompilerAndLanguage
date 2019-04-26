@@ -1,0 +1,13 @@
+// Test of using channels in chains.
+block chain_02 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		block a = build test();
+		block b = build test();
+		block c = build test();
+		
+		this.input -> a -> b -> c -> this.output;
+	}
+}
