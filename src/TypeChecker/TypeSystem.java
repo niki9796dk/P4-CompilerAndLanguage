@@ -1,11 +1,15 @@
 package TypeChecker;
 
 import AST.Enums.NodeEnum;
+import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.*;
+
+import java.nio.channels.Selector;
 
 public class TypeSystem {
     private SymbolTableInterface symbolTable;
@@ -38,7 +42,6 @@ public class TypeSystem {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
-            case SIZE:
                 return numberedNode.getNodeEnum();
 
                 /*
@@ -47,11 +50,24 @@ public class TypeSystem {
                 return this.getTypeOfNode(child, blockScopeId, subScopeId); // TODO: Find a better solution, this is kinda wrong and akward, but works.
                 */
 
+            case SIZE:
+                return NodeEnum.SIZE_TYPE;
+
             case DRAW:
                 return NodeEnum.BLUEPRINT_TYPE;
 
             case BUILD:
-                return NodeEnum.BLOCK_TYPE;
+                String id = ((NamedIdNode) node).getId();
+
+                if (this.symbolTable.isPredefinedOperation(id)) {
+                    return NodeEnum.OPERATION_TYPE;
+
+                } else if (this.symbolTable.isPredefinedSource(id)) {
+                    return NodeEnum.SOURCE_TYPE;
+
+                } else {
+                    return NodeEnum.BLOCK_TYPE;
+                }
 
             case ASSIGN:
                 return this.getTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId);
@@ -65,6 +81,18 @@ public class TypeSystem {
     }
 
     private NodeEnum getTypeOfSelector(AbstractNode node, String blockScopeId, String subScopeId) {
+        // Typecast the node to a namedIdNode
+        NamedIdNode namedIdNode = (NamedIdNode) node;
+        boolean isThis = "this".equals(namedIdNode.getId());
+
+        if (isThis || (node.getChild() == null)) {
+            return this.getTypeOfSelectorVariable(node, blockScopeId, subScopeId);
+        } else {
+            return null;
+        }
+    }
+
+    private NodeEnum getTypeOfSelectorVariable(AbstractNode node, String blockScopeId, String subScopeId) {
         // Typecast the node to a namedIdNode
         NamedIdNode namedIdNode = (NamedIdNode) node;
 
@@ -89,7 +117,7 @@ public class TypeSystem {
             return type;
         } else {
             // If the type is null, there is no such identifier defined... Which should have been caught in the scope checking!!!
-            throw new RuntimeException("Identifier not defined! - THIS ERROR SHOULD HAVE BEEN DETECTED IN SCOPE CHECKING AND NOT TYPE CHECKING");
+            throw new RuntimeException("Identifier not defined: " + (isThis ? ("this." + node.getChild()) : node) + " - THIS ERROR SHOULD HAVE BEEN DETECTED IN SCOPE CHECKING AND NOT TYPE CHECKING");
         }
     }
 

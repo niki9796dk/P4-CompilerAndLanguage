@@ -18,7 +18,9 @@ block cursed_05{
 
 block Test {
     channel:out output;
-    channel:in input;
+    channel:in sizzle;
+    channel:in shizzle;
+
     blueprint() {
     }
 }
