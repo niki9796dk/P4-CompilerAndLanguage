@@ -12,6 +12,9 @@ block cursed_06{
 }
 
 
-
-
-
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}

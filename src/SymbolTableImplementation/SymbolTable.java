@@ -30,6 +30,9 @@ public class SymbolTable implements SymbolTableInterface {
             "_Sigmoid", "_Tanh", "_Relu",
             // Matrix operations
             "Transpose"));
+    // Predefined Sources
+    private static final HashSet<String> SOURCES = new HashSet<>(Arrays.asList(
+            "Source", "FixedSource"));
 
     @Override
     public void openBlockScope(BlockNode node) {
@@ -113,6 +116,11 @@ public class SymbolTable implements SymbolTableInterface {
     @Override
     public boolean isPredefinedOperation(String operation) {
         return OPERATIONS.contains(operation);
+    }
+
+    //@Override
+    public boolean isPredefinedSource(String source) {
+        return SOURCES.contains(source);
     }
 
     @Override

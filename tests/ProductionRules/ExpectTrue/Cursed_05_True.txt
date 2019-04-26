@@ -16,4 +16,16 @@ block cursed_05{
 }
 
 
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}
 
+block Transpose {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}

@@ -10,7 +10,7 @@ block
 a
 =
 build
-test
+Test
 (
 )
 ;
@@ -24,4 +24,12 @@ this
 .
 output
 ;}
+}
+
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
 }

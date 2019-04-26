@@ -11,3 +11,18 @@ block decla_10 {
 	}
 }
 
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}
+
+
+block Abc {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}

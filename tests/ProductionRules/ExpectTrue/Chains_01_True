@@ -4,10 +4,17 @@ block chain_01 {
 	channel:out output;
 	
 	blueprint() {
-		block a = build test();
-		block b = build test();
-		block c = build test();
+		block a = build Test();
+		block b = build Test();
+		block c = build Test();
 		
 		a -> b -> c;
 	}
+}
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
 }
