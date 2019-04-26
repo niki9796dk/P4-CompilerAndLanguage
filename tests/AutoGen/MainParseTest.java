@@ -49,5 +49,18 @@ class MainParseTest {
                 .map(file -> DynamicTest.dynamicTest("Testing: '" + file.getName() + "'",
                         () -> assertThrows(AutoGen.ScannerException.class, () -> assertTrue(MainParse.parseFile(file.getPath())))));
     }
+
+    // Test all negative files regarding scope checking
+    @TestFactory
+    Stream<DynamicTest> scopeNegativeFiles() {
+
+        File trueFolder = new File("tests/ScopeChecking/ExpectFalse/");
+
+        List<File> trueFiles = Arrays.asList(Objects.requireNonNull(trueFolder.listFiles()));
+
+        return trueFiles.stream()
+                .map(file -> DynamicTest.dynamicTest("Testing: '" + file.getName() + "'",
+                        () -> assertThrows(AST.TreeWalks.Exceptions.ScopeBoundsViolationException.class, () -> assertTrue(MainParse.parseFile(file.getPath())))));
+    }
 }
 
