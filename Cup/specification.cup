@@ -438,8 +438,18 @@ declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
                         :}
                         | channel:channel ID:id channelassignopt:assign
                         {:
-                            AbstractNode typeNode = (((NamedIdNode) channel).setId(id));
-                            RESULT = (assign != null) ? assign.adoptAsFirstChild(typeNode) : typeNode;
+                            NamedIdNode channelNode = (NamedIdNode) channel;
+
+                            if (channelNode.getNodeEnum() == NodeEnum.CHANNEL_IN) {
+                                channelNode = new InChannelTypeNode(id);
+                            } else if (channelNode.getNodeEnum() == NodeEnum.CHANNEL_OUT) {
+                                channelNode = new OutChannelTypeNode(id);
+                            } else {
+                                // ERROR
+                                throw new RuntimeException("Im gonna shit your fuck - Christian");
+                            }
+
+                            RESULT = (assign != null) ? assign.adoptAsFirstChild(channelNode) : channelNode;
                         :}
                         | buildtype:type ID:id builddecla:decla
                         {:

@@ -4,9 +4,8 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
-import SymbolTableImplementation.BlockScope;
-import SymbolTableImplementation.SymbolTable;
-import SymbolTableImplementation.SymbolTableInterface;
+import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import SymbolTableImplementation.*;
 
 public class TypeSystem {
     private SymbolTableInterface symbolTable;
@@ -27,10 +26,13 @@ public class TypeSystem {
             case BLUEPRINT:
             case PROCEDURE:
             case CHANNEL_DECLARATIONS:
+            case GROUP:
                 return null; // These nodes don't have a type.
 
             case CHANNEL_IN:
             case CHANNEL_OUT:
+            case CHANNEL_OUT_TYPE:
+            case CHANNEL_IN_TYPE:
             case SIZE_TYPE:
             case BLOCK_TYPE:
             case SOURCE_TYPE:
@@ -38,6 +40,12 @@ public class TypeSystem {
             case OPERATION_TYPE:
             case SIZE:
                 return numberedNode.getNodeEnum();
+
+                /*
+            case GROUP:
+                AbstractNode child = node.getChild();
+                return this.getTypeOfNode(child, blockScopeId, subScopeId); // TODO: Find a better solution, this is kinda wrong and akward, but works.
+                */
 
             case DRAW:
                 return NodeEnum.BLUEPRINT_TYPE;
@@ -52,7 +60,7 @@ public class TypeSystem {
                 return this.getTypeOfSelector(node, blockScopeId, subScopeId);
 
             default:
-                throw new RuntimeException("Unexpected Node");
+                throw new UnexpectedNodeException(numberedNode.getNodeEnum());
         }
     }
 
@@ -86,10 +94,16 @@ public class TypeSystem {
     }
 
     private NodeEnum getTypeFromGlobal(String identifier, String blockScopeId) {
-        return this.symbolTable.getSubScope(blockScopeId, BlockScope.CHANNELS).getVariable(identifier).getSuperType();
+        Scope subScope = this.symbolTable.getSubScope(blockScopeId, BlockScope.CHANNELS);
+        VariableEntry variable = subScope.getVariable(identifier);
+
+        return variable != null ? variable.getSuperType() : null;
     }
 
     private NodeEnum getTypeFromLocal(String identifier, String blockScopeId, String subScopeId) {
-        return this.symbolTable.getSubScope(blockScopeId, subScopeId).getVariable(identifier).getSuperType();
+        Scope subScope = this.symbolTable.getSubScope(blockScopeId, subScopeId);
+        VariableEntry variable = subScope.getVariable(identifier);
+
+        return variable != null ? variable.getSuperType() : null;
     }
 }
