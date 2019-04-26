@@ -176,7 +176,7 @@ blueprint			    ::= BLUEPRINT LPAR blueparams:bps RPAR LCURLY content:cnt RCURLY
                         {:
                            AbstractNode blueprintNode = new BlueprintNode();
                            if (bps != null) {
-                                BuildNode.adoptChildren(bps);
+                                blueprintNode.adoptChildren(bps);
                            }
                            if (cnt != null) {
                                blueprintNode.adoptChildren(cnt);
