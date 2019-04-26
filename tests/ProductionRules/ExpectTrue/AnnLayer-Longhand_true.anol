@@ -1,4 +1,4 @@
-block AnnLayer{
+block AnnLayer_long{
 	// Gates
 	channel:in in;
 	channel:out out;

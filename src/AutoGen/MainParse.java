@@ -3,10 +3,7 @@ package AutoGen;
 import java.io.*;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.TreeWalks.NumberTree;
-import AST.TreeWalks.PrintTree;
-import AST.TreeWalks.ScopeCheckerVisitor;
-import AST.TreeWalks.SymbolTableVisitor;
+import AST.TreeWalks.*;
 import SymbolTableImplementation.SymbolTableInterface;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
@@ -58,6 +55,8 @@ public class MainParse {
         prog.walkTree(new PrintTree(System.out));
 
         prog.walkTree(new ScopeCheckerVisitor(symbolTableInterface));
+
+        prog.walkTree(new TypeCheckerVisitor(symbolTableInterface));
 
         return true;
     }
