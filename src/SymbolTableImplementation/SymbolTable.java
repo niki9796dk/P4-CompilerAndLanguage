@@ -54,8 +54,12 @@ public class SymbolTable implements SymbolTableInterface {
         return this.blockTable.getEntry(id);
     }
 
-    public Scope getSubScope(String scopeId, String subscopeId){
-        return this.blockTable.getEntry(scopeId).getSubscope(subscopeId);
+    @Override
+    public Scope getSubScope(String scopeId, String subscopeId) {
+        BlockScope blockScope = this.blockTable.getEntry(scopeId);
+        if (blockScope != null)
+            return blockScope.getSubscope(subscopeId);
+        else return null;
     }
 
     private String getScopeNameFromNode(NamedNode node) {

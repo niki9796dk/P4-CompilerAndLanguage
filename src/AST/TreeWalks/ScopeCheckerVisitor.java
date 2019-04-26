@@ -42,6 +42,8 @@ public class ScopeCheckerVisitor implements Visitor {
             case ASSIGN:
             case CHANNEL_IN:
             case CHANNEL_OUT:
+            case CHANNEL_IN_TYPE:
+            case CHANNEL_OUT_TYPE:
             case SIZE_TYPE:
             case BLOCK_TYPE:
             case SOURCE_TYPE:
@@ -128,6 +130,8 @@ public class ScopeCheckerVisitor implements Visitor {
             case PROCEDURE:
             case CHANNEL_IN:
             case CHANNEL_OUT:
+            case CHANNEL_IN_TYPE:
+            case CHANNEL_OUT_TYPE:
             case SIZE_TYPE:
             case BLOCK_TYPE:
             case SOURCE_TYPE:
