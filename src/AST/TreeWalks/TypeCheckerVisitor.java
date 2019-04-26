@@ -42,7 +42,7 @@ public class TypeCheckerVisitor implements Visitor {
                 this.currentSubScope = BlockScope.CHANNELS;
                 break;
 
-
+                //// ACTUAL TYPE CHECKING START
 
             case CHAIN:
                 // Get first child
@@ -66,13 +66,27 @@ public class TypeCheckerVisitor implements Visitor {
                 verifyInputType(node);
                 break;
 
+            case ASSIGN:
+                AbstractNode leftNode = node.getChild();
+                AbstractNode rightNode = leftNode.getSib();
+
+                NodeEnum leftSide = this.typeSystem.getTypeOfNode(leftNode, currentBlockScope, currentSubScope);
+                NodeEnum rightSide = this.typeSystem.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
+
+                if (leftSide != rightSide) {
+                    throw new TypeInconsistencyException("Assignment: " + node + " - Has different type on the left and right side of the assignment: " + leftNode + " = " + rightNode);
+                }
+
+                break;
+
+                //// ACTUAL TYPE CHECKING END
+
             case PROCEDURE_CALL:
             case PARAMS:
             case SELECTOR:
             case DRAW:
             case BUILD:
             case SIZE:
-            case ASSIGN:
                 break;
 
 

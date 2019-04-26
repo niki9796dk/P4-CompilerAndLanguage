@@ -79,7 +79,7 @@ public class TypeSystem {
         // Check the types in the correct order, depending on if it's a 'this' selector
         NodeEnum type;
         if (isThis) {
-            type = (typeGlobal != null) ? typeGlobal : typeLocal;
+            type = typeGlobal;
         } else {
             type = (typeLocal != null) ? typeLocal : typeGlobal;
         }
