@@ -4,10 +4,25 @@ block chain_13 {
 	channel:out output;
 	
 	blueprint() {
-		block a = build test();
-		block b = build test();
-		block c = build test();
+		block a = build Test();
+		block b = build Test();
+		block c = build Test();
 		
 		((a.out), b, (c.out)) -> build LargeOpe() -> (this.output);
 	}
+}
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}
+
+
+block LargeOpe {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
 }

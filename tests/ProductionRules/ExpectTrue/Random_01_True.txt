@@ -4,11 +4,19 @@ block random_01 {
 	channel:out output;
 	
 	blueprint() {
-		block a = build test();;;;;;;;;
+		block a = build Test();;;;;;;;;
 		;;;
 		;;;;;;
 		;;;
 		
 		;;;this.input -> a -> this.output;;;;
 	}
+}
+
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
 }

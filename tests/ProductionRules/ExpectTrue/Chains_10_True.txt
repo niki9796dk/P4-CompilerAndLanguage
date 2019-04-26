@@ -4,8 +4,23 @@ block chain_10 {
 	channel:out output;
 	
 	blueprint() {
-		this.input -> block b = build test();
+		this.input -> block b = build Test();
 		
 		(this.input, build Source(), b, source s = build Source()) -> build LargeOpe() -> this.output;
 	}
+}
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}
+
+
+block LargeOpe {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
 }

@@ -5,6 +5,9 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 
 /**
  * A node representing a "block".
+ * It is a child of {@link AST.Nodes.NodeClasses.NamedNodes.RootNode}
+ * Parent of a {@link AST.Nodes.NodeClasses.NamedNodes.BlueprintNode}, a {@link AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode}, and several {@link ProcedureNode}.
+ * @see AST.Nodes.NodeClasses.NamedNodes.RootNode
  */
 public class BlockNode extends NamedIdNode {
     /**

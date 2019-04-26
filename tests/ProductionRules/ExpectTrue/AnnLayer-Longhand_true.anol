@@ -31,3 +31,9 @@ block AnnLayer_long{
 	}
 }
 
+block Sigmoid {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}

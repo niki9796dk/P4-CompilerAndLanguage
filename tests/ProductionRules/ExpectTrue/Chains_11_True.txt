@@ -4,9 +4,9 @@ block chain_11 {
 	channel:out output;
 	
 	blueprint() {
-		block a = build test();
-		block b = build test();
-		block c = build test();
+		block a = build Test();
+		block b = build Test();
+		block c = build Test();
 		
 		this.input -> a.in;
 		
@@ -16,4 +16,11 @@ block chain_11 {
 
 		c.swagOut -> this.output;
 	}
+}
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
 }

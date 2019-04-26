@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import AST.TreeWalks.Exceptions.NonexistentBlockException;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
@@ -28,9 +29,9 @@ public class ScopeCheckerVisitor implements Visitor {
         NamedNode childNode = (NamedNode) node.getChild();
 
         // If needed, typecast
-        String id = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : "";
+        String id = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : "?no id? " + node.toString();
 
-        String childId = (childNode instanceof NamedIdNode) ? ((NamedIdNode) childNode).getId() : "";
+        String childId = (childNode instanceof NamedIdNode) ? ((NamedIdNode) childNode).getId() : "?no id? child of " + node.toString();
 
         switch (node.getNodeEnum()) {
             case ROOT:
@@ -48,8 +49,17 @@ public class ScopeCheckerVisitor implements Visitor {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
+                break;
             case DRAW:
             case BUILD:
+                if (this.symbolTableInterface.getBlockScope(id) != null
+                        || this.symbolTableInterface.isPredefinedOperation(id)
+                        || this.symbolTableInterface.isPredefinedSource(id))
+                {
+                    // Nothing
+                } else {
+                    throw new NonexistentBlockException(childId);
+                }
                 break;
 
             case BLOCK:

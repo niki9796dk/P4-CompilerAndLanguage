@@ -8,3 +8,10 @@ block decla_01 {
 	}
 }
 
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}
