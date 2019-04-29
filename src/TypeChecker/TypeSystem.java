@@ -1,19 +1,15 @@
 package TypeChecker;
 
 import AST.Enums.NodeEnum;
-import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
-import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import Enums.AnsiColor;
 import SymbolTableImplementation.*;
-
-import java.nio.channels.Selector;
+import TypeChecker.Exceptions.ShouldNotHappenException;
 
 public class TypeSystem {
     private SymbolTableInterface symbolTable;

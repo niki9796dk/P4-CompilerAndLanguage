@@ -1,6 +1,6 @@
 package AutoGen;
 
-import TypeChecker.TypeInconsistencyException;
+import TypeChecker.Exceptions.TypeInconsistencyException;
 import org.junit.jupiter.api.*;
 
 import java.io.File;

@@ -1,0 +1,19 @@
+block channels_06 {
+    channel:in in;
+	channel:out out;
+
+	blueprint() {
+	    block b = build Test();
+
+        this.in -> b.out -> this.out;
+	}
+}
+
+block Test {
+    channel:in in;
+    channel:out out;
+
+    blueprint() {
+        this.in -> this.out;
+    }
+}

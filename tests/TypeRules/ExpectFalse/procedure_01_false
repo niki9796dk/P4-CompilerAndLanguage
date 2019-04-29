@@ -1,4 +1,4 @@
-block build_15 {
+block procedure_01 {
     channel:in in;
     channel:out out;
 
@@ -12,14 +12,5 @@ block build_15 {
 
     procedure abc(block b) {
 
-    }
-}
-
-block Test {
-    channel:in in;
-    channel:out out;
-
-    blueprint () {
-        this.in -> this.out;
     }
 }
