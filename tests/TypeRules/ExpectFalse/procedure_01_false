@@ -3,7 +3,7 @@ block build_15 {
     channel:out out;
 
     blueprint () {
-        source fakeBlock = build Source;
+        source fakeBlock = build Source();
 
         abc(fakeBlock);
 

@@ -3,6 +3,6 @@ block build_02 {
     channel:out out;
 
     blueprint () {
-        block fakeBlock = draw _Sigmoid();
+        block fakeBlock = draw _Sigmoid;
     }
 }
