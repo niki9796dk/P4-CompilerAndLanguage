@@ -11,7 +11,7 @@ block cursed_05{
         size qq = [2,3];
         source bb = build Source(qq) -> a;
         source jj = build Source(qq) -> build Transpose() -> k;
-        abc.benis -> output;
+        abc.output -> output;
     }
 }
 

@@ -10,17 +10,17 @@ block chain_11 {
 		
 		this.input -> a.in;
 		
-		a.out -> b.inputGate;
+		a.out -> b.in;
 		
-		b.outputGate -> c.swagIn;
+		b.out -> c.in;
 
-		c.swagOut -> this.output;
+		c.out -> this.output;
 	}
 }
 
 block Test {
-    channel:out output;
-    channel:in input;
+    channel:out out;
+    channel:in in;
     blueprint() {
     }
 }

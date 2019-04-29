@@ -6,7 +6,9 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import Enums.AnsiColor;
 import SymbolTableImplementation.*;
 
 import java.nio.channels.Selector;
@@ -35,14 +37,20 @@ public class TypeSystem {
 
             case CHANNEL_IN:
             case CHANNEL_OUT:
-            case CHANNEL_OUT_TYPE:
-            case CHANNEL_IN_TYPE:
             case SIZE_TYPE:
             case BLOCK_TYPE:
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
                 return numberedNode.getNodeEnum();
+
+            case CHANNEL_OUT_TYPE:
+                return numberedNode.getNodeEnum();
+                //return NodeEnum.CHANNEL_OUT;
+
+            case CHANNEL_IN_TYPE:
+                return numberedNode.getNodeEnum();
+                //return NodeEnum.CHANNEL_IN;
 
                 /*
             case GROUP:
@@ -83,11 +91,71 @@ public class TypeSystem {
     private NodeEnum getTypeOfSelector(AbstractNode node, String blockScopeId, String subScopeId) {
         // Typecast the node to a namedIdNode
         NamedIdNode namedIdNode = (NamedIdNode) node;
-        boolean isThis = "this".equals(namedIdNode.getId());
 
-        if (isThis || (node.getChild() == null)) {
+        // Evaluate booleans
+        boolean isThis = "this".equals(namedIdNode.getId());
+        boolean isChildless = node.getChild() == null;
+        boolean isNotChildOfSelector = !(node.getParent() instanceof SelectorNode);
+
+        if (isThis || isChildless) {
             return this.getTypeOfSelectorVariable(node, blockScopeId, subScopeId);
+        } else if (isNotChildOfSelector) {
+            String nodeId = namedIdNode.getId();
+            int nodeNumber = namedIdNode.getNumber();
+
+            VariableEntry variable = this.symbolTable
+                    .getSubScope(blockScopeId, subScopeId)
+                    .getVariable(nodeId);
+
+            String variableId = variable.getSubType(nodeNumber).getId();
+            String childId = ((NamedIdNode) node.getChild()).getId();
+
+            NodeEnum superType = variable.getSuperType();
+
+            switch (superType) {
+                case BLOCK_TYPE:
+                    Scope subScope = this.symbolTable.getSubScope(variableId, BlockScope.CHANNELS);
+
+                    if (subScope == null) {
+                        throw new ScopeBoundsViolationException("SHOULD NOT HAPPEN HERE - No such block defined '" + variableId + "' - " + node);
+                    }
+
+                    VariableEntry variableEntryBlock = subScope.getVariable(childId);
+
+                    if (variableEntryBlock == null) {
+                        throw new ScopeBoundsViolationException("SHOULD NOT HAPPEN HERE - No such channel defined '" + childId + "' - " + node.getChild());
+                    }
+
+                    NodeEnum type = variableEntryBlock.getSuperType();
+
+                    switch (type) {
+                        // NOTE TIL NIKI FRA NIKI: TRUE
+                        case CHANNEL_IN:
+                            return NodeEnum.CHANNEL_IN_TYPE;
+                        case CHANNEL_OUT:
+                            return NodeEnum.CHANNEL_OUT_TYPE;
+
+                        default:
+                            return type;
+                    }
+
+                case OPERATION_TYPE:
+                    // TODO: Somehow include the operations in the symbol table instead of this BS.
+                    if ("A".equals(childId) || "B".equals(childId)) {
+                        return NodeEnum.CHANNEL_IN_TYPE;
+                    } else if ("out".equals(childId)) {
+                        return NodeEnum.CHANNEL_OUT_TYPE;
+                    } else {
+                        // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
+                        throw new ScopeBoundsViolationException("SHOULD NOT HAPPEN HERE! - The operation '" + variableId + "' does not have a channel named '" + childId + "'");
+                    }
+
+            }
+
+            return null;
+
         } else {
+            // Should not happen with normal calling behaviour.
             return null;
         }
     }
@@ -122,13 +190,14 @@ public class TypeSystem {
     }
 
     private NodeEnum getTypeFromGlobal(String identifier, String blockScopeId) {
-        Scope subScope = this.symbolTable.getSubScope(blockScopeId, BlockScope.CHANNELS);
-        VariableEntry variable = subScope.getVariable(identifier);
-
-        return variable != null ? variable.getSuperType() : null;
+        return this.getType(identifier, blockScopeId, BlockScope.CHANNELS);
     }
 
     private NodeEnum getTypeFromLocal(String identifier, String blockScopeId, String subScopeId) {
+        return this.getType(identifier, blockScopeId, subScopeId);
+    }
+
+    private NodeEnum getType(String identifier, String blockScopeId, String subScopeId) {
         Scope subScope = this.symbolTable.getSubScope(blockScopeId, subScopeId);
         VariableEntry variable = subScope.getVariable(identifier);
 

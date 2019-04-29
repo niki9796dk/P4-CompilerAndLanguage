@@ -73,8 +73,15 @@ public class TypeCheckerVisitor implements Visitor {
                 NodeEnum leftSide = this.typeSystem.getTypeOfNode(leftNode, currentBlockScope, currentSubScope);
                 NodeEnum rightSide = this.typeSystem.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
 
+                // Swap the channel types
+                if (rightSide == NodeEnum.CHANNEL_OUT) {
+                    rightSide = NodeEnum.CHANNEL_OUT_TYPE;
+                } else if (rightSide == NodeEnum.CHANNEL_IN) {
+                    rightSide = NodeEnum.CHANNEL_IN_TYPE;
+                }
+
                 if (leftSide != rightSide) {
-                    throw new TypeInconsistencyException("Assignment: " + node + " - Has different type on the left and right side of the assignment: " + leftNode + " = " + rightNode);
+                    throw new TypeInconsistencyException("Assignment: " + node + " - Has different type on the left and right side of the assignment: " + leftNode + "("+ leftSide +") = " + rightNode + "("+ rightSide +")");
                 }
 
                 break;
@@ -157,6 +164,9 @@ public class TypeCheckerVisitor implements Visitor {
             // If not an instance of a group node, verify that the node itself is an input type
             NodeEnum nodeType = this.typeSystem.getTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
+            if (nodeType == null) {
+                this.throwTypeException(node);
+            }
             switch (nodeType) {
                 case CHANNEL_IN:
                 case CHANNEL_OUT_TYPE:
@@ -173,19 +183,25 @@ public class TypeCheckerVisitor implements Visitor {
     private void verifyMiddleType(AbstractNode node) {
         NodeEnum nodeType = this.typeSystem.getTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
+        if (nodeType == null) {
+            this.throwTypeException(node);
+        }
         switch (nodeType) {
             case BLOCK_TYPE:
             case OPERATION_TYPE:
                 return; // The node was of the correct type, so return an do not throw any exceptions
 
             default:
-                throw new TypeInconsistencyException("Node: " + node.toString() + " - Was not of the correct type for it's chain placement");
+                throw new TypeInconsistencyException("Node: " + node.toString() + " - Was not of the correct type for it's chain placement (" + nodeType + ")");
         }
     }
 
     private void verifyOutputType(AbstractNode node) {
         NodeEnum nodeType = this.typeSystem.getTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
+        if (nodeType == null) {
+            this.throwTypeException(node);
+        }
         switch (nodeType) {
             case CHANNEL_OUT:
             case CHANNEL_IN_TYPE:
@@ -195,5 +211,9 @@ public class TypeCheckerVisitor implements Visitor {
                 // If the node was not a correct specific type, then test if it's a middle type node
                 verifyMiddleType(node);
         }
+    }
+
+    private void throwTypeException(AbstractNode node) {
+        throw new TypeInconsistencyException("Node: " + node.toString() + " - Is a typeless node, and therefore cannot be placed within a chain.");
     }
 }
