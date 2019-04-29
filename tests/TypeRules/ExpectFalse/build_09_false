@@ -1,0 +1,17 @@
+block build_09 {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        operation fakeBlock = [2, 5];
+    }
+}
+
+block Test {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        this.in -> this.out;
+    }
+}

@@ -1,0 +1,8 @@
+block build_01 {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        block fakeBlock = build _Sigmoid();
+    }
+}

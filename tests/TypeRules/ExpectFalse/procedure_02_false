@@ -1,0 +1,25 @@
+block build_15 {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        operation fakeBlock = build _Sigmoid();
+
+        abc(fakeBlock);
+
+        this.in -> this.out;
+    }
+
+    procedure abc(block b) {
+
+    }
+}
+
+block Test {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        this.in -> this.out;
+    }
+}
