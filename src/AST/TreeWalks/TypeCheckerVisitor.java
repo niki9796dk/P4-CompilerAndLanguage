@@ -5,11 +5,16 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
+import TypeChecker.ParamsInconsistencyException;
+import TypeChecker.ShouldNotHappenException;
 import TypeChecker.TypeInconsistencyException;
 import TypeChecker.TypeSystem;
 
@@ -86,17 +91,61 @@ public class TypeCheckerVisitor implements Visitor {
 
                 break;
 
+                case PROCEDURE_CALL:
+                    String nodeId = ((NamedIdNode) node.findFirstChildOfClass(SelectorNode.class)).getId();
+
+                    ProcedureNode procedureNode = this.typeSystem.getProcedure(currentBlockScope, nodeId);
+
+                    // Get actual and formal parameter list
+                    ParamsNode actualParams = (ParamsNode) node.findFirstChildOfClass(ParamsNode.class);
+                    ParamsNode formalParams = (ParamsNode) procedureNode.findFirstChildOfClass(ParamsNode.class);
+
+                    // Check if not params was given
+                    if (actualParams == null && formalParams == null) {
+                        // Break since everything is fine
+                        break;
+                    } else if (actualParams == null || formalParams == null) {
+                        // Throw an exception, since only one of the params is undefined.
+                        throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE - Only one param was defined!: " + node);
+                    } else {
+                        // Verify that there is the same amount of params
+                        if (actualParams.countChildren() != formalParams.countChildren()) {
+                            throw new ParamsInconsistencyException("Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]" );
+                        }
+
+                        // Verify that the parameters match in type
+                        AbstractNode formal = formalParams.getChild();
+                        AbstractNode actual = actualParams.getChild();
+                        for (int i = 0; i < formalParams.countChildren(); i++) {
+                            NodeEnum formalType = this.typeSystem.getTypeOfNode(formal, currentBlockScope, currentSubScope);
+                            NodeEnum actualType = this.typeSystem.getTypeOfNode(actual, currentBlockScope, currentSubScope);
+
+                            if (formalType != actualType) {
+                                throw new TypeInconsistencyException("Procedure call type inconsistency: " + ((NamedIdNode) formal).getId() + " - " + formalType + " vs. " + actualType);
+                            }
+
+                            formal = formal.getSib();
+                            actual = actual.getSib();
+                        }
+
+                        // If we reach this point, everything is cool.
+                        break;
+                    }
+
+
                 //// ACTUAL TYPE CHECKING END
 
-            case PROCEDURE_CALL:
+
+
+
+
             case PARAMS:
-            case SELECTOR:
+                break;
+
             case DRAW:
             case BUILD:
             case SIZE:
-                break;
-
-
+            case SELECTOR:
             case ROOT:
             case CHANNEL_IN:
             case CHANNEL_OUT:

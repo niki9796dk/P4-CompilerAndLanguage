@@ -131,6 +131,40 @@ public abstract class AbstractNode implements Node {
    */
 
     /**
+     * Get the first child of a node, of a given class
+     * @param childClass The expected child class
+     * @return First child of class 'childClass'.
+     */
+    @Override
+   public AbstractNode findFirstChildOfClass(Class childClass) {
+       AbstractNode child = this.getChild();
+
+       while (child != null && !(childClass.isInstance(child))) {
+            child = child.getSib();
+       }
+
+       return child;
+   }
+
+    /**
+     * Counts the child nodes
+     * @return An integer value, representing the amount of child nodes.
+     */
+    @Override
+    public int countChildren()  {
+       AbstractNode child = this.getChild();
+       int children = 0;
+
+       while (child != null) {
+           children++;
+           child = child.getSib();
+       }
+
+       return children;
+   }
+
+
+    /**
      * Set the parent of the node.
      * @param p The node to set as a parent.
      */

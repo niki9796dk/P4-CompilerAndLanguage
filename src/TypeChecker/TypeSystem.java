@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
@@ -18,6 +19,14 @@ public class TypeSystem {
 
     public TypeSystem(SymbolTableInterface symbolTable) {
         this.symbolTable = symbolTable;
+    }
+
+    public ProcedureNode getProcedure(String blockScope, String procedure) {
+        return (ProcedureNode)
+                this.symbolTable
+                .getBlockScope(blockScope)
+                .getProcedureScope(procedure)
+                .getNode();
     }
 
     public NodeEnum getTypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
@@ -117,19 +126,18 @@ public class TypeSystem {
                     Scope subScope = this.symbolTable.getSubScope(variableId, BlockScope.CHANNELS);
 
                     if (subScope == null) {
-                        throw new ScopeBoundsViolationException("SHOULD NOT HAPPEN HERE - No such block defined '" + variableId + "' - " + node);
+                        throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE - No such block defined '" + variableId + "' - " + node);
                     }
 
                     VariableEntry variableEntryBlock = subScope.getVariable(childId);
 
                     if (variableEntryBlock == null) {
-                        throw new ScopeBoundsViolationException("SHOULD NOT HAPPEN HERE - No such channel defined '" + childId + "' - " + node.getChild());
+                        throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE - No such channel defined '" + childId + "' - " + node.getChild());
                     }
 
                     NodeEnum type = variableEntryBlock.getSuperType();
 
                     switch (type) {
-                        // NOTE TIL NIKI FRA NIKI: TRUE
                         case CHANNEL_IN:
                             return NodeEnum.CHANNEL_IN_TYPE;
                         case CHANNEL_OUT:
@@ -147,7 +155,7 @@ public class TypeSystem {
                         return NodeEnum.CHANNEL_OUT_TYPE;
                     } else {
                         // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
-                        throw new ScopeBoundsViolationException("SHOULD NOT HAPPEN HERE! - The operation '" + variableId + "' does not have a channel named '" + childId + "'");
+                        throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE! - The operation '" + variableId + "' does not have a channel named '" + childId + "'");
                     }
 
             }
