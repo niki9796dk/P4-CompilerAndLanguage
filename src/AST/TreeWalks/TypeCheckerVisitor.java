@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
@@ -91,59 +92,47 @@ public class TypeCheckerVisitor implements Visitor {
 
                 break;
 
-                case PROCEDURE_CALL:
-                    String nodeId = ((NamedIdNode) node.findFirstChildOfClass(SelectorNode.class)).getId();
+            case BUILD:
+            case PROCEDURE_CALL:
+                AbstractNode calleeNode;
 
-                    ProcedureNode procedureNode = this.typeSystem.getProcedure(currentBlockScope, nodeId);
-
-                    // Get actual and formal parameter list
-                    ParamsNode actualParams = (ParamsNode) node.findFirstChildOfClass(ParamsNode.class);
-                    ParamsNode formalParams = (ParamsNode) procedureNode.findFirstChildOfClass(ParamsNode.class);
-
-                    // Check if not params was given
-                    if (actualParams == null && formalParams == null) {
-                        // Break since everything is fine
+                switch (node.getNodeEnum()) {
+                    case PROCEDURE_CALL:
+                        String nodeId = ((NamedIdNode) node.findFirstChildOfClass(SelectorNode.class)).getId();
+                        calleeNode = this.typeSystem.getProcedure(currentBlockScope, nodeId);
                         break;
-                    } else if (actualParams == null || formalParams == null) {
-                        // Throw an exception, since only one of the params is undefined.
-                        throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE - Only one param was defined!: " + node);
-                    } else {
-                        // Verify that there is the same amount of params
-                        if (actualParams.countChildren() != formalParams.countChildren()) {
-                            throw new ParamsInconsistencyException("Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]" );
+                    case BUILD:
+                        nodeId = ((NamedIdNode) node).getId();
+                        boolean isNotOperation = !this.typeSystem.getSymbolTable().isPredefinedOperation(nodeId);
+                        boolean isNotSource = !this.typeSystem.getSymbolTable().isPredefinedSource(nodeId);
+
+                        if (isNotOperation && isNotSource) {
+                            calleeNode = this.typeSystem.getBlock(nodeId);
+                            break;
+                        } else {
+                            // This check is only for blocks, so return if not an block
+                            return;
                         }
+                    default:
+                        throw new UnexpectedNodeException(node);
+                }
 
-                        // Verify that the parameters match in type
-                        AbstractNode formal = formalParams.getChild();
-                        AbstractNode actual = actualParams.getChild();
-                        for (int i = 0; i < formalParams.countChildren(); i++) {
-                            NodeEnum formalType = this.typeSystem.getTypeOfNode(formal, currentBlockScope, currentSubScope);
-                            NodeEnum actualType = this.typeSystem.getTypeOfNode(actual, currentBlockScope, currentSubScope);
+                // Get actual and formal parameter list
+                ParamsNode actualParams = (ParamsNode) node.findFirstChildOfClass(ParamsNode.class);
+                ParamsNode formalParams = (ParamsNode) calleeNode.findFirstChildOfClass(ParamsNode.class);
 
-                            if (formalType != actualType) {
-                                throw new TypeInconsistencyException("Procedure call type inconsistency: " + ((NamedIdNode) formal).getId() + " - " + formalType + " vs. " + actualType);
-                            }
+                this.typeCheckParamLists(node, formalParams, actualParams);
 
-                            formal = formal.getSib();
-                            actual = actual.getSib();
-                        }
-
-                        // If we reach this point, everything is cool.
-                        break;
-                    }
-
+                break;
 
                 //// ACTUAL TYPE CHECKING END
-
-
-
 
 
             case PARAMS:
                 break;
 
+
             case DRAW:
-            case BUILD:
             case SIZE:
             case SELECTOR:
             case ROOT:
@@ -196,6 +185,39 @@ public class TypeCheckerVisitor implements Visitor {
 
             default:
                 throw new UnexpectedNodeException(node);
+        }
+    }
+
+    private void typeCheckParamLists(AbstractNode node, ParamsNode formalParams, ParamsNode actualParams) {
+        // Check if not params was given
+        if (actualParams == null && formalParams == null) {
+            // Return since everything is fine
+            return;
+        } else if (actualParams == null || formalParams == null) {
+            // Throw an exception, since only one of the params is undefined.
+            throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE - Only one param was defined!: " + node);
+        } else {
+            // Verify that there is the same amount of params
+            if (actualParams.countChildren() != formalParams.countChildren()) {
+                throw new ParamsInconsistencyException("Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]" );
+            }
+
+            // Verify that the parameters match in type
+            AbstractNode formal = formalParams.getChild();
+            AbstractNode actual = actualParams.getChild();
+            for (int i = 0; i < formalParams.countChildren(); i++) {
+                NodeEnum formalType = this.typeSystem.getTypeOfNode(formal, currentBlockScope, currentSubScope);
+                NodeEnum actualType = this.typeSystem.getTypeOfNode(actual, currentBlockScope, currentSubScope);
+
+                if (formalType != actualType) {
+                    throw new TypeInconsistencyException("Procedure call type inconsistency: " + ((NamedIdNode) formal).getId() + " - " + formalType + " vs. " + actualType);
+                }
+
+                formal = formal.getSib();
+                actual = actual.getSib();
+            }
+
+            // If we reach this point, everything is cool.
         }
     }
 

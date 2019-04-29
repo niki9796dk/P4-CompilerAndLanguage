@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
@@ -21,11 +22,22 @@ public class TypeSystem {
         this.symbolTable = symbolTable;
     }
 
+    public SymbolTableInterface getSymbolTable() {
+        return symbolTable;
+    }
+
     public ProcedureNode getProcedure(String blockScope, String procedure) {
         return (ProcedureNode)
                 this.symbolTable
                 .getBlockScope(blockScope)
                 .getProcedureScope(procedure)
+                .getNode();
+    }
+
+    public BlockNode getBlock(String blockId) {
+        return (BlockNode)
+                this.symbolTable
+                .getBlockScope(blockId)
                 .getNode();
     }
 
