@@ -1,0 +1,15 @@
+ block Keywords_07 {
+ 	channel:out output;
+
+ 	blueprint() {
+ 		block draw = build Test();
+ 	}
+ }
+
+ block block {
+  	channel:out output;
+
+    blueprint() {
+
+    }
+ }
