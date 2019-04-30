@@ -1,0 +1,22 @@
+// Test of out of scope block reference.
+block block_01 {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+		input -> b.input;
+	}
+
+	procedure anotherScope() {
+	    block b = build block_2();
+	}
+}
+
+block block_02 {
+    channel:in input;
+    channel:out output;
+
+    blueprint() {
+
+    }
+}

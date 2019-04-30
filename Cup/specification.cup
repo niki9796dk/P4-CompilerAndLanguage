@@ -17,6 +17,10 @@ import java.util.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
+action code {:
+    Hashtable root = new Hashtable();
+:};
+
 parser code {:
         private AbstractNode rootNode;
 
@@ -78,7 +82,7 @@ parser code {:
 terminal Symbol COMMA, SEMICOLON, LPAR, RPAR, LCURLY, RCURLY, ASSIGN, CONNECTION, LSQR, RSQR, DOT;
 
 /* keywords */
-terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, CHANNELIN, CHANNELOUT, PROCEDURE, THIS, SIZE;
+terminal Symbol BLOCK, BLUEPRINT, BUILD, DRAW, SOURCE, OPERATION, CHANNELIN, CHANNELOUT, MYCHANNELIN, MYCHANNELOUT, PROCEDURE, THIS, SIZE;
 
 /* others */
 terminal String ID;
@@ -91,7 +95,8 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channe
              elementlist, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, inchanneldeclaration, outchanneldeclaration, inoutchanneldeclaration,
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
-             channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, builddecla, channelelementspar, channelelement, idpar;
+             channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, builddecla, channelelementspar,
+             channelelement, idpar, mychannel;
 
 non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
@@ -114,6 +119,7 @@ prog                    ::= blocks:bs
 block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
                         {:
                             RESULT = new BlockNode(ident).adoptChildren(def);
+                            root.put(ident, RESULT);
                         :}
                         ;
 
@@ -136,6 +142,8 @@ type				    ::= buildtype:type
 					    {: RESULT = type; :}
 					    | channel:channel
 					    {: RESULT = channel; :}
+					    | mychannel:channel
+                        {: RESULT = channel; :}
                         ;
 buildtype			    ::= BLOCK
                         {: RESULT = new BlockTypeNode("NoIden"); :}
@@ -150,26 +158,32 @@ channeldeclarations        ::= inchanneldeclaration:ind outchanneldeclaration:ou
                             RESULT = new ChannelDeclarationsNode().adoptChildren(ind, outd, inoutd);
                         :}
                         ;
-inchanneldeclaration       ::= CHANNELIN ID:id SEMICOLON inchanneldeclaration:ind
+inchanneldeclaration       ::= MYCHANNELIN ID:id SEMICOLON inchanneldeclaration:ind
                         {:
-                        AbstractNode channelNode = new InChannelNode(id);
+                        AbstractNode channelNode = new MyInChannelNode(id);
                         RESULT = (ind!=null) ? channelNode.makeSibling(ind) : channelNode;
                         :}
                         |
                         ;
-outchanneldeclaration      ::= CHANNELOUT ID:id SEMICOLON
-                        {: RESULT = new OutChannelNode(id); :}
+outchanneldeclaration      ::= MYCHANNELOUT ID:id SEMICOLON
+                        {: RESULT = new MyOutChannelNode(id); :}
                         ;
-inoutchanneldeclaration    ::= channel:g ID:id SEMICOLON inoutchanneldeclaration:gd
+inoutchanneldeclaration    ::= mychannel:g ID:id SEMICOLON inoutchanneldeclaration:gd
                         {:
                            AbstractNode channelNode = ((NamedIdNode) g).setId(id);
                            RESULT = (gd != null) ? channelNode.makeSibling(gd) :  channelNode; :}
 					    |
 					    ;
+mychannel               ::= MYCHANNELIN
+                        {: RESULT = new MyInChannelNode("NoIden"); :}
+                        | MYCHANNELOUT
+                        {: RESULT = new MyOutChannelNode("NoIden"); :}
+                        ;
+
 channel				    ::= CHANNELIN
-                        {: RESULT = new InChannelNode("NoIden"); :}
+                        {: RESULT = new InChannelTypeNode("NoIden"); :}
 					    | CHANNELOUT
-					    {: RESULT = new OutChannelNode("NoIden"); :}
+					    {: RESULT = new OutChannelTypeNode("NoIden"); :}
                         ;
 // BLUEPRINT
 blueprint			    ::= BLUEPRINT LPAR blueparams:bps RPAR LCURLY content:cnt RCURLY
@@ -395,13 +409,13 @@ sizeconst               ::= LSQR INTCONST:n1 COMMA INTCONST:n2 RSQR
                         {: RESULT = new SizeNode(n1, n2); :}
                         ;
 
-channelelementspar         ::= LPAR channelelement:elem RPAR
+channelelementspar      ::= LPAR channelelement:elem RPAR
                         {: RESULT = elem; :}
                         | channelelement:elem
                         {: RESULT = elem; :}
                         ;
 
-channelelement             ::= THIS DOT ID:id
+channelelement          ::= THIS DOT ID:id
                         {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
                         | ID:id dotid:dotid
                         {: RESULT = new SelectorNode(id).adoptChildren(dotid); :}
@@ -440,9 +454,9 @@ declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
                         {:
                             NamedIdNode channelNode = (NamedIdNode) channel;
 
-                            if (channelNode.getNodeEnum() == NodeEnum.CHANNEL_IN) {
+                            if (channelNode.getNodeEnum() == NodeEnum.CHANNEL_IN_MY) {
                                 channelNode = new InChannelTypeNode(id);
-                            } else if (channelNode.getNodeEnum() == NodeEnum.CHANNEL_OUT) {
+                            } else if (channelNode.getNodeEnum() == NodeEnum.CHANNEL_OUT_MY) {
                                 channelNode = new OutChannelTypeNode(id);
                             } else {
                                 // ERROR

@@ -77,9 +77,9 @@ public class TypeCheckerVisitor implements Visitor {
                 NodeEnum rightSide = this.typeSystem.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
 
                 // Swap the channel types
-                if (rightSide == NodeEnum.CHANNEL_OUT) {
+                if (rightSide == NodeEnum.CHANNEL_OUT_MY) {
                     rightSide = NodeEnum.CHANNEL_OUT_TYPE;
-                } else if (rightSide == NodeEnum.CHANNEL_IN) {
+                } else if (rightSide == NodeEnum.CHANNEL_IN_MY) {
                     rightSide = NodeEnum.CHANNEL_IN_TYPE;
                 }
 
@@ -133,8 +133,8 @@ public class TypeCheckerVisitor implements Visitor {
             case SIZE:
             case SELECTOR:
             case ROOT:
-            case CHANNEL_IN:
-            case CHANNEL_OUT:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
             case CHANNEL_IN_TYPE:
             case CHANNEL_OUT_TYPE:
             case SIZE_TYPE:
@@ -169,8 +169,8 @@ public class TypeCheckerVisitor implements Visitor {
             case BLUEPRINT:
             case PROCEDURE:
             case CHANNEL_DECLARATIONS:
-            case CHANNEL_IN:
-            case CHANNEL_OUT:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
             case CHANNEL_IN_TYPE:
             case CHANNEL_OUT_TYPE:
             case SIZE_TYPE:
@@ -236,7 +236,7 @@ public class TypeCheckerVisitor implements Visitor {
                 this.throwTypeException(node);
             }
             switch (nodeType) {
-                case CHANNEL_IN:
+                case CHANNEL_IN_MY:
                 case CHANNEL_OUT_TYPE:
                 case SOURCE_TYPE:
                     return; // The node was of the correct type, so return an do not throw any exceptions
@@ -271,7 +271,7 @@ public class TypeCheckerVisitor implements Visitor {
             this.throwTypeException(node);
         }
         switch (nodeType) {
-            case CHANNEL_OUT:
+            case CHANNEL_OUT_MY:
             case CHANNEL_IN_TYPE:
                 return; // The node was of the correct type, so return an do not throw any exceptions
 

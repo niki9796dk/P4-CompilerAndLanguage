@@ -4,7 +4,7 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 
 /**
- *
+ * Is a pointer to a {@link AST.Nodes.NodeClasses.NamedNodes.BlueprintNode}
  */
 public class DrawNode extends NamedIdNode {
     public DrawNode(String id) {

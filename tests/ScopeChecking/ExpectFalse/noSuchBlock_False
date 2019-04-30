@@ -1,0 +1,9 @@
+// Test of non-existing block reference.
+block block_01 {
+    channel:in input;
+    channel:out output;
+
+    blueprint() {
+        block a = build noSuchBlock();
+    }
+}
