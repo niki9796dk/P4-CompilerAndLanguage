@@ -176,13 +176,13 @@ public class TypeSystem {
                     Scope subScope = this.symbolTable.getSubScope(variableId, BlockScope.CHANNELS);
 
                     if (subScope == null) {
-                        throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE - No such block defined '" + variableId + "' - " + node);
+                        throw new ShouldNotHappenException("No such block defined '" + variableId + "' - " + node);
                     }
 
                     VariableEntry variableEntryBlock = subScope.getVariable(childId);
 
                     if (variableEntryBlock == null) {
-                        throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE - No such channel defined '" + childId + "' - " + node.getChild());
+                        throw new ShouldNotHappenException("No such channel defined '" + childId + "' - " + node.getChild());
                     }
 
                     NodeEnum type = variableEntryBlock.getSuperType();
@@ -205,7 +205,7 @@ public class TypeSystem {
                         return NodeEnum.CHANNEL_OUT_TYPE;
                     } else {
                         // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
-                        throw new ShouldNotHappenException("SHOULD NOT HAPPEN HERE! - The operation '" + variableId + "' does not have a channel named '" + childId + "'");
+                        throw new ShouldNotHappenException("The operation '" + variableId + "' does not have a channel named '" + childId + "'");
                     }
 
             }
@@ -250,7 +250,7 @@ public class TypeSystem {
             return type;
         } else {
             // If the type is null, there is no such identifier defined... Which should have been caught in the scope checking!!!
-            throw new RuntimeException("Identifier not defined: " + (isThis ? ("this." + node.getChild()) : node) + " - THIS ERROR SHOULD HAVE BEEN DETECTED IN SCOPE CHECKING AND NOT TYPE CHECKING");
+            throw new ShouldNotHappenException("Identifier not defined: " + (isThis ? ("this." + node.getChild()) : node) + " - THIS ERROR SHOULD HAVE BEEN DETECTED IN SCOPE CHECKING AND NOT TYPE CHECKING");
         }
     }
 
