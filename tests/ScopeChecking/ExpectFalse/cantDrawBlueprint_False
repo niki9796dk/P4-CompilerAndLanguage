@@ -1,0 +1,9 @@
+// Test of blueprint declarations regarding non-existing blocks.
+block block_01 {
+    channel:in input;
+    channel:out output;
+
+    blueprint() {
+        blueprint structure = draw noSuchBlock();
+    }
+}

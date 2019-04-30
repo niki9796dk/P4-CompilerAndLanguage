@@ -1,0 +1,9 @@
+// Test of recursive blocks.
+block block_01 {
+    channel:in input;
+    channel:out output;
+
+    blueprint() {
+        block me = build block_01();
+    }
+}
