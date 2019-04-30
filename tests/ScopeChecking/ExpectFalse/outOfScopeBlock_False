@@ -1,11 +1,10 @@
-// Test of non-existing channel reference.
+// Test of out of scope block reference.
 block block_01 {
 	channel:in input;
 	channel:out output;
 
 	blueprint() {
-	    block a = build block_02;
-		input -> a.input;
+		input -> b.input;
 	}
 
 	procedure anotherScope() {

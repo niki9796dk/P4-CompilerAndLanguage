@@ -1,0 +1,21 @@
+// Test of incorrect scope use.
+block block_01 {
+    channel:in input;
+    channel:out output;
+
+    blueprint() {
+        channel:in in;
+        block a = build block_02();
+
+        this.in -> a;
+    }
+}
+
+block block_02 {
+    channel:in fake;
+    channel:out output;
+
+    blueprint() {
+
+    }
+}
