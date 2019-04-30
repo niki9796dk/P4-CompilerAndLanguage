@@ -1,0 +1,16 @@
+block procedure_02 {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        operation fakeBlock = build _Sigmoid();
+
+        abc(fakeBlock);
+
+        this.in -> this.out;
+    }
+
+    procedure abc(block b) {
+
+    }
+}

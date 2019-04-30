@@ -71,9 +71,11 @@ public class ScopeCheckerVisitor implements Visitor {
                 break;
 
             case PROCEDURE_CALL:
-                Scope scope = this.currentBlockScope.getProcedureScope(childId);
+                SelectorNode childSelector = (SelectorNode) node.findFirstChildOfClass(SelectorNode.class);
+
+                Scope scope = this.currentBlockScope.getProcedureScope(childSelector.getId());
                 if (scope == null) {
-                    throw new ScopeBoundsViolationException("No such procedure: " + childId);
+                    throw new ScopeBoundsViolationException("No such procedure: " + childSelector.getId());
                 }
                 break;
 
@@ -154,7 +156,7 @@ public class ScopeCheckerVisitor implements Visitor {
 
     private void checkIfNull(VariableEntry variable, String subScope, String id) {
         if (variable == null) {
-            throw new ScopeBoundsViolationException("In scope: " + subScope + ", no such variable: " + id);
+            throw new ScopeBoundsViolationException("In scope: " + this.currentBlockScope.getId() + ">" + subScope + ", no such variable: " + id);
         }
     }
 }

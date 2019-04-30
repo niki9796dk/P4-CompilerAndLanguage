@@ -1,4 +1,4 @@
-package TypeChecker;
+package TypeChecker.Exceptions;
 
 public class TypeInconsistencyException extends RuntimeException {
     public TypeInconsistencyException() {

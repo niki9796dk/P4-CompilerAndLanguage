@@ -1,0 +1,12 @@
+// Test of legal char sequences
+block procedure_06 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		abc();
+	}
+	
+	procedure abc() {
+	}
+}

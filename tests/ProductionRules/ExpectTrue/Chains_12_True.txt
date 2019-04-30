@@ -13,8 +13,8 @@ block chain_12 {
 }
 
 block Test {
-    channel:out output;
-    channel:in input;
+    channel:out out;
+    channel:in in;
     blueprint() {
     }
 }

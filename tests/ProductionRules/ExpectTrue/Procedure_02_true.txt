@@ -1,16 +1,16 @@
-// Operations
-block chain_15 {
+// Test of legal char sequences
+block procedure_02 {
 	channel:in input;
 	channel:out output;
-
+	
 	blueprint() {
-		block a = build Test();
-		block b = build Test();
+		abc(this.input, build Test());
+	}
+	
+	procedure abc(channel:in x, block y) {
 
-		(a) -> operation abc = build Addition() -> this.output;
 	}
 }
-
 
 block Test {
     channel:out output;

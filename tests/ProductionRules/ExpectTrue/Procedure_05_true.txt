@@ -1,0 +1,20 @@
+// Test of legal char sequences
+block procedure_05 {
+	channel:in input;
+	channel:out output;
+	
+	blueprint() {
+		abc(this.input, build Test(), draw Test, build _Sigmoid(), [25, 20]);
+	}
+	
+	procedure abc(channel:in x, block y, blueprint z, operation o, size s) {
+
+	}
+}
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}

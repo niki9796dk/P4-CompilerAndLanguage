@@ -1,0 +1,33 @@
+block decla_19 {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+	    // Create 2 blueprints
+		blueprint b1 = draw Singleton;
+		blueprint b2 = b1;
+
+		// Build one
+		block blo = build b1();
+
+        // Chain them
+		this.input -> build b2() -> blo;
+
+		// Reassign one of the blueprints
+		b2 = draw _Sigmoid();
+
+		operation ope = build b2();
+
+		// Create a new chain, which now used the updated blueprint type
+		(blo, build b1()) -> ope -> this.output;
+	}
+}
+
+block Singleton {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+		this.in -> this.out;
+	}
+}

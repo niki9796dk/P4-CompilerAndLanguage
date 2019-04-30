@@ -1,0 +1,22 @@
+block decla_20 {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+		blueprint b1 = draw Singleton;
+		blueprint b2 = draw Singleton;
+
+		b1 = b2;
+
+		this.input -> build b2() -> build b1() -> this.output;
+	}
+}
+
+block Singleton {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+		this.in -> this.out;
+	}
+}

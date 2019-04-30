@@ -1,0 +1,11 @@
+block channels_02 {
+    channel:in in;
+	channel:out out;
+
+	blueprint() {
+        channel:in in1 = this.in;
+        channel:out out1 = this.out;
+
+        out1 -> in1;
+	}
+}
