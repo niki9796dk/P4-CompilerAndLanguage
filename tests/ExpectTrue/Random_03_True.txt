@@ -1,7 +1,7 @@
 // Test of legal but ugly syntax.
 block random_03 {
-    channel:in input;
-    channel:out output;
+    mychannel:in input;
+    mychannel:out output;
     
     blueprint() {
         block a = build Test();
@@ -22,8 +22,8 @@ block random_03 {
 
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

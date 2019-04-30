@@ -1,6 +1,6 @@
 block decla_16 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 		operation abc;

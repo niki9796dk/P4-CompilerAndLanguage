@@ -52,8 +52,12 @@ public class ScopeCheckerVisitor implements Visitor {
                 break;
             case DRAW:
             case BUILD:
-                if (this.symbolTableInterface.getBlockScope(id) != null
+                        // The given id is valid IF:
+                        // it is an existent block, AND not itself
+                if ((this.symbolTableInterface.getBlockScope(id) != null && !(this.symbolTableInterface.getBlockScope(id).getId().equals(id)))
+                        // or it is an operation
                         || this.symbolTableInterface.isPredefinedOperation(id)
+                        // or it is a source
                         || this.symbolTableInterface.isPredefinedSource(id))
                 {
                     // Nothing
@@ -92,7 +96,7 @@ public class ScopeCheckerVisitor implements Visitor {
 
                 if ("this".equals(id)) {
                     this.verifyChannelVariable(childId);
-                    
+
                 } else if (ignoreSelector) {
                     // Do nothing.
 

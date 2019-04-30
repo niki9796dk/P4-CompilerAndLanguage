@@ -1,7 +1,7 @@
 // Test of legal char sequences
 block block_01 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		this.input -> build Test(draw Singleton) -> this.output;
@@ -9,8 +9,8 @@ block block_01 {
 }
 
 block Test {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint(blueprint blue) {
         block b = build blue();
@@ -20,8 +20,8 @@ block Test {
 }
 
 block Singleton {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint() {
         this.in -> this.out;

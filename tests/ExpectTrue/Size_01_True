@@ -1,5 +1,5 @@
  block bad_pars_01 {
- 	channel:out output;
+ 	mychannel:out output;
 
  	blueprint() {
  		size a = [2,3];

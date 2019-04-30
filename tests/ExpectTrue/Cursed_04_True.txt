@@ -1,7 +1,7 @@
 // Test of legal but cursed sequences
 
  block cursed_04{
-     channel:out output;
+     mychannel:out output;
 
      blueprint() {
          size a = [2,3];
