@@ -1,6 +1,6 @@
  block decla_20 {
-       	channel:in input;
-       	channel:out output;
+       	mychannel:in input;
+       	mychannel:out output;
 
        	blueprint() {
        		(source abc = build Source());

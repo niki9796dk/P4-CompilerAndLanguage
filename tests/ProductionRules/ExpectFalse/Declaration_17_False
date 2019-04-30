@@ -1,6 +1,6 @@
 block decla {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 		channel:out out = this.output -> this.input -> this.output;
