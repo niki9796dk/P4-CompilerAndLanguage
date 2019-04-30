@@ -1,12 +1,12 @@
 
 block channels_04 {
-	channel:in input1;
-	channel:in input2;
-	channel:out output1;
-    channel:out output2;
-	channel:in input3;
-	channel:out output3;
-    channel:in input4;
+	mychannel:in input1;
+	mychannel:in input2;
+	mychannel:out output1;
+    mychannel:out output2;
+	mychannel:in input3;
+	mychannel:out output3;
+    mychannel:in input4;
 
 	blueprint() {
 

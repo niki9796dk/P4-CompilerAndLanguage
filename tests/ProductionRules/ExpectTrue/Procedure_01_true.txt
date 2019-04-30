@@ -1,13 +1,13 @@
 // Test of legal char sequences
 block procedure_01 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		abc(this.input);
 	}
 	
-	procedure abc(channel:in x) {
+	procedure abc(mychannel:in x) {
 
 	}
 }

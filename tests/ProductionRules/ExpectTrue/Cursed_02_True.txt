@@ -1,12 +1,12 @@
 // Test of legal but cursed sequences
 block cursed_02{
-	channel:in in1																																						;
-	channel:in in2;
-	channel:in in3;
-	channel:in in4;
-	channel:in in5;
-	channel:in in6;
-	channel:out out;
+	mychannel:in in1																																						;
+	mychannel:in in2;
+	mychannel:in in3;
+	mychannel:in in4;
+	mychannel:in in5;
+	mychannel:in in6;
+	mychannel:out out;
 	
 	blueprint(){
 		(in1, build Source([13,4])) -> operation add1 = build Addition()																									;

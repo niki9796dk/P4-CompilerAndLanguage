@@ -1,7 +1,7 @@
 // Test of legal char sequences
 block random_02 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		abcde(this.input);
@@ -13,7 +13,7 @@ block random_02 {
 	;;;
 	}
 	
-	procedure abcde(channel:in hmm) {
+	procedure abcde(mychannel:in hmm) {
 		;;;
 		abc();
 	}

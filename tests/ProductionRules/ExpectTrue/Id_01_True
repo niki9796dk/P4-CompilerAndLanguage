@@ -1,5 +1,5 @@
 block id_01{
-	channel:out output;
+	mychannel:out output;
 
 	blueprint() {
 		block a = build Test();
@@ -10,8 +10,8 @@ block id_01{
 }
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

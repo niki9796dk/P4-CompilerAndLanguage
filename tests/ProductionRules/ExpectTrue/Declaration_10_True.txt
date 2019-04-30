@@ -1,28 +1,28 @@
 // dot channel
 block decla_10 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		block b = build Test();
 		b = build Abc();
 	
-		channel:in s = (this.input);
+		mychannel:in s = (this.input);
 	}
 }
 
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }
 
 
 block Abc {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

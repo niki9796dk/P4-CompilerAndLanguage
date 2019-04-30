@@ -1,7 +1,7 @@
 block channels_01 {
-	channel:in input1;
-	channel:out output;
-	channel:in input2;
+	mychannel:in input1;
+	mychannel:out output;
+	mychannel:in input2;
 
 	blueprint() {
 
