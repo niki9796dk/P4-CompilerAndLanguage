@@ -17,7 +17,7 @@ class MainParseTest {
     @TestFactory
     Stream<DynamicTest> positiveFiles() {
 
-        File trueFolder = new File("tests/ProductionRules/ExpectTrue/");
+        File trueFolder = new File("tests/ExpectTrue/");
 
         List<File> trueFiles = Arrays.asList(Objects.requireNonNull(trueFolder.listFiles()));
 
