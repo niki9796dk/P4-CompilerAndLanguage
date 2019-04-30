@@ -5,6 +5,9 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 
 import java.util.Objects;
 
+/**
+ * A deceleration of a size variable. Contains the specified properties.
+ */
 public class SizeNode extends NamedNode {
     public final Integer first;
     public final Integer second;

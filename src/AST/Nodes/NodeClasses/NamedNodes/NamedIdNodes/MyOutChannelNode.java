@@ -8,8 +8,8 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
  * Represents nodes in the tree as well, but is an in channel when outside channel decelerations.
  * @see AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode
  */
-public class OutChannelNode extends NamedIdNode {
-    public OutChannelNode(String id) {
-        super("OutChannel", id, NodeEnum.CHANNEL_OUT);
+public class MyOutChannelNode extends NamedIdNode {
+    public MyOutChannelNode(String id) {
+        super("MyOutChannel", id, NodeEnum.CHANNEL_OUT_MY);
     }
 }

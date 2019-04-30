@@ -1,7 +1,7 @@
 block AnnLayer_long{
 	// Gates
-	channel:in in;
-	channel:out out;
+	mychannel:in in;
+	mychannel:out out;
 
 	// Blueprint
 	blueprint(){
@@ -32,8 +32,8 @@ block AnnLayer_long{
 }
 
 block Sigmoid {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

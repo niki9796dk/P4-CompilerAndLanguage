@@ -52,8 +52,8 @@ public class SymbolTableVisitor implements Visitor {
                 break;
 
                 // Insert variables
-            case CHANNEL_IN:
-            case CHANNEL_OUT:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
             case CHANNEL_IN_TYPE:
             case CHANNEL_OUT_TYPE:
             case SIZE_TYPE:
@@ -88,8 +88,8 @@ public class SymbolTableVisitor implements Visitor {
             case BLOCK:
             case BLUEPRINT:
             case PROCEDURE:
-            case CHANNEL_IN:
-            case CHANNEL_OUT:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
             case CHANNEL_IN_TYPE:
             case CHANNEL_OUT_TYPE:
             case SIZE_TYPE:
