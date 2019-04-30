@@ -6,7 +6,7 @@ block decla_18 {
 		blueprint b1 = draw Singleton;
 		blueprint b2 = b1;
 
-		this.input -> build b2() -> build b1() -> this.outout;
+		this.input -> build b2() -> build b1() -> this.output;
 	}
 }
 

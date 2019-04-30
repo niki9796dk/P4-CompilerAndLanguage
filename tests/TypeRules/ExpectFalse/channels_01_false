@@ -3,7 +3,7 @@ block channels_01 {
 	mychannel:out out;
 
 	blueprint() {
-        channel:in in1 = this.in;
+        mychannel:in in1 = this.in;
 
         this.in -> in1;
 	}
