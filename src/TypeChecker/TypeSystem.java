@@ -61,13 +61,25 @@ public class TypeSystem {
      * @param currentSubScope The current sub scope to type check from
      */
     public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope) {
+        this.assertEqualTypes(leftNode, rightNode, currentBlockScope, currentSubScope, "Different type on the left and right side node");
+    }
+
+    /**
+     * Asserts that two nodes have the same type, and throws an exception if this condition is not held.
+     * @param leftNode The first node to compare
+     * @param rightNode The second node to compare
+     * @param currentBlockScope The current block scope to type check from
+     * @param currentSubScope The current sub scope to type check from
+     * @param errorMsgPrefix The error msg prefix.
+     */
+    public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope, String errorMsgPrefix) {
         // Get the types of both left and right node.
         NodeEnum leftNodeType = this.getTypeOfNode(leftNode, currentBlockScope, currentSubScope);
         NodeEnum rightNodeType = this.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
 
         // Then compare them.
         if (leftNodeType != rightNodeType) {
-            throw new TypeInconsistencyException("Different type on the left and right side node: " + leftNode + "("+ leftNodeType +") = " + rightNode + "("+ rightNodeType +")");
+            throw new TypeInconsistencyException(errorMsgPrefix + ": " + leftNode + "("+ leftNodeType +") = " + rightNode + "("+ rightNodeType +")");
         }
     }
 
