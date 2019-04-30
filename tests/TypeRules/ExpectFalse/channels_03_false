@@ -1,6 +1,6 @@
 block channels_03 {
-    channel:in in;
-	channel:out out;
+    mychannel:in in;
+	mychannel:out out;
 
 	blueprint() {
         this.out -> this.in;

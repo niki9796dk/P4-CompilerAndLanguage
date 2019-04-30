@@ -1,6 +1,6 @@
 block channels_07 {
-    channel:in in;
-	channel:out out;
+    mychannel:in in;
+	mychannel:out out;
 
 	blueprint() {
 	    source sour = build Source();
@@ -11,8 +11,8 @@ block channels_07 {
 }
 
 block Test {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint() {
         this.in -> this.out;
