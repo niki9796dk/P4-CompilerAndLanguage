@@ -1,7 +1,7 @@
 // Test of recursive blocks.
 block block_01 {
-    channel:in input;
-    channel:out output;
+    mychannel:in input;
+    mychannel:out output;
 
     blueprint() {
         block me = build block_01();

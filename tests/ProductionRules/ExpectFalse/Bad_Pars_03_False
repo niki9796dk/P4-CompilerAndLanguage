@@ -1,5 +1,5 @@
  block bad_pars_03{
-     channel:out output;
+     mychannel:out output;
 
      blueprint() {
          blueprint a = draw Test();

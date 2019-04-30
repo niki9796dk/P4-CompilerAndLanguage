@@ -1,7 +1,7 @@
 // Test of out of scope channel reference.
 block block_01 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 		input -> input2;
@@ -9,8 +9,8 @@ block block_01 {
 }
 
 block block_02 {
-    channel:in input2;
-    channel:out output2;
+    mychannel:in input2;
+    mychannel:out output2;
 
     blueprint() {
 

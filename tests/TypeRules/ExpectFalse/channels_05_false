@@ -1,6 +1,6 @@
 block channels_05 {
-    channel:in in;
-	channel:out out;
+    mychannel:in in;
+	mychannel:out out;
 
 	blueprint() {
 	    block b = build Test();
@@ -10,8 +10,8 @@ block channels_05 {
 }
 
 block Test {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint() {
         this.in -> this.out;

@@ -1,7 +1,7 @@
 // Test of non-existing channel reference.
 block block_01 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 	    block a = build block_02();
@@ -10,8 +10,8 @@ block block_01 {
 }
 
 block block_02 {
-    channel:in fake;
-    channel:out output;
+    mychannel:in fake;
+    mychannel:out output;
 
     blueprint() {
 
