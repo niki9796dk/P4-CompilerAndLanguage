@@ -5,8 +5,10 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
+import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.BlockScope;
@@ -48,89 +50,25 @@ public class TypeCheckerVisitor implements Visitor {
                 //// ACTUAL TYPE CHECKING START
 
             case CHAIN:
-                // Get first child
-                AbstractNode childNode = node.getChild();
-
-                // Verify it's type as an input node
-                this.verifyInputType(childNode);
-
-                // Loop all middle children and verify them as an element node
-                childNode = childNode.getSib();
-                while (childNode.getSib() != null) {
-                    this.verifyMiddleType(childNode);
-                    childNode = childNode.getSib();
-                }
-
-                // Verify the last node as an output node
-                this.verifyOutputType(childNode);
+                this.typecheckChain(node);
                 break;
 
             case GROUP:
-                verifyInputType(node);
+                this.verifyInputType(node);
                 break;
 
             case ASSIGN:
-                AbstractNode leftNode = node.getChild();
-                AbstractNode rightNode = leftNode.getSib();
-
-                NodeEnum leftSide = this.typeSystem.getTypeOfNode(leftNode, currentBlockScope, currentSubScope);
-                NodeEnum rightSide = this.typeSystem.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
-
-                // Swap the channel types
-                /*
-                if (rightSide == NodeEnum.CHANNEL_OUT_MY) {
-                    rightSide = NodeEnum.CHANNEL_OUT_TYPE;
-                } else if (rightSide == NodeEnum.CHANNEL_IN_MY) {
-                    rightSide = NodeEnum.CHANNEL_IN_TYPE;
-                }
-                */
-
-                if (leftSide != rightSide) {
-                    throw new TypeInconsistencyException("Assignment: " + node + " - Has different type on the left and right side of the assignment: " + leftNode + "("+ leftSide +") = " + rightNode + "("+ rightSide +")");
-                }
-
+                this.typecheckAssignments(node);
                 break;
 
             case BUILD:
             case PROCEDURE_CALL:
-                AbstractNode calleeNode;
-
-                switch (node.getNodeEnum()) {
-                    case PROCEDURE_CALL:
-                        String nodeId = ((NamedIdNode) node.findFirstChildOfClass(SelectorNode.class)).getId();
-                        calleeNode = this.typeSystem.getProcedure(currentBlockScope, nodeId);
-                        break;
-                    case BUILD:
-                        nodeId = ((NamedIdNode) node).getId();
-                        boolean isNotOperation = !this.typeSystem.getSymbolTable().isPredefinedOperation(nodeId);
-                        boolean isNotSource = !this.typeSystem.getSymbolTable().isPredefinedSource(nodeId);
-
-                        if (isNotOperation && isNotSource) {
-                            calleeNode = this.typeSystem.getBlock(nodeId);
-                            break;
-                        } else {
-                            // This check is only for blocks, so return if not an block
-                            return;
-                        }
-                    default:
-                        throw new UnexpectedNodeException(node);
-                }
-
-                // Get actual and formal parameter list
-                ParamsNode actualParams = (ParamsNode) node.findFirstChildOfClass(ParamsNode.class);
-                ParamsNode formalParams = (ParamsNode) calleeNode.findFirstChildOfClass(ParamsNode.class);
-
-                this.typeCheckParamLists(node, formalParams, actualParams);
-
+                this.typecheckBuildAndProcCalls(node);
                 break;
 
-                //// ACTUAL TYPE CHECKING END
-
+            //// ACTUAL TYPE CHECKING END
 
             case PARAMS:
-                break;
-
-
             case DRAW:
             case SIZE:
             case SELECTOR:
@@ -185,6 +123,70 @@ public class TypeCheckerVisitor implements Visitor {
             default:
                 throw new UnexpectedNodeException(node);
         }
+    }
+
+    private void typecheckAssignments(AbstractNode node) {
+        AbstractNode leftNode = node.getChild();
+        AbstractNode rightNode = leftNode.getSib();
+
+        this.typeSystem.assertEqualTypes(leftNode, rightNode, this.currentBlockScope, this.currentSubScope);
+    }
+
+    private void typecheckBuildAndProcCalls(NamedNode callerNode) {
+        AbstractNode calleeNode = this.findCalleNodeFromCaller(callerNode);
+
+        // If the callee node is null, just return, since this means that we were building something else than a block (eg. source / operation)
+        if (calleeNode == null) {
+            return;
+        }
+
+        // Get actual and formal parameter list
+        ParamsNode actualParams = (ParamsNode) callerNode.findFirstChildOfClass(ParamsNode.class);
+        ParamsNode formalParams = (ParamsNode) calleeNode.findFirstChildOfClass(ParamsNode.class);
+
+        // Compare param lists
+        this.typeCheckParamLists(callerNode, formalParams, actualParams);
+    }
+
+    // Contract: Expects
+    private AbstractNode findCalleNodeFromCaller(NamedNode callerNode) {
+
+        if (callerNode instanceof ProcedureCallNode) {
+            String nodeId = ((NamedIdNode) callerNode.findFirstChildOfClass(SelectorNode.class)).getId();
+
+            return this.typeSystem.getProcedure(currentBlockScope, nodeId);
+
+        } else if (callerNode instanceof BuildNode) {
+
+            String nodeId = ((NamedIdNode) callerNode).getId();
+            boolean isNotOperation = !this.typeSystem.getSymbolTable().isPredefinedOperation(nodeId);
+            boolean isNotSource = !this.typeSystem.getSymbolTable().isPredefinedSource(nodeId);
+
+            if (isNotOperation && isNotSource) {
+                return this.typeSystem.getBlock(nodeId);
+            }
+        }
+
+        // Return null if the caller node is of wrong instance, or not a block
+        return null;
+    }
+
+    private void typecheckChain(AbstractNode node) {
+        // Get first child
+        AbstractNode childNode = node.getChild();
+
+        // Verify it's type as an input node
+        this.verifyInputType(childNode);
+
+        // Loop all middle children and verify them as an element node
+        childNode = childNode.getSib();
+        while (childNode.getSib() != null) {
+            this.verifyMiddleType(childNode);
+            childNode = childNode.getSib();
+        }
+
+        // Verify the last node as an output node
+        this.verifyOutputType(childNode);
     }
 
     private void typeCheckParamLists(AbstractNode node, ParamsNode formalParams, ParamsNode actualParams) {
@@ -275,7 +277,7 @@ public class TypeCheckerVisitor implements Visitor {
         switch (nodeType) {
             case CHANNEL_OUT_MY:
             case CHANNEL_IN_TYPE:
-                return; // The node was of the correct type, so return an do not throw any exceptions
+                return; // The node was of the correct type, so return and do not throw any exceptions
 
             default:
                 // If the node was not a correct specific type, then test if it's a middle type node
