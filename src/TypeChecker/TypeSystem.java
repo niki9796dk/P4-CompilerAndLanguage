@@ -162,12 +162,9 @@ public class TypeSystem {
         if (isThis || isChildless) {
             return this.getTypeOfSelectorVariable(node, blockScopeId, subScopeId);
         } else if (isNotChildOfSelector) {
-            String nodeId = namedIdNode.getId();
             int nodeNumber = namedIdNode.getNumber();
 
-            VariableEntry variable = this.symbolTable
-                    .getSubScope(blockScopeId, subScopeId)
-                    .getVariable(nodeId);
+            VariableEntry variable = this.getVariableFromIdentifier(namedIdNode.getId(), blockScopeId, subScopeId);
 
             String variableId = variable.getSubType(nodeNumber).getId();
             String childId = ((NamedIdNode) node.getChild()).getId();
@@ -286,9 +283,20 @@ public class TypeSystem {
      * @return (NodeEnum|null) Returns the super type of a variable within the selected sub scope. Returns null if the variable does not exist in the sub scope.
      */
     private NodeEnum getType(String identifier, String blockScopeId, String subScopeId) {
-        Scope subScope = this.symbolTable.getSubScope(blockScopeId, subScopeId);
-        VariableEntry variable = subScope.getVariable(identifier);
-
+        VariableEntry variable = this.getVariableFromIdentifier(identifier, blockScopeId, subScopeId);
         return variable != null ? variable.getSuperType() : null;
+    }
+
+    /**
+     * Returns the variable from a given block and sub scope from an identifier
+     * @param identifier The variable identifier
+     * @param blockScopeId The current block scope to fetch from
+     * @param subScopeId The current sub scope to fetch from
+     * @return (NodeEnum|null) Returns the variable from the selector in the given scope. Returns null if the variable does not exist.
+     */
+    private VariableEntry getVariableFromIdentifier(String identifier, String blockScopeId, String subScopeId) {
+        return this.symbolTable
+                .getSubScope(blockScopeId, subScopeId)
+                .getVariable(identifier);
     }
 }
