@@ -4,16 +4,23 @@ block chain_11 {
 	channel:out output;
 	
 	blueprint() {
-		block a = build test();
-		block b = build test();
-		block c = build test();
+		block a = build Test();
+		block b = build Test();
+		block c = build Test();
 		
 		this.input -> a.in;
 		
-		a.out -> b.inputGate;
+		a.out -> b.in;
 		
-		b.outputGate -> c.swagIn;
+		b.out -> c.in;
 
-		c.swagOut -> this.output;
+		c.out -> this.output;
 	}
+}
+
+block Test {
+    channel:out out;
+    channel:in in;
+    blueprint() {
+    }
 }

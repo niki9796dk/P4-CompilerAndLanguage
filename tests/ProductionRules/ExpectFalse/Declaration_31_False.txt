@@ -1,0 +1,22 @@
+block decla_20 {
+	channel:in input;
+	channel:out output;
+
+	blueprint() {
+	    source sour = build Source();
+	    block s1 = build sig(sour);
+
+	    this.in -> s1 -> this.output;
+	}
+}
+
+block sig {
+    channel:in input;
+    channel:out output;
+
+    blueprint (source sour) {
+        operation sigmoid = build _Sigmoid();
+
+        (this.in, sour) -> sigmoid -> this.output;
+    }
+}

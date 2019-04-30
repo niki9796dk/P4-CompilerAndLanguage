@@ -1,0 +1,17 @@
+block build_11 {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        operation fakeBlock = build FixedSource();
+    }
+}
+
+block Test {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        this.in -> this.out;
+    }
+}

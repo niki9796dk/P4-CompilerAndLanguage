@@ -1,5 +1,6 @@
 package AutoGen;
 
+import TypeChecker.Exceptions.TypeInconsistencyException;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -39,15 +40,28 @@ class MainParseTest {
 
     // Test all negative files
     @TestFactory
-    Stream<DynamicTest> negativeFiles() {
-
+    Stream<DynamicTest> negativeFiles_ProductionRules() {
         File trueFolder = new File("tests/ProductionRules/ExpectFalse/");
 
-        List<File> trueFiles = Arrays.asList(Objects.requireNonNull(trueFolder.listFiles()));
+        return expectedFalse(trueFolder, AutoGen.ScannerException.class);
+    }
+
+    // Test all negative files
+    @TestFactory
+    Stream<DynamicTest> negativeFiles_TypeChecking() {
+        File trueFolder = new File("tests/TypeRules/ExpectFalse/");
+
+        return expectedFalse(trueFolder, TypeInconsistencyException.class);
+    }
+
+    // General test factory for false tests
+    private Stream<DynamicTest> expectedFalse(File filePath, Class expectedExceptionClass) {
+
+        List<File> trueFiles = Arrays.asList(Objects.requireNonNull(filePath.listFiles()));
 
         return trueFiles.stream()
                 .map(file -> DynamicTest.dynamicTest("Testing: '" + file.getName() + "'",
-                        () -> assertThrows(AutoGen.ScannerException.class, () -> assertTrue(MainParse.parseFile(file.getPath())))));
+                        () -> assertThrows(expectedExceptionClass, () -> assertTrue(MainParse.parseFile(file.getPath())))));
     }
 
     // Test all negative files regarding scope checking

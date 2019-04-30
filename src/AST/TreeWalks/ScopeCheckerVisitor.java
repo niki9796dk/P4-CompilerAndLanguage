@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import AST.TreeWalks.Exceptions.NonexistentBlockException;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
@@ -28,9 +29,9 @@ public class ScopeCheckerVisitor implements Visitor {
         NamedNode childNode = (NamedNode) node.getChild();
 
         // If needed, typecast
-        String id = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : "";
+        String id = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : "?no id? " + node.toString();
 
-        String childId = (childNode instanceof NamedIdNode) ? ((NamedIdNode) childNode).getId() : "";
+        String childId = (childNode instanceof NamedIdNode) ? ((NamedIdNode) childNode).getId() : "?no id? child of " + node.toString();
 
         switch (node.getNodeEnum()) {
             case ROOT:
@@ -48,8 +49,17 @@ public class ScopeCheckerVisitor implements Visitor {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
+                break;
             case DRAW:
             case BUILD:
+                if (this.symbolTableInterface.getBlockScope(id) != null
+                        || this.symbolTableInterface.isPredefinedOperation(id)
+                        || this.symbolTableInterface.isPredefinedSource(id))
+                {
+                    // Nothing
+                } else {
+                    throw new NonexistentBlockException(childId);
+                }
                 break;
 
             case BLOCK:
@@ -61,9 +71,11 @@ public class ScopeCheckerVisitor implements Visitor {
                 break;
 
             case PROCEDURE_CALL:
-                Scope scope = this.currentBlockScope.getProcedureScope(childId);
+                SelectorNode childSelector = (SelectorNode) node.findFirstChildOfClass(SelectorNode.class);
+
+                Scope scope = this.currentBlockScope.getProcedureScope(childSelector.getId());
                 if (scope == null) {
-                    throw new ScopeBoundsViolationException("No such procedure: " + childId);
+                    throw new ScopeBoundsViolationException("No such procedure: " + childSelector.getId());
                 }
                 break;
 
@@ -79,11 +91,7 @@ public class ScopeCheckerVisitor implements Visitor {
                 boolean ignoreSelector = node.getParent() instanceof ProcedureCallNode;
 
                 if ("this".equals(id)) {
-                    try {
-                        this.verifyChannelVariable(childId);
-                    } catch (ScopeBoundsViolationException e) {
-                        this.verifyCurrentScopeVariable(childId);
-                    }
+                    this.verifyChannelVariable(childId);
                     
                 } else if (ignoreSelector) {
                     // Do nothing.
@@ -148,7 +156,7 @@ public class ScopeCheckerVisitor implements Visitor {
 
     private void checkIfNull(VariableEntry variable, String subScope, String id) {
         if (variable == null) {
-            throw new ScopeBoundsViolationException("In scope: " + subScope + ", no such variable: " + id);
+            throw new ScopeBoundsViolationException("In scope: " + this.currentBlockScope.getId() + ">" + subScope + ", no such variable: " + id);
         }
     }
 }

@@ -4,14 +4,17 @@ block cursed_06{
 
     blueprint() {
         block abc = build Test();
-        channel:in a = abc.go;
+        channel:in a = abc.input;
 
         source bb = build Source(size qq = [2,3]) -> a;
-        abc.benis -> output;
+        abc.output -> output;
     }
 }
 
 
-
-
-
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}

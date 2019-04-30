@@ -1,0 +1,16 @@
+block procedure_01 {
+    channel:in in;
+    channel:out out;
+
+    blueprint () {
+        source fakeBlock = build Source();
+
+        abc(fakeBlock);
+
+        this.in -> this.out;
+    }
+
+    procedure abc(block b) {
+
+    }
+}

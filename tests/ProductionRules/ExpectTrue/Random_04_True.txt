@@ -6,16 +6,16 @@ block random_04 {
 	;
     
     blueprint() {
-        block a = build test()											;
-			block b = build test()									;
-				block c = build test()							;
-					block d = build test()					;
-						block e = build test()			;
-							block f = build test()	;
-						block g = build test()			;
-					block h = build test()					;
-				block i = build test()							;
-			block j = build test()									;
+        block a = build Test()											;
+			block b = build Test()									;
+				block c = build Test()							;
+					block d = build Test()					;
+						block e = build Test()			;
+							block f = build Test()	;
+						block g = build Test()			;
+					block h = build Test()					;
+				block i = build Test()							;
+			block j = build Test()									;
 		this.input 
 		
 			->
@@ -29,5 +29,13 @@ block random_04 {
 			->
 		this.output
 			;
+    }
+}
+
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
     }
 }

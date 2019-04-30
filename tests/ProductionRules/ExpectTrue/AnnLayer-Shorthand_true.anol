@@ -12,17 +12,24 @@ block AnnLayer_short{
 	// Implement first operation: Multiplication
 	operation mult = build Multiplication();
 	
-	(this.in, this.weights) -> mult;
+	(this.in, weights) -> mult;
 	
 	// Implement second operation: Addition
 	operation add = build Addition();
 	
-	(mult, this.bias) -> add;
+	(mult, bias) -> add;
 	
 	// Implement final operation: Sigmoid
 	// And connect to the output of the block
-	operation sigmoid = build Sigmoid();
+	operation sigmoid = build _Sigmoid();
 	
 	add -> sigmoid -> this.out;
   }
+}
+
+block Sigmoid {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
 }

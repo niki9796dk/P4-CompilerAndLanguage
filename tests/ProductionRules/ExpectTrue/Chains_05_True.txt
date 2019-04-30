@@ -4,10 +4,17 @@ block chain_05 {
 	channel:out output;
 	
 	blueprint() {
-		block a = build test();
-		block b = build test();
+		block a = build Test();
+		block b = build Test();
 		operation c = build Multiplication();
 		
 		(this.input, a) -> c -> b -> this.output;
 	}
+}
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
 }

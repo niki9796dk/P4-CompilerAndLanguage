@@ -66,6 +66,20 @@ public interface Node {
     AbstractNode getChild();
 
     /**
+     * Get the first child of a node, of a given class
+     * @param childClass The expected child class
+     * @return First child of class 'childClass'.
+     */
+    AbstractNode findFirstChildOfClass(Class childClass);
+
+    /**
+     * Counts the child nodes
+     * @return An integer value, representing the amount of child nodes.
+     */
+    int countChildren();
+
+
+    /**
      * Get the first sibling of the node.
      * @return the first sibling of the node.
      */

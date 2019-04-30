@@ -8,3 +8,10 @@ block id_01{
 		a = b;
 	}
 }
+
+block Test {
+    channel:out output;
+    channel:in input;
+    blueprint() {
+    }
+}

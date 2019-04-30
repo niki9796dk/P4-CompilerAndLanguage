@@ -1,0 +1,15 @@
+ block Keywords_08 {
+ 	channel:out output;
+
+ 	blueprint() {
+ 		block -> = build Test();
+ 	}
+ }
+
+ block block {
+  	channel:out output;
+
+    blueprint() {
+
+    }
+ }
