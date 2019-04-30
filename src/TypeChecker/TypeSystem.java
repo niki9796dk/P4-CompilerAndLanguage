@@ -52,8 +52,8 @@ public class TypeSystem {
             case GROUP:
                 return null; // These nodes don't have a type.
 
-            case CHANNEL_IN:
-            case CHANNEL_OUT:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
             case SIZE_TYPE:
             case BLOCK_TYPE:
             case SOURCE_TYPE:
@@ -63,11 +63,11 @@ public class TypeSystem {
 
             case CHANNEL_OUT_TYPE:
                 return numberedNode.getNodeEnum();
-                //return NodeEnum.CHANNEL_OUT;
+                //return NodeEnum.CHANNEL_OUT_MY;
 
             case CHANNEL_IN_TYPE:
                 return numberedNode.getNodeEnum();
-                //return NodeEnum.CHANNEL_IN;
+                //return NodeEnum.CHANNEL_IN_MY;
 
                 /*
             case GROUP:
@@ -146,9 +146,9 @@ public class TypeSystem {
                     NodeEnum type = variableEntryBlock.getSuperType();
 
                     switch (type) {
-                        case CHANNEL_IN:
+                        case CHANNEL_IN_MY:
                             return NodeEnum.CHANNEL_IN_TYPE;
-                        case CHANNEL_OUT:
+                        case CHANNEL_OUT_MY:
                             return NodeEnum.CHANNEL_OUT_TYPE;
 
                         default:
