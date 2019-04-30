@@ -1,7 +1,9 @@
 package AutoGen;
 
+/**
+ * An exception used for unit testing of a scanner.
+ */
 public class ScannerException extends Exception {
-    // USED FOR UNIT TESTING
     public ScannerException(Throwable cause) {
         super(cause);
     }
