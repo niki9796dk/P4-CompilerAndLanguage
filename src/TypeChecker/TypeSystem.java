@@ -10,6 +10,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.ShouldNotHappenException;
+import TypeChecker.Exceptions.TypeInconsistencyException;
 
 public class TypeSystem {
     private SymbolTableInterface symbolTable;
@@ -35,6 +36,15 @@ public class TypeSystem {
                 this.symbolTable
                 .getBlockScope(blockId)
                 .getNode();
+    }
+
+    public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope) {
+        NodeEnum leftSide = this.getTypeOfNode(leftNode, currentBlockScope, currentSubScope);
+        NodeEnum rightSide = this.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
+
+        if (leftSide != rightSide) {
+            throw new TypeInconsistencyException("Different type on the left and right side node: " + leftNode + "("+ leftSide +") = " + rightNode + "("+ rightSide +")");
+        }
     }
 
     public NodeEnum getTypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
