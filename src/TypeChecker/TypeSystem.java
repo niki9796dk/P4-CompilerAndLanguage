@@ -130,7 +130,7 @@ public class TypeSystem {
      * @return (NodeEnum) The type of the build statement
      */
     private NodeEnum getTypeOfBuildStatement(AbstractNode node) {
-        String id = ((NamedIdNode) node).getId();
+        String id = this.getIdFromNode(node);
 
         if (this.symbolTable.isPredefinedOperation(id)) {
             return NodeEnum.OPERATION_TYPE;
@@ -151,58 +151,48 @@ public class TypeSystem {
      * @return (NodeEnum|null) The type of node, the selector is pointing at.
      */
     private NodeEnum getTypeOfSelector(AbstractNode node, String blockScopeId, String subScopeId) {
-        // Typecast the node to a namedIdNode
-        NamedIdNode namedIdNode = (NamedIdNode) node;
+        String nodeId = this.getIdFromNode(node);
 
         // Evaluate booleans
-        boolean isThis = "this".equals(namedIdNode.getId());
+        boolean isThis = "this".equals(nodeId);
         boolean isChildless = node.getChild() == null;
         boolean isNotChildOfSelector = !(node.getParent() instanceof SelectorNode);
 
         if (isThis || isChildless) {
             return this.getTypeOfSelectorVariable(node, blockScopeId, subScopeId);
+
         } else if (isNotChildOfSelector) {
-            int nodeNumber = namedIdNode.getNumber();
+            VariableEntry variable = this.getVariableFromIdentifier(nodeId, blockScopeId, subScopeId);
 
-            VariableEntry variable = this.getVariableFromIdentifier(namedIdNode.getId(), blockScopeId, subScopeId);
-
-            String variableId = variable.getSubType(nodeNumber).getId();
-            String childId = ((NamedIdNode) node.getChild()).getId();
+            String variableId = variable.getSubType(this.getNumberFromNode(node)).getId();
+            String childId = this.getIdFromNode(node.getChild());
 
             NodeEnum superType = variable.getSuperType();
 
             switch (superType) {
                 case BLOCK_TYPE:
+                    // Extract the sub scope, and assert that it's not null.
                     Scope subScope = this.symbolTable.getSubScope(variableId, BlockScope.CHANNELS);
+                    this.assertNotNull(subScope, "No such block defined '" + variableId + "' - " + node);
 
-                    if (subScope == null) {
-                        throw new ShouldNotHappenException("No such block defined '" + variableId + "' - " + node);
-                    }
-
+                    // Extract the variable, and assert that it's not null.
                     VariableEntry variableEntryBlock = subScope.getVariable(childId);
+                    this.assertNotNull(variableEntryBlock, "No such channel defined '" + childId + "' - " + node.getChild());
 
-                    if (variableEntryBlock == null) {
-                        throw new ShouldNotHappenException("No such channel defined '" + childId + "' - " + node.getChild());
-                    }
-
+                    // Get the super type from the variable
                     NodeEnum type = variableEntryBlock.getSuperType();
 
-                    switch (type) {
-                        case CHANNEL_IN_MY:
-                            return NodeEnum.CHANNEL_IN_TYPE;
-                        case CHANNEL_OUT_MY:
-                            return NodeEnum.CHANNEL_OUT_TYPE;
-
-                        default:
-                            return type;
-                    }
+                    // Translate external channels and return the translated type.
+                    return this.translateExternalChannelTypes(type);
 
                 case OPERATION_TYPE:
                     // TODO: Somehow include the operations in the symbol table instead of this BS.
                     if ("A".equals(childId) || "B".equals(childId)) {
                         return NodeEnum.CHANNEL_IN_TYPE;
+
                     } else if ("out".equals(childId)) {
                         return NodeEnum.CHANNEL_OUT_TYPE;
+
                     } else {
                         // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
                         throw new ShouldNotHappenException("The operation '" + variableId + "' does not have a channel named '" + childId + "'");
@@ -218,6 +208,24 @@ public class TypeSystem {
         }
     }
 
+    private void assertNotNull(Object object, String errorMsg) {
+        if (object == null) {
+            throw new ShouldNotHappenException(errorMsg);
+        }
+    }
+
+    private NodeEnum translateExternalChannelTypes(NodeEnum type) {
+        switch (type) {
+            case CHANNEL_IN_MY:
+                return NodeEnum.CHANNEL_IN_TYPE;
+            case CHANNEL_OUT_MY:
+                return NodeEnum.CHANNEL_OUT_TYPE;
+
+            default:
+                return type;
+        }
+    }
+
     /**
      * Returns the type of a selector, which is known to point at a local variable and not anything else (eg. procedures, mychannels...)
      * @param node The selector node to evaluate
@@ -226,12 +234,11 @@ public class TypeSystem {
      * @return (NodeEnum) The type of the local variable that the selector is pointing at.
      */
     private NodeEnum getTypeOfSelectorVariable(AbstractNode node, String blockScopeId, String subScopeId) {
-        // Typecast the node to a namedIdNode
-        NamedIdNode namedIdNode = (NamedIdNode) node;
+        String nodeId = this.getIdFromNode(node);
 
         // Check if it's a 'this' selector, and then extract the correct identifier.
-        boolean isThis = "this".equals(namedIdNode.getId());
-        String identifier = isThis ? ((NamedIdNode) namedIdNode.getChild()).getId() : namedIdNode.getId();
+        boolean isThis = "this".equals(nodeId);
+        String identifier = isThis ? this.getIdFromNode(node.getChild()) : nodeId;
 
         // Try to get the variable type from both global(Channels) and local(SubScope)
         NodeEnum typeGlobal = getTypeFromGlobal(identifier, blockScopeId);
@@ -252,6 +259,24 @@ public class TypeSystem {
             // If the type is null, there is no such identifier defined... Which should have been caught in the scope checking!!!
             throw new ShouldNotHappenException("Identifier not defined: " + (isThis ? ("this." + node.getChild()) : node) + " - THIS ERROR SHOULD HAVE BEEN DETECTED IN SCOPE CHECKING AND NOT TYPE CHECKING");
         }
+    }
+
+    /**
+     * Typecasts an abstract node to an NamedIdNode, and then returns the id from that node.
+     * @param abstractNode The node to extract the ID from.
+     * @return (String) The id of the node
+     */
+    private String getIdFromNode(AbstractNode abstractNode) {
+        return ((NamedIdNode) abstractNode).getId();
+    }
+
+    /**
+     * Typecasts an abstract node to an NumberedNode, and then returns the number from that node.
+     * @param abstractNode The node to extract the number from.
+     * @return (int) The number of the node
+     */
+    private int getNumberFromNode(AbstractNode abstractNode) {
+        return ((NumberedNode) abstractNode).getNumber();
     }
 
     /**
