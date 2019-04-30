@@ -1,7 +1,7 @@
 // Test of channel access groups.
 block chain_12 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		block a = build Test();
@@ -13,16 +13,16 @@ block chain_12 {
 }
 
 block Test {
-    channel:out out;
-    channel:in in;
+    mychannel:out out;
+    mychannel:in in;
     blueprint() {
     }
 }
 
 
 block LargeOpe {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

@@ -1,7 +1,7 @@
 // Test of large group connections.
 block chain_10 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		this.input -> block b = build Test();
@@ -11,16 +11,16 @@ block chain_10 {
 }
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }
 
 
 block LargeOpe {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }
