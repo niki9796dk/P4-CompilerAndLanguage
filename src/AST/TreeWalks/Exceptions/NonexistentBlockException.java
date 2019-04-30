@@ -18,7 +18,7 @@ public class NonexistentBlockException extends ScopeBoundsViolationException{
 
     /**
      * Appends a unique message to the error message of the stack trace.
-     * @param message The appended stacktrace.
+     * @param message The appended message.
      */
     public NonexistentBlockException(String message) {
         super( DEFAULT_ERROR_MESSAGE + ": " + message);
