@@ -6,6 +6,6 @@ public class ShouldNotHappenException extends RuntimeException {
     }
 
     public ShouldNotHappenException(String message) {
-        super(message);
+        super("SHOULT NOT HAPPEN HERE!! - " + message);
     }
 }
