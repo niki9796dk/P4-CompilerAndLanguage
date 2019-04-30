@@ -20,23 +20,25 @@ public class PrintTree implements Visitor {
         this.ps = ps;
     }
 
+
     /**
      * @param printLevel the level, used to decide how many indents there should be in the print statement.
-     * @param n The node which is being visited.
+     * @param abstractNode The node which is being visited.
      */
     @Override
-    public void pre(int printLevel, AbstractNode n) {
+    public void pre(int printLevel, AbstractNode abstractNode) {
         String tab = "";
         for (int i = 1; i <= printLevel; ++i) tab += "  ";
-        ps.println(tab + n.toString());
+        ps.println(tab + abstractNode.toString());
     }
 
 
     /**
      * @param printLevel the level, used to decide how many indents there should be in the print statement.
-     * @param a          The node which is being visited.
+     * @param abstractNode          The node which is being visited.
      */
     @Override
-    public void post(int printLevel, AbstractNode a) {
+    public void post(int printLevel, AbstractNode abstractNode) {
+        /* DoNothing(); */
     }
 }
