@@ -4,8 +4,8 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 
 /**
- * A node representing an input channel of data flow.
- * Represents nodes in the tree as well, but is an out channel when outside channel decelerations.
+ * A node representing an input channel decleration of data flow in a block.
+ * Represents nodes in the tree as well, but is an out channel when outside channel decelerations. [Citation Needed]
  * @see AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode
  */
 public class InChannelNode extends NamedIdNode {
