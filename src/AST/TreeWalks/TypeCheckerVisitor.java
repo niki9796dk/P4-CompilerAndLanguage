@@ -91,6 +91,7 @@ public class TypeCheckerVisitor implements Visitor {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
+                // Do nothing
                 break;
 
             default:
