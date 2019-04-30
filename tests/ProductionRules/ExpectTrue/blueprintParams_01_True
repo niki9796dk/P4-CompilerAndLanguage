@@ -1,53 +1,8 @@
 block b1 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint(blueprint abc) {
-
-	}
-}
-
-block b2 {
-	channel:in input;
-	channel:out output;
-
-	blueprint(size abc) {
-
-	}
-}
-
-block b3 {
-	channel:in input;
-	channel:out output;
-
-	blueprint(size abc1, blueprint abc2) {
-
-	}
-}
-
-block b4 {
-	channel:in input;
-	channel:out output;
-
-	blueprint(blueprint abc1, size abc2) {
-
-	}
-}
-
-block b5 {
-	channel:in input;
-	channel:out output;
-
-	blueprint(blueprint abc1, size abc2, size abc3, size abc4, size abc5) {
-
-	}
-}
-
-block b5 {
-	channel:in input;
-	channel:out output;
-
-	blueprint(blueprint abc1, size abc2, size abc3, blueprint abc4) {
 
 	}
 }

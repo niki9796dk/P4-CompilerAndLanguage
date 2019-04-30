@@ -1,7 +1,7 @@
 // Test of channel access.
 block chain_11 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		block a = build Test();
@@ -19,8 +19,8 @@ block chain_11 {
 }
 
 block Test {
-    channel:out out;
-    channel:in in;
+    mychannel:out out;
+    mychannel:in in;
     blueprint() {
     }
 }
