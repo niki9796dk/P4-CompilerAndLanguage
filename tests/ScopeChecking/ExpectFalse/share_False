@@ -14,7 +14,7 @@ block block_01 {
     }
 }
 
-block blockToBuild() {
+block blockToBuild {
     mychannel:in input;
     mychannel:out output;
 
