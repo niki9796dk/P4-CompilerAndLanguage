@@ -1,0 +1,14 @@
+// Test of out of scope size reference.
+block block_01 {
+    channel:in input;
+    channel:out output;
+
+    blueprint() {
+        size bigboi = [10, 10];
+        reassignBigBoi(bigboi);
+    }
+
+    procedure reassignBigBoi(size bigboiref) {
+        bigboi = [12, 12];
+    }
+}
