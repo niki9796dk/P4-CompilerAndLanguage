@@ -77,11 +77,13 @@ public class TypeCheckerVisitor implements Visitor {
                 NodeEnum rightSide = this.typeSystem.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
 
                 // Swap the channel types
+                /*
                 if (rightSide == NodeEnum.CHANNEL_OUT_MY) {
                     rightSide = NodeEnum.CHANNEL_OUT_TYPE;
                 } else if (rightSide == NodeEnum.CHANNEL_IN_MY) {
                     rightSide = NodeEnum.CHANNEL_IN_TYPE;
                 }
+                */
 
                 if (leftSide != rightSide) {
                     throw new TypeInconsistencyException("Assignment: " + node + " - Has different type on the left and right side of the assignment: " + leftNode + "("+ leftSide +") = " + rightNode + "("+ rightSide +")");
