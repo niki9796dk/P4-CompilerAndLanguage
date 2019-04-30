@@ -89,11 +89,7 @@ public class ScopeCheckerVisitor implements Visitor {
                 boolean ignoreSelector = node.getParent() instanceof ProcedureCallNode;
 
                 if ("this".equals(id)) {
-                    try {
-                        this.verifyChannelVariable(childId);
-                    } catch (ScopeBoundsViolationException e) {
-                        this.verifyCurrentScopeVariable(childId);
-                    }
+                    this.verifyChannelVariable(childId);
                     
                 } else if (ignoreSelector) {
                     // Do nothing.
