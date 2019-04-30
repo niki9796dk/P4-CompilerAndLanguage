@@ -1,7 +1,7 @@
 // Unfished groups 3
 block chain_05 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 		block a = build test();

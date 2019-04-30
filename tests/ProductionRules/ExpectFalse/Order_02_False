@@ -8,6 +8,6 @@ block random_03 {
 
     }
 
-    channel:in input;
-    channel:out output;
+    mychannel:in input;
+    mychannel:out output;
 }

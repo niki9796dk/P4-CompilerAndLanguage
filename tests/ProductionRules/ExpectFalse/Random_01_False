@@ -1,7 +1,7 @@
 // Test of legal char sequences
 block random_01 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 		build test();
