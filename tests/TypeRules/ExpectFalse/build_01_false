@@ -1,6 +1,6 @@
 block build_01 {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint () {
         block fakeBlock = build _Sigmoid();

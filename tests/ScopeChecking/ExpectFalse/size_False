@@ -1,7 +1,7 @@
 // Test of out of scope size reference.
 block block_01 {
-    channel:in input;
-    channel:out output;
+    mychannel:in input;
+    mychannel:out output;
 
     blueprint() {
         size bigboi = [10, 10];
