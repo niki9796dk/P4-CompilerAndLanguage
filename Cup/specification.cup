@@ -454,14 +454,7 @@ declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
                         {:
                             NamedIdNode channelNode = (NamedIdNode) channel;
 
-                            if (channelNode.getNodeEnum() == NodeEnum.CHANNEL_IN_MY) {
-                                channelNode = new InChannelTypeNode(id);
-                            } else if (channelNode.getNodeEnum() == NodeEnum.CHANNEL_OUT_MY) {
-                                channelNode = new OutChannelTypeNode(id);
-                            } else {
-                                // ERROR
-                                throw new RuntimeException("Im gonna shit your fuck - Christian");
-                            }
+                            channelNode.setId(id);
 
                             RESULT = (assign != null) ? assign.adoptAsFirstChild(channelNode) : channelNode;
                         :}
