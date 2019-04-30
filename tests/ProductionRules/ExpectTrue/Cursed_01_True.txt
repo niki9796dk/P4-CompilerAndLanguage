@@ -1,7 +1,7 @@
 // Test of legal but cursed sequences
 block cursed_01 {
-channel:in
-input;channel:out output;
+mychannel:in
+input;mychannel:out output;
 blueprint
 (
 )
@@ -28,8 +28,8 @@ output
 
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

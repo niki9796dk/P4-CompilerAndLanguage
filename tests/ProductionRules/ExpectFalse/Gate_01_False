@@ -1,5 +1,5 @@
 block channels_06 {
-	channel:in input1;
+	mychannel:in input1;
 
 	blueprint() {
 

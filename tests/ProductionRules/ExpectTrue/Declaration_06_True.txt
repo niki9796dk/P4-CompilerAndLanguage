@@ -1,7 +1,7 @@
 // Blueprint
 block decla_06 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		blueprint blockBlueprint = draw Test;
@@ -10,8 +10,8 @@ block decla_06 {
 
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

@@ -1,7 +1,7 @@
 // Para
 block decla_02 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		block a = (build Test());
@@ -10,8 +10,8 @@ block decla_02 {
 
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

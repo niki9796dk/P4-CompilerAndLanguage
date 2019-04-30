@@ -1,5 +1,5 @@
 block cursed_05{
-    channel:out output;
+    mychannel:out output;
 
     blueprint() {
         block abc = build Test();

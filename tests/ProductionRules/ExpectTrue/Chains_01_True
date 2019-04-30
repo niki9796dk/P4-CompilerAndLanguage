@@ -1,7 +1,7 @@
 // Test of simple multi chaining.
 block chain_01 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		block a = build Test();
@@ -13,8 +13,8 @@ block chain_01 {
 }
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

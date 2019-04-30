@@ -1,6 +1,6 @@
 block build_07 {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint () {
         operation fakeBlock = draw Source;
@@ -8,8 +8,8 @@ block build_07 {
 }
 
 block Test {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint () {
         this.in -> this.out;

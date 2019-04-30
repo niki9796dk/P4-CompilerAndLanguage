@@ -1,6 +1,6 @@
 block decla_20 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 	    source sour = build Source();
@@ -11,8 +11,8 @@ block decla_20 {
 }
 
 block sig {
-    channel:in input;
-    channel:out output;
+    mychannel:in input;
+    mychannel:out output;
 
     blueprint (source sour) {
         operation sigmoid = build _Sigmoid();

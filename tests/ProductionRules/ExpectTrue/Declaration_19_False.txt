@@ -1,6 +1,6 @@
 block decla_19 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 	    // Create 2 blueprints
@@ -24,8 +24,8 @@ block decla_19 {
 }
 
 block Singleton {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 		this.in -> this.out;

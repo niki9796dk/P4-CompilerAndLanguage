@@ -1,6 +1,6 @@
 block procedure_04 {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint () {
         blueprint fakeBlock = draw Test;
@@ -16,8 +16,8 @@ block procedure_04 {
 }
 
 block Test {
-    channel:in in;
-    channel:out out;
+    mychannel:in in;
+    mychannel:out out;
 
     blueprint () {
         this.in -> this.out;

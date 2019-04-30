@@ -1,8 +1,8 @@
 // Test of legal but ugly syntax.
 block random_04 {
-    channel:in input
+    mychannel:in input
 	;
-    channel:out output
+    mychannel:out output
 	;
     
     blueprint() {
@@ -34,8 +34,8 @@ block random_04 {
 
 
 block Test {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }

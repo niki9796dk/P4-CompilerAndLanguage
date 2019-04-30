@@ -1,7 +1,7 @@
 // Repeated build.
 block repeat_01 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint() {
 		block a = build build test();

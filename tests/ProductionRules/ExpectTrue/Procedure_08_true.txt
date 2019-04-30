@@ -1,7 +1,7 @@
 // Test of legal char sequences
 block procedure_06 {
-	channel:in input;
-	channel:out output;
+	mychannel:in input;
+	mychannel:out output;
 	
 	blueprint() {
 		abc();

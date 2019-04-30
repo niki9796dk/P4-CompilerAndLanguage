@@ -1,7 +1,7 @@
 // Test of legal but cursed sequences
 
 block cursed_05{
-    channel:out output;
+    mychannel:out output;
 
     blueprint() {
         block abc = build Test();
@@ -17,17 +17,17 @@ block cursed_05{
 
 
 block Test {
-    channel:out output;
-    channel:in sizzle;
-    channel:in shizzle;
+    mychannel:out output;
+    mychannel:in sizzle;
+    mychannel:in shizzle;
 
     blueprint() {
     }
 }
 
 block Transpose {
-    channel:out output;
-    channel:in input;
+    mychannel:out output;
+    mychannel:in input;
     blueprint() {
     }
 }
