@@ -78,7 +78,7 @@ public class TypeCheckerVisitor implements Visitor {
             //// ACTUAL TYPE CHECKING END
 
             case PARAMS:
-            case DRAW:
+            case DRAW:  // TODO: Maybe we should check whatever we draw is a block... But this should also be checked in the scope checker
             case SIZE:
             case SELECTOR:
             case ROOT:
