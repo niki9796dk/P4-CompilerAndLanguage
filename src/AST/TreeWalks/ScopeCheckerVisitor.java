@@ -56,12 +56,17 @@ public class ScopeCheckerVisitor implements Visitor {
             case DRAW:
             case BUILD:
                 // The given id is valid IF:
-                // it is an existent block, AND not itself
-                if ((this.symbolTableInterface.getBlockScope(id) != null && !(this.symbolTableInterface.getBlockScope(id).getId().equals(childId)))
-                        // or it is an operation
+                // it is an existent block, AND not itself,
+                if ((this.symbolTableInterface.getBlockScope(id) != null
+                        && !(this.symbolTableInterface.getBlockScope(id).getId().equals(childId))
+                        // or it is an operation,
                         || this.symbolTableInterface.isPredefinedOperation(id)
-                        // or it is a source
+                        // or it is a source,
                         || this.symbolTableInterface.isPredefinedSource(id))
+                        // or it is a variable in this scope, THAT IS a blueprint, AND not itself
+                        || this.currentSubScope.getVariable(id) != null
+                        && this.currentSubScope.getVariable(id).getSuperType().toString().equals("BLUEPRINT")
+                        && !(this.currentSubScope.getVariable(id).getSubType(node.getNumber()).getName().equals(node.getName())))
                 {
                     // Nothing
                     if(this.symbolTableInterface.getBlockScope(id) != null){
