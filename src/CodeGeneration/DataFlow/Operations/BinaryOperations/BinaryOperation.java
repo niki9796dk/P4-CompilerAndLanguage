@@ -23,7 +23,8 @@ abstract class BinaryOperation extends Operation {
                 .addOutput("out", out);
     }
 
-    Channel getOutputChannel() {
+    @Override
+    public Channel getOutputChannel() {
         return this.getChannel("out");
     }
 }

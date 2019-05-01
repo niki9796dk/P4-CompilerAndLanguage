@@ -32,7 +32,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
         }
     }
 
-    abstract Channel getOutputChannel();
+    protected abstract Channel getOutputChannel();
 
     /**
      * Checks if operation is ready to be performed

@@ -1,5 +1,6 @@
 package CodeGeneration.DataFlow.Operations.BinaryOperations;
 
+import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Operations.Operation;
 import LinearAlgebra.Types.Matrices.Matrix;
 
@@ -14,5 +15,6 @@ public abstract class BinaryMatrixOperation extends BinaryOperation {
     }
 
     abstract Matrix operation(Matrix in1, Matrix in2);
+
 
 }
