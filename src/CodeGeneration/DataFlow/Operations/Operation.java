@@ -32,7 +32,14 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
         return isReady;
     }
 
+    /**
+     * @deprecated
+     */
     protected float getInputValue(ChannelId channelId) {
+        return this.getChannel(channelId).getValue();
+    }
+
+    protected float getInputValue(String channelId) {
         return this.getChannel(channelId).getValue();
     }
 }

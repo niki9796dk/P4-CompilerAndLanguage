@@ -3,6 +3,7 @@ package CodeGeneration.DataFlow.Operations;
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import LinearAlgebra.Types.Matrices.DenseMatrix;
 
 abstract class BinaryOperation extends Operation {
     BinaryOperation() {
@@ -17,20 +18,20 @@ abstract class BinaryOperation extends Operation {
 
         // Store channels
         this
-                .addInput(ChannelId.A, A)
-                .addInput(ChannelId.B, B)
-                .addOutput(ChannelId.C, C);
+                .addInput("A", A)
+                .addInput("B", B)
+                .addOutput("C", C);
     }
 
     @Override
     Channel getOutputChannel() {
-        return this.getChannel(ChannelId.C);
+        return this.getChannel("C");
     }
 
     @Override
     public void performOperation() {
-        float a = this.getInputValue(ChannelId.A);
-        float b = this.getInputValue(ChannelId.B);
+        float a = this.getInputValue("A");
+        float b = this.getInputValue("B");
 
         this.value = operation(a, b);
     }
