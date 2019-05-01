@@ -13,7 +13,7 @@ import java.util.HashSet;
  */
 public class SymbolTable implements SymbolTableInterface {
     /**
-     *
+     * The state of the symbol table.
      */
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
 
