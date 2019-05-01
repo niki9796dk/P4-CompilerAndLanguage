@@ -7,6 +7,6 @@ public class _Addition extends BinaryMatrixOperation {
     @Override
     Matrix operation(Matrix in1, Matrix in2) {
         MatrixBuilder out = new MatrixBuilder(in1.getRows(), in1.getColumns(), true);
-        return out.compLoop((r,c,v) -> out.setEntry(r,c, in1.getEntry(r,c) + in2.getEntry(r,c))).build();
+        return out.additionToEntries(in2).build();
     }
 }
