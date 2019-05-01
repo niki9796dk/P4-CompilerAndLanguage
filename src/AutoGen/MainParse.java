@@ -58,6 +58,8 @@ public class MainParse {
 
         prog.walkTree(new TypeCheckerVisitor(symbolTableInterface));
 
+        prog.walkTree(new SemanticAnalysisVisitor(symbolTableInterface));
+
         return true;
     }
 }

@@ -354,7 +354,7 @@ public class TypeCheckerVisitor implements Visitor {
      * @throws TypeInconsistencyException Is thrown if the node is a typeless node.
      */
     private NodeEnum getTypeOfNode(AbstractNode node) {
-        NodeEnum type = this.typeSystem.getTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+        NodeEnum type = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
         this.assertNonNullType(node, type);
 
         return type;
