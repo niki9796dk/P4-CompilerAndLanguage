@@ -1,31 +1,33 @@
 package CodeGeneration.DataFlow.Blocks;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
-import CodeGeneration.DataFlow.Network.AbstractChannel;
+import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Operations.Addition;
 import CodeGeneration.DataFlow.Operations.Multiplication;
 import CodeGeneration.DataFlow.Operations.Operation;
 
+/// (X, Y) -> ApBmB -> Z
+/// X - ApBmB.A ->
+
 public class A_plus_B_mult_B extends AbstractBlock {
     public A_plus_B_mult_B() {
         // Channel
         this
-                .addInput(ChannelId.A, new AbstractChannel())
-                .addInput(ChannelId.B, new AbstractChannel())
-                .addOutput(ChannelId.C, new AbstractChannel());
+                .addInput("A", new ListChannel())
+                .addInput("B", new ListChannel())
+                .addOutput("C", new ListChannel());
 
         // Blueprint
         Operation add = new Addition();
 
-        this.connectTo(add, ChannelId.A, ChannelId.A);
-        this.connectTo(add, ChannelId.B, ChannelId.B);
+        this.connectAll(add);
 
         Operation mult = new Multiplication();
 
-        add.connectTo(mult, ChannelId.C, ChannelId.A);
+        add.connectTo(mult, "C", "A");
 
-        this.connectTo(mult, ChannelId.B, ChannelId.B);
+        this.connectTo(mult, "B", "B");
 
         mult.connectTo(this, ChannelId.C, ChannelId.C);
     }

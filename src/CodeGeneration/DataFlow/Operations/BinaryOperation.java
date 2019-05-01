@@ -1,20 +1,19 @@
 package CodeGeneration.DataFlow.Operations;
 
-import CodeGeneration.DataFlow.Network.AbstractChannel;
+import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 
 abstract class BinaryOperation extends Operation {
     BinaryOperation() {
         // Define inputs
-        Channel A = new AbstractChannel();
-        Channel B = new AbstractChannel();
+        Channel A = new ListChannel();
+        Channel B = new ListChannel();
         A.addTarget(this);
         B.addTarget(this);
 
         // Define outputs
-        Channel C = new AbstractChannel();
-        C.setSource(this);
+        Channel C = new ListChannel(this);
 
         // Store channels
         this

@@ -10,8 +10,8 @@ public class main {
     public static void main(String[] args) {
         Block block = new A_plus_B_mult_B();
 
-        Channel A = block.getChannel(ChannelId.A);
-        Channel B = block.getChannel(ChannelId.B);
+        Channel A = block.getChannel("A");
+        Channel B = block.getChannel("B");
 
         // Set input A to 10
         Source input1 = new Source(10);
@@ -24,7 +24,9 @@ public class main {
         B.acceptReadySignal();
 
         // Get output
-        System.out.println("Value of out: " + block.getChannel(ChannelId.C).getValue());
+
+        System.out.println("Value of out: ┏━ " + block.getChannel("B").getValue());
+        System.out.println("Should be     ┗━ 24.0");
     }
 
     public static class Source implements SignalNode {

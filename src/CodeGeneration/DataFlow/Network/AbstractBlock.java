@@ -27,6 +27,13 @@ public abstract class AbstractBlock implements Block {
         return this.addInput(id.name(), c);
     }
 
+    /**
+     * Add an input channel
+     *
+     * @param id Desired id of the new channel.
+     * @param c  The channel
+     * @return a reference to this object.
+     */
     public AbstractBlock addInput(String id, Channel c) {
         print.say("New input: " + id);
         this.inputChannels.put(id, c);
@@ -44,70 +51,108 @@ public abstract class AbstractBlock implements Block {
         return this.addOutput(id.name(), c);
     }
 
-    public AbstractBlock addOutput(String id, Channel g) {
+    /**
+     * Add an input channel
+     *
+     * @param id Desired id of the new channel.
+     * @param c  The channel
+     * @return a reference to this object.
+     */
+    public AbstractBlock addOutput(String id, Channel c) {
         print.say("New output: " + id);
-        this.outputChannels.put(id, g);
+        this.outputChannels.put(id, c);
         return this;
     }
 
+    @Override
+    public boolean hasInput(String id){
+        return this.inputChannels.containsKey(id);
+    }
 
-        /**
-         * Get all output channels.
-         *
-         * @return all output channels.
-         */
-        public Collection<Channel> getOutputs () {
-            return this.outputChannels.values();
-        }
+    @Override
+    public boolean hasOutput(String id){
+        return this.outputChannels.containsKey(id);
+    }
 
-        /**
-         * Get all input channels.
-         *
-         * @return all input channels.
-         */
-        public Collection<Channel> getInputs () {
-            return this.inputChannels.values();
+
+    /**
+     * Get all output channels.
+     *
+     * @return all output channels.
+     */
+    public Collection<Channel> getOutputs() {
+        return this.outputChannels.values();
+    }
+
+    /**
+     * Get all input channels.
+     *
+     * @return all input channels.
+     */
+    public Collection<Channel> getInputs() {
+        return this.inputChannels.values();
+    }
+
+
+    /**
+     * Connect all channels with the same id
+     * @param that the block to connect to.
+     * @return a reference to this object.
+     */
+    @Override
+    public Block connectAll(Block that) {
+        for(String id: this.outputChannels.keySet()){
+            if(that.hasInput(id))
+                this.connectTo(that, id);
         }
+        return this;
+    }
 
     @Override
     public Block connectTo(Block toBlocks, ChannelId fromChannel, ChannelId toChannel) {
-        return this.connectTo(toBlocks, fromChannel.name(), toChannel);
+        return this.connectTo(toBlocks, fromChannel.name(), toChannel.toString());
     }
 
     @Override
-        public Block connectTo(Block toBlock, String fromChannel, ChannelId toChannel){
-            Channel outputChannel =
-                    this.outputChannels.getOrDefault(fromChannel,
-                            this.inputChannels.getOrDefault(fromChannel, null)
-                    );
+    public Block connectTo(Block toBlocks, String channelIds) {
+        return this.connectTo(toBlocks, channelIds, channelIds);
+    }
 
-            if (outputChannel == null) {
-                throw new NullPointerException();
-            }
+    @Override
+    public Block connectTo(Block toBlock, String fromChannel, String toChannel) {
 
-            Channel targetChannel = toBlock.getChannel(toChannel);
+        Channel outputChannel =
+                this.outputChannels.getOrDefault(fromChannel,
+                        this.inputChannels.get(fromChannel)
+                );
 
-            outputChannel.addTarget(targetChannel);
-            targetChannel.setSource(outputChannel);
-
-            return this;
+        if (outputChannel == null) {
+            throw new NullPointerException();
         }
 
-        @Override
-        public Channel getChannel(ChannelId channelId){
-            return this.getChannel(channelId.name());
-        }
+        Channel targetChannel = toBlock.getChannel(toChannel);
 
-        @Override
-        public Channel getChannel (String channelId){
-            if (this.inputChannels.containsKey(channelId)) {
-                return this.inputChannels.get(channelId);
+        outputChannel.addTarget(targetChannel);
+        targetChannel.setSource(outputChannel);
 
-            } else if (this.outputChannels.containsKey(channelId)) {
-                return this.outputChannels.get(channelId);
+        return this;
+    }
 
-            } else {
-                throw new IllegalArgumentException("No such channel: " + channelId);
-            }
+    @Override
+    public Channel getChannel(ChannelId channelId) {
+        return this.getChannel(channelId.name());
+    }
+
+    @Override
+    public Channel getChannel(String channelId) {
+        if (this.inputChannels.containsKey(channelId)) {
+            return this.inputChannels.get(channelId);
+
+        } else if (this.outputChannels.containsKey(channelId)) {
+            return this.outputChannels.get(channelId);
+
+        } else {
+            throw new IllegalArgumentException("No such channel: " + channelId);
         }
     }
+}
