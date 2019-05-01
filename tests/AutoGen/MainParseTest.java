@@ -50,6 +50,14 @@ class MainParseTest {
         return expectedFalse(falseFolder, AST.TreeWalks.Exceptions.ScopeBoundsViolationException.class);
     }
 
+    // Test all negative files regarding scope checking
+    @TestFactory
+    Stream<DynamicTest> semanticNegativeFiles() {
+        File falseFolder = new File("tests/SemanticAnalysis/ExpectFalse/");
+
+        return expectedFalse(falseFolder, AST.TreeWalks.Exceptions.ScopeBoundsViolationException.class);
+    }
+
     // General test factory for false tests
     private Stream<DynamicTest> expectedFalse(File filePath, Class expectedExceptionClass) {
 
