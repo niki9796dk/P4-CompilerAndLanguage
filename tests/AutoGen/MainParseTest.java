@@ -57,7 +57,7 @@ class MainParseTest {
 
         return falseFiles.stream()
                 .map(file -> DynamicTest.dynamicTest("Testing: '" + file.getName() + "'",
-                        () -> assertThrows(expectedExceptionClass, () -> assertTrue(MainParse.parseFile(file.getPath())))));
+                        () -> assertThrows(expectedExceptionClass, () -> MainParse.parseFile(file.getPath()))));
     }
 }
 
