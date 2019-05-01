@@ -26,33 +26,36 @@ public class SemanticAnalysisVisitor implements Visitor {
     private SymbolTableInterface symbolTableInterface;
     private String currentBlockScope;
     private String currentSubScope;
+    private SetStack<String> callStack;
 
     public SemanticAnalysisVisitor(SymbolTableInterface symbolTableInterface) {
         this.flowChecker = new FlowChecker();
         this.symbolTableInterface = symbolTableInterface;
+        callStack = new HashSetStack<>();
     }
 
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
 
         NamedNode node = (abstractNode instanceof NamedNode) ? (NamedNode) abstractNode : null;
-        NamedNode namedIdNode = (abstractNode instanceof NamedIdNode) ? (NamedIdNode) abstractNode : null;
+        NamedIdNode namedIdNode = (abstractNode instanceof NamedIdNode) ? (NamedIdNode) abstractNode : null;
+        if (node == null){
+            throw new RuntimeException("How did this node get here?? " + abstractNode.toString());
+        }
 
         // If needed, typecast
         String id = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : "no id";
 
-        SetStack<String> callStack = new HashSetStack<>();
-
         switch (node.getNodeEnum()) {
             // Location enums
             case BLOCK:
-                this.currentBlockScope = ((NamedIdNode) node).getId();
+                this.currentBlockScope = namedIdNode.getId();
                 break;
             case BLUEPRINT:
                 this.currentSubScope = BlockScope.BLUEPRINT;
                 break;
             case PROCEDURE:
-                this.currentSubScope = BlockScope.PROCEDURE_PREFIX + ((NamedIdNode) node).getId();
+                this.currentSubScope = BlockScope.PROCEDURE_PREFIX + namedIdNode.getId();
                 break;
             case CHANNEL_DECLARATIONS:
                 this.currentSubScope = BlockScope.CHANNELS;
@@ -61,9 +64,12 @@ public class SemanticAnalysisVisitor implements Visitor {
             // No action enums
             case GROUP:
             case ASSIGN:
-            case BUILD:
-                buildRecursionCheck(node, callStack);
                 break;
+
+            case BUILD:
+                buildRecursionCheck(node);
+                break;
+
             case PROCEDURE_CALL:
             case PARAMS:
             case DRAW:
@@ -99,6 +105,10 @@ public class SemanticAnalysisVisitor implements Visitor {
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {
+            case BUILD:
+                callStack.pop();
+                break;
+
             // No action enums
             case ROOT:
             case GROUP:
@@ -107,7 +117,6 @@ public class SemanticAnalysisVisitor implements Visitor {
             case PARAMS:
             case SELECTOR:
             case DRAW:
-            case BUILD:
             case SIZE:
             case ASSIGN:
             case BLOCK:
@@ -131,7 +140,7 @@ public class SemanticAnalysisVisitor implements Visitor {
     }
 
 
-    private void buildRecursionCheck(NamedNode node, SetStack<String> callStack){
+    private void buildRecursionCheck(NamedNode node){
         StringBuilder builder = new StringBuilder();
         AbstractNode childNode = node.findFirstChildOfClass(ParamsNode.class).getChild();
 
@@ -145,7 +154,7 @@ public class SemanticAnalysisVisitor implements Visitor {
             childNode = childNode.getSib();
         }
 
-        if (!callStack.push(builder.toString())){
+        if (!this.callStack.push(builder.toString())){
             throw new RecursiveBlockException(childNode.toString());
         }
     }
