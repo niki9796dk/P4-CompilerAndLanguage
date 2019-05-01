@@ -12,6 +12,9 @@ import java.util.HashSet;
  * An implementation of a SymbolTable, which contains the scopes of blocks.
  */
 public class SymbolTable implements SymbolTableInterface {
+    /**
+     *
+     */
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
 
     /**
@@ -34,6 +37,11 @@ public class SymbolTable implements SymbolTableInterface {
     private static final HashSet<String> SOURCES = new HashSet<>(Arrays.asList(
             "Source", "FixedSource"));
 
+    /**
+     * Adds a block table to the symbol table
+     *
+     * @param node The node to add to the symbol table.
+     */
     @Override
     public void openBlockScope(BlockNode node) {
         String blockId = node.getId();
@@ -41,6 +49,11 @@ public class SymbolTable implements SymbolTableInterface {
         this.blockTable.setEntry(blockId, new BlockScope(blockId, node));
     }
 
+    /**
+     * Opens a sub scope within the latest block scope
+     *
+     * @param node The subnode to open within the most recent block scope.
+     */
     @Override
     public void openSubScope(NamedNode node) {
 
@@ -49,11 +62,22 @@ public class SymbolTable implements SymbolTableInterface {
         this.blockTable.getLatest().openScope(scopeName, node);
     }
 
+    /**
+     * Gets a specific BlockScope from an id
+     *
+     * @param id The id of the desired blockscope.
+     * @return The blockscope with the id, or Null if no such blockscope exists.
+     */
     @Override
     public BlockScope getBlockScope(String id) {
         return this.blockTable.getEntry(id);
     }
 
+    /**
+     * Get the specified sub scope of the specified scope.
+     *
+     * @return the sub scope of the specified scope with the input id's, or null if no such scope or sub scope exists.
+     */
     @Override
     public Scope getSubScope(String scopeId, String subscopeId) {
         BlockScope blockScope = this.blockTable.getEntry(scopeId);
@@ -79,11 +103,21 @@ public class SymbolTable implements SymbolTableInterface {
         }
     }
 
+    /**
+     * Inserts a variable into the most recent scope
+     *
+     * @param node The new node to insert into the symbol table.
+     */
     @Override
     public void insertVariable(NamedNode node) {
         this.blockTable.getLatest().getLatestSubScope().setVariable((NamedIdNode) node);
     }
 
+    /**
+     * Updates a variable by reassigning it. This is triggered by assigning to an already declared variable.
+     *
+     * @param assignNode The variable to reassign.
+     */
     @Override
     public void reassignVariable(NamedNode assignNode) {
         NamedIdNode leftSide = (NamedIdNode) assignNode.getChild();
@@ -112,17 +146,34 @@ public class SymbolTable implements SymbolTableInterface {
         }
     }
 
+    /**
+     * Returns the latest block scope
+     *
+     * @return the most recently added block scope, or Null if no such blockscope exists.
+     */
     @Override
     public BlockScope getLatestBlockScope() {
         return this.blockTable.getLatest();
     }
 
+    /**
+     * Check if an operation keyword is one of the final predefined operations.
+     *
+     * @param operation The operation Keyword
+     * @return whether the operation is valid.
+     */
     @Override
     public boolean isPredefinedOperation(String operation) {
         return OPERATIONS.contains(operation);
     }
 
-    //@Override
+    /**
+     * Check if a source keyword is a one of the final predefined operations.
+     *
+     * @param source The source Keyword
+     * @return whether the source is valid.
+     */
+    @Override
     public boolean isPredefinedSource(String source) {
         return SOURCES.contains(source);
     }
