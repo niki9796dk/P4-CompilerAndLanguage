@@ -6,35 +6,35 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class Parallel {
+public class DataflowParallel {
 
     // Fields:
-    private static Parallel runner = new Parallel();
+    private static DataflowParallel runner = new DataflowParallel();
     private final int maxCallables; //How many callables can exist.
     private ThreadPoolExecutor threadPoolExecutor;
 
     // Constant:
     public final static int MINIMUM_MATRIX_ENTRIES_FOR_PARALLEL = 100;
 
-    private Parallel() {
+    private DataflowParallel() {
         this.maxCallables = Runtime.getRuntime().availableProcessors() * 2; //The number the of Java Execution Engines capable of running code
         this.threadPoolExecutor = new ThreadPoolExecutorSimple(this.maxCallables);
     }
 
     public static void forIteration(final int start, final int end, final boolean parallelCondition, final IterationInstructions code) {
-        Parallel.runner.iteration(start, end, parallelCondition, code);
+        DataflowParallel.runner.iteration(start, end, parallelCondition, code);
     }
 
     public static void forIteration(final int start, final int end, final IterationInstructions code) {
-        Parallel.runner.iteration(start, end, code);
+        DataflowParallel.runner.iteration(start, end, code);
     }
 
     public static void forIteration(final int end, final IterationInstructions code) {
-        Parallel.runner.iteration(0, end, code);
+        DataflowParallel.runner.iteration(0, end, code);
     }
 
     public static void forIteration(final int end, final boolean parallelCondition, final IterationInstructions code) {
-        Parallel.runner.iteration(0, end, parallelCondition, code);
+        DataflowParallel.runner.iteration(0, end, parallelCondition, code);
     }
 
     private void iteration(final int start, final int end, boolean parallelCondition, final IterationInstructions code) {
