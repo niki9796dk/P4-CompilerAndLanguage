@@ -20,9 +20,13 @@ import TypeChecker.TypeSystem;
 public class SemanticAnalysisVisitor implements Visitor {
 
     private FlowChecker flowChecker;
+    private SymbolTableInterface symbolTableInterface;
+    private String currentBlockScope;
+    private String currentSubScope;
 
-    public SemanticAnalysisVisitor() {
+    public SemanticAnalysisVisitor(SymbolTableInterface symbolTableInterface) {
         this.flowChecker = new FlowChecker();
+        this.symbolTableInterface = symbolTableInterface;
     }
 
     @Override
@@ -30,11 +34,21 @@ public class SemanticAnalysisVisitor implements Visitor {
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {
-            // No action enums
+            // Location enums
             case BLOCK:
+                this.currentBlockScope = ((NamedIdNode) node).getId();
+                break;
             case BLUEPRINT:
+                this.currentSubScope = BlockScope.BLUEPRINT;
+                break;
             case PROCEDURE:
+                this.currentSubScope = BlockScope.PROCEDURE_PREFIX + ((NamedIdNode) node).getId();
+                break;
             case CHANNEL_DECLARATIONS:
+                this.currentSubScope = BlockScope.CHANNELS;
+                break;
+
+            // No action enums
             case GROUP:
             case ASSIGN:
             case BUILD:
@@ -104,5 +118,17 @@ public class SemanticAnalysisVisitor implements Visitor {
             default:
                 throw new UnexpectedNodeException(node);
         }
+    }
+
+    private void verifyGroupConnection(AbstractNode groupNode, AbstractNode rightNode) {
+
+        int groupChildrenCount = groupNode.countChildren();
+
+
+
+    }
+
+    private void countChannelsOfBlock() {
+
     }
 }
