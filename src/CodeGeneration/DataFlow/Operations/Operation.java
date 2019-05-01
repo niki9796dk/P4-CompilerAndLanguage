@@ -16,23 +16,23 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
     public void acceptReadySignal() {
         if (isReady()) {                         // If all inputs are ready
             this.performOperation();            // Then perform the operation
-            this.getOutputGate().signalReady(); // And signal that the output gate now is ready.
+            this.getOutputChannel().signalReady(); // And signal that the output channel now is ready.
         }
     }
 
-    abstract Channel getOutputGate();
+    abstract Channel getOutputChannel();
 
     private boolean isReady() {
         boolean isReady = true;
 
-        for (Channel inputGate : this.getInputs()) {
-            isReady = isReady && inputGate.isReady();
+        for (Channel inputChannel : this.getInputs()) {
+            isReady = isReady && inputChannel.isReady();
         }
 
         return isReady;
     }
 
     protected float getInputValue(ChannelId channelId) {
-        return this.getGate(channelId).getValue();
+        return this.getChannel(channelId).getValue();
     }
 }

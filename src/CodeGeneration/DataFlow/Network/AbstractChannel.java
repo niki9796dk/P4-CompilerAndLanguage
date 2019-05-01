@@ -11,12 +11,12 @@ public class AbstractChannel implements Channel {
     private SignalNode source;
     private List<SignalNode> targets = new ArrayList<>();
 
-    public void setSource(SignalNode gate){
-        this.source = gate;
+    public void setSource(SignalNode channel){
+        this.source = channel;
     }
 
-    public void addTarget(SignalNode gate){
-        this.targets.add(gate);
+    public void addTarget(SignalNode channel){
+        this.targets.add(channel);
     }
 
     @Override

@@ -8,92 +8,92 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractBlock implements Block {
-    private Map<String, Channel> inputGates = new HashMap<>(2);
-    private Map<String, Channel> outputGates = new HashMap<>(1);
+    private Map<String, Channel> inputChannels = new HashMap<>(2);
+    private Map<String, Channel> outputChannels = new HashMap<>(1);
 
 
     /**
-     * Add an input gate
+     * Add an input channel
      *
-     * @param id Desired id of the new gate.
-     * @param g  The gate
+     * @param id Desired id of the new channel.
+     * @param c  The channel
      * @return a reference to this object.
      */
-    public AbstractBlock addInput(ChannelId id, Channel g) {
-        return this.addInput(id.name(), g);
+    public AbstractBlock addInput(ChannelId id, Channel c) {
+        return this.addInput(id.name(), c);
     }
 
-    public AbstractBlock addInput(String id, Channel g) {
-        this.inputGates.put(id, g);
+    public AbstractBlock addInput(String id, Channel c) {
+        this.inputChannels.put(id, c);
         return this;
     }
 
     /**
-     * Add an output gate
+     * Add an output channel
      *
-     * @param id Desired id of the new gate.
-     * @param g  The gate
+     * @param id Desired id of the new channel.
+     * @param c  The channel
      * @return a reference to this object.
      */
-    public AbstractBlock addOutput(ChannelId id, Channel g) {
-        return this.addInput(id.name(), g);
+    public AbstractBlock addOutput(ChannelId id, Channel c) {
+        return this.addInput(id.name(), c);
     }
 
     public AbstractBlock addOutput(String id, Channel g) {
-        this.outputGates.put(id, g);
+        this.outputChannels.put(id, g);
         return this;
     }
 
 
-    /**
-     * Get all output gates.
-     *
-     * @return all output gates.
-     */
-    public Collection<Channel> getOutputs() {
-        return this.outputGates.values();
-    }
+        /**
+         * Get all output channels.
+         *
+         * @return all output channels.
+         */
+        public Collection<Channel> getOutputs () {
+            return this.outputChannels.values();
+        }
 
-    /**
-     * Get all input gates.
-     *
-     * @return all input gates.
-     */
-    public Collection<Channel> getInputs() {
-        return this.inputGates.values();
-    }
+        /**
+         * Get all input channels.
+         *
+         * @return all input channels.
+         */
+        public Collection<Channel> getInputs () {
+            return this.inputChannels.values();
+        }
 
-    @Override
-    public Block connectTo(Block toBlock, ChannelId fromGate, ChannelId toGate) {
-        Channel outputGate =
-                this.outputGates.getOrDefault(fromGate,
-                        this.inputGates.getOrDefault(fromGate, null)
-                );
+        @Override
+        public Block connectTo (Block toBlock, ChannelId fromChannel, ChannelId toChannel){
+            Channel outputChannel =
+                    this.outputChannels.getOrDefault(fromChannel,
+                            this.inputChannels.getOrDefault(fromChannel, null)
+                    );
 
-        if (outputGate == null)
-            throw new NullPointerException();
+            if (outputChannel == null)
+                throw new NullPointerException();
 
-        Channel targetGate = toBlock.getGate(toGate);
+            Channel targetChannel = toBlock.getChannel(toChannel);
 
-        outputGate.addTarget(targetGate);
-        targetGate.setSource(outputGate);
+            outputChannel.addTarget(targetChannel);
+            targetChannel.setSource(outputChannel);
 
-        return this;
-    }
+            return this;
+        }
 
-    @Override
-    public Channel getGate(ChannelId channelId) {
-        return this.getGate(channelId.name());
-    }
+        @Override
+        public Channel getChannel(ChannelId channelId){
+            return this.getChannel(channelId.name());
+        }
 
-    @Override
-    public Channel getGate(String channelId) {
-        if (this.inputGates.containsKey(channelId)) {
-            return this.inputGates.get(channelId);
-        } else if (this.outputGates.containsKey(channelId)) {
-            return this.outputGates.get(channelId);
-        } else {
-            throw new IllegalArgumentException("No such gate: " + channelId);
+        @Override
+        public Channel getChannel (String channelId){
+            if (this.inputChannels.containsKey(channelId)) {
+                return this.inputChannels.get(channelId);
+            } else if (this.outputChannels.containsKey(channelId)) {
+                return this.outputChannels.get(channelId);
+            } else {
+                throw new IllegalArgumentException("No such channel: " + channelId);
+            }
         }
     }
-}
