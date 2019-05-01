@@ -15,7 +15,7 @@ block AnnLayer_short{
 	(this.in, weights) -> mult;
 	
 	// Implement second operation: Addition
-	operation add = build Addition();
+	operation add = build _Addition();
 	
 	(mult, bias) -> add;
 	

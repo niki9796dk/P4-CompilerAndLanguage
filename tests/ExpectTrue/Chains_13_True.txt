@@ -22,7 +22,18 @@ block Test {
 
 block LargeOpe {
     mychannel:out output;
-    mychannel:in input;
+    mychannel:in input1;
+    mychannel:in input2;
+    mychannel:in input3;
+
     blueprint() {
+        operation mult1 = build Multiplication();
+        operation mult2 = build Multiplication();
+        operation mult3 = build _Multiplication();
+
+        (this.input1, this.input1) -> mult1;
+        (this.input2, this.input3) -> mult2;
+
+        (mult1, mult2) -> mult3 -> this.output;
     }
 }

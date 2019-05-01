@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
+import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.RecursiveBlockException;
@@ -64,6 +65,9 @@ public class SemanticAnalysisVisitor implements Visitor {
 
             // No action enums
             case GROUP:
+                this.verifyGroupConnection(node, node.getSib());
+                break;
+
             case ASSIGN:
                 break;
 
