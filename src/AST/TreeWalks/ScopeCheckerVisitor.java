@@ -6,10 +6,13 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.NonexistentBlockException;
+import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.*;
+
+import java.util.concurrent.RecursiveAction;
 
 public class ScopeCheckerVisitor implements Visitor {
 
@@ -61,6 +64,19 @@ public class ScopeCheckerVisitor implements Visitor {
                         || this.symbolTableInterface.isPredefinedSource(id))
                 {
                     // Nothing
+                    if(this.symbolTableInterface.getBlockScope(id) != null){
+                        AbstractNode nodebuffer;
+                        nodebuffer = node.getParent();
+                        System.out.println(nodebuffer.toString());
+                        while (nodebuffer instanceof NamedIdNode){
+                            if(((NamedIdNode)nodebuffer).getId().equals(id)){
+                                throw new RecursiveBlockException();
+                            }
+                            nodebuffer = nodebuffer.getParent();
+                            System.out.println(nodebuffer.toString());
+                        }
+                    }
+
                 } else {
                     throw new NonexistentBlockException(node.toString());
                 }

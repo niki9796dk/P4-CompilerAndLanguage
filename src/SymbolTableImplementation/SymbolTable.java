@@ -7,6 +7,8 @@ import Enums.AnsiColor;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * An implementation of a SymbolTable, which contains the scopes of blocks.
@@ -37,6 +39,7 @@ public class SymbolTable implements SymbolTableInterface {
     @Override
     public void openBlockScope(BlockNode node) {
         String blockId = node.getId();
+        List<String> blockchain = new LinkedList<>();
 
         this.blockTable.setEntry(blockId, new BlockScope(blockId, node));
     }

@@ -1,0 +1,17 @@
+block recursive_02 {
+    mychannel:in in;
+	mychannel:out out;
+
+	blueprint() {
+        in -> build recursive_02_2() -> out;
+	}
+}
+
+block recursive_02_2 {
+    mychannel:in in;
+	mychannel:out out;
+
+	blueprint() {
+        in -> build recursive_02() -> out;
+	}
+}
