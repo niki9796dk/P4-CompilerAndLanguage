@@ -15,7 +15,6 @@ public abstract class AbstractBlock implements Block {
     private Map<String, Channel> inputChannels = new HashMap<>(2);
     private Map<String, Channel> outputChannels = new HashMap<>(1);
 
-
     /**
      * Add an input channel
      *
@@ -23,6 +22,7 @@ public abstract class AbstractBlock implements Block {
      * @param c  The channel
      * @return a reference to this object.
      */
+    // Outdated
     public AbstractBlock addInput(ChannelId id, Channel c) {
         return this.addInput(id.name(), c);
     }
@@ -47,6 +47,7 @@ public abstract class AbstractBlock implements Block {
      * @param c  The channel
      * @return a reference to this object.
      */
+    // Outdated
     public AbstractBlock addOutput(ChannelId id, Channel c) {
         return this.addOutput(id.name(), c);
     }
