@@ -1,6 +1,7 @@
 package TypeChecker;
 
 import AST.Enums.NodeEnum;
+import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
@@ -74,14 +75,16 @@ public class TypeSystem {
      */
     public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope, String errorMsgPrefix) {
         // Get the types of both left and right node.
-        NodeEnum leftNodeType = this.getTypeOfNode(leftNode, currentBlockScope, currentSubScope);
-        NodeEnum rightNodeType = this.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
+        NodeEnum leftNodeType = this.getSupertypeOfNode(leftNode, currentBlockScope, currentSubScope);
+        NodeEnum rightNodeType = this.getSupertypeOfNode(rightNode, currentBlockScope, currentSubScope);
 
         // Then compare them.
         if (leftNodeType != rightNodeType) {
             throw new TypeInconsistencyException(errorMsgPrefix + ": " + leftNode + "("+ leftNodeType +") = " + rightNode + "("+ rightNodeType +")");
         }
     }
+
+    //public Node getSubtypeOfNode(){} //Get the specific instance of that node
 
     /**
      * Evaluates the type of a given node, and returns that type in the form of a NodeEnum.
@@ -90,7 +93,7 @@ public class TypeSystem {
      * @param subScopeId The current sub scope to type check from
      * @return (NodeEnum|null) The type of the given node, as a NodeEnum. Returns null, if the given node does not have a designated type.
      */
-    public NodeEnum getTypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
+    public NodeEnum getSupertypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
         NumberedNode numberedNode = (NumberedNode) node;
 
         switch (numberedNode.getNodeEnum()) {
@@ -126,7 +129,7 @@ public class TypeSystem {
                 return this.getTypeOfBuildStatement(node);
 
             case ASSIGN:
-                return this.getTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+                return this.getSupertypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
 
             case SELECTOR:
                 return this.getTypeOfSelector(node, blockScopeId, subScopeId);
