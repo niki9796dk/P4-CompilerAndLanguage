@@ -3,9 +3,9 @@ package CodeGeneration.DataFlow.Network.Interfaces;
 import CodeGeneration.DataFlow.Network.ChannelId;
 
 public interface Block extends Node {
-    boolean hasInput(String id);
+    boolean hasInputChannel(String id);
 
-    boolean hasOutput(String id);
+    boolean hasOutputChannel(String id);
 
     Block connectAll(Block toBlocks);
 

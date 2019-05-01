@@ -16,13 +16,8 @@ public abstract class AbstractBlock implements Block {
     private Map<String, Channel> outputChannels = new HashMap<>(1);
 
     /**
-     * Add an input channel
-     *
-     * @param id Desired id of the new channel.
-     * @param c  The channel
-     * @return a reference to this object.
+     * @deprecated
      */
-    // Outdated
     public AbstractBlock addInput(ChannelId id, Channel c) {
         return this.addInput(id.name(), c);
     }
@@ -41,13 +36,8 @@ public abstract class AbstractBlock implements Block {
     }
 
     /**
-     * Add an output channel
-     *
-     * @param id Desired id of the new channel.
-     * @param c  The channel
-     * @return a reference to this object.
+     * @deprecated
      */
-    // Outdated
     public AbstractBlock addOutput(ChannelId id, Channel c) {
         return this.addOutput(id.name(), c);
     }
@@ -65,13 +55,23 @@ public abstract class AbstractBlock implements Block {
         return this;
     }
 
+    /**
+     * Checks if this block has input channel with id
+     * @param id the identifier to check for
+     * @return whether this block has input channel with id
+     */
     @Override
-    public boolean hasInput(String id){
+    public boolean hasInputChannel(String id){
         return this.inputChannels.containsKey(id);
     }
 
+    /**
+     * Checks if this block has output channel with id
+     * @param id the identifier to check for
+     * @return whether this block has output channel with id
+     */
     @Override
-    public boolean hasOutput(String id){
+    public boolean hasOutputChannel(String id){
         return this.outputChannels.containsKey(id);
     }
 
@@ -103,35 +103,51 @@ public abstract class AbstractBlock implements Block {
     @Override
     public Block connectAll(Block that) {
         for(String id: this.outputChannels.keySet()){
-            if(that.hasInput(id))
+            if(that.hasInputChannel(id))
                 this.connectTo(that, id);
         }
         return this;
     }
 
+    /**
+     * @deprecated
+     */
     @Override
     public Block connectTo(Block toBlocks, ChannelId fromChannel, ChannelId toChannel) {
         return this.connectTo(toBlocks, fromChannel.name(), toChannel.toString());
     }
 
+    /**
+     * Connect this block to toBlock via channels with identical ids
+      * @param toBlocks the block to connect to
+     * @param channelIds the id of both the fromChannel and toChannel
+     * @return a reference to this object.
+     */
     @Override
     public Block connectTo(Block toBlocks, String channelIds) {
         return this.connectTo(toBlocks, channelIds, channelIds);
     }
 
+    /**
+     * Connect this block to toBlock via fromChannel to toChannel
+     * @param toBlock the block to connect to
+     * @param fromChannelId the output channel id from this where connection starts
+     * @param toChannelId the input channel id from toBlock where connection ends
+     * @return a reference to this object.
+     */
     @Override
-    public Block connectTo(Block toBlock, String fromChannel, String toChannel) {
+    public Block connectTo(Block toBlock, String fromChannelId, String toChannelId) {
 
         Channel outputChannel =
-                this.outputChannels.getOrDefault(fromChannel,
-                        this.inputChannels.get(fromChannel)
+                this.outputChannels.getOrDefault(fromChannelId,
+                        this.inputChannels.get(fromChannelId)
                 );
 
         if (outputChannel == null) {
             throw new NullPointerException();
         }
 
-        Channel targetChannel = toBlock.getChannel(toChannel);
+        Channel targetChannel = toBlock.getChannel(toChannelId);
 
         outputChannel.addTarget(targetChannel);
         targetChannel.setSource(outputChannel);
@@ -139,11 +155,19 @@ public abstract class AbstractBlock implements Block {
         return this;
     }
 
+    /**
+     * @deprecated
+     */
     @Override
     public Channel getChannel(ChannelId channelId) {
         return this.getChannel(channelId.name());
     }
 
+    /**
+     * Get channel with given id
+     * @param channelId id of channel
+     * @return a reference to this channel
+     */
     @Override
     public Channel getChannel(String channelId) {
         if (this.inputChannels.containsKey(channelId)) {
