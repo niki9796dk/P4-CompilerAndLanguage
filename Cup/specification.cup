@@ -96,7 +96,7 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channe
              buildelement, buildelementpar, sizepar, inchanneldeclaration, outchanneldeclaration, inoutchanneldeclaration,
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
              channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, builddecla, channelelementspar,
-             channelelement, idpar, mychannel;
+             channelelement, idpar, mychannel, mychannelelement, mychannelassignopt, mychannelassign, mychannelelementspar;
 
 non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
@@ -415,10 +415,20 @@ channelelementspar      ::= LPAR channelelement:elem RPAR
                         {: RESULT = elem; :}
                         ;
 
-channelelement          ::= THIS DOT ID:id
-                        {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
-                        | ID:id dotid:dotid
+channelelement          ::= ID:id dotid:dotid
                         {: RESULT = new SelectorNode(id).adoptChildren(dotid); :}
+                        ;
+
+mychannelelementspar      ::= LPAR mychannelelement:elem RPAR
+                        {: RESULT = elem; :}
+                        | mychannelelement:elem
+                        {: RESULT = elem; :}
+                        ;
+
+mychannelelement        ::= THIS DOT ID:id
+                        {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
+                        | ID:id
+                        {: RESULT = new SelectorNode(id); :}
                         ;
 
 idpar                   ::= LPAR ID:id RPAR
@@ -458,6 +468,14 @@ declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
 
                             RESULT = (assign != null) ? assign.adoptAsFirstChild(channelNode) : channelNode;
                         :}
+                        | mychannel:channel ID:id mychannelassignopt:assign
+                                                {:
+                                                    NamedIdNode channelNode = (NamedIdNode) channel;
+
+                                                    channelNode.setId(id);
+
+                                                    RESULT = (assign != null) ? assign.adoptAsFirstChild(channelNode) : channelNode;
+                                                :}
                         | buildtype:type ID:id builddecla:decla
                         {:
                             AbstractNode typeNode = (((NamedIdNode) type).setId(id));
@@ -497,6 +515,9 @@ sizeassign              ::= ASSIGN sizepar:elem
 channelassign           ::= ASSIGN channelelementspar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
+mychannelassign         ::= ASSIGN mychannelelementspar:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
+                        ;
 buildassign             ::= ASSIGN buildelement:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
@@ -508,7 +529,12 @@ sizeassignopt           ::= sizeassign:assign
                         {: RESULT = assign; :}
                         |
                         ;
-channelassignopt           ::= channelassign:assign
+channelassignopt        ::= channelassign:assign
+                        {: RESULT = assign; :}
+                        |
+                        ;
+
+mychannelassignopt      ::= mychannelassign:assign
                         {: RESULT = assign; :}
                         |
                         ;

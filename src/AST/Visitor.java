@@ -8,13 +8,13 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 public interface Visitor {
     /**
      * @param printLevel the level, used to decide how many indents there should be in the print statement.
-     * @param a The node which is being visited.
+     * @param abstractNode The node which is being visited.
      */
-    public void pre(int printLevel, AbstractNode a);
+    void pre(int printLevel, AbstractNode abstractNode);
 
     /**
      * @param printLevel the level, used to decide how many indents there should be in the print statement.
-     * @param a The node which is being visited.
+     * @param abstractNode The node which is being visited.
      */
-    public void post(int printLevel, AbstractNode a);
+    void post(int printLevel, AbstractNode abstractNode);
 }

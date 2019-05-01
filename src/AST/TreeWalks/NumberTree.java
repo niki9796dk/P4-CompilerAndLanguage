@@ -7,14 +7,22 @@ import AST.Visitor;
 public class NumberTree implements Visitor {
     private int counter = 0;
 
+    /**
+     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
+     */
     @Override
-    public void pre(int printLevel, AbstractNode a) {
-        NumberedNode node = (NumberedNode) a;
+    public void pre(int printLevel, AbstractNode abstractNode) {
+        NumberedNode node = (NumberedNode) abstractNode;
         node.setNumber(counter++);
     }
 
+    /**
+     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
+     */
     @Override
-    public void post(int printLevel, AbstractNode a) {
-        // Do nothing...
+    public void post(int printLevel, AbstractNode abstractNode) {
+        /* DoNothing(); */
     }
 }
