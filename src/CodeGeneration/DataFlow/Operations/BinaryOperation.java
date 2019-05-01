@@ -16,7 +16,7 @@ abstract class BinaryOperation extends Operation {
         Channel C = new AbstractChannel();
         C.setSource(this);
 
-        // Store gates
+        // Store channels
         this
                 .addInput(ChannelId.A, A)
                 .addInput(ChannelId.B, B)
@@ -24,8 +24,8 @@ abstract class BinaryOperation extends Operation {
     }
 
     @Override
-    Channel getOutputGate() {
-        return this.getGate(ChannelId.C);
+    Channel getOutputChannel() {
+        return this.getChannel(ChannelId.C);
     }
 
     @Override

@@ -94,5 +94,4 @@ public class DataflowParallel {
             throw new RuntimeException("Remember to not use this on any dynamic list!");
         }
     }
-
 }
