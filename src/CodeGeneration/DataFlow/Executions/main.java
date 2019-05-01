@@ -13,12 +13,12 @@ public class main {
         Channel A = block.getChannel("A");
         Channel B = block.getChannel("B");
 
-        // Set input A to 10
+        // Set input A connect 10
         Source input1 = new Source(10);
         A.setSource(input1);
         A.acceptReadySignal();
 
-        // Set input B to 2
+        // Set input B connect 2
         Source input2 = new Source(2);
         B.setSource(input2);
         B.acceptReadySignal();

@@ -4,7 +4,7 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 
 /**
- * Selects an instance of something using an ID.
+ * Selects an instance of something channel an ID.
  * Child many different nodes. One of which is {@link BuildNode}.
  */
 public class SelectorNode extends NamedIdNode {

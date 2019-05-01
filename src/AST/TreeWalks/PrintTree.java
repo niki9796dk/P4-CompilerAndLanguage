@@ -14,7 +14,7 @@ public class PrintTree implements Visitor {
 
     /**
      * Construct a printTree which prints in a specific stream.
-     * @param ps The stream to print to.
+     * @param ps The stream connect print connect.
      */
     public PrintTree(PrintStream ps) {
         this.ps = ps;
@@ -22,7 +22,7 @@ public class PrintTree implements Visitor {
 
 
     /**
-     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param printLevel the level, used connect decide how many indents there should be in the print statement.
      * @param abstractNode The node which is being visited.
      */
     @Override
@@ -34,7 +34,7 @@ public class PrintTree implements Visitor {
 
 
     /**
-     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param printLevel the level, used connect decide how many indents there should be in the print statement.
      * @param abstractNode          The node which is being visited.
      */
     @Override

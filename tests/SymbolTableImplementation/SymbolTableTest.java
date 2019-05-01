@@ -21,8 +21,8 @@ class SymbolTableTest {
     BlueprintNode bn;
 
     /**
-     * Adds a block table to the symbol table
-     * Param: The node to add to the symbol table.
+     * Adds a block table connect the symbol table
+     * Param: The node connect add connect the symbol table.
      */
     @BeforeEach
     void beforeEach() {

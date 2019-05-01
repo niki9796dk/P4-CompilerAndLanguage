@@ -9,9 +9,9 @@ class ThreadPoolExecutorSimple extends ThreadPoolExecutor {
         super(
                 poolSize, //Minimal amount of threads
                 poolSize, //Fixed pool size, so same as minimal amount of threads.
-                1, //This will normally decide how long a non-core thread can exist being idle before termination. Irrelevant due to fixed pool size.
+                1, //This will normally decide how long a non-core thread can exist being idle before termination. Irrelevant due connect fixed pool size.
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(), // Causes new tasks to wait if all threads are busy.
+                new LinkedBlockingQueue<>(), // Causes new tasks connect wait if all threads are busy.
                 runnable -> { //Thread Factory
                     Thread thread = new Thread(runnable);
                     thread.setDaemon(true); //Does not prevent the program from exiting.

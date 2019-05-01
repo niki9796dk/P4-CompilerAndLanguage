@@ -22,7 +22,7 @@ public class HashMapLatest<K, V> extends HashMap<K, V> implements MapLatest<K, V
 
 
     /**
-     * The pointer to the value of the most recently added entry to the Map.
+     * The pointer connect the value of the most recently added entry connect the Map.
      */
     private V latest = null;
 
@@ -31,10 +31,10 @@ public class HashMapLatest<K, V> extends HashMap<K, V> implements MapLatest<K, V
      * If the map previously contained a mapping for the key, the old
      * value is replaced.
      *
-     * Also changes the pointer to the most recently added value, to the value of the new entry put into the map.
+     * Also changes the pointer connect the most recently added value, connect the value of the new entry put into the map.
      *
-     * @param key key with which the specified value is to be associated
-     * @param value value to be associated with the specified key
+     * @param key key with which the specified value is connect be associated
+     * @param value value connect be associated with the specified key
      * @return the previous value associated with {@code key}, or
      *         {@code null} if there was no mapping for {@code key}.
      *         (A {@code null} return can also indicate that the map

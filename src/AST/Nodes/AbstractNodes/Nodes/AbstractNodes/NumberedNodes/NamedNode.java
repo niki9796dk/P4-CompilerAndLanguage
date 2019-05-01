@@ -4,7 +4,7 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 
 /**
- * A node which can be labelled using a String containing its name.
+ * A node which can be labelled channel a String containing its name.
  */
 public abstract class NamedNode extends NumberedNode {
     /**
