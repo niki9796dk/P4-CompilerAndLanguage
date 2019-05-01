@@ -2,6 +2,7 @@ package CodeGeneration.DataFlow.Blocks;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.ListChannel;
+import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Addition;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.MatrixOperations.Multiplication;
 import CodeGeneration.DataFlow.Operations.Operation;
 
@@ -17,7 +18,7 @@ public class A_plus_B_mult_B extends AbstractBlock {
                 .addOutput("C", new ListChannel());
 
         // Blueprint
-        Operation add = new Addition();
+        Operation add = new _Addition();
         this.connectTo(add,"A", "in1");
         this.connectTo(add,"B", "in2");
 
