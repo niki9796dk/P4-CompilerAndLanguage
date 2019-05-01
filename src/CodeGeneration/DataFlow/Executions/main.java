@@ -1,7 +1,6 @@
 package CodeGeneration.DataFlow.Executions;
 
 import CodeGeneration.DataFlow.Blocks.A_plus_B_mult_B;
-import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Block;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
@@ -30,7 +29,7 @@ public class main {
 
         // Get output
 
-        print.say("Value of out: ┏━ " + block.getChannel("C").getValue() +
+        print.say("Value of out: ┏━ " + block.getChannel("C").getResult() +
                 "\nShould be     ┗━ 24.0");
     }
 
@@ -47,7 +46,7 @@ public class main {
         }
 
         @Override
-        public float getValue() {
+        public float getResult() {
             return this.value;
         }
     }

@@ -30,8 +30,8 @@ public class ListChannel implements Channel {
     }
 
     @Override
-    public float getValue() {
-        return this.source.getValue();
+    public float getResult() {
+        return this.source.getResult();
     }
 
     @Override

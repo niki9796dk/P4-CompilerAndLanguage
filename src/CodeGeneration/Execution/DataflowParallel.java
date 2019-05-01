@@ -56,14 +56,14 @@ public class DataflowParallel {
 
         for (int i = 0; i < this.maxCallables; i++) {
 
-            //Starting value for current callable. Starts where last portion stops.
+            //Starting result for current callable. Starts where last portion stops.
             final int startVal = start + i * iterationsPerCallable;
 
-            //If the starting value is above the end value, do not make a new task!
+            //If the starting result is above the end result, do not make a new task!
             if (startVal >= end)
                 break;
 
-            //Final value for current callable. Does not allow going over the total end limit.
+            //Final result for current callable. Does not allow going over the total end limit.
             final int endVal = Math.min(startVal + iterationsPerCallable, end);
 
             callables.add(

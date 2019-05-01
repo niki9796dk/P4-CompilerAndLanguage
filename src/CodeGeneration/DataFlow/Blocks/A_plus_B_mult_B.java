@@ -20,16 +20,16 @@ public class A_plus_B_mult_B extends AbstractBlock {
 
         // Blueprint
         Operation add = new Addition();
-        this.connectTo(add,"A");
-        this.connectTo(add,"B");
+        this.connectTo(add,"A", "in1");
+        this.connectTo(add,"B", "in2");
 
         Operation mult = new Multiplication();
 
-        add.connectTo(mult, "C", "A");
+        add.connectTo(mult, "out", "in1");
 
-        this.connectTo(mult, "B", "B");
+        this.connectTo(mult, "B", "in2");
 
-        mult.connectTo(this,"C");
+        mult.connectTo(this,"out", "C");
     }
 }
 

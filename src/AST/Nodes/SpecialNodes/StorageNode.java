@@ -19,7 +19,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 public class StorageNode extends AbstractNode {
 
     /**
-     * The nodes connect use as a return value.
+     * The nodes connect use as a return result.
      */
     private AbstractNode[] nodes;
     /**

@@ -148,7 +148,7 @@ public abstract class AbstractNode implements Node {
 
     /**
      * Counts the child nodes
-     * @return An integer value, representing the amount of child nodes.
+     * @return An integer result, representing the amount of child nodes.
      */
     @Override
     public int countChildren()  {
