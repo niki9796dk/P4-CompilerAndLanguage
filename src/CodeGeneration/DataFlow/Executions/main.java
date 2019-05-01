@@ -1,7 +1,6 @@
 package CodeGeneration.DataFlow.Executions;
 
 import CodeGeneration.DataFlow.Blocks.A_plus_B_mult_B;
-import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Block;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
@@ -30,8 +29,9 @@ public class main {
 
         // Get output
 
-        print.say("Value of out: ┏━ " + block.getChannel("C").getValue() +
-                "\nShould be     ┗━ 24.0");
+        print.say("Value of out: " + block.getChannel("C").getValue() +
+                "\nShould be    24.0" +
+                "\nEnd of Main");
     }
 
     public static class Source implements SignalNode {

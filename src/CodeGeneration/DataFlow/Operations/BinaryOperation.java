@@ -1,9 +1,7 @@
 package CodeGeneration.DataFlow.Operations;
 
 import CodeGeneration.DataFlow.Network.ListChannel;
-import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
-import LinearAlgebra.Types.Matrices.DenseMatrix;
 
 abstract class BinaryOperation extends Operation {
     BinaryOperation() {

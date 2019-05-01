@@ -1,7 +1,6 @@
 package CodeGeneration.DataFlow.Operations;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
-import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
@@ -34,13 +33,6 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
         }
 
         return isReady;
-    }
-
-    /**
-     * @deprecated
-     */
-    protected float getInputValue(ChannelId channelId) {
-        return this.getChannel(channelId).getValue();
     }
 
     protected float getInputValue(String channelId) {

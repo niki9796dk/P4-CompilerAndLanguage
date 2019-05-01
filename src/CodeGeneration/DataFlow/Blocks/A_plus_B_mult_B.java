@@ -2,7 +2,6 @@ package CodeGeneration.DataFlow.Blocks;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.ListChannel;
-import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Operations.Addition;
 import CodeGeneration.DataFlow.Operations.Multiplication;
 import CodeGeneration.DataFlow.Operations.Operation;
