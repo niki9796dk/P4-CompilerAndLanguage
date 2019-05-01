@@ -16,7 +16,7 @@ block AnnLayer_long{
 		weights -> mult.B;
 
 		// Implement second operation: Addition
-		operation add = build Addition();
+		operation add = build _Addition();
 
 		mult.out -> add.A;
 		bias -> add.B;
