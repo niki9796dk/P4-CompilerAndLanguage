@@ -41,7 +41,7 @@ public enum Operation {
     }
 
     /**
-     * @return A map containing all operations as entries, with the value being the keyword of the operation.
+     * @return A map containing all operations as entries, with the result being the keyword of the operation.
      */
     private static HashMap<String, Operation> createMap(){
         HashMap<String, Operation> values = new HashMap<>();

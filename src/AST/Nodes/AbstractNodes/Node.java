@@ -74,7 +74,7 @@ public interface Node {
 
     /**
      * Counts the child nodes
-     * @return An integer value, representing the amount of child nodes.
+     * @return An integer result, representing the amount of child nodes.
      */
     int countChildren();
 

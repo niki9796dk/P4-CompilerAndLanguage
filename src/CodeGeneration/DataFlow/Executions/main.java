@@ -29,7 +29,7 @@ public class main {
 
         // Get output
 
-        print.say("Value of out: " + block.getChannel("C").getValue() +
+        print.say("Value of out: " + block.getChannel("C").getResult() +
                 "\nShould be    24.0" +
                 "\nEnd of Main");
     }
@@ -47,7 +47,7 @@ public class main {
         }
 
         @Override
-        public float getValue() {
+        public float getResult() {
             return this.value;
         }
     }

@@ -6,34 +6,34 @@ import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 abstract class BinaryOperation extends Operation {
     BinaryOperation() {
         // Define inputs
-        Channel A = new ListChannel();
-        Channel B = new ListChannel();
-        A.addTarget(this);
-        B.addTarget(this);
+        Channel in1 = new ListChannel();
+        Channel in2 = new ListChannel();
+        in1.addTarget(this);
+        in2.addTarget(this);
 
         // Define outputs
-        Channel C = new ListChannel(this);
+        Channel out = new ListChannel(this);
 
         // Store channels
         this
-                .addInput("A", A)
-                .addInput("B", B)
-                .addOutput("C", C);
+                .addInput("in1", in1)
+                .addInput("in2", in2)
+                .addOutput("out", out);
     }
 
     @Override
     Channel getOutputChannel() {
-        return this.getChannel("C");
+        return this.getChannel("out");
     }
 
     @Override
     public void performOperation() {
-        float a = this.getInputValue("A");
-        float b = this.getInputValue("B");
+        float in1 = this.getInputValue("in1");
+        float in2 = this.getInputValue("in2");
 
-        this.value = operation(a, b);
-        print.say("performOperation() -> this.value = " + this.value);
+        this.result = operation(in1, in2);
+        print.say("performOperation() -> this.result = " + this.result);
     }
 
-    abstract float operation(float a, float b);
+    abstract float operation(float in1, float in2);
 }

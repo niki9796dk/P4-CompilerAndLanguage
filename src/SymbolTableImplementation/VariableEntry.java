@@ -39,10 +39,10 @@ public class VariableEntry {
     }
 
     /**
-     * Returns the correct node for a certain node number. This is useful for when a variable is reassigned, and the value appropriate for a specific node is required.
+     * Returns the correct node for a certain node number. This is useful for when a variable is reassigned, and the result appropriate for a specific node is required.
      * In simple terms; A nodes number is used connect find the correct assignment of the variable at that time.
-     * @param number The node number of the current point of the node value request.
-     * @return The value of the variable assigned at that point, or null if it is unassigned.
+     * @param number The node number of the current point of the node result request.
+     * @return The result of the variable assigned at that point, or null if it is unassigned.
      */
     // Returns null if unassigned
     public NamedIdNode getSubType(int number) {
