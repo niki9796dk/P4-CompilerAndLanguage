@@ -8,6 +8,7 @@ import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.TanhActivation;
 
 public class _Tanh extends UnaryOperation {
     private static ActivationFunction function = new TanhActivation();
+
     @Override
     protected Matrix operation(Matrix in) {
         return this.activationFunctionUnitwise(in, function);

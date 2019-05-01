@@ -19,7 +19,7 @@ public class ListChannel implements Channel {
     /**
      * Constructor for ListChannel class that sets a source and a number of target SignalNodes
      * @param source The SignalNode that enters the channel
-     * @param targets
+     * @param targets The list of SignalNodes exits the channel and sends information
      */
     public ListChannel(SignalNode source, SignalNode ... targets) {
         this.source = source;
