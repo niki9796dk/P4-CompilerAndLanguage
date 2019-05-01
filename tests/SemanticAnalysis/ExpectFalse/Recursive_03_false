@@ -1,0 +1,26 @@
+block Sauron {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        block MyRing = build TheOneRing(draw Sauron);
+    }
+}
+
+block Gollum {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        block MyPrecious = build TheOneRing(draw Gollum);
+    }
+}
+
+block TheOneRing {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(blueprint master) {
+        block MyMaster = build master();
+    }
+}

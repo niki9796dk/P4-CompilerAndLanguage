@@ -1,5 +1,6 @@
 package AutoGen;
 
+import SemanticAnalysis.SemanticProblemException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
 import org.junit.jupiter.api.*;
 
@@ -48,6 +49,14 @@ class MainParseTest {
         File falseFolder = new File("tests/ScopeChecking/ExpectFalse/");
 
         return expectedFalse(falseFolder, AST.TreeWalks.Exceptions.ScopeBoundsViolationException.class);
+    }
+
+    // Test all negative files regarding scope checking
+    @TestFactory
+    Stream<DynamicTest> semanticNegativeFiles() {
+        File falseFolder = new File("tests/SemanticAnalysis/ExpectFalse/");
+
+        return expectedFalse(falseFolder, SemanticProblemException.class);
     }
 
     // General test factory for false tests

@@ -1,0 +1,8 @@
+block Master {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        block myself = build Master();
+    }
+}
