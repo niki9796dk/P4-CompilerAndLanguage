@@ -19,6 +19,7 @@ public abstract class AbstractBlock implements Block {
      * @param c  The channel
      * @return a reference to this object.
      */
+    // Outdated
     public AbstractBlock addInput(ChannelId id, Channel c) {
         return this.addInput(id.name(), c);
     }
@@ -35,12 +36,13 @@ public abstract class AbstractBlock implements Block {
      * @param c  The channel
      * @return a reference to this object.
      */
+    // Outdated
     public AbstractBlock addOutput(ChannelId id, Channel c) {
         return this.addInput(id.name(), c);
     }
 
-    public AbstractBlock addOutput(String id, Channel g) {
-        this.outputChannels.put(id, g);
+    public AbstractBlock addOutput(String id, Channel c) {
+        this.outputChannels.put(id, c);
         return this;
     }
 
