@@ -1,6 +1,7 @@
 package CodeGeneration.utility;
 
 import Enums.AnsiColor;
+//Hi!
 
 /**
  * Contains static interfaces to allow simplified and prettier prints into the console.

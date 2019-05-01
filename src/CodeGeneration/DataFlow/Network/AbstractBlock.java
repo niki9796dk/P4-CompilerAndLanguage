@@ -2,6 +2,8 @@ package CodeGeneration.DataFlow.Network;
 
 import CodeGeneration.DataFlow.Network.Interfaces.Block;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import CodeGeneration.utility.Print;
+import Enums.AnsiColor;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +27,13 @@ public abstract class AbstractBlock implements Block {
         return this.addInput(id.name(), c);
     }
 
+    /**
+     * Add an input channel
+     *
+     * @param id Desired id of the new channel.
+     * @param c  The channel
+     * @return a reference to this object.
+     */
     public AbstractBlock addInput(String id, Channel c) {
         print.say("New input: " + id);
         this.inputChannels.put(id, c);
@@ -43,18 +52,36 @@ public abstract class AbstractBlock implements Block {
         return this.addOutput(id.name(), c);
     }
 
+    /**
+     * Add an input channel
+     *
+     * @param id Desired id of the new channel.
+     * @param c  The channel
+     * @return a reference to this object.
+     */
     public AbstractBlock addOutput(String id, Channel c) {
         print.say("New output: " + id);
         this.outputChannels.put(id, c);
         return this;
     }
 
+    @Override
+    public boolean hasInput(String id){
+        return this.inputChannels.containsKey(id);
+    }
+
+    @Override
+    public boolean hasOutput(String id){
+        return this.outputChannels.containsKey(id);
+    }
+
+
     /**
      * Get all output channels.
      *
      * @return all output channels.
      */
-    public Collection<Channel> getOutputs () {
+    public Collection<Channel> getOutputs() {
         return this.outputChannels.values();
     }
 
@@ -63,20 +90,41 @@ public abstract class AbstractBlock implements Block {
      *
      * @return all input channels.
      */
-    public Collection<Channel> getInputs () {
+    public Collection<Channel> getInputs() {
         return this.inputChannels.values();
+    }
+
+
+    /**
+     * Connect all channels with the same id
+     * @param that the block to connect to.
+     * @return a reference to this object.
+     */
+    @Override
+    public Block connectAll(Block that) {
+        for(String id: this.outputChannels.keySet()){
+            if(that.hasInput(id))
+                this.connectTo(that, id);
+        }
+        return this;
     }
 
     @Override
     public Block connectTo(Block toBlocks, ChannelId fromChannel, ChannelId toChannel) {
-        return this.connectTo(toBlocks, fromChannel.name(), toChannel);
+        return this.connectTo(toBlocks, fromChannel.name(), toChannel.toString());
     }
 
     @Override
-    public Block connectTo(Block toBlock, String fromChannel, ChannelId toChannel){
+    public Block connectTo(Block toBlocks, String channelIds) {
+        return this.connectTo(toBlocks, channelIds, channelIds);
+    }
+
+    @Override
+    public Block connectTo(Block toBlock, String fromChannel, String toChannel) {
+
         Channel outputChannel =
                 this.outputChannels.getOrDefault(fromChannel,
-                        this.inputChannels.getOrDefault(fromChannel, null)
+                        this.inputChannels.get(fromChannel)
                 );
 
         if (outputChannel == null) {
@@ -92,12 +140,12 @@ public abstract class AbstractBlock implements Block {
     }
 
     @Override
-    public Channel getChannel(ChannelId channelId){
+    public Channel getChannel(ChannelId channelId) {
         return this.getChannel(channelId.name());
     }
 
     @Override
-    public Channel getChannel (String channelId){
+    public Channel getChannel(String channelId) {
         if (this.inputChannels.containsKey(channelId)) {
             return this.inputChannels.get(channelId);
 

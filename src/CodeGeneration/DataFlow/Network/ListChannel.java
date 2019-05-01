@@ -4,13 +4,23 @@ import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class AbstractChannel implements Channel {
+public class ListChannel implements Channel {
     private boolean ready = false;
     private SignalNode source;
     private List<SignalNode> targets = new ArrayList<>();
 
+    public ListChannel(SignalNode source, SignalNode ... targets) {
+        this.source = source;
+        this.targets.addAll(Arrays.asList(targets));
+    }
+
+    public ListChannel() {
+    }
+
+    @Deprecated
     public void setSource(SignalNode channel){
         this.source = channel;
     }
