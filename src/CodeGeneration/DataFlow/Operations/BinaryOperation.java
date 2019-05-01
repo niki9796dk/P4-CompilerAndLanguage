@@ -17,9 +17,9 @@ abstract class BinaryOperation extends Operation {
 
         // Store channels
         this
-                .addInput(ChannelId.A, A)
-                .addInput(ChannelId.B, B)
-                .addOutput(ChannelId.C, C);
+                .addInput("A", A)
+                .addInput("B", B)
+                .addOutput("C", C);
     }
 
     @Override
@@ -29,10 +29,11 @@ abstract class BinaryOperation extends Operation {
 
     @Override
     public void performOperation() {
-        float a = this.getInputValue(ChannelId.A);
-        float b = this.getInputValue(ChannelId.B);
+        float a = this.getInputValue("A");
+        float b = this.getInputValue("B");
 
         this.value = operation(a, b);
+        print.say("performOperation() -> this.value = " + this.value);
     }
 
     abstract float operation(float a, float b);

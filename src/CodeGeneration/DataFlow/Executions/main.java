@@ -5,9 +5,13 @@ import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Block;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
+import CodeGeneration.utility.Print;
+import Enums.AnsiColor;
 
 public class main {
+    private static Print print = new Print(AnsiColor.YELLOW,"Main");
     public static void main(String[] args) {
+        print.say("Running");
         Block block = new A_plus_B_mult_B();
 
         Channel A = block.getChannel("A");
@@ -18,6 +22,7 @@ public class main {
         A.setSource(input1);
         A.acceptReadySignal();
 
+
         // Set input B connect 2
         Source input2 = new Source(2);
         B.setSource(input2);
@@ -25,8 +30,8 @@ public class main {
 
         // Get output
 
-        System.out.println("Value of out: ┏━ " + block.getChannel("B").getValue());
-        System.out.println("Should be     ┗━ 24.0");
+        print.say("Value of out: ┏━ " + block.getChannel("C").getValue() +
+                "\nShould be     ┗━ 24.0");
     }
 
     public static class Source implements SignalNode {
