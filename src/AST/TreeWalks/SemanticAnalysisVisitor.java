@@ -72,7 +72,7 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             case BUILD:
-                //buildRecursionCheck(node);
+                buildRecursionCheck(node);
                 break;
 
             case PROCEDURE_CALL:
@@ -111,7 +111,7 @@ public class SemanticAnalysisVisitor implements Visitor {
 
         switch (node.getNodeEnum()) {
             case BUILD:
-                //callStack.pop();
+                callStack.pop();
                 break;
 
             // No action enums
