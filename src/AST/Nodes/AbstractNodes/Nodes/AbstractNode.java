@@ -245,7 +245,7 @@ public abstract class AbstractNode implements Node {
    }
 
     /**
-     * Walk the tree of child nodes using a visitor.
+     * Walk the tree of child nodes channel a visitor.
      * @param v the visitor object to use.
      */
    @Override

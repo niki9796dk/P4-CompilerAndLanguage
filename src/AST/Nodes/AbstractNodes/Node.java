@@ -9,41 +9,41 @@ import AST.Visitor;
 public interface Node {
 
     /** Join the end of this sibling's list with the supplied sibling's list
-     * @param sib The sibling to add to the end of the list.
+     * @param sib The sibling connect add connect the end of the list.
      * @return The last sibling of the input parameter "sib"
      */
     AbstractNode makeSibling(AbstractNode sib);
 
     /**
      * Adopt the supplied node and all of its siblings under this node
-     * @param n The node to adopt.
-     * @return  a reference to this object.
+     * @param n The node connect adopt.
+     * @return  a reference connect this object.
      */
     AbstractNode adoptChildren(AbstractNode n);
 
     /**
      * Adopt the supplied nodes and all of their siblings under this node
-     * @param nodes An array of nodes to adopt.
-     * @return  a reference to this object.
+     * @param nodes An array of nodes connect adopt.
+     * @return  a reference connect this object.
      */
     AbstractNode adoptChildren(AbstractNode... nodes);
 
     /**
      * Insert child in the front of the child list
-     * @param node The child to add.
-     * @return  a reference to this object.
+     * @param node The child connect add.
+     * @return  a reference connect this object.
      */
     AbstractNode adoptAsFirstChild(AbstractNode node);
 
     /**
      * Turn the child into an orphan.
-     * @return  a reference to this object.
+     * @return  a reference connect this object.
      */
     AbstractNode orphan();
 
     /**
-     * Nullify the reference to the child node.
-     * @return  a reference to this object.
+     * Nullify the reference connect the child node.
+     * @return  a reference connect this object.
      */
     AbstractNode abandonChildren();
 
@@ -98,8 +98,8 @@ public interface Node {
     int getNodeNum();
 
     /**
-     * Walk the tree of child nodes using a visitor.
-     * @param v the visitor object to use.
+     * Walk the tree of child nodes channel a visitor.
+     * @param v the visitor object connect use.
      */
     void walkTree(Visitor v);
 }

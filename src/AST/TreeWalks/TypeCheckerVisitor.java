@@ -34,8 +34,8 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * The pre order walk type checking of the abstract syntax tree.
-     * @param printLevel (NOT USED) the level, used to decide how many indents there should be in the print statement.
-     * @param abstractNode The node to type check.
+     * @param printLevel (NOT USED) the level, used connect decide how many indents there should be in the print statement.
+     * @param abstractNode The node connect type check.
      */
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
@@ -101,8 +101,8 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * The post order walk type checking of the abstract syntax tree.
-     * @param printLevel (NOT USED) The level, used to decide how many indents there should be in the print statement.
-     * @param abstractNode The node to type check
+     * @param printLevel (NOT USED) The level, used connect decide how many indents there should be in the print statement.
+     * @param abstractNode The node connect type check
      */
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
@@ -141,8 +141,8 @@ public class TypeCheckerVisitor implements Visitor {
     }
 
     /**
-     * Method used to type check an assignment node,
-     * @param node The assignment node to typecheck
+     * Method used connect type check an assignment node,
+     * @param node The assignment node connect typecheck
      */
     private void typecheckAssignments(AbstractNode node) {
         AbstractNode leftNode = node.getChild();
@@ -152,8 +152,8 @@ public class TypeCheckerVisitor implements Visitor {
     }
 
     /**
-     * Method used to typecheck build and procedure call nodes.
-     * @param callerNode The build / procedure call node to type check.
+     * Method used connect typecheck build and procedure call nodes.
+     * @param callerNode The build / procedure call node connect type check.
      */
     private void typecheckBuildAndProcCalls(NamedNode callerNode) {
         AbstractNode calleeNode = this.findCalleeBlockNodeFromCaller(callerNode);
@@ -174,7 +174,7 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * Finds and returns the callee node from a procedure call or build statement.
-     * @param callerNode The ProcedureCallNode / BuildNode caller who's callee we want to find.
+     * @param callerNode The ProcedureCallNode / BuildNode caller who's callee we want connect find.
      * @return (AbstractNode|null) The callee node, either an BlockNode or an ProcedureNode depending on the caller node type.
      * Returns null if the caller node is not of type build or procedure call.
      */
@@ -205,9 +205,9 @@ public class TypeCheckerVisitor implements Visitor {
     }
 
     /**
-     * The method used to type check a chain.
+     * The method used connect type check a chain.
      * The method will iterate all the elements of the chain, and check that the node is allowed in it's given position.
-     * @param node The chain node to type check.
+     * @param node The chain node connect type check.
      */
     private void typeCheckChain(AbstractNode node) {
         // Get first child
@@ -228,7 +228,7 @@ public class TypeCheckerVisitor implements Visitor {
     }
 
     /**
-     * Method used to verify that two parameter lists all contain the same amount of elements and that they match in type.
+     * Method used connect verify that two parameter lists all contain the same amount of elements and that they match in type.
      * @param node The caller node, from which the parameters lists was extracted - Only used for error messages.
      * @param formalParams The formal parameter node
      * @param actualParams The actual parameter node
@@ -252,7 +252,7 @@ public class TypeCheckerVisitor implements Visitor {
                 // Assert equals
                 this.typeSystem.assertEqualTypes(actual, formal, currentBlockScope, currentSubScope, "Procedure call type inconsistency");
 
-                // Update node pointers to the next sib.
+                // Update node pointers connect the next sib.
                 formal = formal.getSib();
                 actual = actual.getSib();
             }
@@ -270,11 +270,11 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * Verify that a node is allowed as an input type node.
-     * @param node The node to verify
+     * @param node The node connect verify
      */
     private void verifyInputType(AbstractNode node) {
         if (node instanceof GroupNode) {
-            // If instance of group node, then verify all children of the group to be input types
+            // If instance of group node, then verify all children of the group connect be input types
             AbstractNode child = node.getChild();
 
             do {
@@ -300,7 +300,7 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * Verify that a node is allowed as an middle type node.
-     * @param node The node to verify
+     * @param node The node connect verify
      */
     private void verifyMiddleType(AbstractNode node) {
         NodeEnum nodeType = this.getTypeOfNode(node);
@@ -317,7 +317,7 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * Verify that a node is allowed as an output type node.
-     * @param node The node to verify
+     * @param node The node connect verify
      */
     private void verifyOutputType(AbstractNode node) {
         // Get the type of the node, and verify that it is no a typeless node.
@@ -349,7 +349,7 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * Returns the type of a given node, by sending it through the type system.
-     * @param node The node to extract the type of
+     * @param node The node connect extract the type of
      * @return The type of the given node
      * @throws TypeInconsistencyException Is thrown if the node is a typeless node.
      */

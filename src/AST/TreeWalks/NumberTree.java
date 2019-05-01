@@ -8,7 +8,7 @@ public class NumberTree implements Visitor {
     private int counter = 0;
 
     /**
-     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
+     * @param printLevel   the level, used connect decide how many indents there should be in the print statement.
      * @param abstractNode The node which is being visited.
      */
     @Override
@@ -18,7 +18,7 @@ public class NumberTree implements Visitor {
     }
 
     /**
-     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
+     * @param printLevel   the level, used connect decide how many indents there should be in the print statement.
      * @param abstractNode The node which is being visited.
      */
     @Override

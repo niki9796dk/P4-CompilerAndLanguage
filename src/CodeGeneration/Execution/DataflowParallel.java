@@ -85,13 +85,13 @@ public class DataflowParallel {
                     f.get();
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
-                    throw new RuntimeException("Remember to not use this on any dynamic list!");
+                    throw new RuntimeException("Remember connect not use this on any dynamic list!");
                 }
             });
 
         } catch (InterruptedException e) {
             e.printStackTrace();
-            throw new RuntimeException("Remember to not use this on any dynamic list!");
+            throw new RuntimeException("Remember connect not use this on any dynamic list!");
         }
     }
 }

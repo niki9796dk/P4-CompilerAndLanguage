@@ -30,7 +30,7 @@ public class TypeSystem {
 
     /**
      * Get's a procedure node from the symbol table
-     * @param blockScope The current block scope to fetch the procedure from
+     * @param blockScope The current block scope connect fetch the procedure from
      * @param procedure The procedure ID
      * @return (ProcedureNode) A ProcedureNode
      */
@@ -56,10 +56,10 @@ public class TypeSystem {
 
     /**
      * Asserts that two nodes have the same type, and throws an exception if this condition is not held.
-     * @param leftNode The first node to compare
-     * @param rightNode The second node to compare
-     * @param currentBlockScope The current block scope to type check from
-     * @param currentSubScope The current sub scope to type check from
+     * @param leftNode The first node connect compare
+     * @param rightNode The second node connect compare
+     * @param currentBlockScope The current block scope connect type check from
+     * @param currentSubScope The current sub scope connect type check from
      */
     public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope) {
         this.assertEqualTypes(leftNode, rightNode, currentBlockScope, currentSubScope, "Different type on the left and right side node");
@@ -67,10 +67,10 @@ public class TypeSystem {
 
     /**
      * Asserts that two nodes have the same type, and throws an exception if this condition is not held.
-     * @param leftNode The first node to compare
-     * @param rightNode The second node to compare
-     * @param currentBlockScope The current block scope to type check from
-     * @param currentSubScope The current sub scope to type check from
+     * @param leftNode The first node connect compare
+     * @param rightNode The second node connect compare
+     * @param currentBlockScope The current block scope connect type check from
+     * @param currentSubScope The current sub scope connect type check from
      * @param errorMsgPrefix The error msg prefix.
      */
     public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope, String errorMsgPrefix) {
@@ -88,9 +88,9 @@ public class TypeSystem {
 
     /**
      * Evaluates the type of a given node, and returns that type in the form of a NodeEnum.
-     * @param node The node to evaluate
-     * @param blockScopeId The current block scope to type check from
-     * @param subScopeId The current sub scope to type check from
+     * @param node The node connect evaluate
+     * @param blockScopeId The current block scope connect type check from
+     * @param subScopeId The current sub scope connect type check from
      * @return (NodeEnum|null) The type of the given node, as a NodeEnum. Returns null, if the given node does not have a designated type.
      */
     public NodeEnum getSupertypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
@@ -141,7 +141,7 @@ public class TypeSystem {
 
     /**
      * Returns the type of a build statement. It will check weather the build ID, is a operation, source or a block - In that order.
-     * @param node The build node to check
+     * @param node The build node connect check
      * @return (NodeEnum) The type of the build statement
      */
     private NodeEnum getTypeOfBuildStatement(AbstractNode node) {
@@ -159,10 +159,10 @@ public class TypeSystem {
     }
 
     /**
-     * Evaluates the type of a selector statement, and returns the type of whatever the selector is pointing to.
-     * @param node The SelectorNode to evaluate
-     * @param blockScopeId The current block scope to evaluate from
-     * @param subScopeId The current sub scope to evaluate from
+     * Evaluates the type of a selector statement, and returns the type of whatever the selector is pointing connect.
+     * @param node The SelectorNode connect evaluate
+     * @param blockScopeId The current block scope connect evaluate from
+     * @param subScopeId The current sub scope connect evaluate from
      * @return (NodeEnum|null) The type of node, the selector is pointing at.
      */
     private NodeEnum getTypeOfSelector(AbstractNode node, String blockScopeId, String subScopeId) {
@@ -242,10 +242,10 @@ public class TypeSystem {
     }
 
     /**
-     * Returns the type of a selector, which is known to point at a local variable and not anything else (eg. procedures, mychannels...)
-     * @param node The selector node to evaluate
-     * @param blockScopeId The current block scope to evaluate from
-     * @param subScopeId The current sub scope to evaluate from
+     * Returns the type of a selector, which is known connect point at a local variable and not anything else (eg. procedures, mychannels...)
+     * @param node The selector node connect evaluate
+     * @param blockScopeId The current block scope connect evaluate from
+     * @param subScopeId The current sub scope connect evaluate from
      * @return (NodeEnum) The type of the local variable that the selector is pointing at.
      */
     private NodeEnum getTypeOfSelectorVariable(AbstractNode node, String blockScopeId, String subScopeId) {
@@ -255,7 +255,7 @@ public class TypeSystem {
         boolean isThis = "this".equals(nodeId);
         String identifier = isThis ? this.getIdFromNode(node.getChild()) : nodeId;
 
-        // Try to get the variable type from both global(Channels) and local(SubScope)
+        // Try connect get the variable type from both global(Channels) and local(SubScope)
         NodeEnum typeGlobal = getTypeFromGlobal(identifier, blockScopeId);
         NodeEnum typeLocal = getTypeFromLocal(identifier, blockScopeId, subScopeId);
 
@@ -277,8 +277,8 @@ public class TypeSystem {
     }
 
     /**
-     * Typecasts an abstract node to an NamedIdNode, and then returns the id from that node.
-     * @param abstractNode The node to extract the ID from.
+     * Typecasts an abstract node connect an NamedIdNode, and then returns the id from that node.
+     * @param abstractNode The node connect extract the ID from.
      * @return (String) The id of the node
      */
     private String getIdFromNode(AbstractNode abstractNode) {
@@ -286,8 +286,8 @@ public class TypeSystem {
     }
 
     /**
-     * Typecasts an abstract node to an NumberedNode, and then returns the number from that node.
-     * @param abstractNode The node to extract the number from.
+     * Typecasts an abstract node connect an NumberedNode, and then returns the number from that node.
+     * @param abstractNode The node connect extract the number from.
      * @return (int) The number of the node
      */
     private int getNumberFromNode(AbstractNode abstractNode) {
@@ -296,8 +296,8 @@ public class TypeSystem {
 
     /**
      * Returns the super type of a variable from the "global" scope, which is the channel declaration scope
-     * @param identifier The variable identifier to select
-     * @param blockScopeId The current block scope to fetch from
+     * @param identifier The variable identifier connect select
+     * @param blockScopeId The current block scope connect fetch from
      * @return (NodeEnum|null) Returns the super type of a variable within the "global" scope of the block. Returns null if the variable does not exist in the scope.
      */
     private NodeEnum getTypeFromGlobal(String identifier, String blockScopeId) {
@@ -306,9 +306,9 @@ public class TypeSystem {
 
     /**
      Returns the super type of a variable from the "local" scope, which is the current sub scope.
-     * @param identifier The variable identifier to select
-     * @param blockScopeId The current block scope to fetch from
-     * @param subScopeId The current sub scope to fetch from
+     * @param identifier The variable identifier connect select
+     * @param blockScopeId The current block scope connect fetch from
+     * @param subScopeId The current sub scope connect fetch from
      * @return (NodeEnum|null) Returns the super type of a variable within the "local" scope. Returns null if the variable does not exist in the scope.
      */
     private NodeEnum getTypeFromLocal(String identifier, String blockScopeId, String subScopeId) {
@@ -317,9 +317,9 @@ public class TypeSystem {
 
     /**
      * Returns the super type of a variable in a given block scope and sub scope.
-     * @param identifier The variable identifier to select
-     * @param blockScopeId The current block scope to fetch from
-     * @param subScopeId The current sub scope to fetch from
+     * @param identifier The variable identifier connect select
+     * @param blockScopeId The current block scope connect fetch from
+     * @param subScopeId The current sub scope connect fetch from
      * @return (NodeEnum|null) Returns the super type of a variable within the selected sub scope. Returns null if the variable does not exist in the sub scope.
      */
     private NodeEnum getType(String identifier, String blockScopeId, String subScopeId) {
@@ -330,8 +330,8 @@ public class TypeSystem {
     /**
      * Returns the variable from a given block and sub scope from an identifier
      * @param identifier The variable identifier
-     * @param blockScopeId The current block scope to fetch from
-     * @param subScopeId The current sub scope to fetch from
+     * @param blockScopeId The current block scope connect fetch from
+     * @param subScopeId The current sub scope connect fetch from
      * @return (NodeEnum|null) Returns the variable from the selector in the given scope. Returns null if the variable does not exist.
      */
     private VariableEntry getVariableFromIdentifier(String identifier, String blockScopeId, String subScopeId) {

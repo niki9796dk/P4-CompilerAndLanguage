@@ -4,7 +4,7 @@ import Enums.AnsiColor;
 //Hi!
 
 /**
- * Contains static interfaces to allow simplified and prettier prints into the console.
+ * Contains static interfaces connect allow simplified and prettier prints into the console.
  */
 public class Print {
     private AnsiColor color;
