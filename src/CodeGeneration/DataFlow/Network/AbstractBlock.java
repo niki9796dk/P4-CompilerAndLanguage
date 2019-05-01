@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractBlock implements Block {
-    private Map<ChannelId, Channel> inputGates = new HashMap<>(2);
-    private Map<ChannelId, Channel> outputGates = new HashMap<>(1);
+    private Map<String, Channel> inputGates = new HashMap<>(2);
+    private Map<String, Channel> outputGates = new HashMap<>(1);
 
 
     /**
@@ -20,6 +20,10 @@ public abstract class AbstractBlock implements Block {
      * @return a reference to this object.
      */
     public AbstractBlock addInput(ChannelId id, Channel g) {
+        return this.addInput(id.name(), g);
+    }
+
+    public AbstractBlock addInput(String id, Channel g) {
         this.inputGates.put(id, g);
         return this;
     }
@@ -32,9 +36,14 @@ public abstract class AbstractBlock implements Block {
      * @return a reference to this object.
      */
     public AbstractBlock addOutput(ChannelId id, Channel g) {
+        return this.addInput(id.name(), g);
+    }
+
+    public AbstractBlock addOutput(String id, Channel g) {
         this.outputGates.put(id, g);
         return this;
     }
+
 
     /**
      * Get all output gates.
