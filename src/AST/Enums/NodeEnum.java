@@ -1,5 +1,9 @@
 package AST.Enums;
 
+/**
+ * An enum representing the type of a node, which is often its class.
+ * Recommended use is easily using switches with nodes, depending on their type.
+ */
 public enum NodeEnum {
     ASSIGN,
     BLOCK,
