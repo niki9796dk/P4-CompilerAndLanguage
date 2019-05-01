@@ -4,6 +4,6 @@ block block_01 {
     mychannel:out output;
 
     blueprint() {
-        blueprint structure = draw noSuchBlock();
+        blueprint structure = draw noSuchBlock;
     }
 }

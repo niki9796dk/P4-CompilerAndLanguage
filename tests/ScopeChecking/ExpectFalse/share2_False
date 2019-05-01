@@ -4,11 +4,15 @@ block block_01 {
     mychannel:out output;
 
     blueprint() {
-        block blueBlock = build blockToBuild();
         proc1();
+        proc2();
     }
 
     procedure proc1() {
+        block blueBlock = build blockToBuild();
+    }
+
+    procedure proc2() {
         block procBlock = build blockToBuild();
         this.input -> blueBlock -> procBlock -> this.output;
     }
