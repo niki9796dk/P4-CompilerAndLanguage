@@ -163,8 +163,22 @@ public abstract class AbstractNode implements Node {
        return children;
    }
 
+   @Override
+   public int countChildrenInstanceOf(Class childClass) {
+      AbstractNode child = this.getChild();
+      int count = 0;
 
-    /**
+      while (child != null) {
+         if (childClass.isInstance(child)) {
+            count++;
+         }
+         child = child.getSib();
+      }
+
+      return count;
+   }
+
+   /**
      * Set the parent of the node.
      * @param p The node to set as a parent.
      */
