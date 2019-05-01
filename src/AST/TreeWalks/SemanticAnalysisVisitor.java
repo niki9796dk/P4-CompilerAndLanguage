@@ -78,6 +78,18 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             case CHAIN:
+                AbstractNode childNode = ((NamedIdNode) node).getChild();
+
+                // Iterate through all selectors
+                do {
+                    // Exclude this keyword.
+                    while(childNode.getChild() != null) {
+                        childNode = childNode.getChild();
+                    }
+
+                    flowChecker.getConnected().add(((NamedIdNode) childNode).getId());
+                } while (childNode.getSib() != null);
+
                 break;
 
             // Channels
@@ -85,6 +97,8 @@ public class SemanticAnalysisVisitor implements Visitor {
             case CHANNEL_OUT_MY:
             case CHANNEL_IN_TYPE:
             case CHANNEL_OUT_TYPE:
+
+
 
                 flowChecker.getChannels().add(id);
                 break;

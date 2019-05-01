@@ -1,4 +1,4 @@
-package SemanticAnalysis;
+package SemanticAnalysis.Exceptions;
 
 public class SemanticProblemException extends RuntimeException {
 
