@@ -19,12 +19,7 @@ public class A_plus_B_mult_B extends AbstractBlock {
         Operation add = new Addition();
 
         this.connectTo(add, ChannelId.A, ChannelId.A);
-
-        this
-                .connectTo(
-                add,
-                ChannelId.B,
-                ChannelId.B);
+        this.connectTo(add, ChannelId.B, ChannelId.B);
 
         Operation mult = new Multiplication();
 
