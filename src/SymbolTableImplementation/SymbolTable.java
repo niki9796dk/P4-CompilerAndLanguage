@@ -67,7 +67,7 @@ public class SymbolTable implements SymbolTableInterface {
             case CHANNEL_DECLARATIONS:
                 return BlockScope.CHANNELS;
 
-            case BLUEPRINT:
+            case BLUEPRINT: 
                 return BlockScope.BLUEPRINT;
 
             case PROCEDURE:
