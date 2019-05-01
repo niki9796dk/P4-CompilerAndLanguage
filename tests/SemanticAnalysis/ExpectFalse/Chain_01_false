@@ -1,0 +1,22 @@
+block Master {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        (this.in, this.in) -> build Slave() -> this.out;
+    }
+}
+
+block Slave {
+    mychannel:in in1;
+    mychannel:in in2;
+    mychannel:out out1;
+    mychannel:out out2;
+
+    blueprint() {
+        operation mult = build Multiplication();
+
+        (this.in1) -> mult -> this.out1;
+        mult -> this.out2;
+    }
+}
