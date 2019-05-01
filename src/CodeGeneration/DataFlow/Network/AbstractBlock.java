@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractBlock implements Block {
-    private Print print = new Print(AnsiColor.PURPLE, this.getClass().getSimpleName());
+    private Print print = new Print(AnsiColor.PURPLE, "Block." + this.getClass().getSimpleName());
 
     private Map<String, Channel> inputChannels = new HashMap<>(2);
     private Map<String, Channel> outputChannels = new HashMap<>(1);

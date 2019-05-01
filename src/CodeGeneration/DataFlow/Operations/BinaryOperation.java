@@ -2,6 +2,7 @@ package CodeGeneration.DataFlow.Operations;
 
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import LinearAlgebra.Types.Matrices.Matrix;
 
 abstract class BinaryOperation extends Operation {
     BinaryOperation() {
@@ -28,12 +29,12 @@ abstract class BinaryOperation extends Operation {
 
     @Override
     public void performOperation() {
-        float in1 = this.getInputValue("in1");
-        float in2 = this.getInputValue("in2");
+        Matrix in1 = this.getInputValue("in1");
+        Matrix in2 = this.getInputValue("in2");
 
         this.result = operation(in1, in2);
         print.say("performOperation() -> this.result = " + this.result);
     }
 
-    abstract float operation(float in1, float in2);
+    abstract Matrix operation(Matrix a, Matrix b);
 }

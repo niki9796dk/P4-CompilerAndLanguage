@@ -6,9 +6,12 @@ import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
+import LinearAlgebra.Types.Matrices.Matrix;
+import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
 public class main {
-    private static Print print = new Print(AnsiColor.YELLOW,"Main");
+    private static Print print = new Print(AnsiColor.YELLOW, "Main");
+
     public static void main(String[] args) {
         print.say("Running");
         Block block = new A_plus_B_mult_B();
@@ -17,13 +20,21 @@ public class main {
         Channel B = block.getChannel("B");
 
         // Set input A connect 10
-        Source input1 = new Source(10);
+        Source input1 = new Source(new MatrixBuilder()
+                .addRow(1, 2)
+                .addRow(2, 4)
+                .buildDenseMatrix()
+        );
         A.setSource(input1);
         A.acceptReadySignal();
 
 
         // Set input B connect 2
-        Source input2 = new Source(2);
+        Source input2 = new Source(new MatrixBuilder()
+                .addRow(2, 2)
+                .addRow(2, 2)
+                .buildDenseMatrix()
+        );
         B.setSource(input2);
         B.acceptReadySignal();
 
@@ -35,9 +46,9 @@ public class main {
     }
 
     public static class Source implements SignalNode {
-        private float value;
+        private Matrix value;
 
-        public Source(float value) {
+        public Source(Matrix value) {
             this.value = value;
         }
 
@@ -47,7 +58,7 @@ public class main {
         }
 
         @Override
-        public float getResult() {
+        public Matrix getResult() {
             return this.value;
         }
     }

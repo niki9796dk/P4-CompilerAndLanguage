@@ -1,8 +1,11 @@
 package CodeGeneration.DataFlow.Operations;
 
+import LinearAlgebra.Types.Matrices.Matrix;
+
 public class Subtraction extends BinaryOperation {
+
     @Override
-    float operation(float a, float b) {
-        return a - b;
+    Matrix operation(Matrix a, Matrix b) {
+        return a.sub(b);
     }
 }

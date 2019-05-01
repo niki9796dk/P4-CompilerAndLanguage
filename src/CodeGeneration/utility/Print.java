@@ -13,7 +13,7 @@ public class Print {
     boolean isMuted = false;
 
     private static String lastPrefix = null;
-    public static int minimalIndent = 30;
+    public static int minimalIndent = 35;
 
     public static boolean samePrefix(String prefix){
         if(prefix.equals(lastPrefix))
@@ -43,6 +43,8 @@ public class Print {
     }
 
     private static String emptyLine(int length){
+        if(length < 0)
+            return "";
         char[] chars = new char[length];
         for (int i = 0; i < length; i++)
             chars[i] = ' ';
@@ -54,28 +56,24 @@ public class Print {
     private static String lineBottom = "├┄ ";
 
     private static String formatString(String prefix, String line){
-
         //The indent line
         String indent = emptyLine(prefix.length()) + lineMiddle;
+        line = line.replaceAll("\n","\n"+indent);
 
         //If it is the same prefix as last print, just print it with the indent.
         if(samePrefix(prefix))
             return indent + line;
 
-
         line = prefix + lineTop + line;
 
         //If it is a new line with no newline, just print it with the whole prefix
-        if(!line.contains("\n"))
-            return line;
-        else return line.replaceAll("\n","\n"+indent);
+        return line;
     }
 
 
     public String say(AnsiColor color, String s) {
         if (!isMuted)
             return Print.echo(color, formatString(this.getPrefix(), s));
-            //return Print.echo(color, this.getPrefix() + s.replaceAll("\n", "\n" + indent));
         return "";
     }
 
