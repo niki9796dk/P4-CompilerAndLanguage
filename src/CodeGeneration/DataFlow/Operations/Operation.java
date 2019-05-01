@@ -8,7 +8,7 @@ import LinearAlgebra.Types.Matrices.Matrix;
 
 public abstract class Operation extends AbstractBlock implements CodeGeneration.DataFlow.Network.Interfaces.Operation {
     protected Matrix result;
-    Print print = new Print(AnsiColor.GREEN, "Operation."+this.getClass().getSimpleName());
+    protected Print print = new Print(AnsiColor.GREEN, "Operation." + this.getClass().getSimpleName());
 
     /**
      * Get result of operation
@@ -18,7 +18,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
     @Override
     public Matrix getResult() {
         print.say("getResult() -> this.result = " + this.result);
-        return this.result;
+        return result;
     }
 
     /**
