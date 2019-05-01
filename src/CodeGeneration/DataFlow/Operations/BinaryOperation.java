@@ -34,6 +34,7 @@ abstract class BinaryOperation extends Operation {
         float b = this.getInputValue("B");
 
         this.value = operation(a, b);
+        print.say("performOperation() -> this.value = " + this.value);
     }
 
     abstract float operation(float a, float b);

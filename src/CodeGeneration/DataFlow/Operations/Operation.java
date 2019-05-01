@@ -3,12 +3,16 @@ package CodeGeneration.DataFlow.Operations;
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import CodeGeneration.utility.Print;
+import Enums.AnsiColor;
 
 public abstract class Operation extends AbstractBlock implements CodeGeneration.DataFlow.Network.Interfaces.Operation {
     protected float value;
+    Print print = new Print(AnsiColor.GREEN, this.getClass().getSimpleName());
 
     @Override
     public float getValue() {
+        print.say("getValue() -> this.value = " + value);
         return this.value;
     }
 
