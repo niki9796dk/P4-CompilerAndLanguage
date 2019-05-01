@@ -1,5 +1,6 @@
 package AST.TreeWalks;
 
+import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
@@ -65,23 +66,16 @@ public class ScopeCheckerVisitor implements Visitor {
                         || this.symbolTableInterface.isPredefinedSource(id))
                         // or it is a variable in this scope, THAT IS a blueprint, AND not itself
                         || this.currentSubScope.getVariable(id) != null
-                        && this.currentSubScope.getVariable(id).getSuperType().toString().equals("BLUEPRINT")
-                        && !(this.currentSubScope.getVariable(id).getSubType(node.getNumber()).getName().equals(node.getName())))
+                        && this.currentSubScope.getVariable(id).getSuperType() == NodeEnum.BLUEPRINT_TYPE
+                        && !(this.currentSubScope.getVariable(id)
+                        .getSubType(node
+                                .getNumber())
+                        .getName()
+                        .equals(node
+                                .getName())))
                 {
                     // Nothing
-                    if(this.symbolTableInterface.getBlockScope(id) != null){
-                        AbstractNode nodebuffer;
-                        nodebuffer = node.getParent();
-                        System.out.println(nodebuffer.toString());
-                        while (nodebuffer instanceof NamedIdNode){
-                            if(((NamedIdNode)nodebuffer).getId().equals(id)){
-                                throw new RecursiveBlockException();
-                            }
-                            nodebuffer = nodebuffer.getParent();
-                            System.out.println(nodebuffer.toString());
-                        }
-                    }
-
+                    System.out.println(node.getNumber());
                 } else {
                     throw new NonexistentBlockException(node.toString());
                 }

@@ -160,7 +160,7 @@ public class SemanticAnalysisVisitor implements Visitor {
         }
 
         if (!this.callStack.push(builder.toString())){
-            throw new RecursiveBlockException(childNode.toString());
+            throw new RecursiveBlockException(builder.toString());
         }
     }
 

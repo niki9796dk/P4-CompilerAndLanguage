@@ -17,6 +17,6 @@ block Singleton {
 	mychannel:out output;
 
 	blueprint() {
-		this.in -> this.out;
+		this.input -> this.output;
 	}
 }
