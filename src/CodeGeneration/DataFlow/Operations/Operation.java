@@ -7,7 +7,7 @@ import Enums.AnsiColor;
 
 public abstract class Operation extends AbstractBlock implements CodeGeneration.DataFlow.Network.Interfaces.Operation {
     protected float result;
-    Print print = new Print(AnsiColor.GREEN, this.getClass().getSimpleName());
+    protected Print print = new Print(AnsiColor.GREEN, this.getClass().getSimpleName());
 
     /**
      * Get result of operation

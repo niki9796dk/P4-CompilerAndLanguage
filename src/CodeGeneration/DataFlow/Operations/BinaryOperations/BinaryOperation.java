@@ -1,8 +1,9 @@
-package CodeGeneration.DataFlow.Operations;
+package CodeGeneration.DataFlow.Operations.BinaryOperations;
 
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Operations.Operation;
+import LinearAlgebra.Types.Matrices.Matrix;
 
 abstract class BinaryOperation extends Operation {
     BinaryOperation() {
@@ -22,19 +23,12 @@ abstract class BinaryOperation extends Operation {
                 .addOutput("out", out);
     }
 
-    @Override
     Channel getOutputChannel() {
         return this.getChannel("out");
     }
-
-    @Override
-    public void performOperation() {
-        float in1 = this.getInputValue("in1");
-        float in2 = this.getInputValue("in2");
-
-        this.result = operation(in1, in2);
-        print.say("performOperation() -> result = " + this.result);
-    }
-
-    abstract float operation(float in1, float in2);
 }
+
+// Binary matrix operation ("Addition", "Multiplication", "Subtraction")
+// Binary unitwise operation ("_Addition", "_Multiplication", "_Subtraction", "_Division")
+// unary matrix operation ("Transpose")
+// Unary unitwise operation ("_Sigmoid", "_Tanh", "_Relu")

@@ -2,8 +2,8 @@ package CodeGeneration.DataFlow.Blocks;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.ListChannel;
-import CodeGeneration.DataFlow.Operations.Addition;
-import CodeGeneration.DataFlow.Operations.Multiplication;
+import CodeGeneration.DataFlow.Operations.BinaryOperations.Addition;
+import CodeGeneration.DataFlow.Operations.BinaryOperations.Multiplication;
 import CodeGeneration.DataFlow.Operations.Operation;
 
 /// (X, Y) -> ApBmB -> Z

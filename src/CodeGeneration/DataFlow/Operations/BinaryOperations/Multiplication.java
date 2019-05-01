@@ -1,4 +1,4 @@
-package CodeGeneration.DataFlow.Operations;
+package CodeGeneration.DataFlow.Operations.BinaryOperations;
 
 public class Multiplication extends BinaryOperation {
     @Override
