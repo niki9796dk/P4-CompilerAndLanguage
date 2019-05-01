@@ -73,7 +73,7 @@ public abstract class AbstractBlock implements Block {
         if (outputGate == null)
             throw new NullPointerException();
 
-        Channel targetGate = toBlock.getGate(toGate); // TODO: Null check?
+        Channel targetGate = toBlock.getGate(toGate);
 
         outputGate.addTarget(targetGate);
         targetGate.setSource(outputGate);
@@ -83,6 +83,11 @@ public abstract class AbstractBlock implements Block {
 
     @Override
     public Channel getGate(ChannelId channelId) {
+        return this.getGate(channelId.name());
+    }
+
+    @Override
+    public Channel getGate(String channelId) {
         if (this.inputGates.containsKey(channelId)) {
             return this.inputGates.get(channelId);
         } else if (this.outputGates.containsKey(channelId)) {

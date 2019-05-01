@@ -5,4 +5,6 @@ import CodeGeneration.DataFlow.Network.ChannelId;
 public interface Block extends Node {
     Block connectTo(Block toBlocks, ChannelId fromGate, ChannelId toGate);
     Channel getGate(ChannelId channelId);
+
+    Channel getGate(String channelId);
 }
