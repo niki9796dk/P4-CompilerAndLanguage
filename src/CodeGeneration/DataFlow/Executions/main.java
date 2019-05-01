@@ -6,6 +6,7 @@ import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
+import LinearAlgebra.Statics.Matrices;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public class main {
@@ -18,13 +19,13 @@ public class main {
         Channel B = block.getChannel("B");
 
         // Set input A connect 10
-        Source input1 = new Source(10);
+        Source input1 = new Source( Matrices.randomMatrix(2,2) );
         A.setSource(input1);
         A.acceptReadySignal();
 
 
         // Set input B connect 2
-        Source input2 = new Source(2);
+        Source input2 = new Source( Matrices.randomMatrix(2,2) );
         B.setSource(input2);
         B.acceptReadySignal();
 
