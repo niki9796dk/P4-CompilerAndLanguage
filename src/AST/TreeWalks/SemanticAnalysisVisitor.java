@@ -10,6 +10,7 @@ import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
+import SemanticAnalysis.FlowChecker;
 import SemanticAnalysis.Datastructures.HashSetStack;
 import SemanticAnalysis.Datastructures.SetStack;
 import SymbolTableImplementation.BlockScope;
@@ -20,6 +21,12 @@ import TypeChecker.Exceptions.TypeInconsistencyException;
 import TypeChecker.TypeSystem;
 
 public class SemanticAnalysisVisitor implements Visitor {
+
+    private FlowChecker flowChecker;
+
+    public SemanticAnalysisVisitor() {
+        this.flowChecker = new FlowChecker();
+    }
 
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
@@ -49,10 +56,6 @@ public class SemanticAnalysisVisitor implements Visitor {
             case SIZE:
             case SELECTOR:
             case ROOT:
-            case CHANNEL_IN_MY:
-            case CHANNEL_OUT_MY:
-            case CHANNEL_IN_TYPE:
-            case CHANNEL_OUT_TYPE:
             case SIZE_TYPE:
             case BLOCK_TYPE:
             case SOURCE_TYPE:
@@ -61,12 +64,15 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             case CHAIN:
-                // Get first child
-                AbstractNode childNode = node.getChild();
+                break;
 
-                while (childNode.getSib() != null) {
-                    childNode = childNode.getSib();
-                }
+            // Channels
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
+            case CHANNEL_IN_TYPE:
+            case CHANNEL_OUT_TYPE:
+
+                flowChecker.getChannels().add(id);
                 break;
 
             default:

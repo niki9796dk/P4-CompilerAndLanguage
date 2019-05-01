@@ -1,0 +1,17 @@
+block A {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        block child = build A_1(draw A_1);
+    }
+}
+
+block A_1 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(blueprint B) {
+        block WhoDis = build B();
+    }
+}

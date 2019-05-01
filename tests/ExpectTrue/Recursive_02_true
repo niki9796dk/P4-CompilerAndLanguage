@@ -1,0 +1,76 @@
+block master {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(){
+        block b1 = build B1(draw B3, draw B2);
+        block b3 = build B3(draw B1, draw B2);
+
+        this.in -> b1 -> b3 -> this.out;
+    }
+}
+
+block B1 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint (blueprint x, blueprint y) {
+        block there = build x(y, draw B3);
+
+        this.in -> there -> this.out;
+    }
+}
+
+
+
+
+block B3 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint (blueprint x, blueprint y) {
+       block there = build x(y, draw B1);
+
+       this.in -> there -> this.out;
+    }
+}
+
+block B2 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(blueprint x, blueprint y){
+        operation mult = build Multiplication();
+
+        block g = build x();
+        block h = build y(draw B5, draw B4);
+
+        this.in -> g -> h;
+        (g, h) -> mult -> this.out;
+    }
+}
+
+block B4 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(){
+        operation o1 = build Addition();
+
+        (this.in, this.in) -> o1 -> this.out;
+    }
+}
+
+block B5 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(blueprint x){
+        operation o1 = build Addition();
+        block b4 = build x();
+
+        this.in -> b4;
+
+        (this.in, b4) -> o1 -> this.out;
+    }
+}
