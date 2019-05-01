@@ -143,10 +143,14 @@ public class SemanticAnalysisVisitor implements Visitor {
 
     private void buildRecursionCheck(NamedNode node){
         StringBuilder builder = new StringBuilder();
-        AbstractNode childNode = node.findFirstChildOfClass(ParamsNode.class).getChild();
+        AbstractNode paramsNode = node.findFirstChildOfClass(ParamsNode.class);
+        AbstractNode childNode = null;
+        if (paramsNode != null) {
+             childNode = paramsNode.getChild();
+        }
 
         builder.append(node.getName());
-        while (childNode.getSib() != null) {
+        while (childNode != null) {
             if(childNode instanceof NamedIdNode){
                 builder.append(childNode.getName() + ((NamedIdNode) childNode).getId());
             } else if (childNode instanceof NamedNode){
