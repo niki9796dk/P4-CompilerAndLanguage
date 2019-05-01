@@ -23,7 +23,9 @@ public class SymbolTable implements SymbolTableInterface {
     public SymbolTable() {
     }
 
-    // List of predefined operations
+    /**
+     *  List of predefined operations
+     */
     private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
             // Matrix arithmetic operations
             "Addition", "Multiplication", "Subtraction",
@@ -33,7 +35,10 @@ public class SymbolTable implements SymbolTableInterface {
             "_Sigmoid", "_Tanh", "_Relu",
             // Matrix operations
             "Transpose"));
-    // Predefined Sources
+
+    /**
+     * List of Predefined Sources
+     */
     private static final HashSet<String> SOURCES = new HashSet<>(Arrays.asList(
             "Source", "FixedSource"));
 
