@@ -4,9 +4,10 @@ import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
+import LinearAlgebra.Types.Matrices.Matrix;
 
 public abstract class Operation extends AbstractBlock implements CodeGeneration.DataFlow.Network.Interfaces.Operation {
-    protected float result;
+    protected Matrix result;
     protected Print print = new Print(AnsiColor.GREEN, this.getClass().getSimpleName());
 
     /**
@@ -15,7 +16,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
      * @return result as float
      */
     @Override
-    public float getResult() {
+    public Matrix getResult() {
         print.say("getResult() -> result = " + result);
         return this.result;
     }
@@ -54,7 +55,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
      * @param channelId channel to get output from
      * @return float value from output of channel
      */
-    protected float getInputValue(String channelId) {
+    protected Matrix getInputValue(String channelId) {
         return this.getChannel(channelId).getResult();
     }
 }

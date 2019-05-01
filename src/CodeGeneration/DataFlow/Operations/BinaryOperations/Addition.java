@@ -1,8 +1,10 @@
 package CodeGeneration.DataFlow.Operations.BinaryOperations;
 
-public class Addition extends BinaryOperation {
+import LinearAlgebra.Types.Matrices.Matrix;
+
+public class Addition extends BinaryMatrixOperation {
     @Override
-    float operation(float in1, float in2) {
-        return in1 + in2;
+    Matrix operation(Matrix in1, Matrix in2) {
+        return in1.add(in2);
     }
 }

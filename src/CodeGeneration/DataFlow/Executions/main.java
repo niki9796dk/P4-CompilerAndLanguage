@@ -6,6 +6,7 @@ import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
+import LinearAlgebra.Types.Matrices.Matrix;
 
 public class main {
     private static Print print = new Print(AnsiColor.YELLOW,"Main");
@@ -35,9 +36,9 @@ public class main {
     }
 
     public static class Source implements SignalNode {
-        private float value;
+        private Matrix value;
 
-        public Source(float value) {
+        public Source(Matrix value) {
             this.value = value;
         }
 
@@ -47,7 +48,7 @@ public class main {
         }
 
         @Override
-        public float getResult() {
+        public Matrix getResult() {
             return this.value;
         }
     }

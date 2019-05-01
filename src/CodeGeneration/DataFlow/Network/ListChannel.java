@@ -2,6 +2,7 @@ package CodeGeneration.DataFlow.Network;
 
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
+import LinearAlgebra.Types.Matrices.Matrix;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class ListChannel implements Channel {
     }
 
     @Override
-    public float getResult() {
+    public Matrix getResult() {
         return this.source.getResult();
     }
 
