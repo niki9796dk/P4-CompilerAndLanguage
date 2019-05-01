@@ -16,7 +16,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
      */
     @Override
     public float getResult() {
-        print.say("getResult() -> this.result = " + result);
+        print.say("getResult() -> result = " + result);
         return this.result;
     }
 

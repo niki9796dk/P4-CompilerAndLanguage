@@ -2,6 +2,7 @@ package CodeGeneration.DataFlow.Operations;
 
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import CodeGeneration.DataFlow.Operations.Operation;
 
 abstract class BinaryOperation extends Operation {
     BinaryOperation() {
@@ -32,7 +33,7 @@ abstract class BinaryOperation extends Operation {
         float in2 = this.getInputValue("in2");
 
         this.result = operation(in1, in2);
-        print.say("performOperation() -> this.result = " + this.result);
+        print.say("performOperation() -> result = " + this.result);
     }
 
     abstract float operation(float in1, float in2);
