@@ -3,8 +3,8 @@ block channels_04 {
 	mychannel:out out;
 
 	blueprint() {
-	    channel:in in_1 = this.in;
-	    channel:out out_1 = this.out;
+	    mychannel:in in_1 = this.in;
+	    mychannel:out out_1 = this.out;
 
 	    block b = build Test();
 
