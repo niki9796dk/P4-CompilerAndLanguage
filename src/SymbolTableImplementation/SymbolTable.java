@@ -70,8 +70,8 @@ public class SymbolTable implements SymbolTableInterface {
     /**
      * Gets a specific BlockScope from an id
      *
-     * @param id The id of the desired blockscope.
-     * @return The blockscope with the id, or Null if no such blockscope exists.
+     * @param id The id of the desired block scope.
+     * @return The block scope with the id, or Null if no such block scope exists.
      */
     @Override
     public BlockScope getBlockScope(String id) {

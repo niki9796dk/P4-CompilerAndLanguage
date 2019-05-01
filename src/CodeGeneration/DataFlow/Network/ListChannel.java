@@ -8,11 +8,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A channel that uses list implementation (**!!!!!And not a list of channels!!!!!**)
+ */
 public class ListChannel implements Channel {
     private boolean ready = false;
     private SignalNode source;
     private List<SignalNode> targets = new ArrayList<>();
 
+    /**
+     * Constructor for ListChannel class that sets a source and a number of target SignalNodes
+     * @param source The SignalNode that enters the channel
+     * @param targets
+     */
     public ListChannel(SignalNode source, SignalNode ... targets) {
         this.source = source;
         this.targets.addAll(Arrays.asList(targets));
