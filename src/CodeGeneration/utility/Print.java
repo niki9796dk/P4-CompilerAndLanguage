@@ -12,6 +12,17 @@ public class Print {
     private String indent;
     boolean isMuted = false;
 
+    private static String lastPrefix = null;
+    public static int minimalIndent = 30;
+
+    public static boolean samePrefix(String prefix){
+        if(prefix.equals(lastPrefix))
+            return true;
+
+        Print.lastPrefix = prefix;
+        return false;
+    }
+
     public Print(AnsiColor c, String name) {
         this.color = c;
         this.name = name;
@@ -20,17 +31,51 @@ public class Print {
     }
 
     private String getPrefix() {
-        return "[" + name + "] says -> ";
+        return  withLinePostfix("[" + name + "] says ");
+    }
+
+    private String withLinePostfix(String s) {
+        return s + (emptyLine(minimalIndent - s.length()).replace(" ","─"));
     }
 
     public String say(String s) {
         return this.say(color, s);
     }
 
+    private static String emptyLine(int length){
+        char[] chars = new char[length];
+        for (int i = 0; i < length; i++)
+            chars[i] = ' ';
+        return new String(chars);
+    }
+
+    private static String lineTop = "┬┄ ";
+    private static String lineMiddle = "├┄ ";
+    private static String lineBottom = "├┄ ";
+
+    private static String formatString(String prefix, String line){
+
+        //The indent line
+        String indent = emptyLine(prefix.length()) + lineMiddle;
+
+        //If it is the same prefix as last print, just print it with the indent.
+        if(samePrefix(prefix))
+            return indent + line;
+
+
+        line = prefix + lineTop + line;
+
+        //If it is a new line with no newline, just print it with the whole prefix
+        if(!line.contains("\n"))
+            return line;
+        else return line.replaceAll("\n","\n"+indent);
+    }
+
 
     public String say(AnsiColor color, String s) {
         if (!isMuted)
-            return Print.echo(color, this.getPrefix() + s.replaceAll("\n", "\n" + indent));
+            return Print.echo(color, formatString(this.getPrefix(), s));
+            //return Print.echo(color, this.getPrefix() + s.replaceAll("\n", "\n" + indent));
         return "";
     }
 

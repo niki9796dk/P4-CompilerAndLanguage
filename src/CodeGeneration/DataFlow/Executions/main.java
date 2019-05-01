@@ -29,8 +29,9 @@ public class main {
 
         // Get output
 
-        print.say("Value of out: ┏━ " + block.getChannel("C").getResult() +
-                "\nShould be     ┗━ 24.0");
+        print.say("Value of out: " + block.getChannel("C").getResult() +
+                "\nShould be    24.0" +
+                "\nEnd of Main");
     }
 
     public static class Source implements SignalNode {

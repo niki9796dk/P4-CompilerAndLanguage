@@ -16,13 +16,6 @@ public abstract class AbstractBlock implements Block {
     private Map<String, Channel> outputChannels = new HashMap<>(1);
 
     /**
-     * @deprecated
-     */
-    public AbstractBlock addInput(ChannelId id, Channel c) {
-        return this.addInput(id.name(), c);
-    }
-
-    /**
      * Add an input channel
      *
      * @param id Desired id of the new channel.
@@ -33,13 +26,6 @@ public abstract class AbstractBlock implements Block {
         print.say("New input: " + id);
         this.inputChannels.put(id, c);
         return this;
-    }
-
-    /**
-     * @deprecated
-     */
-    public AbstractBlock addOutput(ChannelId id, Channel c) {
-        return this.addOutput(id.name(), c);
     }
 
     /**
@@ -110,14 +96,6 @@ public abstract class AbstractBlock implements Block {
     }
 
     /**
-     * @deprecated
-     */
-    @Override
-    public Block connectTo(Block toBlocks, ChannelId fromChannel, ChannelId toChannel) {
-        return this.connectTo(toBlocks, fromChannel.name(), toChannel.toString());
-    }
-
-    /**
      * Connect this block to toBlock via channels with identical ids
       * @param toBlocks the block to connect to
      * @param channelIds the id of both the fromChannel and toChannel
@@ -155,13 +133,6 @@ public abstract class AbstractBlock implements Block {
         return this;
     }
 
-    /**
-     * @deprecated
-     */
-    @Override
-    public Channel getChannel(ChannelId channelId) {
-        return this.getChannel(channelId.name());
-    }
 
     /**
      * Get channel with given id

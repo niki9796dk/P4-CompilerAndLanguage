@@ -1,7 +1,6 @@
 package CodeGeneration.DataFlow.Operations;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
-import CodeGeneration.DataFlow.Network.ChannelId;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
@@ -12,6 +11,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
 
     /**
      * Get result of operation
+     *
      * @return result as float
      */
     @Override
@@ -35,6 +35,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
 
     /**
      * Checks if operation is ready to be performed
+     *
      * @return boolean value of whether all operation inputs are ready
      */
     private boolean isReady() {
@@ -48,14 +49,8 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
     }
 
     /**
-     * @deprecated
-     */
-    protected float getInputValue(ChannelId channelId) {
-        return this.getChannel(channelId).getResult();
-    }
-
-    /**
      * Get the output of the given channel
+     *
      * @param channelId channel to get output from
      * @return float value from output of channel
      */
