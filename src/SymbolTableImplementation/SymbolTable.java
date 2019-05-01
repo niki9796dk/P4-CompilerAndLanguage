@@ -28,7 +28,7 @@ public class SymbolTable implements SymbolTableInterface {
      */
     private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
             // Matrix arithmetic operations
-            "Addition", "Multiplication", "Subtraction",
+            "Multiplication",
             // Unitwise Arithmetic operations
             "_Addition", "_Multiplication", "_Subtraction", "_Division",
             // Activation functions

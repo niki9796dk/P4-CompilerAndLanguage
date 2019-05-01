@@ -6,7 +6,6 @@ import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
-import LinearAlgebra.Statics.Matrices;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
@@ -33,7 +32,7 @@ public class main {
         // Set input B connect 2
         Source input2 = new Source(new MatrixBuilder()
                 .addRow(2, 2)
-                .addRow(2, 2)
+                .addRow(3, 2)
                 .buildDenseMatrix()
         );
         B.setSource(input2);
