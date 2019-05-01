@@ -39,8 +39,3 @@ public abstract class BinaryOperation extends Operation {
 
     protected abstract Matrix operation(Matrix in1, Matrix in2);
 }
-
-// Binary matrix operation ("Addition", "Multiplication", "Subtraction")
-// Binary unitwise operation ("_Addition", "_Multiplication", "_Subtraction", "_Division")
-// unary matrix operation ("Transpose")
-// Unary unitwise operation ("_Sigmoid", "_Tanh", "_Relu")
