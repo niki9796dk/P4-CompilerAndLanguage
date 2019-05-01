@@ -1,22 +1,21 @@
 package CodeGeneration.DataFlow.Network;
 
-import CodeGeneration.DataFlow.Network.Interfaces.Gates;
-import CodeGeneration.DataFlow.Network.Interfaces.Operations;
-import CodeGeneration.DataFlow.Network.Interfaces.SignalNodes;
+import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Gate implements Gates {
+public class AbstractChannel implements Channel {
     private boolean ready = false;
-    private SignalNodes source;
-    private List<SignalNodes> targets = new ArrayList<>();
+    private SignalNode source;
+    private List<SignalNode> targets = new ArrayList<>();
 
-    public void setSource(SignalNodes gate){
+    public void setSource(SignalNode gate){
         this.source = gate;
     }
 
-    public void addTarget(SignalNodes gate){
+    public void addTarget(SignalNode gate){
         this.targets.add(gate);
     }
 
@@ -32,7 +31,7 @@ public class Gate implements Gates {
 
     @Override
     public void signalReady() {
-        for (SignalNodes target : this.targets) {
+        for (SignalNode target : this.targets) {
             target.acceptReadySignal();
         }
     }

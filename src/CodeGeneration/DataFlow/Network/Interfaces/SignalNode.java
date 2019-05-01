@@ -1,6 +1,6 @@
 package CodeGeneration.DataFlow.Network.Interfaces;
 
-public interface SignalNodes extends Nodes {
+public interface SignalNode extends Node {
     void acceptReadySignal();
     float getValue();
 }

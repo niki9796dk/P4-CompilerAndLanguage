@@ -1,37 +1,37 @@
 package CodeGeneration.DataFlow.Operations;
 
-import CodeGeneration.DataFlow.Network.Gate;
-import CodeGeneration.DataFlow.Network.GateId;
-import CodeGeneration.DataFlow.Network.Interfaces.Gates;
+import CodeGeneration.DataFlow.Network.AbstractChannel;
+import CodeGeneration.DataFlow.Network.ChannelId;
+import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 
 abstract class BinaryOperation extends Operation {
     BinaryOperation() {
         // Define inputs
-        Gates A = new Gate();
-        Gates B = new Gate();
+        Channel A = new AbstractChannel();
+        Channel B = new AbstractChannel();
         A.addTarget(this);
         B.addTarget(this);
 
         // Define outputs
-        Gates C = new Gate();
+        Channel C = new AbstractChannel();
         C.setSource(this);
 
         // Store gates
-        this.inputGates.put(GateId.A, A);
-        this.inputGates.put(GateId.B, B);
-
-        this.outputGates.put(GateId.C, C);
+        this
+                .addInput(ChannelId.A, A)
+                .addInput(ChannelId.B, B)
+                .addOutput(ChannelId.C, C);
     }
 
     @Override
-    Gates getOutputGate() {
-        return this.getGate(GateId.C);
+    Channel getOutputGate() {
+        return this.getGate(ChannelId.C);
     }
 
     @Override
     public void performOperation() {
-        float a = this.getInputValue(GateId.A);
-        float b = this.getInputValue(GateId.B);
+        float a = this.getInputValue(ChannelId.A);
+        float b = this.getInputValue(ChannelId.B);
 
         this.value = operation(a, b);
     }
