@@ -8,9 +8,9 @@ class OperationTest {
 
     @Test
     void isValid() {
-        assertTrue(Operation.isValid("Addition"));
+        assertTrue(Operation.isValid("_Addition"));
         assertTrue(Operation.isValid("Multiplication"));
-        assertTrue(Operation.isValid("Subtraction"));
+        assertTrue(Operation.isValid("_Subtraction"));
         assertTrue(Operation.isValid("_Addition"));
         assertTrue(Operation.isValid("_Multiplication"));
         assertTrue(Operation.isValid("_Subtraction"));

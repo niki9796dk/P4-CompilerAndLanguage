@@ -7,9 +7,9 @@ import java.util.HashMap;
  */
 public enum Operation {
     @SuppressWarnings("unused")
-    ADDITION("Addition"),
+    ADDITION("_Addition"),
     MULTIPLICATION("Multiplication"),
-    SUBTRACTION("Subtraction"),
+    SUBTRACTION("_Subtraction"),
     ELEMENTWISE_ADDITION("_Addition"),
     ELEMENTWISE_MULTIPLICATION("_Multiplication"),
     ELEMENTWISE_SUBTRACTION("_Subtraction"),

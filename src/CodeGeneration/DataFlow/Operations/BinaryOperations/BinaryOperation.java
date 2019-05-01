@@ -6,6 +6,9 @@ import CodeGeneration.DataFlow.Operations.Operation;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public abstract class BinaryOperation extends Operation {
+    /**
+     * Operation constructor that makes 2 input-channels which is the operands, and an output-channel which is the result
+     */
     protected BinaryOperation() {
         // Define inputs
         Channel in1 = new ListChannel();
@@ -23,6 +26,9 @@ public abstract class BinaryOperation extends Operation {
                 .addOutput("out", out);
     }
 
+    /**
+     * Run the specified operation on in1 and in2 and update result field
+     */
     @Override
     public void performOperation() {
         Matrix in1 = this.getInputValue("in1");
@@ -32,6 +38,10 @@ public abstract class BinaryOperation extends Operation {
         print.say("performOperation() -> result = " + this.result);
     }
 
+    /**
+     * Get channel with specified id 'out'
+     * @return output channel
+     */
     @Override
     public Channel getOutputChannel() {
         return this.getChannel("out");
