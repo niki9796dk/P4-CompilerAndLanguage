@@ -1,4 +1,4 @@
-package SymbolTableImplementation.Datastructures;
+package SemanticAnalysis.Datastructures;
 
 import java.util.HashSet;
 import java.util.Stack;

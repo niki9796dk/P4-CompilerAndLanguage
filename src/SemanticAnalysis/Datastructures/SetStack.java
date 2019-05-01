@@ -1,4 +1,4 @@
-package SymbolTableImplementation.Datastructures;
+package SemanticAnalysis.Datastructures;
 
 public interface SetStack<T> {
     boolean push(T t);

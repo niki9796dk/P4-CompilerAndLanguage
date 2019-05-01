@@ -7,8 +7,11 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
+import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
+import SemanticAnalysis.Datastructures.HashSetStack;
+import SemanticAnalysis.Datastructures.SetStack;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.SymbolTableInterface;
 import TypeChecker.Exceptions.ParamsInconsistencyException;
@@ -20,7 +23,14 @@ public class SemanticAnalysisVisitor implements Visitor {
 
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
-        NamedNode node = (NamedNode) abstractNode;
+
+        NamedNode node = (abstractNode instanceof NamedNode) ? (NamedNode) abstractNode : null;
+        NamedNode namedIdNode = (abstractNode instanceof NamedIdNode) ? (NamedIdNode) abstractNode : null;
+
+        // If needed, typecast
+        String id = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : "no id";
+
+        SetStack<String> callStack = new HashSetStack<>();
 
         switch (node.getNodeEnum()) {
             // No action enums
@@ -31,6 +41,8 @@ public class SemanticAnalysisVisitor implements Visitor {
             case GROUP:
             case ASSIGN:
             case BUILD:
+                buildRecursionCheck(node, callStack);
+                break;
             case PROCEDURE_CALL:
             case PARAMS:
             case DRAW:
@@ -95,6 +107,26 @@ public class SemanticAnalysisVisitor implements Visitor {
 
             default:
                 throw new UnexpectedNodeException(node);
+        }
+    }
+
+
+    private void buildRecursionCheck(NamedNode node, SetStack<String> callStack){
+        StringBuilder builder = new StringBuilder();
+        AbstractNode childNode = node.findFirstChildOfClass(ParamsNode.class).getChild();
+
+        builder.append(node.getName());
+        while (childNode.getSib() != null) {
+            if(childNode instanceof NamedIdNode){
+                builder.append(childNode.getName() + ((NamedIdNode) childNode).getId());
+            } else if (childNode instanceof NamedNode){
+                builder.append(childNode.getName());
+            }
+            childNode = childNode.getSib();
+        }
+
+        if (!callStack.push(builder.toString())){
+            throw new RecursiveBlockException(childNode.toString());
         }
     }
 }
