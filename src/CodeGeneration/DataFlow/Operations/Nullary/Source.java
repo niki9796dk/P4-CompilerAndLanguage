@@ -22,12 +22,6 @@ public class Source extends NullaryOperation {
         return this.source;
     }
 
-    //Should be called when there is an output
-    @Override
-    public void acceptReadySignal() {
-        super.acceptReadySignal();
-    }
-
     @Override
     public boolean hasNoInput() {
         return true;

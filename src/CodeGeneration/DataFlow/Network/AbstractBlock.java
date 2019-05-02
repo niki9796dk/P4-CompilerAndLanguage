@@ -23,7 +23,7 @@ public abstract class AbstractBlock implements Block {
      * @return a reference to this object.
      */
     public AbstractBlock addNewInputLabel(String id, Channel c) {
-        print.say("New input: " + id);
+        //print.say("New input: " + id);
 
         if(c == null)
             throw new NullPointerException("input c is null!");
