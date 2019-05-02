@@ -4,9 +4,11 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyOutChannelNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
@@ -65,9 +67,6 @@ public class SemanticAnalysisVisitor implements Visitor {
 
             // No action enums
             case GROUP:
-                this.verifyGroupConnection(node, node.getSib());
-                break;
-
             case ASSIGN:
                 break;
 
@@ -89,6 +88,7 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             case CHAIN:
+                this.verifyChain((ChainNode) node);
                 break;
 
             // Channels
@@ -169,6 +169,40 @@ public class SemanticAnalysisVisitor implements Visitor {
     }
 
     /**
+     * Verify that every child connection within a chain.
+     * @param chainNode The chain node to verify.
+     */
+    private void verifyChain(ChainNode chainNode) {
+        AbstractNode child = chainNode.getChild();
+
+        while (child.getSib() != null) {
+            this.verifyConnection(child, child.getSib());
+            child = child.getSib();
+        }
+    }
+
+    /**
+     * Verifies that a connection between two nodes, is acceptable in terms of channel sizes.
+     * @param leftNode The left side node of the chain: ->
+     * @param rightNode The right side node of the chain: ->
+     */
+    private void verifyConnection(AbstractNode leftNode, AbstractNode rightNode) {
+        // If left node is a group, then verify it as a group connection
+        if (leftNode instanceof GroupNode) {
+            this.verifyGroupConnection(leftNode, rightNode);
+
+        } else {
+            // Else verify it as an ordinary connection
+            int leftOut = this.countOutChannels(leftNode);
+            int rightIn = this.countInChannels(rightNode);
+
+            if (leftOut != 1 || rightIn != 1) {
+                throw new SemanticProblemException("A chain was used on an element with more than 1 in/out channel: " + leftNode + "[" + leftOut + "] -> " + rightNode + "[" + rightIn + "]");
+            }
+        }
+    }
+
+    /**
      * Verifies that a group connection size matches whatever it connects to.
      * @param groupNode The group node, from which we compare
      * @param rightNode The right side node, from which the group node connects to.
@@ -211,10 +245,54 @@ public class SemanticAnalysisVisitor implements Visitor {
      * @return The amount of in channels in the given node.
      */
     private int countInChannels(AbstractNode rightNode) {
-        if (this.typeSystem.getSuperTypeOfNode(rightNode, this.currentBlockScope, this.currentSubScope) == NodeEnum.OPERATION_TYPE) {
-            return this.countInChannelsOfOperation(rightNode);
-        } else {
-            return this.countInChannelsOfBlock(rightNode);
+        NodeEnum superType = this.typeSystem.getSuperTypeOfNode(rightNode, this.currentBlockScope, this.currentSubScope);
+
+        switch (superType) {
+            case OPERATION_TYPE:
+                return this.countInChannelsOfOperation(rightNode);
+
+            case BLOCK_TYPE:
+                return this.countInChannelsOfBlock(rightNode);
+
+            case SOURCE_TYPE:
+                return 0;
+
+            case CHANNEL_IN_TYPE:
+            case CHANNEL_OUT_TYPE:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
+                return 1;
+
+            default:
+                throw new UnexpectedNodeException(superType);
+        }
+
+    }
+
+    /**
+     * Counts the amount of in channels in a given right side node, of either type operation or block.
+     * @param rightNode The node to count channels from
+     * @return The amount of in channels in the given node.
+     */
+    private int countOutChannels(AbstractNode rightNode) {
+        NodeEnum superType = this.typeSystem.getSuperTypeOfNode(rightNode, this.currentBlockScope, this.currentSubScope);
+
+        switch (superType) {
+            case OPERATION_TYPE:
+                return this.countOutChannelsOfOperation(rightNode);
+
+            case BLOCK_TYPE:
+                return this.countOutChannelsOfBlock(rightNode);
+
+            case SOURCE_TYPE:
+            case CHANNEL_IN_TYPE:
+            case CHANNEL_OUT_TYPE:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
+                return 1;
+
+            default:
+                throw new UnexpectedNodeException(superType);
         }
     }
 
@@ -229,28 +307,40 @@ public class SemanticAnalysisVisitor implements Visitor {
         // Get the channel declaration node of the block
         ChannelDeclarationsNode channelDeclaNode = (ChannelDeclarationsNode) this.symbolTableInterface.getBlockScope(blockId).getChannelDeclarationScope().getNode();
 
-        // Loop all children (Channel declarations), and if it's an input channel, increment the counter
-        AbstractNode child = channelDeclaNode.getChild();
-
-        int inChannelCount = 0;
-
-        while (child != null) {
-            if (child instanceof MyInChannelNode) {
-                inChannelCount++;
-            }
-            child = child.getSib();
-        }
-
-        // Return the amount of in channels.
-        return inChannelCount;
+        // Count the amount of children of type MyInChannel
+        return channelDeclaNode.countChildrenInstanceOf(MyInChannelNode.class);
     }
 
     /**
-     * Counts and return the amount of channels within an operation.
+     * Counts the amount of mychannel:out declaration is present in a block, and returns that integer value.
+     * @param rightNode The block, from which should be counted from.
+     * @return The amount of mychannel:out declarations in the given block
+     */
+    private int countOutChannelsOfBlock(AbstractNode rightNode) {
+        String blockId = this.typeSystem.getSubTypeOfNode(rightNode, this.currentBlockScope, this.currentSubScope);
+
+        // Get the channel declaration node of the block
+        ChannelDeclarationsNode channelDeclaNode = (ChannelDeclarationsNode) this.symbolTableInterface.getBlockScope(blockId).getChannelDeclarationScope().getNode();
+
+        // Count the amount of children of type MyInChannel
+        return channelDeclaNode.countChildrenInstanceOf(MyOutChannelNode.class);
+    }
+
+    /**
+     * Counts and return the amount of in channels within an operation.
      * @param rightNode The operation node
      * @return The amount of in channels within the operation.
      */
     private int countInChannelsOfOperation(AbstractNode rightNode) {
         return 2; // TODO: Connect this to some definition of operations.
+    }
+
+    /**
+     * Counts and return the amount of out channels within an operation.
+     * @param rightNode The operation node
+     * @return The amount of out channels within the operation.
+     */
+    private int countOutChannelsOfOperation(AbstractNode rightNode) {
+        return 1; // TODO: Connect this to some definition of operations.
     }
 }

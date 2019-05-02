@@ -78,6 +78,12 @@ public interface Node {
      */
     int countChildren();
 
+    /**
+     * Counts the amount of children of a specific class.
+     * @param childClass The children class which is to be counted.
+     * @return The amount of children of the specified class.
+     */
+    int countChildrenInstanceOf(Class childClass);
 
     /**
      * Get the first sibling of the node.
