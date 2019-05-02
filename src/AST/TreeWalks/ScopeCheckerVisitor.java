@@ -7,13 +7,10 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.NonexistentBlockException;
-import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.*;
-
-import java.util.concurrent.RecursiveAction;
 
 public class ScopeCheckerVisitor implements Visitor {
 
@@ -56,23 +53,10 @@ public class ScopeCheckerVisitor implements Visitor {
                 break;
             case DRAW:
             case BUILD:
-                // The given id is valid IF:
-                // it is an existent block, AND not itself,
-                if ((this.symbolTableInterface.getBlockScope(id) != null
-                        && !(this.symbolTableInterface.getBlockScope(id).getId().equals(childId))
-                        // or it is an operation,
-                        || this.symbolTableInterface.isPredefinedOperation(id)
-                        // or it is a source,
-                        || this.symbolTableInterface.isPredefinedSource(id))
-                        // or it is a variable in this scope, THAT IS a blueprint, AND not itself
-                        || this.currentSubScope.getVariable(id) != null
-                        && this.currentSubScope.getVariable(id).getSuperType() == NodeEnum.BLUEPRINT_TYPE
-                        && !(this.currentSubScope.getVariable(id).getSubType(node.getNumber()).getName().equals(node.getName())))
-                {
-                    // Nothing
-                } else {
+                if (this.isNotADefinedBuildableElement(id) && this.isNotLocalBlueprintVariable(id)) {
                     throw new NonexistentBlockException(node.toString());
                 }
+
                 break;
 
             case BLOCK:
@@ -84,7 +68,7 @@ public class ScopeCheckerVisitor implements Visitor {
                 break;
 
             case PROCEDURE_CALL:
-                SelectorNode childSelector = (SelectorNode) node.findFirstChildOfClass(SelectorNode.class);
+                SelectorNode childSelector = node.findFirstChildOfClass(SelectorNode.class);
 
                 Scope scope = this.currentBlockScope.getProcedureScope(childSelector.getId());
                 if (scope == null) {
@@ -154,6 +138,27 @@ public class ScopeCheckerVisitor implements Visitor {
 
             default:
                 throw new UnexpectedNodeException(node);
+        }
+    }
+
+    private boolean isNotADefinedBuildableElement(String buildId) {
+        boolean isADefinedBlock = this.symbolTableInterface.getBlockScope(buildId) != null;
+        boolean isPredefinedOperation = this.symbolTableInterface.isPredefinedOperation(buildId);
+        boolean isPredefinedSource = this.symbolTableInterface.isPredefinedSource(buildId);
+
+        return !(isADefinedBlock || isPredefinedOperation || isPredefinedSource);
+    }
+
+    private boolean isNotLocalBlueprintVariable(String buildId) {
+        VariableEntry localVariable = this.currentSubScope.getVariable(buildId);
+
+        // Check if the build ID is a local variable
+        if (localVariable != null) {
+            // If it is, check that it's not of blueprint type.
+            return localVariable.getSuperType() != NodeEnum.BLUEPRINT_TYPE;
+
+        } else {
+            return true;
         }
     }
 

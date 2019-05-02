@@ -1,0 +1,17 @@
+block Builder {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        block fakeBlock = build Test([25, 10], draw Builder);
+    }
+}
+
+block Test {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint (blueprint blue, size s) {
+        this.in -> this.out;
+    }
+}

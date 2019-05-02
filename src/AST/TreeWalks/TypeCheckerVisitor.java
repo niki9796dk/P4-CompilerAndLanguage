@@ -4,6 +4,7 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
@@ -165,8 +166,8 @@ public class TypeCheckerVisitor implements Visitor {
         }
 
         // Get actual and formal parameter list
-        ParamsNode actualParams = (ParamsNode) callerNode.findFirstChildOfClass(ParamsNode.class);
-        ParamsNode formalParams = (ParamsNode) calleeNode.findFirstChildOfClass(ParamsNode.class);
+        ParamsNode actualParams = callerNode.findFirstChildOfClass(ParamsNode.class);
+        ParamsNode formalParams = calleeNode.findFirstChildOfClass(ParamsNode.class);
 
         // Compare param lists
         this.typeCheckParamLists(callerNode, formalParams, actualParams);
@@ -182,7 +183,7 @@ public class TypeCheckerVisitor implements Visitor {
 
         if (callerNode instanceof ProcedureCallNode) {
             // Get the callee ID
-            String nodeId = ((NamedIdNode) callerNode.findFirstChildOfClass(SelectorNode.class)).getId();
+            String nodeId = callerNode.findFirstChildOfClass(SelectorNode.class).getId();
 
             return this.typeSystem.getProcedure(currentBlockScope, nodeId);
 
@@ -194,9 +195,9 @@ public class TypeCheckerVisitor implements Visitor {
             boolean isNotOperation = !this.typeSystem.getSymbolTable().isPredefinedOperation(nodeId);
             boolean isNotSource = !this.typeSystem.getSymbolTable().isPredefinedSource(nodeId);
 
-            // Return the block node, if the callee is a block
+            // Return the block blueprint node, if the callee is a block
             if (isNotOperation && isNotSource) {
-                return this.typeSystem.getBlock(nodeId);
+                return this.typeSystem.getBlock(nodeId).findFirstChildOfClass(BlueprintNode.class);
             }
         }
 
@@ -259,7 +260,7 @@ public class TypeCheckerVisitor implements Visitor {
 
         } else if (callerOrCalleeIsMissingParams) {
             // Throw an exception, since one of the params is undefined.
-            throw new ShouldNotHappenException("Only one param was defined!: " + node);
+            throw new TypeInconsistencyException("Only one param was defined " + node + ": Formal: " + formalParams + " vs. " + "Actual: " + actualParams);
 
         }
         // else {
