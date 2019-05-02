@@ -1,5 +1,6 @@
 package CodeGeneration.DataFlow.Operations.UnaryOperations;
 
+import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Operations.Operation;
@@ -18,15 +19,18 @@ public abstract class UnaryOperation extends Operation {
 
         // Store channels
         this
-                .addInput("in", in)
-                .addOutput("out", out);
+                .addNewInputLabel("in", in)
+                .addNewOutputLabel("out", out);
     }
 
     @Override
     public void performOperation() {
-        Matrix in1 = this.getInputValue("in1");
+        Matrix in = this.getInputValue("in");
 
-        this.result = operation(in1);
+        if(in == null)
+            throw new NullPointerException("in is null!");
+
+        this.result = operation(in);
         print.say("performOperation() -> result = " + this.result);
     }
 
@@ -43,5 +47,12 @@ public abstract class UnaryOperation extends Operation {
         b.compLoop((r,c,v) -> b.setEntry(r,c, function.function(in.getEntry(r,c))));
 
         return b.buildDenseMatrix();
+    }
+
+    @Override
+    public AbstractBlock addNewInputLabel(String id, Channel c) {
+        if(!id.equals("in"))
+            throw new IllegalArgumentException("Input channel has to be in for UnaryOperation objects!");
+        return super.addNewInputLabel(id, c);
     }
 }

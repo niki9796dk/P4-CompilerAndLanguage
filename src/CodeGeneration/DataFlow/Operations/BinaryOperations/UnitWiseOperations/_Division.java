@@ -13,7 +13,6 @@ public class _Division extends BinaryOperation {
      */
     @Override
     protected Matrix operation(Matrix in1, Matrix in2) {
-        MatrixBuilder out = new MatrixBuilder(in1.getRows(), in1.getColumns(), true);
-        return out.divisionToEntries(in2).build();
+        return in1.compDivision(in2);
     }
 }

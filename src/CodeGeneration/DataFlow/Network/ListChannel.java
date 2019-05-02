@@ -29,18 +29,32 @@ public class ListChannel implements Channel {
     public ListChannel() {
     }
 
-    @Deprecated
-    public void setSource(SignalNode channel){
+    public ListChannel setSource(SignalNode channel){
+
+        if(channel == null)
+            throw new NullPointerException("Channel is null!");
+
         this.source = channel;
+
+        if(channel.hasNoInput() && false)
+            this.acceptReadySignal();
+
+        return this;
     }
 
-    public void addTarget(SignalNode channel){
+    public ListChannel addTarget(SignalNode channel){
         this.targets.add(channel);
+        return this;
     }
 
     @Override
     public Matrix getResult() {
-        return this.source.getResult();
+        Matrix result = this.source.getResult();
+
+        if(result == null)
+            throw new NullPointerException("Result is null!");
+
+        return result;
     }
 
     @Override
@@ -59,5 +73,10 @@ public class ListChannel implements Channel {
     public void acceptReadySignal() {
         this.ready = true;  // Store ready state for later recall
         this.signalReady(); // Signal all outputs that their input is now ready.
+    }
+
+    @Override
+    public SignalNode getSource() {
+        return source;
     }
 }

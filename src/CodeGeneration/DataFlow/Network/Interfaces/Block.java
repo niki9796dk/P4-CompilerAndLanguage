@@ -5,10 +5,6 @@ public interface Block extends Node {
 
     boolean hasOutputChannel(String id);
 
-    Block connectAll(Block toBlocks);
-
-    Block connectTo(Block toBlocks, String channelIds);
-
     Block connectTo(Block toBlock, String fromChannel, String toChannel);
 
     Channel getChannel(String channelId);

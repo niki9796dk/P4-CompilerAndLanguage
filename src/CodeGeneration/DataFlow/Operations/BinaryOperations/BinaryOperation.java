@@ -1,5 +1,6 @@
 package CodeGeneration.DataFlow.Operations.BinaryOperations;
 
+import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Operations.Operation;
@@ -11,19 +12,17 @@ public abstract class BinaryOperation extends Operation {
      */
     protected BinaryOperation() {
         // Define inputs
-        Channel in1 = new ListChannel();
-        Channel in2 = new ListChannel();
-        in1.addTarget(this);
-        in2.addTarget(this);
+        Channel in1 = new ListChannel().addTarget(this);
+        Channel in2 = new ListChannel().addTarget(this);
 
         // Define outputs
-        Channel out = new ListChannel(this);
+        Channel out = new ListChannel().setSource(this);
 
         // Store channels
         this
-                .addInput("in1", in1)
-                .addInput("in2", in2)
-                .addOutput("out", out);
+                .addNewInputLabel("in1", in1)
+                .addNewInputLabel("in2", in2)
+                .addNewOutputLabel("out", out);
     }
 
     /**
@@ -33,6 +32,12 @@ public abstract class BinaryOperation extends Operation {
     public void performOperation() {
         Matrix in1 = this.getInputValue("in1");
         Matrix in2 = this.getInputValue("in2");
+
+        if(in1 == null)
+            throw new NullPointerException("in1 is null!");
+
+        if(in2 == null)
+            throw new NullPointerException("in2 is null!");
 
         this.result = operation(in1, in2);
         print.say("performOperation() -> result = " + this.result);
@@ -48,4 +53,11 @@ public abstract class BinaryOperation extends Operation {
     }
 
     protected abstract Matrix operation(Matrix in1, Matrix in2);
+
+    @Override
+    public AbstractBlock addNewInputLabel(String id, Channel c) {
+        if(!id.equals("in1") && !id.equals("in2"))
+            throw new IllegalArgumentException("Input channel has to be in1 or in2 for BinaryOperation objects!");
+        return super.addNewInputLabel(id, c);
+    }
 }

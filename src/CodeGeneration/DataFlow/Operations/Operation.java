@@ -17,7 +17,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
      */
     @Override
     public Matrix getResult() {
-        print.say("getResult() -> this.result = " + this.result);
+        //print.say("getResult() -> this.result = " + this.result);
         return result;
     }
 
@@ -26,7 +26,8 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
      */
     @Override
     public void acceptReadySignal() {
-        if (isReady()) {                            // If all inputs are ready
+        print.say("acceptReadySignal()");
+        if (this.isReady()) {// If all inputs are ready
             this.performOperation();                // Then perform the operation
             this.getOutputChannel().signalReady();  // And signal that the output channel now is ready.
         }
@@ -53,7 +54,7 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
      * Get the output of the given channel
      *
      * @param channelId channel to get output from
-     * @return float value from output of channel
+     * @return Matrix value from output of channel
      */
     protected Matrix getInputValue(String channelId) {
         return this.getChannel(channelId).getResult();
