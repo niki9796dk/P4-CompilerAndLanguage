@@ -169,7 +169,7 @@ public class SemanticAnalysisVisitor implements Visitor {
     }
 
     /**
-     * Verify that every child connection within a chain.
+     * Verify every child connection within a chain.
      * @param chainNode The chain node to verify.
      */
     private void verifyChain(ChainNode chainNode) {

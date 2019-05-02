@@ -67,15 +67,9 @@ public class ScopeCheckerVisitor implements Visitor {
                         // or it is a variable in this scope, THAT IS a blueprint, AND not itself
                         || this.currentSubScope.getVariable(id) != null
                         && this.currentSubScope.getVariable(id).getSuperType() == NodeEnum.BLUEPRINT_TYPE
-                        && !(this.currentSubScope.getVariable(id)
-                        .getSubType(node
-                                .getNumber())
-                        .getName()
-                        .equals(node
-                                .getName())))
+                        && !(this.currentSubScope.getVariable(id).getSubType(node.getNumber()).getName().equals(node.getName())))
                 {
                     // Nothing
-                    System.out.println(node.getNumber());
                 } else {
                     throw new NonexistentBlockException(node.toString());
                 }
