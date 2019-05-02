@@ -332,7 +332,25 @@ public class SemanticAnalysisVisitor implements Visitor {
      * @return The amount of in channels within the operation.
      */
     private int countInChannelsOfOperation(AbstractNode rightNode) {
-        return 2; // TODO: Connect this to some definition of operations.
+        switch (this.typeSystem.getSubTypeOfNode(rightNode, this.currentBlockScope, this.currentSubScope)) {
+            case "Addition":
+            case "Multiplication":
+            case "Subtraction":
+            case "_Addition":
+            case "_Multiplication":
+            case "_Subtraction":
+            case "_Division":
+                return 2;
+
+            case "_Sigmoid":
+            case "_Tanh":
+            case "_Relu":
+            case "Transpose":
+                return 1;
+
+            default:
+                throw new ShouldNotHappenException("We were checking a non exsistent operation for it's channels: " + rightNode);
+        }
     }
 
     /**
