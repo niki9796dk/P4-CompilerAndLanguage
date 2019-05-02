@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A node representing a "block".
@@ -37,5 +38,19 @@ public class BlockNode extends NamedIdNode {
     @Override
     public String toString() {
         return "\n\n" + super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BlockNode)) return false;
+        BlockNode blockNode = (BlockNode) o;
+        return Objects.equals(this.getName(), blockNode.getName())
+                && Objects.equals(this.getId(), blockNode.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getName(), this.getId());
     }
 }

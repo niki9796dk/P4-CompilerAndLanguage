@@ -1,3 +1,12 @@
+block Main {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        this.in -> this.out;
+    }
+}
+
 block b5 {
 	mychannel:in input;
 	mychannel:out output;

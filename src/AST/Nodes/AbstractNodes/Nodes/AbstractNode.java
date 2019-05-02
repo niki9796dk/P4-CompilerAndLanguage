@@ -136,14 +136,14 @@ public abstract class AbstractNode implements Node {
      * @return First child of class 'childClass'.
      */
     @Override
-   public AbstractNode findFirstChildOfClass(Class childClass) {
+   public <T> T findFirstChildOfClass(Class<T> childClass) {
        AbstractNode child = this.getChild();
 
        while (child != null && !(childClass.isInstance(child))) {
             child = child.getSib();
        }
 
-       return child;
+       return (T) child;
    }
 
     /**
@@ -253,8 +253,10 @@ public abstract class AbstractNode implements Node {
    private void internWalk(int printLevel, Visitor v) {
       v.pre(printLevel, this);
 
-      for (AbstractNode c = child; c != null; c=c.mysib)
+      for (AbstractNode c = child; c != null; c=c.mysib) {
          c.internWalk(printLevel+1, v);
+      }
+
       v.post(printLevel, this);
    }
 

@@ -70,7 +70,7 @@ public interface Node {
      * @param childClass The expected child class
      * @return First child of class 'childClass'.
      */
-    AbstractNode findFirstChildOfClass(Class childClass);
+    <T> T findFirstChildOfClass(Class<T> childClass);
 
     /**
      * Counts the child nodes

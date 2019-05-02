@@ -7,7 +7,7 @@ block chain_15 {
 		block a = build Test();
 		block b = build Test();
 
-		(a) -> operation abc = build _Addition() -> this.output;
+		(a, b) -> operation abc = build _Addition() -> this.output;
 	}
 }
 
@@ -15,6 +15,8 @@ block chain_15 {
 block Test {
     mychannel:out output;
     mychannel:in input;
+
     blueprint() {
+        this.input -> this.output;
     }
 }
