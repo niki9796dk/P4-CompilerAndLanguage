@@ -1,11 +1,16 @@
 package SemanticAnalysis;
 
+import SemanticAnalysis.Exceptions.UnusedChannelException;
+
 import java.util.ArrayList;
 
 public class FlowChecker {
 
+    // Fields
     private ArrayList<String> channels;
+    private ArrayList<String> connected;
 
+    // Constructors
     public FlowChecker() {
         this.channels = new ArrayList<>();
     }
@@ -14,13 +19,25 @@ public class FlowChecker {
         this.channels = channels;
     }
 
-    // Get all blocks
+    public boolean check() throws UnusedChannelException {
+        // that all channels are used
+        for (String channel : channels) {
+            if (!connected.contains(channel)) {
+                throw new UnusedChannelException();
+            }
+        }
 
-    // Get all connections
+        // that a channel only is used once
 
-    // Make sure every channel has been accounted for.
+        return true;
+    }
 
+    // Getters
     public ArrayList<String> getChannels() {
         return channels;
+    }
+
+    public ArrayList<String> getConnected() {
+        return connected;
     }
 }

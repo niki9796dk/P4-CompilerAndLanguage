@@ -12,10 +12,10 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyOutChannelNode;
 import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
+import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SemanticAnalysis.FlowChecker;
 import SemanticAnalysis.Datastructures.HashSetStack;
 import SemanticAnalysis.Datastructures.SetStack;
-import SemanticAnalysis.SemanticProblemException;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.SymbolTableInterface;
 import TypeChecker.Exceptions.ShouldNotHappenException;
@@ -93,6 +93,18 @@ public class SemanticAnalysisVisitor implements Visitor {
 
             case CHAIN:
                 this.verifyChain((ChainNode) node);
+                AbstractNode childNode = ((NamedIdNode) node).getChild();
+
+                // Iterate through all selectors
+                do {
+                    // Exclude this keyword.
+                    while(childNode.getChild() != null) {
+                        childNode = childNode.getChild();
+                    }
+
+                    flowChecker.getConnected().add(((NamedIdNode) childNode).getId());
+                } while (childNode.getSib() != null);
+
                 break;
 
             // Channels

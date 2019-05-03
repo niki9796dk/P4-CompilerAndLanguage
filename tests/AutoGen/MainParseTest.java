@@ -1,6 +1,6 @@
 package AutoGen;
 
-import SemanticAnalysis.SemanticProblemException;
+import SemanticAnalysis.Exceptions.SemanticProblemException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
 import org.junit.jupiter.api.*;
 
