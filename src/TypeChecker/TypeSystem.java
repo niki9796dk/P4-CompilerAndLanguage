@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
@@ -74,8 +75,8 @@ public class TypeSystem {
      */
     public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope, String errorMsgPrefix) {
         // Get the types of both left and right node.
-        NodeEnum leftNodeType = this.getTypeOfNode(leftNode, currentBlockScope, currentSubScope);
-        NodeEnum rightNodeType = this.getTypeOfNode(rightNode, currentBlockScope, currentSubScope);
+        NodeEnum leftNodeType = this.getSuperTypeOfNode(leftNode, currentBlockScope, currentSubScope);
+        NodeEnum rightNodeType = this.getSuperTypeOfNode(rightNode, currentBlockScope, currentSubScope);
 
         // Then compare them.
         if (leftNodeType != rightNodeType) {
@@ -84,13 +85,126 @@ public class TypeSystem {
     }
 
     /**
-     * Evaluates the type of a given node, and returns that type in the form of a NodeEnum.
+     * Evaluates the sub type of a given node, and returns that type in the form of a NodeEnum.
      * @param node The node to evaluate
      * @param blockScopeId The current block scope to type check from
      * @param subScopeId The current sub scope to type check from
      * @return (NodeEnum|null) The type of the given node, as a NodeEnum. Returns null, if the given node does not have a designated type.
      */
-    public NodeEnum getTypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
+    public String getSubTypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
+        NumberedNode numberedNode = (NumberedNode) node;
+        NamedIdNode namedIdNode = (node instanceof NamedIdNode) ? (NamedIdNode) node : null;
+
+        switch (numberedNode.getNodeEnum()) {
+            case ROOT:
+            case CHAIN:
+            case PROCEDURE_CALL:
+            case PARAMS:
+            case BLOCK:
+            case BLUEPRINT:
+            case PROCEDURE:
+            case CHANNEL_DECLARATIONS:
+            case GROUP:
+                return null; // These nodes don't have a sub type.
+
+            case SIZE_TYPE:
+            case BLOCK_TYPE:
+            case SOURCE_TYPE:
+            case BLUEPRINT_TYPE:
+            case OPERATION_TYPE:
+                return null; // These nodes, while they might have super type, would never actually have a sub type, since they are declarations.
+
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
+            case CHANNEL_OUT_TYPE:
+            case CHANNEL_IN_TYPE:
+                return numberedNode.getNodeEnum().toString();
+
+
+            case SIZE:
+                return NodeEnum.SIZE_TYPE.toString();
+
+            case DRAW:
+                return namedIdNode.getId();
+
+            case BUILD:
+                return this.getSubtypeOfBuildStatement((BuildNode) node, blockScopeId, subScopeId);
+
+            case ASSIGN:
+                return this.getSubTypeOfNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+
+            case SELECTOR:
+                return this.getSubTypeOfSelector((SelectorNode) node, blockScopeId, subScopeId);
+
+            default:
+                throw new UnexpectedNodeException(numberedNode.getNodeEnum());
+        }
+    }
+
+    /**
+     * Gets and returns the sub type of a given build statement.
+     * @param node The build node
+     * @param blockScopeId The current block scope, from which we will compare from
+     * @param subScopeId The current sub scope, from which we will compare from
+     * @return The sub type of the build statement.
+     */
+    private String getSubtypeOfBuildStatement(BuildNode node, String blockScopeId, String subScopeId) {
+        String buildId = node.getId();
+
+        boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
+        boolean isPredefinedSource = this.symbolTable.isPredefinedSource(buildId);
+
+        if (isPredefinedOperation || isPredefinedSource) {
+            return buildId;
+
+        } else {
+            boolean isLocalVariable = this.getVariableFromIdentifier(buildId, blockScopeId, subScopeId) != null;
+            boolean isDefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
+
+            // The order here is relevant! We should always check the local scope before the set of block scopes!
+            if (isLocalVariable) {
+                // Convert the identifier into an selector
+                SelectorNode selectorNode = new SelectorNode(buildId);
+                selectorNode.setNumber(node.getNumber());
+
+                // Get the sub type of the selector
+                return this.getSubTypeOfNode(selectorNode, blockScopeId, subScopeId);
+
+            } else if (isDefinedBlock) {
+                return buildId;
+
+            } else {
+                throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker!");
+            }
+        }
+    }
+
+    private String getSubTypeOfSelector(SelectorNode selectorNode, String blockScope, String subScope) {
+        boolean hasSelectorChild = selectorNode.getChild() instanceof SelectorNode;
+        boolean isThis = "this".equals(selectorNode.getId());
+
+        if (isThis || hasSelectorChild) {
+            return this.getSuperTypeOfNode(selectorNode, blockScope, subScope).toString();
+
+        } else {
+            VariableEntry selectorVariable = this.getVariableFromIdentifier(selectorNode.getId(), blockScope, subScope);
+
+            if (selectorVariable.getNode() instanceof SelectorNode) {
+                return this.getSubTypeOfSelector((SelectorNode) selectorVariable.getNode(), blockScope, subScope);
+            } else {
+                return selectorVariable.getSubType(selectorNode.getNumber()).getId();
+            }
+        }
+    }
+
+    /**
+     * Evaluates the super type of a given node, and returns that type in the form of a NodeEnum.
+     * @param node The node to evaluate
+     * @param blockScopeId The current block scope to type check from
+     * @param subScopeId The current sub scope to type check from
+     * @return (NodeEnum|null) The type of the given node, as a NodeEnum. Returns null, if the given node does not have a designated type.
+     */
+    public NodeEnum getSuperTypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
         NumberedNode numberedNode = (NumberedNode) node;
 
         switch (numberedNode.getNodeEnum()) {
@@ -126,10 +240,10 @@ public class TypeSystem {
                 return this.getTypeOfBuildStatement(node);
 
             case ASSIGN:
-                return this.getTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+                return this.getSuperTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
 
             case SELECTOR:
-                return this.getTypeOfSelector(node, blockScopeId, subScopeId);
+                return this.getSuperTypeOfSelector(node, blockScopeId, subScopeId);
 
             default:
                 throw new UnexpectedNodeException(numberedNode.getNodeEnum());
@@ -162,7 +276,7 @@ public class TypeSystem {
      * @param subScopeId The current sub scope to evaluate from
      * @return (NodeEnum|null) The type of node, the selector is pointing at.
      */
-    private NodeEnum getTypeOfSelector(AbstractNode node, String blockScopeId, String subScopeId) {
+    private NodeEnum getSuperTypeOfSelector(AbstractNode node, String blockScopeId, String subScopeId) {
         String nodeId = this.getIdFromNode(node);
 
         // Evaluate booleans

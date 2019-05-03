@@ -55,7 +55,7 @@ block B4 {
     mychannel:out out;
 
     blueprint(){
-        operation o1 = build Addition();
+        operation o1 = build _Addition();
 
         (this.in, this.in) -> o1 -> this.out;
     }
@@ -66,7 +66,7 @@ block B5 {
     mychannel:out out;
 
     blueprint(blueprint x){
-        operation o1 = build Addition();
+        operation o1 = build _Addition();
         block b4 = build x();
 
         this.in -> b4;

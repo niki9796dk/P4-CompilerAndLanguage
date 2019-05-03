@@ -1,8 +1,0 @@
-block recursive_01 {
-    mychannel:in in;
-	mychannel:out out;
-
-	blueprint() {
-        in -> build recursive_01() -> out; 
-	}
-}
