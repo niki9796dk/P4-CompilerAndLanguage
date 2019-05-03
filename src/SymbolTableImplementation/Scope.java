@@ -41,6 +41,17 @@ public class Scope {
     }
 
     /**
+     * @param node Returns the node of which this is a scope of.
+     */
+    public void setVariable(Node node) {
+        if (node instanceof NamedIdNode)
+            this.scope.setEntry(((NamedIdNode) node).getId(), new VariableEntry((NamedIdNode) node));
+        else {
+            throw new IllegalArgumentException("Input \"node\" must be subclass of NamedIdNode");
+        }
+    }
+
+    /**
      * Retrieve a variable entry within the id
      *
      * @param id The id of the variable.

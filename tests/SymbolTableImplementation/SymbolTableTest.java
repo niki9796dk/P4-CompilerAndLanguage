@@ -60,6 +60,11 @@ class SymbolTableTest {
     }
 
     @Test
+    void getSubScope() {
+        assertNull(s.getSubScope("nonExistant", "ignored"));
+    }
+
+    @Test
     void insertVariable() {
         s.openBlockScope(n);
         s.openSubScope(bn);
