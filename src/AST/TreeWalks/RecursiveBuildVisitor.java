@@ -8,7 +8,7 @@ import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SemanticAnalysis.Datastructures.SetStack;
-import SemanticAnalysis.SemanticProblemException;
+import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.*;
 import TypeChecker.TypeSystem;
 import java_cup.runtime.Symbol;

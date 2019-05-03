@@ -1,6 +1,6 @@
 package SemanticAnalysis.Exceptions;
 
-public class MultipleEntriesToChannelException extends Exception {
+public class MultipleEntriesToChannelException extends RuntimeException {
 
     public MultipleEntriesToChannelException() { super(); }
 
