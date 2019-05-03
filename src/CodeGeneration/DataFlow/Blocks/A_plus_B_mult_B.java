@@ -1,7 +1,6 @@
 package CodeGeneration.DataFlow.Blocks;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
-import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.MatrixOperations.Multiplication;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Addition;

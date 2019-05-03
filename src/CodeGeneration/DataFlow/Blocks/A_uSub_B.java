@@ -18,10 +18,10 @@ public class A_uSub_B extends AbstractBlock {
 
         // Blueprint
         Operation sub = new _Subtraction();
-        this.connectTo(sub,"A", "in1");
-        this.connectTo(sub,"B", "in2");
+        this.connectTo(sub, "A", "in1");
+        this.connectTo(sub, "B", "in2");
 
-        sub.connectTo(this,"out", "out");
+        sub.connectTo(this, "out", "out");
     }
 }
 

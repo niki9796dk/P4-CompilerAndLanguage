@@ -2,7 +2,6 @@ package CodeGeneration.DataFlow.Executions;
 
 import CodeGeneration.DataFlow.Blocks.A_Half;
 import CodeGeneration.DataFlow.Blocks.A_plus_B_mult_B;
-import CodeGeneration.DataFlow.Blocks.A_uSub_B;
 import CodeGeneration.DataFlow.Network.Interfaces.Block;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Addition;
 import CodeGeneration.DataFlow.Operations.Nullary.Source;
@@ -37,7 +36,7 @@ public class mainRevamp {
         block000.connectTo(operation000, "out", "in1");
         block000.connectTo(operation000, "out", "in2");
 
-        operation000.connectTo(block001,"out","A");
+        operation000.connectTo(block001, "out", "A");
 
         ////////// Sources, must be connected as the last part of the network. //////////
         source000.connectTo(block000, "out", "A");
@@ -52,24 +51,4 @@ public class mainRevamp {
         ///////// EOF //////////
         print.say("End of main.");
     }
-
-    /*
-    public static class Source implements SignalNode {
-        private Matrix value;
-
-        public Source(Matrix value) {
-            this.value = value;
-        }
-
-        @Override
-        public void acceptReadySignal() {
-            // Do nothing
-        }
-
-        @Override
-        public Matrix getResult() {
-            return this.value;
-        }
-    }
-    */
 }

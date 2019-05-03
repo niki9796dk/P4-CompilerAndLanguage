@@ -18,10 +18,11 @@ public class ListChannel implements Channel {
 
     /**
      * Constructor for ListChannel class that sets a source and a number of target SignalNodes
-     * @param source The SignalNode that enters the channel
+     *
+     * @param source  The SignalNode that enters the channel
      * @param targets The list of SignalNodes exits the channel and sends information
      */
-    public ListChannel(SignalNode source, SignalNode ... targets) {
+    public ListChannel(SignalNode source, SignalNode... targets) {
         this.source = source;
         this.targets.addAll(Arrays.asList(targets));
     }
@@ -29,20 +30,7 @@ public class ListChannel implements Channel {
     public ListChannel() {
     }
 
-    public ListChannel setSource(SignalNode channel){
-
-        if(channel == null)
-            throw new NullPointerException("Channel is null!");
-
-        this.source = channel;
-
-        if(channel.hasNoInput() && false)
-            this.acceptReadySignal();
-
-        return this;
-    }
-
-    public ListChannel addTarget(SignalNode channel){
+    public ListChannel addTarget(SignalNode channel) {
         this.targets.add(channel);
         return this;
     }
@@ -51,7 +39,7 @@ public class ListChannel implements Channel {
     public Matrix getResult() {
         Matrix result = this.source.getResult();
 
-        if(result == null)
+        if (result == null)
             throw new NullPointerException("Result is null!");
 
         return result;
@@ -78,5 +66,18 @@ public class ListChannel implements Channel {
     @Override
     public SignalNode getSource() {
         return source;
+    }
+
+    public ListChannel setSource(SignalNode channel) {
+
+        if (channel == null)
+            throw new NullPointerException("Channel is null!");
+
+        this.source = channel;
+
+        if (channel.hasNoInput() && false)
+            this.acceptReadySignal();
+
+        return this;
     }
 }

@@ -2,7 +2,6 @@ package CodeGeneration.DataFlow.Operations.UnaryOperations.UnitWiseOperations;
 
 import CodeGeneration.DataFlow.Operations.UnaryOperations.UnaryOperation;
 import LinearAlgebra.Types.Matrices.Matrix;
-import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.SigmoidActivation;
 

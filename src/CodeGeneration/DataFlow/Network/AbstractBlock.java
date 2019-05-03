@@ -25,7 +25,7 @@ public abstract class AbstractBlock implements Block {
     public AbstractBlock addNewInputLabel(String id, Channel c) {
         //print.say("New input: " + id);
 
-        if(c == null)
+        if (c == null)
             throw new NullPointerException("input c is null!");
 
         this.inputChannels.put(id, c);
@@ -110,7 +110,7 @@ public abstract class AbstractBlock implements Block {
         ///////
         Channel targetChannel = toBlock.getChannel(toChannelId);
 
-        if(targetChannel == null)
+        if (targetChannel == null)
             throw new NullPointerException("targetChannel is null!");
 
         ///////

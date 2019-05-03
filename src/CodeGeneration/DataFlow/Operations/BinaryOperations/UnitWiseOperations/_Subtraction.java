@@ -6,6 +6,7 @@ import LinearAlgebra.Types.Matrices.Matrix;
 public class _Subtraction extends BinaryOperation {
     /**
      * Unit-wise subtraction of matrices
+     *
      * @param in1 operand 1
      * @param in2 operand 2
      * @return unit-wise subtraction of matrix in1 and in2

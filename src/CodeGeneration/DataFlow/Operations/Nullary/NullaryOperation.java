@@ -30,6 +30,7 @@ public abstract class NullaryOperation extends Operation {
 
     /**
      * Get channel with specified id 'out'
+     *
      * @return output channel
      */
     @Override

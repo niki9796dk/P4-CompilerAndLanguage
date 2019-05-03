@@ -1,8 +1,8 @@
 package CodeGeneration.DataFlow.Operations.BinaryOperations;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
-import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Operations.Operation;
 import LinearAlgebra.Types.Matrices.Matrix;
 
@@ -33,10 +33,10 @@ public abstract class BinaryOperation extends Operation {
         Matrix in1 = this.getInputValue("in1");
         Matrix in2 = this.getInputValue("in2");
 
-        if(in1 == null)
+        if (in1 == null)
             throw new NullPointerException("in1 is null!");
 
-        if(in2 == null)
+        if (in2 == null)
             throw new NullPointerException("in2 is null!");
 
         this.result = operation(in1, in2);
@@ -45,6 +45,7 @@ public abstract class BinaryOperation extends Operation {
 
     /**
      * Get channel with specified id 'out'
+     *
      * @return output channel
      */
     @Override
@@ -56,7 +57,7 @@ public abstract class BinaryOperation extends Operation {
 
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {
-        if(!id.equals("in1") && !id.equals("in2"))
+        if (!id.equals("in1") && !id.equals("in2"))
             throw new IllegalArgumentException("Input channel has to be in1 or in2 for BinaryOperation objects!");
         return super.addNewInputLabel(id, c);
     }

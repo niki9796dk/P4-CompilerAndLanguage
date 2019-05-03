@@ -2,9 +2,7 @@ package CodeGeneration.DataFlow.Blocks;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.ListChannel;
-import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Addition;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Division;
-import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Multiplication;
 import CodeGeneration.DataFlow.Operations.Nullary.Source;
 import CodeGeneration.DataFlow.Operations.Operation;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
