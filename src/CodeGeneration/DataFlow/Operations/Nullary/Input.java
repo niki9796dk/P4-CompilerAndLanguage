@@ -9,7 +9,7 @@ import LinearAlgebra.Types.Matrices.MatrixBuilder;
  * Contains a mutable matrix.
  * Whenever its input is changed, it will call acceptReadySignal()
  */
-public class Input extends NullaryOperation {
+public class Input extends NullaryAbstractOperation {
     private Matrix input;
 
     /**

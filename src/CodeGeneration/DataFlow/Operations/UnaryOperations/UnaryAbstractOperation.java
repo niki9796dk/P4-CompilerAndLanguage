@@ -3,13 +3,13 @@ package CodeGeneration.DataFlow.Operations.UnaryOperations;
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
 import CodeGeneration.DataFlow.Network.ListChannel;
-import CodeGeneration.DataFlow.Operations.Operation;
+import CodeGeneration.DataFlow.Operations.AbstractOperation;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
 
-public abstract class UnaryOperation extends Operation {
-    protected UnaryOperation() {
+public abstract class UnaryAbstractOperation extends AbstractOperation {
+    protected UnaryAbstractOperation() {
         // Define inputs
         Channel in = new ListChannel();
         in.addTarget(this);

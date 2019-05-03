@@ -3,14 +3,14 @@ package CodeGeneration.DataFlow.Executions;
 import CodeGeneration.DataFlow.Blocks.A_Half;
 import CodeGeneration.DataFlow.Blocks.A_plus_B_mult_B;
 import CodeGeneration.DataFlow.Network.Interfaces.Block;
+import CodeGeneration.DataFlow.Network.Interfaces.Operation;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Addition;
 import CodeGeneration.DataFlow.Operations.Nullary.Source;
-import CodeGeneration.DataFlow.Operations.AbstractOperation;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
-public class mainRevamp {
+public class mainBack {
     private static Print print = new Print(AnsiColor.YELLOW, "Main");
 
     @SuppressWarnings("Duplicates")
@@ -30,7 +30,7 @@ public class mainRevamp {
         Block block001 = new A_Half();
 
         /// Operations ///
-        AbstractOperation operation000 = new _Addition();
+        Operation operation000 = new _Addition();
 
         ////////// Connect the network //////////
         block000.connectTo(operation000, "out", "in1");
@@ -46,6 +46,8 @@ public class mainRevamp {
         print.say("block000: " + block000.getChannel("out").getResult());
         print.say("operation000: " + operation000.getChannel("out").getResult());
         print.say("block001: " + block001.getChannel("out").getResult());
+
+        /// Backpropagation ///
 
 
         ///////// EOF //////////

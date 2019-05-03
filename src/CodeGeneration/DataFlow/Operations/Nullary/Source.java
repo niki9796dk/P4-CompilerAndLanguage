@@ -8,7 +8,7 @@ import LinearAlgebra.Types.Matrices.MatrixBuilder;
  * A source nullary operator.
  * Contains an  immutable matrix.
  */
-public class Source extends NullaryOperation {
+public class Source extends NullaryAbstractOperation {
     private final Matrix source;
 
     /**

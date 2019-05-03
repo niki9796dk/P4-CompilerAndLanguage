@@ -1,9 +1,9 @@
 package CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations;
 
-import CodeGeneration.DataFlow.Operations.BinaryOperations.BinaryOperation;
+import CodeGeneration.DataFlow.Operations.BinaryOperations.BinaryAbstractOperation;
 import LinearAlgebra.Types.Matrices.Matrix;
 
-public class _Subtraction extends BinaryOperation {
+public class _Subtraction extends BinaryAbstractOperation {
     /**
      * Unit-wise subtraction of matrices
      *

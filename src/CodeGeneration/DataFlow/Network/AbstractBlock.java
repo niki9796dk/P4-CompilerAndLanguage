@@ -122,6 +122,7 @@ public abstract class AbstractBlock implements Block {
         // Allow back propagation //
 
 
+
         ///////
         return this;
     }
@@ -146,4 +147,25 @@ public abstract class AbstractBlock implements Block {
         throw new IllegalArgumentException("No such channel: " + channelId);
 
     }
+
+    /*
+    @Override
+    public void flip() {
+        Map<String, Channel> temp = this.inputChannels;
+        this.inputChannels = this.outputChannels;
+        this.outputChannels = temp;
+    }
+    */
+
+    /*
+    @Override
+    public void traverseBackwards() {
+        for(Channel c: this.getInputs()){
+            print.say("traverseBackwards!");
+            c.traverseBackwards();
+        }
+    }
+    */
+
+
 }

@@ -1,8 +1,7 @@
 package CodeGeneration.DataFlow.Executions;
 
 import CodeGeneration.DataFlow.Operations.Nullary.Input;
-import CodeGeneration.DataFlow.Operations.Nullary.Source;
-import CodeGeneration.DataFlow.Operations.Operation;
+import CodeGeneration.DataFlow.Operations.AbstractOperation;
 import CodeGeneration.DataFlow.Operations.UnaryOperations.MatrixOperations.Transpose;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
@@ -23,7 +22,7 @@ public class mainInput {
                 .addRow(1, 2));
 
         /// Operations ///
-        Operation operation000 = new Transpose();
+        AbstractOperation operation000 = new Transpose();
 
         ////////// Sources, must be connected as the last part of the network. //////////
         input.connectTo(operation000, "out", "in");
