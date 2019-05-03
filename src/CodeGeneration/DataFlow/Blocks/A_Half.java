@@ -1,10 +1,10 @@
 package CodeGeneration.DataFlow.Blocks;
 
-import CodeGeneration.DataFlow.Network.AbstractBlock;
-import CodeGeneration.DataFlow.Network.ListChannel;
-import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Division;
-import CodeGeneration.DataFlow.Operations.Nullary.Source;
-import CodeGeneration.DataFlow.Operations.AbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Division;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
 /// (X, Y) -> ApBmB -> Z

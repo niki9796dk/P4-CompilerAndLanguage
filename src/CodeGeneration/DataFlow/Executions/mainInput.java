@@ -1,8 +1,8 @@
 package CodeGeneration.DataFlow.Executions;
 
-import CodeGeneration.DataFlow.Operations.Nullary.Input;
-import CodeGeneration.DataFlow.Operations.AbstractOperation;
-import CodeGeneration.DataFlow.Operations.UnaryOperations.MatrixOperations.Transpose;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Input;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.MatrixOperations.Transpose;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;

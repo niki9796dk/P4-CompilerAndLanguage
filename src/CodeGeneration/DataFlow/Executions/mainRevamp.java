@@ -2,10 +2,10 @@ package CodeGeneration.DataFlow.Executions;
 
 import CodeGeneration.DataFlow.Blocks.A_Half;
 import CodeGeneration.DataFlow.Blocks.A_plus_B_mult_B;
-import CodeGeneration.DataFlow.Network.Interfaces.Block;
-import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Addition;
-import CodeGeneration.DataFlow.Operations.Nullary.Source;
-import CodeGeneration.DataFlow.Operations.AbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.Block;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Addition;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
