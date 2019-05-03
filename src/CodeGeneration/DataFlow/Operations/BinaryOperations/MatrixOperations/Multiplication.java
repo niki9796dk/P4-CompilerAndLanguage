@@ -1,9 +1,9 @@
 package CodeGeneration.DataFlow.Operations.BinaryOperations.MatrixOperations;
 
-import CodeGeneration.DataFlow.Operations.BinaryOperations.BinaryOperation;
+import CodeGeneration.DataFlow.Operations.BinaryOperations.BinaryAbstractOperation;
 import LinearAlgebra.Types.Matrices.Matrix;
 
-public class Multiplication extends BinaryOperation {
+public class Multiplication extends BinaryAbstractOperation {
     /**
      * Matrix-wise multiplication of matrices
      *

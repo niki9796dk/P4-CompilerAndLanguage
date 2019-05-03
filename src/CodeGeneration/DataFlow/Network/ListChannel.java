@@ -16,6 +16,7 @@ public class ListChannel implements Channel {
     private boolean ready = false;
     private SignalNode source;
     private List<SignalNode> targets = new ArrayList<>();
+    //private boolean isFlipped = false;
 
     /**
      * Constructor for ListChannel class that sets a source and a number of target SignalNodes
@@ -53,9 +54,8 @@ public class ListChannel implements Channel {
 
     @Override
     public void signalReady() {
-        for (SignalNode target : targets) {
+        for (SignalNode target : targets)
             target.acceptReadySignal();
-        }
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ListChannel implements Channel {
     }
 
     @Override
-    public List<SignalNode> getTargets(){
+    public List<SignalNode> getTargets() {
         return new LinkedList<>(targets);
     }
 
@@ -83,4 +83,26 @@ public class ListChannel implements Channel {
 
         return this;
     }
+
+    /*
+    @Override
+    public void traverseBackwards() {
+        this.source.traverseBackwards();
+    }
+    */
+
+    /*
+    @Override
+    public boolean flip() {
+        this.isFlipped = !isFlipped;
+        return isFlipped;
+    }
+    */
+
+    /*
+    @Override
+    public void acceptBackSignal() {
+        this.source.acceptBackSignal();
+    }
+    */
 }

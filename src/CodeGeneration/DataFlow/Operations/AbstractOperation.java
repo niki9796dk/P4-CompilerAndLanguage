@@ -2,11 +2,13 @@ package CodeGeneration.DataFlow.Operations;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import CodeGeneration.DataFlow.Network.Interfaces.Operation;
+import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 
-public abstract class Operation extends AbstractBlock implements CodeGeneration.DataFlow.Network.Interfaces.Operation {
+public abstract class AbstractOperation extends AbstractBlock implements Operation {
     protected Matrix result;
     protected Print print = new Print(AnsiColor.GREEN, "Operation." + this.getClass().getSimpleName());
 
@@ -38,16 +40,17 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
     /**
      * Checks if operation is ready to be performed
      *
-     * @return boolean value of whether all operation inputs are ready
+     * @return boolean value of whether all operation inputs are ready, or there are no inputs.
      */
     private boolean isReady() {
-        boolean isReady = true;
+        if(this.getInputs().isEmpty())
+            return true;
 
-        for (Channel inputChannel : this.getInputs()) {
-            isReady = isReady && inputChannel.isReady();
-        }
+        for (Channel inputChannel : this.getInputs())
+            if(!inputChannel.isReady())
+                return false;
 
-        return isReady;
+        return true;
     }
 
     /**
@@ -59,4 +62,13 @@ public abstract class Operation extends AbstractBlock implements CodeGeneration.
     protected Matrix getInputValue(String channelId) {
         return this.getChannel(channelId).getResult();
     }
+
+    /*
+    @Override
+    public void traverseBackwards() {
+        print.say("Operation traverseBackwards!");
+        for(SignalNode n: this.getInputs())
+            n.traverseBackwards();
+    }
+    */
 }

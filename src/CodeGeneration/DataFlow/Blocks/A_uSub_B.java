@@ -3,7 +3,7 @@ package CodeGeneration.DataFlow.Blocks;
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Subtraction;
-import CodeGeneration.DataFlow.Operations.Operation;
+import CodeGeneration.DataFlow.Operations.AbstractOperation;
 
 /// (X, Y) -> ApBmB -> Z
 /// X - ApBmB.A ->
@@ -17,7 +17,7 @@ public class A_uSub_B extends AbstractBlock {
                 .addNewOutputLabel("out", new ListChannel());
 
         // Blueprint
-        Operation sub = new _Subtraction();
+        AbstractOperation sub = new _Subtraction();
         this.connectTo(sub, "A", "in1");
         this.connectTo(sub, "B", "in2");
 

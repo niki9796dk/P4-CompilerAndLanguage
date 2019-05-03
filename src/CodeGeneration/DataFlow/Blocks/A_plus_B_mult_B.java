@@ -4,7 +4,7 @@ import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.ListChannel;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.MatrixOperations.Multiplication;
 import CodeGeneration.DataFlow.Operations.BinaryOperations.UnitWiseOperations._Addition;
-import CodeGeneration.DataFlow.Operations.Operation;
+import CodeGeneration.DataFlow.Operations.AbstractOperation;
 
 /// (X, Y) -> ApBmB -> Z
 /// X - ApBmB.A ->
@@ -17,8 +17,8 @@ public class A_plus_B_mult_B extends AbstractBlock {
         this.addNewOutputLabel("out", new ListChannel());
 
         // Blueprint
-        Operation add = new _Addition();
-        Operation mult = new Multiplication();
+        AbstractOperation add = new _Addition();
+        AbstractOperation mult = new Multiplication();
 
         this.connectTo(add, "A", "in1");
         this.connectTo(add, "B", "in2");

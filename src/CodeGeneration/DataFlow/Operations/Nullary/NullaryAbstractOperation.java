@@ -2,16 +2,18 @@ package CodeGeneration.DataFlow.Operations.Nullary;
 
 import CodeGeneration.DataFlow.Network.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Interfaces.Channel;
+import CodeGeneration.DataFlow.Network.Interfaces.SignalNode;
 import CodeGeneration.DataFlow.Network.ListChannel;
-import CodeGeneration.DataFlow.Operations.Operation;
+import CodeGeneration.DataFlow.Operations.AbstractOperation;
 import CodeGeneration.DataFlow.Operations.UnaryOperations.IllegalMethodException;
+import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 
-public abstract class NullaryOperation extends Operation {
+public abstract class NullaryAbstractOperation extends AbstractOperation {
     /**
      * Operation constructor that makes 2 input-channels which is the operands, and an output-channel which is the result
      */
-    protected NullaryOperation() {
+    protected NullaryAbstractOperation() {
         // Define outputs
         Channel out = new ListChannel(this);
 
@@ -47,4 +49,12 @@ public abstract class NullaryOperation extends Operation {
     public AbstractBlock addNewInputLabel(String id, Channel c) {
         throw new IllegalMethodException("Can not add input to a Unary Operation");
     }
+
+    /*
+    @Override
+    public void traverseBackwards() {
+        print.say(AnsiColor.WHITE,"Nullary traverseBackwards!");
+
+    }
+    */
 }

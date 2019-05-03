@@ -17,4 +17,6 @@ public interface Channel extends SignalNode {
     SignalNode getSource();
 
     Collection<SignalNode> getTargets();
+
+    //boolean flip();
 }
