@@ -1,14 +1,12 @@
 package AST.TreeWalks;
 
 import AST.Enums.NodeEnum;
+import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.*;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyOutChannelNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
@@ -17,10 +15,13 @@ import SemanticAnalysis.FlowChecker;
 import SemanticAnalysis.Datastructures.HashSetStack;
 import SemanticAnalysis.Datastructures.SetStack;
 import SymbolTableImplementation.BlockScope;
+import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
+import SymbolTableImplementation.VariableEntry;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
 
+import java.nio.channels.SelectableChannel;
 import java.util.*;
 
 public class SemanticAnalysisVisitor implements Visitor {
@@ -34,7 +35,7 @@ public class SemanticAnalysisVisitor implements Visitor {
     private Set<BlockNode> buildNodes;
 
     public SemanticAnalysisVisitor(SymbolTableInterface symbolTableInterface) {
-        this.flowChecker = new FlowChecker();
+        this.flowChecker = new FlowChecker(symbolTableInterface);
         this.symbolTableInterface = symbolTableInterface;
         this.callStack = new HashSetStack<>();
         this.typeSystem = new TypeSystem(this.symbolTableInterface);
@@ -57,6 +58,7 @@ public class SemanticAnalysisVisitor implements Visitor {
             // Location enums
             case BLOCK:
                 this.currentBlockScope = namedIdNode.getId();
+
                 break;
             case BLUEPRINT:
                 this.currentSubScope = BlockScope.BLUEPRINT;
@@ -68,9 +70,11 @@ public class SemanticAnalysisVisitor implements Visitor {
                 this.currentSubScope = BlockScope.CHANNELS;
                 break;
 
-            // No action enums
+                // No action enums
             case GROUP:
             case ASSIGN:
+            case CHANNEL_IN_TYPE:
+            case CHANNEL_OUT_TYPE:
                 break;
 
             case BUILD:
@@ -82,7 +86,6 @@ public class SemanticAnalysisVisitor implements Visitor {
             case PARAMS:
             case DRAW:
             case SIZE:
-            case SELECTOR:
             case ROOT:
             case SIZE_TYPE:
             case BLOCK_TYPE:
@@ -91,29 +94,17 @@ public class SemanticAnalysisVisitor implements Visitor {
             case OPERATION_TYPE:
                 break;
 
+            case SELECTOR:
+                break;
+
             case CHAIN:
                 this.verifyChain((ChainNode) node);
-                AbstractNode childNode = ((NamedIdNode) node).getChild();
-
-                // Iterate through all selectors
-                do {
-                    // Exclude this keyword.
-                    while(childNode.getChild() != null) {
-                        childNode = childNode.getChild();
-                    }
-
-                    flowChecker.getConnected().add(((NamedIdNode) childNode).getId());
-                } while (childNode.getSib() != null);
 
                 break;
 
-            // Channels
+                // Channels
             case CHANNEL_IN_MY:
             case CHANNEL_OUT_MY:
-            case CHANNEL_IN_TYPE:
-            case CHANNEL_OUT_TYPE:
-
-                flowChecker.getChannels().add(id);
                 break;
 
             default:
@@ -135,6 +126,11 @@ public class SemanticAnalysisVisitor implements Visitor {
                 this.performBlockRecursionTesting();
                 break;
 
+            case BLOCK:
+                this.flowChecker.check(this.currentBlockScope);
+                this.flowChecker.getConnected().clear();
+                break;
+
             case GROUP:
             case CHAIN:
             case PROCEDURE_CALL:
@@ -143,7 +139,6 @@ public class SemanticAnalysisVisitor implements Visitor {
             case DRAW:
             case SIZE:
             case ASSIGN:
-            case BLOCK:
             case BLUEPRINT:
             case PROCEDURE:
             case CHANNEL_DECLARATIONS:
@@ -163,6 +158,52 @@ public class SemanticAnalysisVisitor implements Visitor {
         }
     }
 
+    private void extractMyChannelsUses(AbstractNode chainNode) {
+        AbstractNode child = chainNode.getChild();
+
+        while (child.getSib() != null) {
+            this.handleChannel(child);
+            child = child.getSib();
+        }
+    }
+
+    private void handleChannel(AbstractNode node) {
+        if (node instanceof GroupNode) {
+            for (AbstractNode child = node.getChild(); child != null; child = child.getSib()) {
+                this.handleChannel(child);
+            }
+        } else if (node instanceof SelectorNode) {
+
+            NodeEnum nodeSuperType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+            if (nodeSuperType == NodeEnum.CHANNEL_IN_MY || nodeSuperType == NodeEnum.CHANNEL_OUT_MY) {
+                this.handleSelector((SelectorNode) node);
+            }
+
+        } else {
+            // Do nothing
+        }
+    }
+
+    private void handleSelector(SelectorNode node) {
+        boolean isThis = ("this").equals(node.getId());
+        if (isThis) {
+            flowChecker.getConnected().add(((NamedIdNode) node.getChild()).getId());
+        } else {
+            Scope scope = this.symbolTableInterface.getSubScope(this.currentBlockScope, this.currentSubScope);
+            VariableEntry localVariable = scope.getVariable(node);
+
+            boolean isLocalVariable = localVariable != null;
+
+            if (isLocalVariable) {
+                SelectorNode subtypeNode = (SelectorNode) localVariable.getSubType(node.getNumber());
+                this.handleSelector(subtypeNode);
+
+            } else {
+                flowChecker.getConnected().add(node.getId());
+            }
+        }
+    }
 
     private void buildRecursionCheck(NamedNode node){
         StringBuilder builder = new StringBuilder();

@@ -1,6 +1,6 @@
 package SemanticAnalysis.Exceptions;
 
-public class UnusedChannelException extends Exception {
+public class UnusedChannelException extends RuntimeException {
 
     public UnusedChannelException() { super(); }
 

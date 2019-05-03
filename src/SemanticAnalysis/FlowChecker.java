@@ -1,42 +1,66 @@
 package SemanticAnalysis;
 
-import SemanticAnalysis.Exceptions.UnusedChannelException;
+
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import SymbolTableImplementation.Scope;
+import SymbolTableImplementation.SymbolTableInterface;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FlowChecker {
 
     // Fields
-    private ArrayList<String> channels;
     private ArrayList<String> connected;
+    private SymbolTableInterface symbolTableInterface;
 
     // Constructors
-    public FlowChecker() {
-        this.channels = new ArrayList<>();
+    public FlowChecker(SymbolTableInterface symbolTableInterface) {
+        this.connected = new ArrayList<>();
+        this.symbolTableInterface = symbolTableInterface;
     }
 
-    public FlowChecker(ArrayList<String> channels) {
-        this.channels = channels;
+    public boolean check(String currentBlockScope) {
+        List<String> myChannels = getAllChannelsOfBlock(currentBlockScope);
+
+        return evaluate(myChannels, this.connected);
     }
 
-    public boolean check() throws UnusedChannelException {
-        // that all channels are used
-        for (String channel : channels) {
-            if (!connected.contains(channel)) {
-                throw new UnusedChannelException();
-            }
+    private List<String> getAllChannelsOfBlock(String currentBlockScope) {
+        // Get all channels
+        Scope channelDeclarationScope = symbolTableInterface
+                .getBlockScope(currentBlockScope)
+                .getChannelDeclarationScope();
+
+        ArrayList<String> myChannels = new ArrayList<>();
+
+        // For all channel nodes add the channel id to the list
+        for (AbstractNode node = channelDeclarationScope.getNode().getChild(); node == null; node = node.getSib()) {
+            myChannels.add(((NamedIdNode) node).getId());
         }
 
-        // that a channel only is used once
+        return myChannels;
+    }
 
+    private boolean evaluate(List<String> myChannels, List<String> usedChannels) {
+        for (String myChannel : myChannels) {
+            int amount = 0;
+
+            for (String usedChannel : usedChannels) {
+                if (myChannel.equals(usedChannel)) {
+                    amount++;
+                    if (amount != 0) {
+                        return false;
+                    }
+                }
+            }
+
+        }
         return true;
     }
 
     // Getters
-    public ArrayList<String> getChannels() {
-        return channels;
-    }
-
     public ArrayList<String> getConnected() {
         return connected;
     }

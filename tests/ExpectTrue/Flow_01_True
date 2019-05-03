@@ -1,0 +1,11 @@
+block block_01 {
+    mychannel:in input01;
+    mychannel:in input02;
+    mychannel:out output;
+
+    blueprint () {
+        mychannel:in input01 = this.input02;
+
+        (this.input01, input01) -> build Multiplication() -> this.output;
+    }
+}
