@@ -38,6 +38,9 @@ public abstract class NullaryOperation extends Operation {
         return this.getChannel("out");
     }
 
+    /**
+     * @return the content matrix.
+     */
     protected abstract Matrix operation();
 
     @Override
