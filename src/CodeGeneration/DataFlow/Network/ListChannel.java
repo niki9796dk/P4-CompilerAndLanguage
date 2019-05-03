@@ -6,6 +6,7 @@ import LinearAlgebra.Types.Matrices.Matrix;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -52,7 +53,7 @@ public class ListChannel implements Channel {
 
     @Override
     public void signalReady() {
-        for (SignalNode target : this.targets) {
+        for (SignalNode target : targets) {
             target.acceptReadySignal();
         }
     }
@@ -68,15 +69,17 @@ public class ListChannel implements Channel {
         return source;
     }
 
+    @Override
+    public List<SignalNode> getTargets(){
+        return new LinkedList<>(targets);
+    }
+
     public ListChannel setSource(SignalNode channel) {
 
         if (channel == null)
             throw new NullPointerException("Channel is null!");
 
         this.source = channel;
-
-        if (channel.hasNoInput() && false)
-            this.acceptReadySignal();
 
         return this;
     }

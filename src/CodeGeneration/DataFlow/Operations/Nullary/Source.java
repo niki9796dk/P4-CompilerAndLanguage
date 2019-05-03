@@ -23,11 +23,6 @@ public class Source extends NullaryOperation {
     }
 
     @Override
-    public boolean hasNoInput() {
-        return true;
-    }
-
-    @Override
     public Source connectTo(Block toBlock, String fromChannelId, String toChannelId) {
         super.connectTo(toBlock, fromChannelId, toChannelId);
         this.acceptReadySignal();

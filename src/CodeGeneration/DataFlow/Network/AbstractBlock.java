@@ -119,6 +119,10 @@ public abstract class AbstractBlock implements Block {
         targetChannel.setSource(outputChannel);
 
         ///////
+        // Allow back propagation //
+
+
+        ///////
         return this;
     }
 
