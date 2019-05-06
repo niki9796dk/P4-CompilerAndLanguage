@@ -18,7 +18,7 @@ block Test {
     mychannel:out out;
 
     blueprint() {
-        this.input -> this.output;
+        this.in -> this.out;
     }
 }
 

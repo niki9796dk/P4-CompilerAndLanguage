@@ -329,6 +329,7 @@ public class SemanticAnalysisVisitor implements Visitor {
         AbstractNode child = chainNode.getChild();
 
         while (child.getSib() != null) {
+            System.out.println("Checking: " + child + " and " + child.getSib());
             this.verifyConnection(child, child.getSib());
             child = child.getSib();
         }

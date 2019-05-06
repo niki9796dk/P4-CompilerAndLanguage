@@ -1,9 +1,9 @@
 block hej {
-    mychannel:out out;
     mychannel:in in1;
     mychannel:in in2;
+    mychannel:out out;
 
     blueprint() {
-        (in1, in2) -> build Multiplication() -> this.output;
+        (in1, in2) -> build Multiplication() -> this.out;
     }
 }
