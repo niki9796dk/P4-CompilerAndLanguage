@@ -8,13 +8,15 @@ block chain_01 {
 		block b = build Test();
 		block c = build Test();
 		
-		a -> b -> c;
+		this.input -> a -> b -> c -> this.output;
 	}
 }
 
 block Test {
-    mychannel:out output;
     mychannel:in input;
+    mychannel:out output;
+
     blueprint() {
+        this.input -> this.output;
     }
 }

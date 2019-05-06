@@ -6,6 +6,8 @@ block channels_02 {
     mychannel:in input4;
 
 	blueprint() {
-
+        (this.input1, this.input2) -> operation add1 build Addition();
+        (this.input3, this.input4) -> operation add2 build Addition();
+        (add1, add2) -> operation add3 build Addition() -> this.output;
 	}
 }

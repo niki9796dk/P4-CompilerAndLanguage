@@ -11,23 +11,26 @@ block cursed_05{
         size qq = [2,3];
         source bb = build Source(qq) -> a;
         source jj = build Source(qq) -> build Transpose() -> k;
-        abc.output -> output;
+        abc.output -> this.output;
     }
 }
 
 
 block Test {
-    mychannel:out output;
     mychannel:in sizzle;
     mychannel:in shizzle;
+    mychannel:out output;
 
     blueprint() {
+        (sizzle, shizzle) -> build Multiplication() -> this.output;
     }
 }
 
 block Transpose {
     mychannel:out output;
     mychannel:in input;
+
     blueprint() {
+        this.input -> this.output;
     }
 }

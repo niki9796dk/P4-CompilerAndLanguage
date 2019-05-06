@@ -4,6 +4,7 @@ block decla_13 {
 
 	blueprint() {
 		channel:in abc;
+		this.input -> this.output;
 	}
 }
 

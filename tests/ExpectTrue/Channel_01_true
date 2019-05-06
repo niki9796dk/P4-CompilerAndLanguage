@@ -4,6 +4,6 @@ block hej {
     mychannel:in in2;
 
     blueprint() {
-
+        (in1, in2) -> build Multiplication() -> this.output;
     }
 }

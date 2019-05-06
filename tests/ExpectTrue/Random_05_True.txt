@@ -1,7 +1,9 @@
 // Single out channel
 block Test {
-    mychannel:out output;
     mychannel:in input;
+    mychannel:out output;
+
     blueprint() {
+        this.input -> this.output;
     }
 }

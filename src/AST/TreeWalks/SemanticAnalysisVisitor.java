@@ -99,7 +99,7 @@ public class SemanticAnalysisVisitor implements Visitor {
 
             case CHAIN:
                 this.verifyChain((ChainNode) node);
-
+                this.extractMyChannelsUses(node);
                 break;
 
                 // Channels
@@ -127,6 +127,7 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             case BLOCK:
+                System.out.println("JEG ER ALTSÅ HER!!!!!!");
                 this.flowChecker.check(this.currentBlockScope);
                 this.flowChecker.getConnected().clear();
                 break;
@@ -161,7 +162,7 @@ public class SemanticAnalysisVisitor implements Visitor {
     private void extractMyChannelsUses(AbstractNode chainNode) {
         AbstractNode child = chainNode.getChild();
 
-        while (child.getSib() != null) {
+        while (child != null) {
             this.handleChannel(child);
             child = child.getSib();
         }
@@ -187,8 +188,13 @@ public class SemanticAnalysisVisitor implements Visitor {
 
     private void handleSelector(SelectorNode node) {
         boolean isThis = ("this").equals(node.getId());
+
         if (isThis) {
-            flowChecker.getConnected().add(((NamedIdNode) node.getChild()).getId());
+            String childId = ((NamedIdNode) node.getChild()).getId();
+
+            System.out.println("Added: this."+childId);
+
+            flowChecker.getConnected().add(childId);
         } else {
             Scope scope = this.symbolTableInterface.getSubScope(this.currentBlockScope, this.currentSubScope);
             VariableEntry localVariable = scope.getVariable(node);

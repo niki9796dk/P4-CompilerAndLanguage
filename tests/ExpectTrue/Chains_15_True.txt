@@ -7,6 +7,7 @@ block chain_15 {
 		block a = build Test();
 		block b = build Test();
 
+        this.input -> a;
 		(a, b) -> operation abc = build _Addition() -> this.output;
 	}
 }

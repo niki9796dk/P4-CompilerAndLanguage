@@ -6,13 +6,16 @@ block decla_04 {
 	blueprint() {
 		block a = build Test();
 		block b = (a);
+		this.input -> b -> this.output;
 	}
 }
 
 
 block Test {
-    mychannel:out output;
     mychannel:in input;
+    mychannel:out output;
+
     blueprint() {
+        this.input -> this.output;
     }
 }

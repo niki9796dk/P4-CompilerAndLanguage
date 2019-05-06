@@ -7,23 +7,26 @@ block chain_12 {
 		block a = build Test();
 		block b = build Test();
 		block c = build Test();
-		
+
+		this.input -> a;
 		(a.out, b.out, c.out) -> build LargeOpe() -> this.output;
 	}
 }
 
 block Test {
-    mychannel:out out;
     mychannel:in in;
+    mychannel:out out;
+
     blueprint() {
+        this.input -> this.output;
     }
 }
 
 block LargeOpe {
-    mychannel:out output;
     mychannel:in input1;
     mychannel:in input2;
     mychannel:in input3;
+    mychannel:out output;
 
     blueprint() {
         operation mult1 = build Multiplication();

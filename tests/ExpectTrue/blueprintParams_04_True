@@ -12,6 +12,6 @@ block b4 {
 	mychannel:out output;
 
 	blueprint(blueprint abc1, size abc2) {
-
+        this.input -> this.output;
 	}
 }

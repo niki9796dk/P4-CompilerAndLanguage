@@ -7,6 +7,8 @@ block decla_09 {
 		block b = build Test();
 	
 		channel:in s = (b.input);
+
+		this.input -> this.output;
 	}
 }
 
@@ -14,6 +16,8 @@ block decla_09 {
 block Test {
     mychannel:out output;
     mychannel:in input;
+
     blueprint() {
+        this.input -> this.output;
     }
 }

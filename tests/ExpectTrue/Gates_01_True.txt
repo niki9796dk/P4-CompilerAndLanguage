@@ -4,6 +4,6 @@ block channels_01 {
 	mychannel:in input2;
 
 	blueprint() {
-
+        (this.input1, this.input2) -> build Multiplication() -> this.output;
 	}
 }
