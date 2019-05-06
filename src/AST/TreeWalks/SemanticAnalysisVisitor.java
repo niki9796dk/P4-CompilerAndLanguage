@@ -1,7 +1,6 @@
 package AST.TreeWalks;
 
 import AST.Enums.NodeEnum;
-import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
@@ -9,7 +8,6 @@ import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import AST.Visitor;
 import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SemanticAnalysis.FlowChecker;
 import SemanticAnalysis.Datastructures.HashSetStack;
@@ -21,56 +19,33 @@ import SymbolTableImplementation.VariableEntry;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
 
-import java.nio.channels.SelectableChannel;
 import java.util.*;
 
-public class SemanticAnalysisVisitor implements Visitor {
-
+public class SemanticAnalysisVisitor extends ScopeTracker {
     private FlowChecker flowChecker;
-    private SymbolTableInterface symbolTableInterface;
-    private TypeSystem typeSystem;
-    private String currentBlockScope;
-    private String currentSubScope;
     private SetStack<String> callStack;
     private Set<BlockNode> buildNodes;
 
-    public SemanticAnalysisVisitor(SymbolTableInterface symbolTableInterface) {
-        this.flowChecker = new FlowChecker(symbolTableInterface);
-        this.symbolTableInterface = symbolTableInterface;
+    public SemanticAnalysisVisitor(SymbolTableInterface symbolTable) {
+        super(symbolTable);
+        this.flowChecker = new FlowChecker(symbolTable);
         this.callStack = new HashSetStack<>();
-        this.typeSystem = new TypeSystem(this.symbolTableInterface);
+        this.typeSystem = new TypeSystem(this.symbolTable);
         this.buildNodes = new HashSet<>();
     }
 
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
+        // Update the scope tracker
+        super.pre(printLevel, abstractNode);
 
-        NamedNode node = (abstractNode instanceof NamedNode) ? (NamedNode) abstractNode : null;
-        NamedIdNode namedIdNode = (abstractNode instanceof NamedIdNode) ? (NamedIdNode) abstractNode : null;
-        if (node == null){
-            throw new RuntimeException("How did this node get here?? " + abstractNode.toString());
-        }
-
-        // If needed, typecast
-        String id = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : "no id";
-
-        switch (node.getNodeEnum()) {
-            // Location enums
+        // Perform visitor
+        switch (((NamedNode) abstractNode).getNodeEnum()) {
+            // No action enums
             case BLOCK:
-                this.currentBlockScope = namedIdNode.getId();
-
-                break;
             case BLUEPRINT:
-                this.currentSubScope = BlockScope.BLUEPRINT;
-                break;
             case PROCEDURE:
-                this.currentSubScope = BlockScope.PROCEDURE_PREFIX + namedIdNode.getId();
-                break;
             case CHANNEL_DECLARATIONS:
-                this.currentSubScope = BlockScope.CHANNELS;
-                break;
-
-                // No action enums
             case GROUP:
             case ASSIGN:
             case CHANNEL_IN_TYPE:
@@ -78,8 +53,8 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             case BUILD:
-                this.addBuildBlockToSet((BuildNode) node);
-                buildRecursionCheck(node);
+                this.addBuildBlockToSet((BuildNode) abstractNode);
+                buildRecursionCheck((NamedNode) abstractNode);
                 break;
 
             case PROCEDURE_CALL:
@@ -98,8 +73,7 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             case CHAIN:
-                this.verifyChain((ChainNode) node);
-
+                this.verifyChain((ChainNode) abstractNode);
                 break;
 
                 // Channels
@@ -108,12 +82,16 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             default:
-                throw new UnexpectedNodeException(node);
+                throw new UnexpectedNodeException((NamedNode) abstractNode);
         }
     }
 
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
+        // Update the scope tracker
+        super.post(printLevel, abstractNode);
+
+        // Perform visitor
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {
@@ -190,7 +168,7 @@ public class SemanticAnalysisVisitor implements Visitor {
         if (isThis) {
             flowChecker.getConnected().add(((NamedIdNode) node.getChild()).getId());
         } else {
-            Scope scope = this.symbolTableInterface.getSubScope(this.currentBlockScope, this.currentSubScope);
+            Scope scope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
             VariableEntry localVariable = scope.getVariable(node);
 
             boolean isLocalVariable = localVariable != null;
@@ -251,13 +229,13 @@ public class SemanticAnalysisVisitor implements Visitor {
     }
 
     private void assertNoBuildCycles(BlockNode mainBlock) {
-        mainBlock.walkTree(new RecursiveBuildVisitor(new HashSetStack<>(), this.symbolTableInterface));
+        mainBlock.walkTree(new RecursiveBuildVisitor(new HashSetStack<>(), this.symbolTable));
     }
 
     private void addBuildBlockToSet(BuildNode node) {
         String buildSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
-        if (this.symbolTableInterface.isPredefinedSource(buildSubType) || this.symbolTableInterface.isPredefinedOperation(buildSubType)) {
+        if (this.symbolTable.isPredefinedSource(buildSubType) || this.symbolTable.isPredefinedOperation(buildSubType)) {
             return; // Simply ignore this case.
         }
 
@@ -277,7 +255,7 @@ public class SemanticAnalysisVisitor implements Visitor {
         List<BlockNode> potentialMainBlocks = new LinkedList<>(); /* Linked list is used, since we only ever iterate it. */
 
         // Find the very fist block definition
-        BlockNode currentBlock = (BlockNode) this.symbolTableInterface.getLatestBlockScope().getNode().getFirstSib();
+        BlockNode currentBlock = (BlockNode) this.symbolTable.getLatestBlockScope().getNode().getFirstSib();
 
         // Loop all block definition and if they are a potential main block, store it in the list
         for (/* Do Nothing */ ; currentBlock != null; currentBlock = (BlockNode) currentBlock.getSib()) {
@@ -300,7 +278,7 @@ public class SemanticAnalysisVisitor implements Visitor {
      */
     private boolean checkIfBlockCouldBeAMainBlock(BlockNode block) {
         // Find the blueprint node within the block
-        AbstractNode blueprintNode = this.symbolTableInterface
+        AbstractNode blueprintNode = this.symbolTable
                 .getBlockScope(block.getId())
                 .getBlueprintScope()
                 .getNode();
@@ -452,7 +430,7 @@ public class SemanticAnalysisVisitor implements Visitor {
         String blockId = this.typeSystem.getSubTypeOfNode(rightNode, this.currentBlockScope, this.currentSubScope);
 
         // Get the channel declaration node of the block
-        ChannelDeclarationsNode channelDeclaNode = (ChannelDeclarationsNode) this.symbolTableInterface.getBlockScope(blockId).getChannelDeclarationScope().getNode();
+        ChannelDeclarationsNode channelDeclaNode = (ChannelDeclarationsNode) this.symbolTable.getBlockScope(blockId).getChannelDeclarationScope().getNode();
 
         // Count the amount of children of type MyInChannel
         return channelDeclaNode.countChildrenInstanceOf(MyInChannelNode.class);
@@ -467,7 +445,7 @@ public class SemanticAnalysisVisitor implements Visitor {
         String blockId = this.typeSystem.getSubTypeOfNode(rightNode, this.currentBlockScope, this.currentSubScope);
 
         // Get the channel declaration node of the block
-        ChannelDeclarationsNode channelDeclaNode = (ChannelDeclarationsNode) this.symbolTableInterface.getBlockScope(blockId).getChannelDeclarationScope().getNode();
+        ChannelDeclarationsNode channelDeclaNode = (ChannelDeclarationsNode) this.symbolTable.getBlockScope(blockId).getChannelDeclarationScope().getNode();
 
         // Count the amount of children of type MyInChannel
         return channelDeclaNode.countChildrenInstanceOf(MyOutChannelNode.class);
