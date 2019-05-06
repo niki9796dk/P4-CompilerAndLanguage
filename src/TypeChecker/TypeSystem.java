@@ -188,11 +188,12 @@ public class TypeSystem {
 
         } else {
             VariableEntry selectorVariable = this.getVariableFromIdentifier(selectorNode.getId(), blockScope, subScope);
+            NamedIdNode subtypeNode = selectorVariable.getSubType(selectorNode.getNumber());
 
-            if (selectorVariable.getNode() instanceof SelectorNode) {
-                return this.getSubTypeOfSelector((SelectorNode) selectorVariable.getNode(), blockScope, subScope);
+            if (subtypeNode instanceof SelectorNode) {
+                return this.getSubTypeOfSelector((SelectorNode) subtypeNode, blockScope, subScope);
             } else {
-                return selectorVariable.getSubType(selectorNode.getNumber()).getId();
+                return subtypeNode.getId();
             }
         }
     }

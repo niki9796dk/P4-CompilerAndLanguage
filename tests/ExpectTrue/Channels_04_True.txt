@@ -9,6 +9,8 @@ block channels_04 {
     mychannel:in input4;
 
 	blueprint() {
-
+        (this.input1, this.input2) -> build Addition() -> this.output1;
+        (this.input3, this.input4) -> build Addition() -> this.output2;
+        this.input1 -> this.output3;
 	}
 }

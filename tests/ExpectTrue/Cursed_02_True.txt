@@ -16,18 +16,18 @@ block cursed_02{
 		(in5, build Source([13,4])) -> operation add5 = build _Addition()																									;
 		(in6, build Source([13,4])) -> operation add6 = build _Addition()																									;
 		
-		(add1, add2, add3, add4, add5, add6) -> build LargeOpe() -> this										.										out				    ;
+		(add1, add2, add3, add4, add5, add6) -> build LargeOpe() -> this								.											out				    ;
 	}
 }
 
 block LargeOpe {
-    mychannel:out output;
     mychannel:in input1;
     mychannel:in input2;
     mychannel:in input3;
     mychannel:in input4;
     mychannel:in input5;
     mychannel:in input6;
+    mychannel:out output;
 
     blueprint() {
         operation mult1 = build Multiplication();

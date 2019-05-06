@@ -185,7 +185,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
         } else if (callerNode instanceof BuildNode) {
             // Get the callee ID
-            String nodeId = ((NamedIdNode) callerNode).getId();
+            String nodeId = this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope);
 
             // Verify that we are building an block, and not anything else. TODO: How about operation and source params?
             boolean isNotOperation = !this.typeSystem.getSymbolTable().isPredefinedOperation(nodeId);

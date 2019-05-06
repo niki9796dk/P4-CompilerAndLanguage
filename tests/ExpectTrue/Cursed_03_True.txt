@@ -2,13 +2,13 @@
 block cursed_03{mychannel:in in1;mychannel:in in2;mychannel:in in3;mychannel:in in4;mychannel:in in5;mychannel:in in6;mychannel:out output;blueprint(){(in1,build Source([13,4]))->operation add1=build _Addition();(in2, build Source([13,4]))->operation add2=build _Addition();(in3,build Source([13,4]))->operation add3=build _Addition();(in4,build Source([13,4]))->operation add4=build _Addition();(in5,build Source([13,4]))->operation add5=build _Addition();(in6,build Source([13,4]))->operation add6=build _Addition();(add1,add2,add3,add4,add5,add6)->build LargeOpe()->this.output;}}
 
 block LargeOpe {
-    mychannel:out output;
     mychannel:in input1;
     mychannel:in input2;
     mychannel:in input3;
     mychannel:in input4;
     mychannel:in input5;
     mychannel:in input6;
+    mychannel:out output;
 
     blueprint() {
         operation mult1 = build Multiplication();

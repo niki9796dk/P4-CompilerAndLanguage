@@ -8,21 +8,27 @@ block decla_10 {
 		b = build Abc();
 	
 		mychannel:in s = (this.input);
+
+		this.input -> this.output;
 	}
 }
 
 
 block Test {
-    mychannel:out output;
     mychannel:in input;
+    mychannel:out output;
+
     blueprint() {
+        this.input -> this.output;
     }
 }
 
 
 block Abc {
-    mychannel:out output;
     mychannel:in input;
+    mychannel:out output;
+
     blueprint() {
+        this.input -> this.output;
     }
 }

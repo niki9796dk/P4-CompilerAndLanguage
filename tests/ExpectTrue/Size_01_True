@@ -4,5 +4,7 @@
  	blueprint() {
  		size a = [2,3];
  		size b = a;
+
+ 		build Source() -> this.output;
  	}
  }

@@ -21,6 +21,7 @@ block Slave1 {
 
         (this.in1, this.in2) -> slave2;
         slave2.in1 -> this.out1;
+        slave2.in1 -> this.out2;
     }
 }
 

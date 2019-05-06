@@ -4,6 +4,6 @@ block channels_07 {
 	mychannel:out output;
 
 	blueprint() {
-
+        build Source() -> this.output;
 	}
 }

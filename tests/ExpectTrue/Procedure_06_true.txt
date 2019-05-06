@@ -8,13 +8,15 @@ block procedure_06 {
 	}
 	
 	procedure abc(mychannel:in x, block y, blueprint z, operation o, size s, mychannel:out c) {
-
+        x -> c;
 	}
 }
 
 block Test {
-    mychannel:out output;
     mychannel:in input;
+    mychannel:out output;
+
     blueprint() {
+        this.input -> this.output;
     }
 }

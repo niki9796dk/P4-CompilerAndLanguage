@@ -12,6 +12,11 @@ block channels_06 {
     mychannel:out output5;
 
 	blueprint() {
+        this.input1 -> this.output1;
+        this.input2 -> this.output2;
+        this.input3 -> this.output3;
+        this.input4 -> this.output4;
 
+        this.input1 -> this.output5;
 	}
 }

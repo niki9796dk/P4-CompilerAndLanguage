@@ -4,6 +4,7 @@ block decla_11 {
 
 	blueprint() {
 		size abc;
+		this.input -> this.output;
 	}
 }
 

@@ -7,14 +7,16 @@ block cursed_06{
         channel:in a = abc.input;
 
         source bb = build Source(size qq = [2,3]) -> a;
-        abc.output -> output;
+        abc.output -> this.output;
     }
 }
 
 
 block Test {
-    mychannel:out output;
     mychannel:in input;
+    mychannel:out output;
+
     blueprint() {
+        this.input -> this.output;
     }
 }

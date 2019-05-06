@@ -74,6 +74,8 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
             case CHAIN:
                 this.verifyChain((ChainNode) abstractNode);
+                this.verifyChain((ChainNode) abstractNode);
+                this.extractMyChannelsUses(abstractNode);
                 break;
 
                 // Channels
@@ -139,7 +141,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
     private void extractMyChannelsUses(AbstractNode chainNode) {
         AbstractNode child = chainNode.getChild();
 
-        while (child.getSib() != null) {
+        while (child != null) {
             this.handleChannel(child);
             child = child.getSib();
         }
@@ -165,8 +167,13 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
     private void handleSelector(SelectorNode node) {
         boolean isThis = ("this").equals(node.getId());
+
         if (isThis) {
-            flowChecker.getConnected().add(((NamedIdNode) node.getChild()).getId());
+            String childId = ((NamedIdNode) node.getChild()).getId();
+
+            System.out.println("Added: this."+childId);
+
+            flowChecker.getConnected().add(childId);
         } else {
             Scope scope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
             VariableEntry localVariable = scope.getVariable(node);

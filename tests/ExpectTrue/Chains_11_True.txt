@@ -19,8 +19,10 @@ block chain_11 {
 }
 
 block Test {
-    mychannel:out out;
     mychannel:in in;
+    mychannel:out out;
+
     blueprint() {
+        this.in -> this.out;
     }
 }

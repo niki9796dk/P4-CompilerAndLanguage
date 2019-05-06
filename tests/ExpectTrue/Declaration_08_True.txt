@@ -5,6 +5,7 @@ block decla_08 {
 	
 	blueprint() {
 		size s = ([ 2 ,5]);
+		this.input -> this.output;
 	}
 }
 

@@ -5,6 +5,7 @@ block decla_05 {
 	
 	blueprint() {
 		mychannel:in in = this.input;
+		in -> output;
 	}
 }
 
