@@ -35,11 +35,11 @@ public class SemanticAnalysisVisitor implements Visitor {
     private Set<BlockNode> buildNodes;
 
     public SemanticAnalysisVisitor(SymbolTableInterface symbolTableInterface) {
-        this.flowChecker = new FlowChecker(symbolTableInterface);
         this.symbolTableInterface = symbolTableInterface;
         this.callStack = new HashSetStack<>();
         this.typeSystem = new TypeSystem(this.symbolTableInterface);
         this.buildNodes = new HashSet<>();
+        this.flowChecker = new FlowChecker(symbolTableInterface, typeSystem);
     }
 
     @Override
@@ -127,8 +127,7 @@ public class SemanticAnalysisVisitor implements Visitor {
                 break;
 
             case BLOCK:
-                System.out.println("JEG ER ALTSÅ HER!!!!!!");
-                this.flowChecker.check(this.currentBlockScope);
+                this.flowChecker.check(this.currentBlockScope, this.currentSubScope);
                 this.flowChecker.getConnected().clear();
                 break;
 
@@ -189,12 +188,14 @@ public class SemanticAnalysisVisitor implements Visitor {
     private void handleSelector(SelectorNode node) {
         boolean isThis = ("this").equals(node.getId());
 
+        String prefix = flowChecker.channelPrefix(node, currentBlockScope, currentSubScope);
+
         if (isThis) {
             String childId = ((NamedIdNode) node.getChild()).getId();
 
             System.out.println("Added: this."+childId);
 
-            flowChecker.getConnected().add(childId);
+            flowChecker.getConnected().add(prefix + childId);
         } else {
             Scope scope = this.symbolTableInterface.getSubScope(this.currentBlockScope, this.currentSubScope);
             VariableEntry localVariable = scope.getVariable(node);
@@ -206,7 +207,7 @@ public class SemanticAnalysisVisitor implements Visitor {
                 this.handleSelector(subtypeNode);
 
             } else {
-                flowChecker.getConnected().add(node.getId());
+                flowChecker.getConnected().add(prefix + node.getId());
             }
         }
     }
