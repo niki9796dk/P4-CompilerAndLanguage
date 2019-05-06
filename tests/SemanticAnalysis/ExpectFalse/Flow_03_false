@@ -5,7 +5,8 @@ block Master {
     blueprint() {
         block mySlave = build Slave1(draw Slave2);
 
-        (this.in, this.in) -> mySlave -> this.out;
+        (this.in, this.in) -> mySlave;
+        mySlave.out1 -> this.out;
     }
 }
 
@@ -18,10 +19,8 @@ block Slave1 {
     blueprint(blueprint blue) {
         block slave2 = build blue();
 
-        this.in1 -> slave2 -> this.out1;
-        mult -> this.out1;
-
-        this.in2 -> this.out2;
+        (this.in1, this.in2) -> slave2;
+        slave2.in1 -> this.out1;
     }
 }
 
