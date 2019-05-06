@@ -28,9 +28,8 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
     public SemanticAnalysisVisitor(SymbolTableInterface symbolTable) {
         super(symbolTable);
-        this.flowChecker = new FlowChecker(symbolTable);
+        this.flowChecker = new FlowChecker(symbolTable, typeSystem);
         this.callStack = new HashSetStack<>();
-        this.typeSystem = new TypeSystem(this.symbolTable);
         this.buildNodes = new HashSet<>();
     }
 
@@ -107,7 +106,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
                 break;
 
             case BLOCK:
-                this.flowChecker.check(this.currentBlockScope);
+                this.flowChecker.check(this.currentBlockScope, this.currentSubScope);
                 this.flowChecker.getConnected().clear();
                 break;
 
@@ -168,12 +167,14 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
     private void handleSelector(SelectorNode node) {
         boolean isThis = ("this").equals(node.getId());
 
+        String prefix = flowChecker.channelPrefix(node, currentBlockScope, currentSubScope);
+
         if (isThis) {
             String childId = ((NamedIdNode) node.getChild()).getId();
 
             System.out.println("Added: this."+childId);
 
-            flowChecker.getConnected().add(childId);
+            flowChecker.getConnected().add(prefix + childId);
         } else {
             Scope scope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
             VariableEntry localVariable = scope.getVariable(node);
@@ -185,7 +186,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
                 this.handleSelector(subtypeNode);
 
             } else {
-                flowChecker.getConnected().add(node.getId());
+                flowChecker.getConnected().add(prefix + node.getId());
             }
         }
     }
