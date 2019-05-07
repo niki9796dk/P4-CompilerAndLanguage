@@ -21,11 +21,18 @@ import TypeChecker.TypeSystem;
 
 import java.util.*;
 
+/**
+ * The visitor used for the whole semantic analysis phase of the compiler.
+ */
 public class SemanticAnalysisVisitor extends ScopeTracker {
     private FlowChecker flowChecker;
     private SetStack<String> callStack;
     private Set<BlockNode> buildNodes;
 
+    /**
+     * The constructor
+     * @param symbolTable A symbol table, used for the scope tracker.
+     */
     public SemanticAnalysisVisitor(SymbolTableInterface symbolTable) {
         super(symbolTable);
         this.flowChecker = new FlowChecker(symbolTable, typeSystem);
@@ -33,13 +40,18 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
         this.buildNodes = new HashSet<>();
     }
 
+    /**
+     * The preorder walk of the visistor
+     * @param printLevel    the level, used to decide how many indents there should be in the print statement.
+     * @param node          The node which is being visited.
+     */
     @Override
-    public void pre(int printLevel, AbstractNode abstractNode) {
+    public void pre(int printLevel, AbstractNode node) {
         // Update the scope tracker
-        super.pre(printLevel, abstractNode);
+        super.pre(printLevel, node);
 
         // Perform visitor
-        switch (((NamedNode) abstractNode).getNodeEnum()) {
+        switch (((NamedNode) node).getNodeEnum()) {
             // No action enums
             case BLOCK:
             case BLUEPRINT:
@@ -52,8 +64,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
                 break;
 
             case BUILD:
-                this.addBuildBlockToSet((BuildNode) abstractNode);
-                buildRecursionCheck((NamedNode) abstractNode);
+                this.addBuildBlockToSet((BuildNode) node);
                 break;
 
             case PROCEDURE_CALL:
@@ -72,8 +83,8 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
                 break;
 
             case CHAIN:
-                this.verifyChain((ChainNode) abstractNode);
-                this.extractMyChannelsUses(abstractNode);
+                this.verifyChain((ChainNode) node);
+                this.extractMyChannelsUses(node);
                 break;
 
                 // Channels
@@ -82,10 +93,15 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
                 break;
 
             default:
-                throw new UnexpectedNodeException((NamedNode) abstractNode);
+                throw new UnexpectedNodeException((NamedNode) node);
         }
     }
 
+    /**
+     * The post order walk of the visitor
+     * @param printLevel    the level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode  The node which is being visited.
+     */
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
         // Update the scope tracker
@@ -136,6 +152,10 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
         }
     }
 
+    /**
+     * Extracts all channel uses within a chain.
+     * @param chainNode The ChainNode.
+     */
     private void extractMyChannelsUses(AbstractNode chainNode) {
         AbstractNode child = chainNode.getChild();
 
@@ -145,6 +165,13 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
         }
     }
 
+    /**
+     * Helper function used to extract all channel uses within a chain.
+     * If node is instance of a group, all the group children are handled recursively,
+     * else if it's a selector we first check that the selector is for a channel, and then handle that selector,
+     * and ignore everything else.
+     * @param node A single chain element
+     */
     private void handleChannel(AbstractNode node) {
         if (node instanceof GroupNode) {
             for (AbstractNode child = node.getChild(); child != null; child = child.getSib()) {
@@ -158,11 +185,16 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
                 this.handleSelector((SelectorNode) node);
             }
 
-        } else {
-            // Do nothing
         }
     }
 
+    /**
+     * Helper function used to extract all channel uses within a chain.
+     * Depending on the type of the selector different behaviour is executed.
+     * If it's a straight channel access, the ID is simply stored,
+     * else if it's a selector for another selector, we recursively follow the selectors until we find the channel in use.
+     * @param node The SelectorNode to extract channel uses from.
+     */
     private void handleSelector(SelectorNode node) {
         boolean isThis = ("this").equals(node.getId());
 
@@ -170,8 +202,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
         if (isThis) {
             String childId = ((NamedIdNode) node.getChild()).getId();
-
-            System.out.println("Added: this."+childId);
 
             flowChecker.getConnected().add(prefix + childId);
         } else {
@@ -190,29 +220,10 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
         }
     }
 
-    private void buildRecursionCheck(NamedNode node){
-        StringBuilder builder = new StringBuilder();
-        AbstractNode paramsNode = node.findFirstChildOfClass(ParamsNode.class);
-        AbstractNode childNode = null;
-        if (paramsNode != null) {
-             childNode = paramsNode.getChild();
-        }
-
-        builder.append(node.getName());
-        while (childNode != null) {
-            if(childNode instanceof NamedIdNode){
-                builder.append(childNode.getName() + ((NamedIdNode) childNode).getId());
-            } else if (childNode instanceof NamedNode){
-                builder.append(childNode.getName());
-            }
-            childNode = childNode.getSib();
-        }
-
-        if (!this.callStack.push(builder.toString())){
-            throw new RecursiveBlockException(builder.toString());
-        }
-    }
-
+    /**
+     * Method used to start the block recursion testing check.
+     * It will first find all potential main blocks, and then perform recursion checking on their build patterns.
+     */
     private void performBlockRecursionTesting() {
         // Find all potential main blocks
         List<BlockNode> potentialMainBlocks = this.findPotentialMainBlocks();
@@ -229,16 +240,32 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
         }
     }
 
+    /**
+     * Helper function for block recursion checking - Used for simplification.
+     * Will throw an exception if no potential main blocks is present.
+     * @param potentialMainBlocks A list of potential main blocks
+     * @throws SemanticProblemException if no potential blocks is present in the list.
+     */
     private void assertNonZeroMainBlockCount(List<BlockNode> potentialMainBlocks) {
         if (potentialMainBlocks.size() == 0) {
             throw new SemanticProblemException("The supplied program have NO buildable blocks - All blocks require parameters or there is none.");
         }
     }
 
+    /**
+     * Method used to start the no build cycle check, for a single potential main block.
+     * @param mainBlock A potential main block.
+     * @throws SemanticProblemException is there is build recursion within the block.
+     */
     private void assertNoBuildCycles(BlockNode mainBlock) {
         mainBlock.walkTree(new RecursiveBuildVisitor(new HashSetStack<>(), this.symbolTable));
     }
 
+    /**
+     * Helper function for performing build recursion testing.
+     * Simply adds a block to a set over blocks that have been build by other blocks.
+     * @param node The BuildNode.
+     */
     private void addBuildBlockToSet(BuildNode node) {
         String buildSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
