@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+/**
+ * The FlowChecker class - Is used as a helper class for performing flow checking in the semantic analysis phase
+ */
 public class FlowChecker {
 
     // Fields
@@ -22,20 +25,33 @@ public class FlowChecker {
     private ArrayList<String> connected;
     private SymbolTableInterface symbolTableInterface;
 
-    // Constructor
-    public FlowChecker(SymbolTableInterface symbolTableInterface, TypeSystem typeSystem) {
+    /**
+     * The constructor
+     * @param symbolTableInterface A symbole table interface object.
+     */
+    public FlowChecker(SymbolTableInterface symbolTableInterface) {
         this.connected = new ArrayList<>();
         this.symbolTableInterface = symbolTableInterface;
-        this.typeSystem = typeSystem;
+        this.typeSystem = new TypeSystem(symbolTableInterface);
     }
 
+    /**
+     * Will verify that the collected information about channel usages is sufficient for actual data flow.
+     * @param currentBlockScope The current block scope to compare from
+     * @param currentSubScope The current sub scope to compare from
+     */
     public void check(String currentBlockScope, String currentSubScope) {
         List<String> myChannels = this.getAllChannelsOfBlock(currentBlockScope, currentSubScope);
 
         evaluate(myChannels, this.connected);
     }
 
-    // Gets all channels in the channeldeclaration subscope
+    /**
+     * Get's all channels in the channel declaration subscope
+     * @param currentBlockScope The current block scope to compare from
+     * @param currentSubScope The current sub scope to compare from
+     * @return A list of all channels, in string representation, of the given block.
+     */
     private List<String> getAllChannelsOfBlock(String currentBlockScope, String currentSubScope) {
         // Get all channels
         Scope channelDeclarationScope = symbolTableInterface
@@ -55,18 +71,26 @@ public class FlowChecker {
         return myChannels;
     }
 
-    // Figure out what kind of channel it is
+    /**
+     * Figure out what kind of channel it is, and return the appropriate channel prefix
+     * @param node The channel node to check
+     * @param currentBlockScope The current block scope
+     * @param currentSubScope The current sub scope
+     * @return An appropriate channel prefix for the channel node.
+     */
     public String channelPrefix(AbstractNode node, String currentBlockScope, String currentSubScope) {
-        String prefix;
         if (this.typeSystem.getSuperTypeOfNode(node, currentBlockScope, currentSubScope).equals(NodeEnum.CHANNEL_IN_MY)) {
-            prefix = "IN_";
+            return  "IN_";
         } else {
-            prefix = "OUT_";
+            return  "OUT_";
         }
-        return prefix;
     }
 
-    // Evaluate that all channels are connected
+    /**
+     * Evaluate that all channels are connected, and in allowed counts.
+     * @param myChannels A list of all mychannels:in/out of a block
+     * @param usedChannels A list of all registered used channels
+     */
     private void evaluate(List<String> myChannels, List<String> usedChannels) {
 
         // For all channels
@@ -88,7 +112,10 @@ public class FlowChecker {
         }
     }
 
-    // Getters
+    /**
+     * A getter for the list of all registered connections
+     * @return The list of known connections.
+     */
     public ArrayList<String> getConnected() {
         return connected;
     }

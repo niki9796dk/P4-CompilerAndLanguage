@@ -34,7 +34,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
      */
     public SemanticAnalysisVisitor(SymbolTableInterface symbolTable) {
         super(symbolTable);
-        this.flowChecker = new FlowChecker(symbolTable, typeSystem);
+        this.flowChecker = new FlowChecker(symbolTable);
         this.buildNodes = new HashSet<>();
     }
 
