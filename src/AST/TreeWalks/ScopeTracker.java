@@ -13,10 +13,27 @@ import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
 import TypeChecker.TypeSystem;
 
+/**
+ * Abstract Visitor class - ScopeTracker.
+ * A Visitor class which can be extended to avoid tracking current block and sub scopes in every Visitor implementation
+ * When extending this class, in both pre() and post() should super.pre() / super.post() be called, to update the tracker.
+ */
 public abstract class ScopeTracker implements Visitor {
+    /**
+     * The current in-use block scope - Updated at all BlockNodes.
+     */
     protected String currentBlockScope;
+    /**
+     * The current in-use sub scope - Updated at BlueprintNode, ProcedureNode and ChannelDeclarationNode.
+     */
     protected String currentSubScope;
+    /**
+     * A pointer to the symbol table - Is only here for ease of use.
+     */
     protected SymbolTableInterface symbolTable;
+    /**
+     * A pointer to a type system - Is only here for ease of use.
+     */
     protected TypeSystem typeSystem;
 
     public ScopeTracker(SymbolTableInterface symbolTable) {
@@ -25,8 +42,8 @@ public abstract class ScopeTracker implements Visitor {
     }
 
     /**
-     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
-     * @param node The node which is being visited.
+     * @param printLevel    the level, used to decide how many indents there should be in the print statement.
+     * @param node          The node which is being visited.
      */
     @Override
     public void pre(int printLevel, AbstractNode node) {

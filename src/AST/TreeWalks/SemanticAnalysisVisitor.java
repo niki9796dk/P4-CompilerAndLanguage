@@ -73,7 +73,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
             case CHAIN:
                 this.verifyChain((ChainNode) abstractNode);
-                this.verifyChain((ChainNode) abstractNode);
                 this.extractMyChannelsUses(abstractNode);
                 break;
 

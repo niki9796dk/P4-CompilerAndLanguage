@@ -13,21 +13,17 @@ import SymbolTableImplementation.*;
 import TypeChecker.TypeSystem;
 import java_cup.runtime.Symbol;
 
-public class RecursiveBuildVisitor implements Visitor {
+/**
+ * A recursive build visitor, which will **follow** all build statements to verify that no build recursions happen.
+ */
+public class RecursiveBuildVisitor extends ScopeTracker {
 
     private SetStack<String> buildStack;
-    private TypeSystem typeSystem;
-    private String currentBlockScope;
-    private String currentSubScope;
 
     public RecursiveBuildVisitor(SetStack<String> buildStack, SymbolTableInterface symbolTable) {
+        super(symbolTable);
         this.buildStack = buildStack;
         this.typeSystem = new TypeSystem(symbolTable);
-    }
-
-    private RecursiveBuildVisitor(SetStack<String> buildStack, TypeSystem typeSystem) {
-        this.buildStack = buildStack;
-        this.typeSystem = typeSystem;
     }
 
     /**
@@ -37,24 +33,13 @@ public class RecursiveBuildVisitor implements Visitor {
     @Override
     public void pre(int printLevel, AbstractNode node) {
         NamedNode namedNode = (NamedNode) node;
-        NamedIdNode namedIdNode = (node instanceof NamedIdNode) ? (NamedIdNode) node : null;
 
         switch (namedNode.getNodeEnum()) {
-            // Location enums
-            case BLOCK:
-                this.currentBlockScope = namedIdNode.getId();
-                break;
-            case BLUEPRINT:
-                this.currentSubScope = BlockScope.BLUEPRINT;
-                break;
-            case PROCEDURE:
-                this.currentSubScope = BlockScope.PROCEDURE_PREFIX + namedIdNode.getId();
-                break;
-            case CHANNEL_DECLARATIONS:
-                this.currentSubScope = BlockScope.CHANNELS;
-                break;
-
             // No action enums
+            case BLOCK:
+            case BLUEPRINT:
+            case PROCEDURE:
+            case CHANNEL_DECLARATIONS:
             case ROOT:
             case GROUP:
             case CHAIN:
@@ -120,7 +105,6 @@ public class RecursiveBuildVisitor implements Visitor {
                 break;
 
             case BUILD:
-                // Once done, pop the top of the build stack.
                 break;
 
             default:
@@ -128,6 +112,12 @@ public class RecursiveBuildVisitor implements Visitor {
         }
     }
 
+    /**
+     * Method to handle a BuildNode.
+     * Will check if whatever it is we are building is a block, and then store the call in a call stack
+     * and if the same call is still within the stack (no pop) it means there is an recursion, and an exception is thrown.
+     * @param node the BuildNode to follow.
+     */
     private void handleBuild(AbstractNode node) {
         String nodeSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
@@ -150,17 +140,27 @@ public class RecursiveBuildVisitor implements Visitor {
         AbstractNode nodeBeingBuild = this.findNodeBeingBuild(node);
 
         // Jump to the build node, and walk it instead.
-        nodeBeingBuild.walkTree(new RecursiveBuildVisitor(this.buildStack, this.typeSystem));
+        nodeBeingBuild.walkTree(new RecursiveBuildVisitor(this.buildStack, this.symbolTable));
 
         // Once done, pop the newly added build
         this.buildStack.pop();
     }
 
+    /**
+     * Method for finding the root node of the specific block being build.
+     * @param buildNode The BuildNode, from which the subtype will be extracted.
+     * @return a BlockNode, which is the root for the block type extracted from the buildNode param.
+     */
     private AbstractNode findNodeBeingBuild(AbstractNode buildNode) {
         String buildSubType = this.typeSystem.getSubTypeOfNode(buildNode, this.currentBlockScope, this.currentSubScope);
         return this.typeSystem.getBlock(buildSubType);
     }
 
+    /**
+     * Convert a build node into a string representation of it's ID and the subtype of it's params.
+     * @param buildNode The BuildNode to convert.
+     * @return A string representation of build call.
+     */
     public String convertBuildNodeToString(AbstractNode buildNode) {
         String buildTypeSubType = this.typeSystem.getSubTypeOfNode(buildNode, this.currentBlockScope, this.currentSubScope);
         String paramAsString = this.getParamAsString(buildNode);
@@ -168,6 +168,12 @@ public class RecursiveBuildVisitor implements Visitor {
         return buildTypeSubType + ": " + paramAsString;
     }
 
+    /**
+     * Helper method for converting the build node into a string.
+     * Will convert the parameter part of the string representation, by loop all parameters and storing their subtypes.
+     * @param buildNode The BuildNode to convert.
+     * @return A string representation of the parameter part of the BuildNode.
+     */
     private String getParamAsString(AbstractNode buildNode) {
         ParamsNode paramsNode = buildNode.findFirstChildOfClass(ParamsNode.class);
 
@@ -190,6 +196,12 @@ public class RecursiveBuildVisitor implements Visitor {
         }
     }
 
+    /**
+     * Helper method for converting the build node into a string.
+     * Will convert a single parameter into it's string representation.
+     * @param param The single parameter node to convert.
+     * @return A string representation of a single parameter.
+     */
     private String convertSingleParamToString(AbstractNode param) {
         return this.typeSystem.getSubTypeOfNode(param, this.currentBlockScope, this.currentSubScope);
     }
