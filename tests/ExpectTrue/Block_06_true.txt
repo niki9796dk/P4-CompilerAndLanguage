@@ -7,7 +7,7 @@ block block_06 {
 	    blueprint sing_01 = draw Singleton_01;
 	    blueprint sing_02 = draw Singleton_02;
 
-		this.input -> build sing_01(sing_02) -> build sing_02(sing_01) -> this.output;
+		this.input -> build sing_01(sing_02) -> build sing_02() -> this.output;
 	}
 }
 

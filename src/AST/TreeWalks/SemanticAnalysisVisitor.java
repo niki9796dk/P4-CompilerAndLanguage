@@ -26,7 +26,6 @@ import java.util.*;
  */
 public class SemanticAnalysisVisitor extends ScopeTracker {
     private FlowChecker flowChecker;
-    private SetStack<String> callStack;
     private Set<BlockNode> buildNodes;
 
     /**
@@ -36,7 +35,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
     public SemanticAnalysisVisitor(SymbolTableInterface symbolTable) {
         super(symbolTable);
         this.flowChecker = new FlowChecker(symbolTable, typeSystem);
-        this.callStack = new HashSetStack<>();
         this.buildNodes = new HashSet<>();
     }
 
@@ -111,9 +109,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {
-            case BUILD:
-                callStack.pop();
-                break;
 
             // No action enums
             case ROOT:
@@ -126,6 +121,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
                 break;
 
             case GROUP:
+            case BUILD:
             case CHAIN:
             case PROCEDURE_CALL:
             case PARAMS:

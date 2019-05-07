@@ -32,6 +32,10 @@ public class RecursiveBuildVisitor extends ScopeTracker {
      */
     @Override
     public void pre(int printLevel, AbstractNode node) {
+        // Update scope counter
+        super.pre(printLevel, node);
+
+        // Execute visitor
         NamedNode namedNode = (NamedNode) node;
 
         switch (namedNode.getNodeEnum()) {
@@ -62,7 +66,6 @@ public class RecursiveBuildVisitor extends ScopeTracker {
 
             case BUILD:
                 this.handleBuild(node);
-
                 break;
 
             default:
@@ -76,6 +79,10 @@ public class RecursiveBuildVisitor extends ScopeTracker {
      */
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
+        // Update scope counter
+        super.post(printLevel, abstractNode);
+
+        // Execute visitor
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {
