@@ -104,6 +104,10 @@ public class BlockScope {
         return this.getScope().getEntry(PROCEDURE_PREFIX + id);
     }
 
+    /**
+     * The to string method.
+     * @return a string representation of the object.
+     */
     @Override
     public String toString() {
         return AnsiColor.GREEN + "BlockScope " + this.id + AnsiColor.RESET + ":\n" + this.getScope().toString();

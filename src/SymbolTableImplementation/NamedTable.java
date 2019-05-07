@@ -50,6 +50,10 @@ public class NamedTable<T> {
         return this.table.put(name, entry);
     }
 
+    /**
+     * The to string method.
+     * @return a string representation of the object.
+     */
     @Override
     public String toString() {
         if (this.table.size() == 0) {

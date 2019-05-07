@@ -68,6 +68,10 @@ public class VariableEntry {
         this.subTypes.add(subNode);
     }
 
+    /**
+     * The to string method.
+     * @return a string representation of the object.
+     */
     @Override
     public String toString() {
         return "\t\t\tEntry: " + AnsiColor.YELLOW + this.getId() + AnsiColor.RESET
@@ -76,6 +80,10 @@ public class VariableEntry {
                 + "\n" + getSubTypeToString();
     }
 
+    /**
+     * A helper function for the toString method, which returns subtype part of the toString method.
+     * @return A string representation of the subType list.
+     */
     private String getSubTypeToString() {
         StringBuilder builder = new StringBuilder();
 

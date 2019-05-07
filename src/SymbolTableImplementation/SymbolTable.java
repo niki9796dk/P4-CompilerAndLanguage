@@ -94,6 +94,11 @@ public class SymbolTable implements SymbolTableInterface {
         else return null;
     }
 
+    /**
+     * Evaluates a node, and return the appropriate scope id for it to open.
+     * @param node The node which started the openScope method.
+     * @return The name of the scope to open.
+     */
     private String getScopeNameFromNode(NamedNode node) {
         switch (node.getNodeEnum()) {
             case CHANNEL_DECLARATIONS:
@@ -186,6 +191,10 @@ public class SymbolTable implements SymbolTableInterface {
         return SOURCES.contains(source);
     }
 
+    /**
+     * The to string method.
+     * @return a string representation of the object.
+     */
     @Override
     public String toString() {
         return AnsiColor.CYAN.toString()
