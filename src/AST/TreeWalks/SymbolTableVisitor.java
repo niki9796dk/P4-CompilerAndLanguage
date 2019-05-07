@@ -120,7 +120,7 @@ public class SymbolTableVisitor implements Visitor {
     }
 
     /**
-     * Checks latest sub scope for a variable with identifier id, otherwise throw ScopeBoundsViolationException
+     * Checks latest sub scope for a variable with identifier id already defined, otherwise throw ScopeBoundsViolationException
      * @param id Identifier of variable to check
      */
     private void checkIfVariableIsDefined(String id) {

@@ -27,5 +27,6 @@ public enum NodeEnum {
     SELECTOR,
     SIZE,
     SIZE_TYPE,
-    SOURCE_TYPE
+    SOURCE_TYPE,
+    TEMPORARY
 }

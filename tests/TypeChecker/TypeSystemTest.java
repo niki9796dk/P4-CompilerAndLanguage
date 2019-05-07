@@ -14,5 +14,4 @@ class TypeSystemTest {
 
         assertNull(ts.getSupertypeOfNode(new RootNode(), "ignored", "ignored"));
     }
-
 }
