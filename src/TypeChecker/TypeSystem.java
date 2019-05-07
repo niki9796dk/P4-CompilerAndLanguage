@@ -179,6 +179,13 @@ public class TypeSystem {
         }
     }
 
+    /**
+     * Returns the sub type of a SelectorNode
+     * @param selectorNode The selector node from which the sub type should be extracted
+     * @param blockScope The current block scope of the node
+     * @param subScope The current sub scope of then node
+     * @return The subtype as a string.
+     */
     private String getSubTypeOfSelector(SelectorNode selectorNode, String blockScope, String subScope) {
         boolean hasSelectorChild = selectorNode.getChild() instanceof SelectorNode;
         boolean isThis = "this".equals(selectorNode.getId());
