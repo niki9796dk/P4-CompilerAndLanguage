@@ -516,4 +516,8 @@ public class SemanticAnalysisVisitor implements Visitor {
     private int countOutChannelsOfOperation(AbstractNode rightNode) {
         return 1; // TODO: Connect this to some definition of operations.
     }
+
+    public FlowChecker getFlowChecker() {
+        return flowChecker;
+    }
 }

@@ -50,8 +50,6 @@ public class FlowChecker {
             myChannels.add(prefix + ((NamedIdNode) node).getId());
         }
 
-        System.out.println(myChannels);
-
         return myChannels;
     }
 
@@ -82,8 +80,8 @@ public class FlowChecker {
             }
 
             // If a channel was not connected
-            if (amount == 0) {
-                throw new SemanticProblemException("Channel " + myChannel + " was never used!");
+            if (amount == 0 || (myChannel.startsWith("OUT_") && amount > 1)) {
+                throw new SemanticProblemException("Incorrect use of " + myChannel + ". Amount: " + amount);
             }
         }
     }

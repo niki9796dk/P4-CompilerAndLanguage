@@ -35,7 +35,7 @@ class MainParseTest {
         return expectedFalse(falseFolder, AutoGen.ScannerException.class);
     }
 
-    // Test all negative files
+    // Test all negative files regarding type checking
     @TestFactory
     Stream<DynamicTest> negativeFiles_TypeChecking() {
         File falseFolder = new File("tests/TypeRules/ExpectFalse/");
