@@ -342,12 +342,24 @@ public class TypeSystem {
         }
     }
 
+    /**
+     * Helper function, for asserting that an object is not null, and throw an exception if it is.
+     * @param object The object to evaluate
+     * @param errorMsg The error messages to throw if the object is null.
+     * @throws ShouldNotHappenException Is thrown if the object is null.
+     */
     private void assertNotNull(Object object, String errorMsg) {
         if (object == null) {
             throw new ShouldNotHappenException(errorMsg);
         }
     }
 
+    /**
+     * Translates the super type of an external channel into the correct internal channel type.
+     * eg. mychannel:in -> channel:in
+     * @param type The type of the external channel
+     * @return The translated super type.
+     */
     private NodeEnum translateExternalChannelTypes(NodeEnum type) {
         switch (type) {
             case CHANNEL_IN_MY:
