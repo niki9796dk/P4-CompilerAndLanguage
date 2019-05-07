@@ -119,6 +119,10 @@ public class SymbolTableVisitor implements Visitor {
         }
     }
 
+    /**
+     * Checks latest sub scope for a variable with identifier id, otherwise throw ScopeBoundsViolationException
+     * @param id Identifier of variable to check
+     */
     private void checkIfVariableIsDefined(String id) {
         Scope latestSubScope = this.symbolTableInterface.getLatestBlockScope().getLatestSubScope();
         VariableEntry variable = latestSubScope.getVariable(id);
