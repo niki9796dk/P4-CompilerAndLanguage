@@ -18,7 +18,7 @@ class MainParseTest {
 
     // Test all positive files
     @TestFactory
-    Stream<DynamicTest> positiveFiles() {
+    Stream<DynamicTest> positiveFiles_TRUE() {
 
         File trueFolder = new File("tests/ExpectTrue/");
 
@@ -32,7 +32,7 @@ class MainParseTest {
     // Test all negative files
     @TestFactory
     Stream<DynamicTest> negativeFiles_ProductionRules() {
-        File falseFolder = new File("tests/TypeRules/ExpectFalse/");
+        File falseFolder = new File("tests/ProductionRules/ExpectFalse/");
 
         return expectedFalse(falseFolder, AutoGen.ScannerException.class);
     }
@@ -63,7 +63,7 @@ class MainParseTest {
 
     // Test all negative files regarding scope checking
     @TestFactory
-    Stream<DynamicTest> scopeNegativeFiles() {
+    Stream<DynamicTest> negativeFiles_ScopeChecking() {
         File falseFolder = new File("tests/ScopeChecking/ExpectFalse/");
 
         return expectedFalse(falseFolder, AST.TreeWalks.Exceptions.ScopeBoundsViolationException.class);
@@ -71,7 +71,7 @@ class MainParseTest {
 
     // Test all negative files regarding scope checking
     @TestFactory
-    Stream<DynamicTest> semanticNegativeFiles() {
+    Stream<DynamicTest> negativeFiles_SemanticChecking() {
         String mainPath = "tests/SemanticAnalysis/ExpectFalse/";
 
         String[] paths = {
