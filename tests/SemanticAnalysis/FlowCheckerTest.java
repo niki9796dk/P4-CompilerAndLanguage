@@ -63,7 +63,7 @@ class FlowCheckerTest {
         latestBlockScope = symbolTableInterface.getLatestBlockScope().getId();
         channelScope = symbolTableInterface.getLatestBlockScope().getChannelDeclarationScope().getId();
 
-        flowChecker = new FlowChecker(symbolTableInterface, new TypeSystem(symbolTableInterface));
+        flowChecker = new FlowChecker(symbolTableInterface);
     }
 
     @Test
