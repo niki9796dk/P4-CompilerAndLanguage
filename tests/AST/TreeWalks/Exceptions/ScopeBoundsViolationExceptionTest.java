@@ -10,14 +10,14 @@ class ScopeBoundsViolationExceptionTest {
 
     @Test
     void noMessage() {
-        assertThrows(RecursiveBlockException.class, () -> {
+        assertThrows(ScopeBoundsViolationException.class, () -> {
             throw new ScopeBoundsViolationException();
         });
     }
 
     @Test
     void message() {
-        assertThrows(RecursiveBlockException.class, () -> {
+        assertThrows(ScopeBoundsViolationException.class, () -> {
             throw new ScopeBoundsViolationException("message");
         });
     }
