@@ -16,6 +16,10 @@ public class SymbolTableVisitor implements Visitor {
 
     private SymbolTableInterface symbolTableInterface = new SymbolTable();
 
+    /**
+     * A getter for the generated symbol table.
+     * @return The generated symbol table instance.
+     */
     public SymbolTableInterface getSymbolTableInterface() {
         return symbolTableInterface;
     }
@@ -119,6 +123,11 @@ public class SymbolTableVisitor implements Visitor {
         }
     }
 
+    /**
+     * Checks if a variable is already defined within the symbol table, and if it is, and exception is thrown.
+     * @param id The variable id to check.
+     * @throws ScopeBoundsViolationException thrown if the variable id is already declared.
+     */
     private void checkIfVariableIsDefined(String id) {
         Scope latestSubScope = this.symbolTableInterface.getLatestBlockScope().getLatestSubScope();
         VariableEntry variable = latestSubScope.getVariable(id);

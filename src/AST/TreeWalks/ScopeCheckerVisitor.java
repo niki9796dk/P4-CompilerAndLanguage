@@ -12,6 +12,9 @@ import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SymbolTableImplementation.*;
 
+/**
+ * The scope checker visitor, used for checking everything in the scope checking phase of a the compiler.
+ */
 public class ScopeCheckerVisitor implements Visitor {
 
     private SymbolTableInterface symbolTableInterface;
@@ -24,6 +27,11 @@ public class ScopeCheckerVisitor implements Visitor {
         this.currentSubScope = null;
     }
 
+    /**
+     * The preorder walk for the visitor.
+     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
+     */
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
         NamedNode node = (NamedNode) abstractNode;
@@ -106,6 +114,11 @@ public class ScopeCheckerVisitor implements Visitor {
         }
     }
 
+    /**
+     * The post order walk for the visitor
+     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
+     */
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
         NamedNode node = (NamedNode) abstractNode;
@@ -141,6 +154,11 @@ public class ScopeCheckerVisitor implements Visitor {
         }
     }
 
+    /**
+     * Checks if a build id is not a buildable element such as a Source, Operation or Block.
+     * @param buildId The id to check.
+     * @return false if the element is buildable or true if it's not.
+     */
     private boolean isNotADefinedBuildableElement(String buildId) {
         boolean isADefinedBlock = this.symbolTableInterface.getBlockScope(buildId) != null;
         boolean isPredefinedOperation = this.symbolTableInterface.isPredefinedOperation(buildId);
@@ -149,6 +167,11 @@ public class ScopeCheckerVisitor implements Visitor {
         return !(isADefinedBlock || isPredefinedOperation || isPredefinedSource);
     }
 
+    /**
+     * Check if a build id is not a local blueprint variable.
+     * @param buildId The build id to check.
+     * @return false if it's not a local blueprint variable, and true if it is.
+     */
     private boolean isNotLocalBlueprintVariable(String buildId) {
         VariableEntry localVariable = this.currentSubScope.getVariable(buildId);
 
@@ -162,16 +185,32 @@ public class ScopeCheckerVisitor implements Visitor {
         }
     }
 
+    /**
+     * Verifies that an id is a channel variable, and throws an exception if it's not.
+     * @param id the channel id to check.
+     * @throws ScopeBoundsViolationException if the id is not a channel.
+     */
     private void verifyChannelVariable(String id) {
         VariableEntry variable = this.currentBlockScope.getChannelDeclarationScope().getVariable(id);
         checkIfNull(variable, "Channeldeclarations", id);
     }
 
+    /**
+     * Verify that an id is a variable in the current local scope, and throws an exception if it's not.
+     * @param id The variable id to check
+     * @throws ScopeBoundsViolationException if the id is not a local variable.
+     */
     private void verifyCurrentScopeVariable(String id) {
         VariableEntry variable = this.currentSubScope.getVariable(id);
         checkIfNull(variable, this.currentSubScope.getNode().getName(), id);
     }
 
+    /**
+     * Helper function used to simplify checking if a variable entry is null, and throw an exception if it is.
+     * @param variable The variable entry to compare.
+     * @param subScope The subscope the variable entry was extracted from - Used for error messages.
+     * @param id The variable id the variable entry was extracted with - Used for error messages .
+     */
     private void checkIfNull(VariableEntry variable, String subScope, String id) {
         if (variable == null) {
             throw new ScopeBoundsViolationException("In scope: " + this.currentBlockScope.getId() + ">" + subScope + ", no such variable: " + id);

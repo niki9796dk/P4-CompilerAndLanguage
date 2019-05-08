@@ -19,18 +19,14 @@ import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
 import TypeChecker.TypeSystem;
 
-public class TypeCheckerVisitor implements Visitor {
-
-    private TypeSystem typeSystem;
-    private String currentBlockScope;
-    private String currentSubScope;
+public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Type checker visitor constructor
      * @param symbolTableInterface A symbol table used as reference.
      */
     public TypeCheckerVisitor(SymbolTableInterface symbolTableInterface) {
-        this.typeSystem = new TypeSystem(symbolTableInterface);
+        super(symbolTableInterface);
     }
 
     /**
@@ -40,21 +36,17 @@ public class TypeCheckerVisitor implements Visitor {
      */
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
+        // Update the scope tracker
+        super.pre(printLevel, abstractNode);
+
+        // Perform visitor
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {
-            // Location enums
             case BLOCK:
-                this.currentBlockScope = ((NamedIdNode) node).getId();
-                break;
             case BLUEPRINT:
-                this.currentSubScope = BlockScope.BLUEPRINT;
-                break;
             case PROCEDURE:
-                this.currentSubScope = BlockScope.PROCEDURE_PREFIX + ((NamedIdNode) node).getId();
-                break;
             case CHANNEL_DECLARATIONS:
-                this.currentSubScope = BlockScope.CHANNELS;
                 break;
 
                 //// ACTUAL TYPE CHECKING START
@@ -107,6 +99,10 @@ public class TypeCheckerVisitor implements Visitor {
      */
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
+        // Update the scope tracker
+        super.post(printLevel, abstractNode);
+
+        // Perform visitor
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {

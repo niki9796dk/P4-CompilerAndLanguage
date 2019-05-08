@@ -77,6 +77,10 @@ public class Scope {
         return node;
     }
 
+    /**
+     * The to string method.
+     * @return a string representation of the object.
+     */
     @Override
     public String toString() {
         return AnsiColor.BLUE + "\tSubScope " + id + AnsiColor.RESET + ": \n" + this.scope.toString();
