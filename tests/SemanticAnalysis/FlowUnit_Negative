@@ -1,0 +1,9 @@
+block Sigmoid {
+    mychannel:out output;
+    mychannel:in input;
+
+    blueprint() {
+        this.input -> this.output;
+        this.input -> this.output;
+    }
+}

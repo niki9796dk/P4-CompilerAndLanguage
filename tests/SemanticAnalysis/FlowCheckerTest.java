@@ -5,12 +5,14 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
 import AST.TreeWalks.NumberTree;
 import AST.TreeWalks.SymbolTableVisitor;
 import AutoGen.MainParse;
+import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.SymbolTableInterface;
 import TypeChecker.TypeSystem;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 import java_cup.runtime.Symbol;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -23,19 +25,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class FlowCheckerTest {
 
     // Fields
-    private static String latestBlockScope;
-    private static String channelScope;
-    private static FlowChecker flowChecker;
-    private static SymbolTableInterface symbolTableInterface;
+    private String latestBlockScope;
+    private String channelScope;
+    private FlowChecker flowChecker;
+    private SymbolTableInterface symbolTableInterface;
 
     // Constants
-    private static final String PATH = "C:\\Users\\mikel\\Desktop\\Git projects\\P4\\tests\\ExpectTrue\\AnnLayer-Shorthand_true.anol";
+    private static final String PATH = "tests/SemanticAnalysis/FlowUnit_01";
+    private static final String PATH_NEGATIVE = "tests/SemanticAnalysis/FlowUnit_Negative";
 
-    @BeforeAll
-    static void beforeAll() throws Exception {
+    @BeforeEach
+    void beforeEach() throws Exception {
+        beforeEachContent(PATH);
+    }
+
+    private void beforeEachContent(String path) throws Exception {
         ComplexSymbolFactory csf = new ComplexSymbolFactory();
         // create a buffering scanner wrapper
-        ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(PATH)),csf));
+        ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)),csf));
 
         // start parsing
         AutoGen.Parser p = new AutoGen.Parser(lexer,csf);
@@ -55,17 +62,34 @@ class FlowCheckerTest {
 
         latestBlockScope = symbolTableInterface.getLatestBlockScope().getId();
         channelScope = symbolTableInterface.getLatestBlockScope().getChannelDeclarationScope().getId();
+
+        flowChecker = new FlowChecker(symbolTableInterface, new TypeSystem(symbolTableInterface));
     }
 
     @Test
     void check() {
-        System.out.println(flowChecker.getConnected());
+        flowChecker.getConnected().add("IN_input");
+        flowChecker.getConnected().add("OUT_output");
         flowChecker.check(latestBlockScope, channelScope);
         assertTrue(true); // No exceptions
     }
 
     @Test
+    void evaluate() throws Exception{
+        beforeEachContent(PATH_NEGATIVE);
+        flowChecker.getConnected().add("IN_input");
+        flowChecker.getConnected().add("OUT_output");
+        flowChecker.getConnected().add("IN_input");
+        flowChecker.getConnected().add("OUT_output");
+        assertThrows(SemanticProblemException.class, () -> {
+            flowChecker.check(latestBlockScope, channelScope);
+        });
+    }
+
+    @Test
     void getConnected() {
+        flowChecker.getConnected().add("IN_input");
+        flowChecker.getConnected().add("OUT_output");
         flowChecker.check(latestBlockScope, channelScope);
         List<String> expected = new ArrayList<>();
         expected.add("IN_input");
