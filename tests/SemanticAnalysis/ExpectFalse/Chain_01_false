@@ -17,6 +17,6 @@ block Slave {
         operation mult = build Multiplication();
 
         (this.in1) -> mult -> this.out1;
-        mult -> this.out2;
+        this.in2 -> this.out2;
     }
 }

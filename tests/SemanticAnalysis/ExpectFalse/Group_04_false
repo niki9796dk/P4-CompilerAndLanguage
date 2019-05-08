@@ -15,6 +15,7 @@ block Slave {
     blueprint() {
         operation mult = build Multiplication();
 
-        (this.in1) -> mult -> this.out;
+        (this.in1) -> mult;
+        this.in2 -> this.out;
     }
 }

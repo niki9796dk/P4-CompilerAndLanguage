@@ -4,6 +4,7 @@ block Main {
 
     blueprint() {
         block master = build A();
+        this.in -> this.out;
     }
 }
 
@@ -13,6 +14,7 @@ block A {
 
     blueprint() {
         block child = build A_1();
+        this.in -> this.out;
     }
 }
 
@@ -22,6 +24,7 @@ block A_1 {
 
     blueprint() {
         block myLove = build B();
+        this.in -> this.out;
     }
 }
 
@@ -32,6 +35,7 @@ block B {
 
     blueprint() {
         block child = build B_1();
+        this.in -> this.out;
     }
 }
 
@@ -42,5 +46,6 @@ block B_1 {
 
     blueprint() {
         block myLove = build A();
+        this.in -> this.out;
     }
 }

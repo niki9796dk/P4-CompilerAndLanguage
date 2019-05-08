@@ -1,7 +1,8 @@
 block ABC {
+    mychannel:in in;
     mychannel:out out;
 
     blueprint(blueprint def) {
-
+        this.in -> this.out;
     }
 }
