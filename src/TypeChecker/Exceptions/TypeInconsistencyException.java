@@ -8,4 +8,8 @@ public class TypeInconsistencyException extends RuntimeException {
     public TypeInconsistencyException(String message) {
         super(message);
     }
+
+    public TypeInconsistencyException(Throwable cause) {
+        super(cause);
+    }
 }
