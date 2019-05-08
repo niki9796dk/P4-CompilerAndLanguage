@@ -99,7 +99,7 @@ public class ListChannel implements Channel {
 
     @Override
     public void tether(Channel that) {
-        that.tether(this);
+        that.setSource(this);
         this.addTarget(that);
     }
 }
