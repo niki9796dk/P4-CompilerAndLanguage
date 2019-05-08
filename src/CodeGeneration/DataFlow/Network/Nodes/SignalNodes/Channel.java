@@ -7,7 +7,7 @@ import java.util.Collection;
 public interface Channel extends SignalNode {
     boolean isReady();
 
-    void signalReady();
+    void sendReadySignals();
 
 
     SignalNode setSource(SignalNode channel);
@@ -17,7 +17,7 @@ public interface Channel extends SignalNode {
 
     SignalNode getSource();
 
-    Collection<SignalNode> getTargets();
+    void tether(Channel that);
 
-    //boolean flip();
+    Collection<SignalNode> getTargets();
 }

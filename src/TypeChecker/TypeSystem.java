@@ -212,7 +212,6 @@ public class TypeSystem {
                         // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
                         throw new ShouldNotHappenException("The operation '" + variableId + "' does not have a channel named '" + childId + "'");
                     }
-
             }
 
             return null;

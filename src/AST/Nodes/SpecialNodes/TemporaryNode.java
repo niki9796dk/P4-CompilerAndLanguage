@@ -1,5 +1,6 @@
 package AST.Nodes.SpecialNodes;
 
+import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 
 /**
@@ -11,6 +12,6 @@ public class TemporaryNode extends NamedNode {
      * @param name  The unique name of the node.
      */
     public TemporaryNode(String name) {
-        super(name, null);
+        super(name, NodeEnum.TEMPORARY);
     }
 }

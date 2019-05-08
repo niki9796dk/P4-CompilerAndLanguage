@@ -22,7 +22,7 @@ public class ListChannel implements Channel {
      * Constructor for ListChannel class that sets a source and a number of target SignalNodes
      *
      * @param source  The SignalNode that enters the channel
-     * @param targets The list of SignalNodes exits the channel and sends information
+     * @param targets The list of SignalNodes that exit the channel and sends information
      */
     public ListChannel(SignalNode source, SignalNode... targets) {
         this.source = source;
@@ -32,11 +32,20 @@ public class ListChannel implements Channel {
     public ListChannel() {
     }
 
+    /**
+     * Adds a channel as a target
+     * @param channel The target channel that this connects to
+     * @return Returns itself to allow chaining method calls
+     */
     public ListChannel addTarget(SignalNode channel) {
         this.targets.add(channel);
         return this;
     }
 
+    /**
+     * Gets the resulting matrix of data from the source
+     * @return A matrix of data
+     */
     @Override
     public Matrix getResult() {
         Matrix result = this.source.getResult();
@@ -47,13 +56,17 @@ public class ListChannel implements Channel {
         return result;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isReady() {
         return this.ready;
     }
 
     @Override
-    public void signalReady() {
+    public void sendReadySignals() {
         for (SignalNode target : targets)
             target.acceptReadySignal();
     }
@@ -61,7 +74,7 @@ public class ListChannel implements Channel {
     @Override
     public void acceptReadySignal() {
         this.ready = true;  // Store ready state for later recall
-        this.signalReady(); // Signal all outputs that their input is now ready.
+        this.sendReadySignals(); // Signal all outputs that their input is now ready.
     }
 
     @Override
@@ -84,25 +97,9 @@ public class ListChannel implements Channel {
         return this;
     }
 
-    /*
     @Override
-    public void traverseBackwards() {
-        this.source.traverseBackwards();
+    public void tether(Channel that) {
+        that.tether(this);
+        this.addTarget(that);
     }
-    */
-
-    /*
-    @Override
-    public boolean flip() {
-        this.isFlipped = !isFlipped;
-        return isFlipped;
-    }
-    */
-
-    /*
-    @Override
-    public void acceptBackSignal() {
-        this.source.acceptBackSignal();
-    }
-    */
 }

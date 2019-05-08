@@ -17,12 +17,20 @@ public class ScopeCheckerVisitor implements Visitor {
     private BlockScope currentBlockScope;
     private Scope currentSubScope;
 
+    /**
+     * The constructor for the ScopeCheckerVisitor that initializes the given symbol table
+     * @param symbolTableInterface The symbol table to check scope on
+     */
     public ScopeCheckerVisitor(SymbolTableInterface symbolTableInterface) {
         this.symbolTableInterface = symbolTableInterface;
         this.currentBlockScope = null;
         this.currentSubScope = null;
     }
 
+    /**
+     * @param printLevel the level, used connect decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
+     */
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
         NamedNode node = (NamedNode) abstractNode;
@@ -113,6 +121,10 @@ public class ScopeCheckerVisitor implements Visitor {
         }
     }
 
+    /**
+     * @param printLevel the level, used connect decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
+     */
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
         NamedNode node = (NamedNode) abstractNode;
@@ -148,16 +160,30 @@ public class ScopeCheckerVisitor implements Visitor {
         }
     }
 
+    /**
+     * Verify that a channel exists in the symbol table
+     * @param id Identifier of channel variable
+     */
     private void verifyChannelVariable(String id) {
         VariableEntry variable = this.currentBlockScope.getChannelDeclarationScope().getVariable(id);
         checkIfNull(variable, "Channeldeclarations", id);
     }
 
+    /**
+     * Verify that a variable exists within the current subscope in the symbol table
+     * @param id Identifier of variable
+     */
     private void verifyCurrentScopeVariable(String id) {
         VariableEntry variable = this.currentSubScope.getVariable(id);
         checkIfNull(variable, this.currentSubScope.getNode().getName(), id);
     }
 
+    /**
+     * Checks is a given variable is null, and throws a ScopeBoundsViolationException if that is the case
+     * @param variable The variable to check if null
+     * @param subScope The subScope that the variable should exist within, used in error message
+     * @param id The identifier of the variable, used in error message
+     */
     private void checkIfNull(VariableEntry variable, String subScope, String id) {
         if (variable == null) {
             throw new ScopeBoundsViolationException("In scope: " + this.currentBlockScope.getId() + ">" + subScope + ", no such variable: " + id);

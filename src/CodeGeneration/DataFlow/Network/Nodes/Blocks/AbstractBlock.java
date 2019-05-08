@@ -114,9 +114,7 @@ public abstract class AbstractBlock implements Block {
             throw new NullPointerException("targetChannel is null!");
 
         ///////
-        outputChannel.addTarget(targetChannel);
-
-        targetChannel.setSource(outputChannel);
+        outputChannel.tether(targetChannel);
 
         ///////
         // Allow back propagation //

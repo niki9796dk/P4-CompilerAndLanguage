@@ -1,8 +1,8 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations;
 
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operation;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
@@ -28,9 +28,9 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
      */
     @Override
     public void acceptReadySignal() {
-        if (this.isReady()) {// If all inputs are isReady
+        if (this.isReady()) {                       // If all inputs are isReady
             this.performOperation();                // Then perform the operation
-            this.getOutputChannel().signalReady();  // And signal that the output channel now is isReady.
+            this.getOutputChannel().sendReadySignals();  // And signal that the output channel now is isReady.
         }
     }
 
@@ -42,14 +42,14 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
      * @return boolean value of whether all operation inputs are isReady, or there are no inputs.
      */
     private boolean isReady() {
-        if(this.isReady)
+        if (this.isReady)
             return true;
 
-        if(this.getInputs().isEmpty())
+        if (this.getInputs().isEmpty())
             return (this.isReady = true);
 
         for (Channel inputChannel : this.getInputs())
-            if(!inputChannel.isReady())
+            if (!inputChannel.isReady())
                 return false;
 
         return (this.isReady = true);

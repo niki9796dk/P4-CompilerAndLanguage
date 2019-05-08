@@ -11,6 +11,4 @@ public interface Block extends Node {
     Block connectTo(Block toBlock, String fromChannel, String toChannel);
 
     Channel getChannel(String channelId);
-
-    //void flip();
 }
