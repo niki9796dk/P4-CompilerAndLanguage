@@ -92,18 +92,6 @@ public interface Node {
     AbstractNode getFirstSib();
 
     /**
-     * Returns the name of the node.
-     * @return the name of the node, or an empty string if there is none.
-     */
-    String getName();
-
-    /**
-     * Get the number of the node, which is based on the amount of nodes created before the node,
-     * @return the number of the node.
-     */
-    int getNodeNum();
-
-    /**
      * Walk the tree of child nodes using a visitor.
      * @param v the visitor object to use.
      */

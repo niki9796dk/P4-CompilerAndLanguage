@@ -25,6 +25,8 @@ import java.util.*;
  * The visitor used for the whole semantic analysis phase of the compiler.
  */
 public class SemanticAnalysisVisitor extends ScopeTracker {
+
+    // Fields:
     private FlowChecker flowChecker;
     private Set<BlockNode> buildNodes;
 

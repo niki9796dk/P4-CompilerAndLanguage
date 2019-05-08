@@ -202,7 +202,7 @@ public class ScopeCheckerVisitor implements Visitor {
      */
     private void verifyCurrentScopeVariable(String id) {
         VariableEntry variable = this.currentSubScope.getVariable(id);
-        checkIfNull(variable, this.currentSubScope.getNode().getName(), id);
+        checkIfNull(variable, ((NamedNode) this.currentSubScope.getNode()).getName(), id);
     }
 
     /**
