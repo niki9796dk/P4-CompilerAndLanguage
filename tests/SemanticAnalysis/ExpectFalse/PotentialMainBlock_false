@@ -1,0 +1,7 @@
+block ABC {
+    mychannel:out out;
+
+    blueprint(blueprint def) {
+
+    }
+}

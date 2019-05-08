@@ -49,7 +49,9 @@ class ScopeCheckerVisitorTest {
         symbolTableInterface.openBlockScope(otherBlockNode);
 
         BuildNode otherBuildNode = new BuildNode("otherBlockNodeId");
-        assertDoesNotThrow(() -> scopeCheckerVisitor.pre(0, otherBuildNode));
+        scopeCheckerVisitor.pre(0, otherBuildNode);
+
+        assertTrue(true);
     }
 
     @Test

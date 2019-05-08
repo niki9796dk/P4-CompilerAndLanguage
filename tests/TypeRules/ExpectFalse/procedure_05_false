@@ -1,0 +1,25 @@
+block procedure_04 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        blueprint fakeBlock = draw Test;
+
+        abc(fakeBlock, fakeBlock);
+
+        this.in -> this.out;
+    }
+
+    procedure abc(blueprint b) {
+
+    }
+}
+
+block Test {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        this.in -> this.out;
+    }
+}
