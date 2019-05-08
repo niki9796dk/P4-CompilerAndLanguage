@@ -14,11 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SymbolTableTest {
 
-    SymbolTable s;
-    BlockNode n;
-    NamedIdNode n2;
-    NamedIdNode n3;
-    BlueprintNode bn;
+    // Fields
+    private SymbolTable s;
+    private BlockNode n;
+    private NamedIdNode n2;
+    private NamedIdNode n3;
+    private BlueprintNode bn;
 
     /**
      * Adds a block table to the symbol table
@@ -26,52 +27,52 @@ class SymbolTableTest {
      */
     @BeforeEach
     void beforeEach() {
-        s = new SymbolTable();
-        n = new BlockNode("n");
-        n2 = new SizeTypeNode("n2");
-        n3 = new SizeTypeNode("n3");
-        bn = new BlueprintNode();
+        this.s = new SymbolTable();
+        this.n = new BlockNode("n");
+        this.n2 = new SizeTypeNode("n2");
+        this.n3 = new SizeTypeNode("n3");
+        this.bn = new BlueprintNode();
     }
 
     @Test
     void openBlockScope() {
-        s.openBlockScope(n);
+        this.s.openBlockScope(this.n);
     }
 
     @Test
     void openSubScope() {
-        s.openBlockScope(n);
-        s.openSubScope(bn);
+        this.s.openBlockScope(this.n);
+        this.s.openSubScope(this.bn);
 
         ChannelDeclarationsNode cdNode = new ChannelDeclarationsNode();
         ProcedureNode pNode = new ProcedureNode("pNode");
         SizeNode sNode = new SizeNode(0, 2);
 
-        s.openSubScope(cdNode);
-        s.openSubScope(pNode);
+        this.s.openSubScope(cdNode);
+        this.s.openSubScope(pNode);
         assertThrows(IllegalArgumentException.class, () -> s.openSubScope(sNode));
 
     }
 
     @Test
     void getBlockScope() {
-        s.openBlockScope(n);
-        assertSame(n, s.getBlockScope("n").getNode());
+        this.s.openBlockScope(this.n);
+        assertSame(this.n, this.s.getBlockScope("n").getNode());
     }
 
     @Test
     void insertVariable() {
-        s.openBlockScope(n);
-        s.openSubScope(bn);
-        s.insertVariable(n2);
-        s.getBlockScope("n").getLatestSubScope().getVariable("n2");
+        this.s.openBlockScope(this.n);
+        this.s.openSubScope(this.bn);
+        this.s.insertVariable(this.n2);
+        this.s.getBlockScope("n").getLatestSubScope().getVariable("n2");
     }
 
     @Test
     void reassignVariable() {
-        s.openBlockScope(n);
-        s.openSubScope(bn);
-        s.insertVariable(n2);
+        this.s.openBlockScope(this.n);
+        this.s.openSubScope(this.bn);
+        this.s.insertVariable(this.n2);
 
         AssignNode assignNode = new AssignNode();
 
@@ -80,15 +81,15 @@ class SymbolTableTest {
                 new BuildNode("BuildNode")
         );
 
-        s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
-        s.reassignVariable(assignNode);
+        this.s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
+        this.s.reassignVariable(assignNode);
     }
 
     @Test
     void reassignVariable001() {
-        s.openBlockScope(n);
-        s.openSubScope(bn);
-        s.insertVariable(n2);
+        this.s.openBlockScope(this.n);
+        this.s.openSubScope(this.bn);
+        this.s.insertVariable(this.n2);
 
         AssignNode assignNode = new AssignNode();
 
@@ -97,15 +98,15 @@ class SymbolTableTest {
                 new SizeNode(0, 100)
         );
 
-        s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
-        s.reassignVariable(assignNode);
+        this.s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
+        this.s.reassignVariable(assignNode);
     }
 
     @Test
     void reassignVariable002() {
-        s.openBlockScope(n);
-        s.openSubScope(bn);
-        s.insertVariable(n2);
+        this.s.openBlockScope(this.n);
+        this.s.openSubScope(this.bn);
+        this.s.insertVariable(this.n2);
 
         AssignNode assignNode = new AssignNode();
 
@@ -118,39 +119,45 @@ class SymbolTableTest {
         assertThrows(IllegalArgumentException.class, () -> s.reassignVariable(assignNode));
     }
 
+    @Test
+    void getSubScope() {
+        assertEquals(null, s.getSubScope("", ""));
+    }
+
+
 
     @Test
     void getLatestBlockScope() {
-        s.openBlockScope(n);
-        assertSame(s.getLatestBlockScope().getNode(), n);
+        this.s.openBlockScope(this.n);
+        assertSame(this.s.getLatestBlockScope().getNode(), this.n);
     }
 
     @Test
     void isPredefinedOperation() {
-        assertTrue(s.isPredefinedOperation("Addition"));
-        assertTrue(s.isPredefinedOperation("Multiplication"));
-        assertTrue(s.isPredefinedOperation("Subtraction"));
-        assertTrue(s.isPredefinedOperation("_Addition"));
-        assertTrue(s.isPredefinedOperation("_Multiplication"));
-        assertTrue(s.isPredefinedOperation("_Subtraction"));
-        assertTrue(s.isPredefinedOperation("_Division"));
-        assertTrue(s.isPredefinedOperation("_Sigmoid"));
-        assertTrue(s.isPredefinedOperation("_Tanh"));
-        assertTrue(s.isPredefinedOperation("_Relu"));
-        assertTrue(s.isPredefinedOperation("Transpose"));
+        assertTrue(this.s.isPredefinedOperation("Addition"));
+        assertTrue(this.s.isPredefinedOperation("Multiplication"));
+        assertTrue(this.s.isPredefinedOperation("Subtraction"));
+        assertTrue(this.s.isPredefinedOperation("_Addition"));
+        assertTrue(this.s.isPredefinedOperation("_Multiplication"));
+        assertTrue(this.s.isPredefinedOperation("_Subtraction"));
+        assertTrue(this.s.isPredefinedOperation("_Division"));
+        assertTrue(this.s.isPredefinedOperation("_Sigmoid"));
+        assertTrue(this.s.isPredefinedOperation("_Tanh"));
+        assertTrue(this.s.isPredefinedOperation("_Relu"));
+        assertTrue(this.s.isPredefinedOperation("Transpose"));
 
-        assertFalse(s.isPredefinedOperation("Division"));
-        assertFalse(s.isPredefinedOperation("_Transpose"));
-        assertFalse(s.isPredefinedOperation("Lizard"));
+        assertFalse(this.s.isPredefinedOperation("Division"));
+        assertFalse(this.s.isPredefinedOperation("_Transpose"));
+        assertFalse(this.s.isPredefinedOperation("Lizard"));
 
     }
 
     @Test
     void toString000() {
-        s.openBlockScope(n);
-        s.openSubScope(bn);
-        s.insertVariable(n2);
-        assertEquals(AnsiColor.removeColor(s.toString()),
+        this.s.openBlockScope(this.n);
+        this.s.openSubScope(this.bn);
+        this.s.insertVariable(this.n2);
+        assertEquals(AnsiColor.removeColor(this.s.toString()),
                 "Symbol Table:\n" +
                         "\n" +
                         "BlockScope n:\n" +
