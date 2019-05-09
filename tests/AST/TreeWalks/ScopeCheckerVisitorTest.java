@@ -21,35 +21,36 @@ class ScopeCheckerVisitorTest {
 
     @BeforeEach
     void beforeEach() {
-        symbolTableInterface = new SymbolTable();
-        scopeCheckerVisitor = new ScopeCheckerVisitor(symbolTableInterface);
+        this.symbolTableInterface = new SymbolTable();
+        this.scopeCheckerVisitor = new ScopeCheckerVisitor(this.symbolTableInterface);
 
-        blockNode = new BlockNode("blockNodeId");
-        blueprintNode = new BlueprintNode();
+        this.blockNode = new BlockNode("blockNodeId");
+        this.blueprintNode = new BlueprintNode();
 
         // Insert into symbol table
-        symbolTableInterface.openBlockScope(blockNode);
-        symbolTableInterface.openSubScope(blueprintNode);
+        this.symbolTableInterface.openBlockScope(this.blockNode);
+        this.symbolTableInterface.openSubScope(this.blueprintNode);
 
         // Pretend to enter block and blueprint
-        scopeCheckerVisitor.pre(0, blockNode);
-        scopeCheckerVisitor.pre(0, blueprintNode);
+        this.scopeCheckerVisitor.pre(0, this.blockNode);
+        this.scopeCheckerVisitor.pre(0, this.blueprintNode);
     }
 
     @Test
     void preTestDrawBuild01() {
         BuildNode buildNode = new BuildNode("notBlockNodeId");
 
-        assertThrows(NonexistentBlockException.class, () -> scopeCheckerVisitor.pre(0, buildNode));
+        assertThrows(NonexistentBlockException.class, () -> this.scopeCheckerVisitor.pre(0, buildNode));
     }
 
     @Test
     void preTestDrawBuild02() {
         BlockNode otherBlockNode = new BlockNode("otherBlockNodeId");
-        symbolTableInterface.openBlockScope(otherBlockNode);
+        this.symbolTableInterface.openBlockScope(otherBlockNode);
 
         BuildNode otherBuildNode = new BuildNode("otherBlockNodeId");
-        assertDoesNotThrow(() -> scopeCheckerVisitor.pre(0, otherBuildNode));
+        this.scopeCheckerVisitor.pre(0, otherBuildNode);
+        assertTrue(true);
     }
 
     @Test
