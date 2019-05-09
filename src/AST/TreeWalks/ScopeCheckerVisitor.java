@@ -27,6 +27,14 @@ public class ScopeCheckerVisitor implements Visitor {
         this.currentSubScope = null;
     }
 
+    public BlockScope getCurrentBlockScope() {
+        return currentBlockScope;
+    }
+
+    public Scope getCurrentSubScope() {
+        return currentSubScope;
+    }
+
     /**
      * The preorder walk for the visitor.
      * @param printLevel the level, used to decide how many indents there should be in the print statement.
