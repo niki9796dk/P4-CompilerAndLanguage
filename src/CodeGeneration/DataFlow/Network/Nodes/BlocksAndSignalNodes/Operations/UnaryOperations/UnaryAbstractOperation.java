@@ -41,6 +41,8 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
 
     protected abstract Matrix operation(Matrix in);
 
+    protected abstract Matrix operationBackpropagation(Matrix in1, Matrix out);
+
     protected final Matrix activationFunctionUnitwise(Matrix in, ActivationFunction function) {
         MatrixBuilder b = new MatrixBuilder(in.getRows(), in.getColumns(), true);
 

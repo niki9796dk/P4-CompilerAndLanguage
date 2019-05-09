@@ -48,13 +48,5 @@ public abstract class NullaryAbstractOperation extends AbstractOperation {
         throw new IllegalMethodException("Can not add input to a Unary Operation");
     }
 
-    /*
-    @Override
-    public void traverseBackwards() {
-        print.say(AnsiColor.WHITE,"Nullary traverseBackwards!");
-
-    }
-    */
-
 
 }

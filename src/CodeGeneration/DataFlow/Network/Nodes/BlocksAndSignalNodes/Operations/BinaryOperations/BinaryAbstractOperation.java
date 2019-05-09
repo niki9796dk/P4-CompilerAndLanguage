@@ -60,9 +60,8 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
         if (out == null)
             throw new NullPointerException("out is null!");
 
-        Pair<Matrix, Matrix> result = this.operationBackpropagation(in1,in2,out);
-        this.resultBackpropagation = new Matrix[]{result.getKey(), result.getValue()};
-        print.say("performOperation() -> result = " + this.result);
+        this.operationBackpropagation(in1,in2,out);
+        print.say("performOperation() -> result = " + this.resultBackpropagation[0] + "\n" + this.resultBackpropagation[1]);
     }
 
     /**
@@ -76,14 +75,19 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
     }
 
     protected abstract Matrix operation(Matrix in1, Matrix in2);
-    //@Override
+
+    protected abstract Matrix operationBackpropagation(Matrix in1, Matrix in2, Matrix out);
+    //@OverrideoperationBackpropagation
     //Todo; Make this an abstract method
+
+    /*
     protected void operationBackpropagation(Matrix in1, Matrix in2, Matrix out) {
         print.say(AnsiColor.RED,"operationBackpropagation() has been called, yet it is not implemented!");
 
         this.resultBackpropagation[0] = null;
         this.resultBackpropagation[1] = null;
     }
+    */
 
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {
