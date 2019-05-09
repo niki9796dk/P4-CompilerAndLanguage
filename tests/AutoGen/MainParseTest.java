@@ -32,10 +32,10 @@ class MainParseTest {
 
     // Test all negative files
     @TestFactory
-    Stream<DynamicTest> negativeFiles_ProductionRules() {
-        File falseFolder = new File("tests/ProductionRules/ExpectFalse/");
+    Stream<DynamicTest> negativeFiles_SyntaxAnalysis() {
+        File falseFolder = new File("tests/SyntaxAnalysis/ExpectFalse/");
 
-        return expectedFalse(falseFolder, AutoGen.ScannerException.class);
+        return expectedFalse(falseFolder, AutoGen.SyntaxAnalysisException.class);
     }
 
     // Test all negative files regarding type checking
