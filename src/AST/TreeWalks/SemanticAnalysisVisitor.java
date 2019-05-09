@@ -243,7 +243,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
      * Helper function for block recursion checking - Used for simplification.
      * Will throw an exception if no potential main blocks is present.
      * @param potentialMainBlocks A list of potential main blocks
-     * @throws SemanticProblemException if no potential blocks is present in the list.
+     * @throws NoMainBlockException if no potential blocks is present in the list.
      */
     private void assertNonZeroMainBlockCount(List<BlockNode> potentialMainBlocks) {
         if (potentialMainBlocks.size() == 0) {

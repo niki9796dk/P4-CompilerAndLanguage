@@ -1,4 +1,4 @@
-package AST.TreeWalks.Exceptions;
+package ScopeChecker.Exceptions;
 
 /**
  * An exception that is thrown if a method violates the scope pound, often if a scope returns as null.

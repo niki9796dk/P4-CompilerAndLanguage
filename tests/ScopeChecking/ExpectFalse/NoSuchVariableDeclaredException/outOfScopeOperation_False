@@ -1,0 +1,14 @@
+// Test of out of scope operation reference.
+block block_01 {
+	mychannel:in input1;
+	mychannel:in input2;
+	mychannel:out output;
+
+	blueprint() {
+		(input1, input2) -> mult;
+	}
+
+	procedure anotherScope() {
+	    operation mult = build Multiplication();
+	}
+}

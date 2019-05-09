@@ -6,8 +6,8 @@ import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
-import AST.TreeWalks.Exceptions.NonexistentBlockException;
-import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
+import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
+import ScopeChecker.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
@@ -44,7 +44,7 @@ class ScopeCheckerVisitorTest {
     void preTestDrawBuild01() {
         BuildNode buildNode = new BuildNode("notBlockNodeId");
 
-        assertThrows(NonexistentBlockException.class, () -> scopeCheckerVisitor.pre(0, buildNode));
+        assertThrows(NoSuchBlockDeclaredException.class, () -> scopeCheckerVisitor.pre(0, buildNode));
     }
 
     @Test

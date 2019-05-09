@@ -1,6 +1,5 @@
 package AST.TreeWalks;
 
-import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
@@ -10,15 +9,12 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockTypeNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlueprintTypeNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.RootNode;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
-import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
+import ScopeChecker.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.BlockScope;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.table.AbstractTableModel;
 
 import static org.junit.jupiter.api.Assertions.*;
 

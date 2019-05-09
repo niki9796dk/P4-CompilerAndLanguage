@@ -1,5 +1,6 @@
 package AutoGen;
 
+import ScopeChecker.Exceptions.*;
 import SemanticAnalysis.Exceptions.*;
 import TypeChecker.Exceptions.*;
 import org.junit.jupiter.api.*;
@@ -64,9 +65,23 @@ class MainParseTest {
     // Test all negative files regarding scope checking
     @TestFactory
     Stream<DynamicTest> negativeFiles_ScopeChecking() {
-        File falseFolder = new File("tests/ScopeChecking/ExpectFalse/");
+        String mainPath = "tests/ScopeChecking/ExpectFalse/";
 
-        return expectedFalse(falseFolder, AST.TreeWalks.Exceptions.ScopeBoundsViolationException.class);
+        String[] paths = {
+                "IllegalProcedureCallScopeException/",
+                "VariableAlreadyDeclaredException/",
+                "NoSuchVariableDeclaredException/",
+                "NoSuchBlockDeclaredException/",
+        };
+
+        Class[] exceptions = {
+                IllegalProcedureCallScopeException.class,
+                VariableAlreadyDeclaredException.class,
+                NoSuchVariableDeclaredException.class,
+                NoSuchBlockDeclaredException.class,
+        };
+
+        return multipleExpectFalse(mainPath, paths, exceptions);
     }
 
     // Test all negative files regarding scope checking
