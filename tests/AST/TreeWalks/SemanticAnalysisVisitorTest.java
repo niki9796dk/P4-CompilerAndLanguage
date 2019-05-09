@@ -2,6 +2,7 @@ package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
+import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
@@ -43,13 +44,14 @@ class SemanticAnalysisVisitorTest {
     @Disabled
     @Test
     void pre_build() {
-        BuildNode buildNode = new BuildNode("build");
+        BuildNode buildNode = new BuildNode("blockNodeId");
         this.semanticAnalysisVisitor.pre(0, buildNode);
         assertTrue(this.semanticAnalysisVisitor.getBuildNodes().contains(buildNode));
     }
 
     @Test
     void pre_chain() {
+        ChainNode chainNode = new ChainNode();
         this.semanticAnalysisVisitor.pre(0, this.blueprintNode);
         assertTrue(true);
     }
