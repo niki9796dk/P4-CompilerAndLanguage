@@ -9,7 +9,9 @@ import LinearAlgebra.Types.Matrices.Matrix;
 
 public abstract class AbstractOperation extends AbstractBlock implements Operation {
     private boolean isReady = false;
+    private boolean isReadyBackpropagation = false;
     protected Matrix result;
+    protected Matrix[] resultBackpropagation = new Matrix[2];
     protected Print print = new Print(AnsiColor.GREEN, "Operation." + this.getClass().getSimpleName());
 
     /**
@@ -63,5 +65,31 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
      */
     protected Matrix getInputValue(String channelId) {
         return this.getChannel(channelId).getResult();
+    }
+
+    @Override
+    public void acceptReadyBackpropagationSignal() {
+        if (this.isReadyBackpropagation()) {                       // If all inputs are isReady
+            this.performBackpropagationOperation();                // Then perform the operation
+
+            for (Channel inputChannel : this.getInputs())
+                inputChannel.sendReadyBackpropagationSignals();  // And signal that the output channel now is isReady.
+        }
+    }
+
+
+    @Override
+    public boolean isReadyBackpropagation() {
+        if (this.isReadyBackpropagation)
+            return true;
+
+        if (this.getOutputs().isEmpty())
+            return (this.isReadyBackpropagation = true);
+
+        for (Channel outputChannel : this.getOutputs())
+            if (!outputChannel.isReady())
+                return false;
+
+        return (this.isReadyBackpropagation = true);
     }
 }

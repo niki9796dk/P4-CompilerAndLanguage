@@ -4,6 +4,8 @@ import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
+import DataStructures.Pair;
+import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public abstract class BinaryAbstractOperation extends AbstractOperation {
@@ -43,6 +45,26 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
         print.say("performOperation() -> result = " + this.result);
     }
 
+    @Override
+    public void performBackpropagationOperation() {
+        Matrix in1 = this.getInputValue("in1");
+        Matrix in2 = this.getInputValue("in2");
+        Matrix out = this.getOutputChannel().getResult();
+
+        if (in1 == null)
+            throw new NullPointerException("in1 is null!");
+
+        if (in2 == null)
+            throw new NullPointerException("in2 is null!");
+
+        if (out == null)
+            throw new NullPointerException("out is null!");
+
+        Pair<Matrix, Matrix> result = this.operationBackpropagation(in1,in2,out);
+        this.resultBackpropagation = new Matrix[]{result.getKey(), result.getValue()};
+        print.say("performOperation() -> result = " + this.result);
+    }
+
     /**
      * Get channel with specified id 'out'
      *
@@ -54,6 +76,14 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
     }
 
     protected abstract Matrix operation(Matrix in1, Matrix in2);
+    //@Override
+    //Todo; Make this an abstract method
+    protected void operationBackpropagation(Matrix in1, Matrix in2, Matrix out) {
+        print.say(AnsiColor.RED,"operationBackpropagation() has been called, yet it is not implemented!");
+
+        this.resultBackpropagation[0] = null;
+        this.resultBackpropagation[1] = null;
+    }
 
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {

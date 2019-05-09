@@ -1,6 +1,7 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.MatrixOperations;
 
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
+import DataStructures.Pair;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public class Multiplication extends BinaryAbstractOperation {

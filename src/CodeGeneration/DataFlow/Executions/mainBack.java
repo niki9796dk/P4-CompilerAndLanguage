@@ -10,6 +10,8 @@ import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
+import java.util.LinkedList;
+
 public class mainBack {
     private static Print print = new Print(AnsiColor.YELLOW, "Main");
 
@@ -27,7 +29,7 @@ public class mainBack {
 
         /// Blocks ///
         Block block000 = new A_plus_B_mult_B();
-        Block block001 = new A_Half();
+        A_Half block001 = new A_Half();
 
         /// Operations ///
         Operation operation000 = new _Addition();
@@ -48,7 +50,7 @@ public class mainBack {
         print.say("block001: " + block001.getChannel("out").getResult());
 
         /// Backpropagation ///
-
+        new LinkedList<>(block001.getInputs()).getFirst().acceptReadyBackpropagationSignal();
 
         ///////// EOF //////////
         print.say("End of main.");

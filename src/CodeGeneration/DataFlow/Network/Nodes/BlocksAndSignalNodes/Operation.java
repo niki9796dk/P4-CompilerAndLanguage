@@ -5,4 +5,5 @@ import CodeGeneration.DataFlow.Network.Nodes.SignalNode;
 
 public interface Operation extends Block, SignalNode {
     void performOperation();
+    void performBackpropagationOperation();
 }

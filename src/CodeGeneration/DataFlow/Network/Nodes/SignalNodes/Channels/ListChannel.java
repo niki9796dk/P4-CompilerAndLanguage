@@ -1,22 +1,20 @@
 package CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels;
 
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNode;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import LinearAlgebra.Types.Matrices.Matrix;
+import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A channel that uses list implementation (**!!!!!And not a list of channels!!!!!**)
  */
 public class ListChannel implements Channel {
     private boolean ready = false;
+    private boolean backpropagationReady = false;
     private SignalNode source;
     private List<SignalNode> targets = new ArrayList<>();
-    //private boolean isFlipped = false;
 
     /**
      * Constructor for ListChannel class that sets a source and a number of target SignalNodes
@@ -34,6 +32,7 @@ public class ListChannel implements Channel {
 
     /**
      * Adds a channel as a target
+     *
      * @param channel The target channel that this connects to
      * @return Returns itself to allow chaining method calls
      */
@@ -44,6 +43,7 @@ public class ListChannel implements Channel {
 
     /**
      * Gets the resulting matrix of data from the source
+     *
      * @return A matrix of data
      */
     @Override
@@ -56,8 +56,19 @@ public class ListChannel implements Channel {
         return result;
     }
 
+    @Override
+    public Matrix getResultBackpropagation() {
+        LinkedList<SignalNode> signalNodes = new LinkedList<>(this.getTargets());
+
+        Matrix result = signalNodes.pollFirst().getResult();
+
+        while (!signalNodes.isEmpty())
+            result = result.add(signalNodes.pollFirst().getResult());
+
+        return result;
+    }
+
     /**
-     *
      * @return
      */
     @Override
@@ -75,6 +86,26 @@ public class ListChannel implements Channel {
     public void acceptReadySignal() {
         this.ready = true;  // Store ready state for later recall
         this.sendReadySignals(); // Signal all outputs that their input is now ready.
+    }
+
+    @Override
+    public void sendReadyBackpropagationSignals() {
+        this.source.acceptReadyBackpropagationSignal();
+    }
+
+    @Override
+    public void acceptReadyBackpropagationSignal() {
+        for (SignalNode target : targets)
+            if(!target.isReadyBackpropagation())
+                return;
+
+        this.backpropagationReady = true;
+        this.sendReadyBackpropagationSignals();
+    }
+
+    @Override
+    public boolean isReadyBackpropagation() {
+        return this.backpropagationReady;
     }
 
     @Override

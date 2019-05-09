@@ -5,10 +5,11 @@ import CodeGeneration.DataFlow.Network.Nodes.SignalNode;
 import java.util.Collection;
 
 public interface Channel extends SignalNode {
+
     boolean isReady();
 
     void sendReadySignals();
-
+    void sendReadyBackpropagationSignals();
 
     SignalNode setSource(SignalNode channel);
 
