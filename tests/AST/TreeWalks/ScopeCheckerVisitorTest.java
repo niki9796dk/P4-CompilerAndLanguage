@@ -140,4 +140,11 @@ class ScopeCheckerVisitorTest {
     @Test
     void post() {
     }
+
+    @Test
+    void postUnexpectedNode() {
+        AbstractNode unexpectedNode = new UnexpectedNode("unexpectedNodeId");
+
+        assertThrows(UnexpectedNodeException.class, () -> scopeCheckerVisitor.post(1, unexpectedNode));
+    }
 }
