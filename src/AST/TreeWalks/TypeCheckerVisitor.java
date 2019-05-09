@@ -52,10 +52,6 @@ public class TypeCheckerVisitor extends ScopeTracker {
                 this.typeCheckChain(node);
                 break;
 
-            case GROUP:
-                this.verifyInputType(node);
-                break;
-
             case ASSIGN:
                 this.typecheckAssignments(node);
                 break;
@@ -67,6 +63,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
             //// ACTUAL TYPE CHECKING END
 
+            case GROUP:
             case PARAMS:
             case DRAW:  // TODO: Maybe we should check whatever we draw is a block... But this should also be checked in the scope checker
             case SIZE:
@@ -142,7 +139,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
         AbstractNode leftNode = node.getChild();
         AbstractNode rightNode = leftNode.getSib();
 
-        this.typeSystem.assertEqualTypes(leftNode, rightNode, this.currentBlockScope, this.currentSubScope);
+        this.typeSystem.assertEqualSuperTypes(leftNode, rightNode, this.currentBlockScope, this.currentSubScope);
     }
 
     /**
@@ -245,7 +242,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
             for (int i = 0; i < formalParams.countChildren(); i++) {
                 // Assert equals
                 try {
-                    this.typeSystem.assertEqualTypes(actual, formal, currentBlockScope, currentSubScope, "Procedure call type inconsistency");
+                    this.typeSystem.assertEqualSuperTypes(actual, formal, currentBlockScope, currentSubScope, "Procedure call type inconsistency");
                 } catch (TypeInconsistencyException e) {
                     throw new ParamsTypeInconsistencyException(e);
                 }

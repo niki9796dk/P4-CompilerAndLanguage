@@ -1,9 +1,11 @@
-package AST.TreeWalks.Exceptions;
+package ScopeChecker.Exceptions;
+
+import ScopeChecker.Exceptions.ScopeBoundsViolationException;
 
 /**
  * An exception thrown when a non-declared block tries to be built or drawn.
  */
-public class NonexistentBlockException extends ScopeBoundsViolationException{
+public class NoSuchBlockDeclaredException extends ScopeBoundsViolationException {
     /**
      * The default error message if none is given.
      */
@@ -12,7 +14,7 @@ public class NonexistentBlockException extends ScopeBoundsViolationException{
     /**
      * Prints the default error message in the stacktrace.
      */
-    public NonexistentBlockException() {
+    public NoSuchBlockDeclaredException() {
         super(DEFAULT_ERROR_MESSAGE + ".");
     }
 
@@ -20,7 +22,7 @@ public class NonexistentBlockException extends ScopeBoundsViolationException{
      * Appends a unique message to the error message of the stack trace.
      * @param message The appended message.
      */
-    public NonexistentBlockException(String message) {
+    public NoSuchBlockDeclaredException(String message) {
         super( DEFAULT_ERROR_MESSAGE + ": " + message);
     }
 }

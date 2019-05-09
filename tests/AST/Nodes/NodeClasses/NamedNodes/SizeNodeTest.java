@@ -8,28 +8,35 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SizeNodeTest {
 
-    // Fields:
-    private SizeNode node1;
-    private SizeNode node2;
+    @Test
+    void equals01() {
+        SizeNode sn = new SizeNode(1, 2);
 
-    @BeforeEach
-    void beforeEach() {
-        this.node1 = new SizeNode(1, 2);
-        this.node2 = new SizeNode(1, 2);
+        assertEquals(sn, sn);
     }
 
     @Test
-    void equals() {
-        assertEquals(this.node1, this.node2);
+    void equals02() {
+        SizeNode sn1 = new SizeNode(1, 2);
+        SizeNode sn2 = new SizeNode(2, 1);
+
+        assertNotEquals(sn1, sn2);
+        assertNotEquals(sn2, sn1);
     }
 
     @Test
-    void hashCode01() {
-        assertEquals(this.node1.hashCode(), this.node2.hashCode());
+    void equals03() {
+        SizeNode sn = new SizeNode(1, 2);
+
+        assertNotEquals(null, sn);
     }
 
     @Test
-    void toString01() {
-        assertEquals("[-1] Size [1, 2]", this.node1.toString());
+    void equals04() {
+        SizeNode sn1 = new SizeNode(1, 2);
+        SizeNode sn2 = new SizeNode(1, 2);
+
+        assertEquals(sn1.hashCode(), sn2.hashCode());
+        assertTrue(sn1.equals(sn2) && sn2.equals(sn1));
     }
 }

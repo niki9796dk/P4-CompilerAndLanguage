@@ -1,5 +1,7 @@
 package AutoGen;
 
+import DataStructures.Pair;
+import ScopeChecker.Exceptions.*;
 import SemanticAnalysis.Exceptions.*;
 import TypeChecker.Exceptions.*;
 import org.junit.jupiter.api.*;
@@ -31,10 +33,10 @@ class MainParseTest {
 
     // Test all negative files
     @TestFactory
-    Stream<DynamicTest> negativeFiles_ProductionRules() {
-        File falseFolder = new File("tests/ProductionRules/ExpectFalse/");
+    Stream<DynamicTest> negativeFiles_SyntaxAnalysis() {
+        File falseFolder = new File("tests/SyntaxAnalysis/ExpectFalse/");
 
-        return expectedFalse(falseFolder, AutoGen.ScannerException.class);
+        return expectedFalse(falseFolder, AutoGen.SyntaxAnalysisException.class);
     }
 
     // Test all negative files regarding type checking
@@ -42,31 +44,30 @@ class MainParseTest {
     Stream<DynamicTest> negativeFiles_TypeChecking() {
         String mainPath = "tests/TypeRules/ExpectFalse/";
 
-        String[] paths = {
-                "",
-                "IncorrectAssignmentTypesException/",
-                "ParamsSizeInconsistencyException/",
-                "ParamsTypeInconsistencyException/",
-                "ChannelPlacementTypeException/",
+        Pair[] pathExceptionPair = {
+                new Pair<>("", TypeInconsistencyException.class),
+                new Pair<>("IncorrectAssignmentTypesException/", IncorrectAssignmentTypesException.class),
+                new Pair<>("ParamsSizeInconsistencyException/", ParamsSizeInconsistencyException.class),
+                new Pair<>("ParamsTypeInconsistencyException/", ParamsTypeInconsistencyException.class),
+                new Pair<>("ChannelPlacementTypeException/", ChannelPlacementTypeException.class),
         };
 
-        Class[] exceptions = {
-                TypeInconsistencyException.class,
-                IncorrectAssignmentTypesException.class,
-                ParamsSizeInconsistencyException.class,
-                ParamsTypeInconsistencyException.class,
-                ChannelPlacementTypeException.class,
-        };
-
-        return multipleExpectFalse(mainPath, paths, exceptions);
+        return multipleExpectFalse(mainPath, pathExceptionPair);
     }
 
     // Test all negative files regarding scope checking
     @TestFactory
     Stream<DynamicTest> negativeFiles_ScopeChecking() {
-        File falseFolder = new File("tests/ScopeChecking/ExpectFalse/");
+        String mainPath = "tests/ScopeChecking/ExpectFalse/";
 
-        return expectedFalse(falseFolder, AST.TreeWalks.Exceptions.ScopeBoundsViolationException.class);
+        Pair[] pathExceptionPair = {
+                new Pair<>("IllegalProcedureCallScopeException/", IllegalProcedureCallScopeException.class),
+                new Pair<>("VariableAlreadyDeclaredException/", VariableAlreadyDeclaredException.class),
+                new Pair<>("NoSuchVariableDeclaredException/", NoSuchVariableDeclaredException.class),
+                new Pair<>("NoSuchBlockDeclaredException/", NoSuchBlockDeclaredException.class),
+        };
+
+        return multipleExpectFalse(mainPath, pathExceptionPair);
     }
 
     // Test all negative files regarding scope checking
@@ -74,41 +75,28 @@ class MainParseTest {
     Stream<DynamicTest> negativeFiles_SemanticChecking() {
         String mainPath = "tests/SemanticAnalysis/ExpectFalse/";
 
-        String[] paths = {
-                "",
-                "BuildRecursionException/",
-                "NoMainBlockException/",
-                "GroupConnectionMismatchException/",
-                "ChainConnectionMismatchException/",
-                "IncorrectChannelUsageException/",
+        Pair[] pathExceptionPair = {
+                new Pair<>("", SemanticProblemException.class),
+                new Pair<>("BuildRecursionException/", BuildRecursionException.class),
+                new Pair<>("NoMainBlockException/", NoMainBlockException.class),
+                new Pair<>("GroupConnectionMismatchException/", GroupConnectionMismatchException.class),
+                new Pair<>("ChainConnectionMismatchException/", ChainConnectionMismatchException.class),
+                new Pair<>("IncorrectChannelUsageException/", IncorrectChannelUsageException.class),
         };
 
-        Class[] exceptions = {
-                SemanticProblemException.class,
-                BuildRecursionException.class,
-                NoMainBlockException.class,
-                GroupConnectionMismatchException.class,
-                ChainConnectionMismatchException.class,
-                IncorrectChannelUsageException.class,
-        };
-
-        return multipleExpectFalse(mainPath, paths, exceptions);
+        return multipleExpectFalse(mainPath, pathExceptionPair);
     }
 
-    private Stream<DynamicTest> multipleExpectFalse(String mainPath, String[] paths, Class[] exceptions) {
+    private Stream<DynamicTest> multipleExpectFalse(String mainPath, Pair<String, Class>[] pathExceptionPair) {
         if ("".equals(mainPath)) {
             throw new IllegalArgumentException("No main path given");
         }
 
-        if (paths.length == 0 || paths.length != exceptions.length) {
-            throw new IllegalArgumentException("Uneven amount of paths and exceptions or non given at all!");
-        }
-
         List<Stream<DynamicTest>> testStreams = new ArrayList<>();
 
-        for (int i = 0; i < paths.length; i++) {
-            File filePath = new File(mainPath + paths[i]);
-            Class exception = exceptions[i];
+        for (Pair<String, Class> stringClassPair : pathExceptionPair) {
+            File filePath = new File(mainPath + stringClassPair.getKey());
+            Class exception = stringClassPair.getValue();
 
             testStreams.add(expectedFalse(filePath, exception));
         }
