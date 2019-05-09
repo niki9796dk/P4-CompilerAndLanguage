@@ -81,9 +81,7 @@ class FlowCheckerTest {
         flowChecker.getConnected().add("OUT_output");
         flowChecker.getConnected().add("IN_input");
         flowChecker.getConnected().add("OUT_output");
-        assertThrows(SemanticProblemException.class, () -> {
-            flowChecker.check(latestBlockScope, channelScope);
-        });
+        assertThrows(SemanticProblemException.class, () -> flowChecker.check(latestBlockScope, channelScope));
     }
 
     @Test

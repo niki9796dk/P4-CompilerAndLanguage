@@ -8,6 +8,7 @@ import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
 import SemanticAnalysis.Datastructures.SetStack;
+import SemanticAnalysis.Exceptions.BuildRecursionException;
 import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.*;
 import TypeChecker.TypeSystem;
@@ -140,7 +141,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
         boolean failure = !this.buildStack.push(this.convertBuildNodeToString(node));
 
         if (failure) {
-            throw new SemanticProblemException("Recursive block building! - " + node);
+            throw new BuildRecursionException("Recursive block building! - " + node);
         }
         
         // Find node we are building

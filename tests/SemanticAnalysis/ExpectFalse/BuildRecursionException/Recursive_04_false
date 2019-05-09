@@ -4,6 +4,7 @@ block Main {
 
     blueprint() {
         block master = build Sauron();
+        this.in -> this.out;
     }
 }
 
@@ -13,6 +14,7 @@ block Sauron {
 
     blueprint() {
         block MyRing = build TheOneRing();
+        this.in -> this.out;
     }
 }
 
@@ -22,6 +24,7 @@ block Gollum {
 
     blueprint() {
         block theBadGuyWhoHadMyPrecious = build Sauron();
+        this.in -> this.out;
     }
 }
 
@@ -31,5 +34,6 @@ block TheOneRing {
 
     blueprint() {
         block MyCaptor = build Gollum();
+        this.in -> this.out;
     }
 }

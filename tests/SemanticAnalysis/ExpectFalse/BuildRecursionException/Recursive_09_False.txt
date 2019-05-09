@@ -4,6 +4,7 @@ block Main {
 
     blueprint() {
         block master = build recursive_01();
+        this.in -> this.out;
     }
 }
 

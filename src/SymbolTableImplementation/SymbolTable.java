@@ -87,10 +87,10 @@ public class SymbolTable implements SymbolTableInterface {
      * @return the sub scope of the specified scope with the input id's, or null if no such scope or sub scope exists.
      */
     @Override
-    public Scope getSubScope(String scopeId, String subscopeId) {
+    public Scope getSubScope(String scopeId, String subScopeId) {
         BlockScope blockScope = this.blockTable.getEntry(scopeId);
         if (blockScope != null)
-            return blockScope.getSubscope(subscopeId);
+            return blockScope.getSubscope(subScopeId);
         else return null;
     }
 

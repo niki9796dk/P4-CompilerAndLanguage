@@ -10,6 +10,8 @@ import java.util.Stack;
  * @param <T>
  */
 public class HashSetStack<T> implements SetStack<T>{
+
+    // Fields
     private HashSet<T> hashSet;
     private Stack<T> stack;
 

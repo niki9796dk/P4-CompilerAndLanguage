@@ -13,6 +13,7 @@ block Sauron {
 
     blueprint() {
         block MyRing = build TheOneRing(draw Sauron);
+        this.in -> this.out;
     }
 }
 
@@ -22,6 +23,7 @@ block Gollum {
 
     blueprint() {
         block MyPrecious = build TheOneRing(draw Gollum);
+        this.in -> this.out;
     }
 }
 
@@ -31,5 +33,6 @@ block TheOneRing {
 
     blueprint(blueprint master) {
         block MyMaster = build master();
+        this.in -> this.out;
     }
 }

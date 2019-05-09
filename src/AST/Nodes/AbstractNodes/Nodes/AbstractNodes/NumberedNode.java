@@ -21,16 +21,6 @@ public abstract class NumberedNode extends AbstractNode implements NodeEnumAble 
     private NodeEnum nodeEnum;
 
     /**
-     * Construct a node with the specified number label, and Enum for its class.
-     * @param number The number label of the node.
-     * @param nodeEnum An enum appropriate for a non-abstract class extending this class.
-     */
-    public NumberedNode(int number, NodeEnum nodeEnum) {
-        this(nodeEnum);
-        this.setNumber(number);
-    }
-
-    /**
      * Construct a node with the default number label, and Enum for its class.
      * @param nodeEnum An enum appropriate for the class of the node extending this class.
      */

@@ -1,0 +1,8 @@
+// Test of non-existing operation reference.
+block block_01 {
+	mychannel:out output;
+
+	blueprint() {
+		noSuchProcedure();
+	}
+}
