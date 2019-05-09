@@ -11,7 +11,6 @@ import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTableInterface;
-import TypeChecker.Exceptions.ParamsInconsistencyException;
 import TypeChecker.Exceptions.ChannelPlacementTypeException;
 import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
 import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
