@@ -5,15 +5,21 @@ block Main {
     blueprint () {
         blueprint param = draw B1;
 
-        proc(param);
+        proc1(param);
     }
 
     procedure proc1(blueprint blue) {
-        proc2(blue, blue);
+        blueprint myNewPar;
+        myNewPar = blue;
+
+        proc2(blue, myNewPar);
     }
 
     procedure proc2(blueprint blue1, blueprint blue2) {
-        proc3(blue1, blue2, blue1, blue2);
+        blueprint myNewPar;
+        myNewPar = blue1;
+
+        proc3(blue1, blue2, myNewPar, blue2);
     }
 
     procedure proc3(blueprint blue1, blueprint blue2, blueprint blue3, blueprint blue4) {

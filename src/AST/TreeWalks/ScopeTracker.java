@@ -10,6 +10,7 @@ import SemanticAnalysis.Datastructures.SetStack;
 import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
+import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
 import TypeChecker.TypeSystem;
 
@@ -30,15 +31,29 @@ public abstract class ScopeTracker implements Visitor {
     /**
      * A pointer to the symbol table - Is only here for ease of use.
      */
-    protected SymbolTableInterface symbolTable;
+    protected SymbolTable symbolTable;
     /**
      * A pointer to a type system - Is only here for ease of use.
      */
     protected TypeSystem typeSystem;
 
-    public ScopeTracker(SymbolTableInterface symbolTable) {
+    public ScopeTracker(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
         this.typeSystem = new TypeSystem(symbolTable);
+    }
+
+    protected ScopeTracker(SymbolTable symbolTable, String currentBlockScope, String currentSubScope) {
+        this(symbolTable);
+        this.currentBlockScope = currentBlockScope;
+        this.currentSubScope = currentSubScope;
+    }
+
+    protected void setCurrentBlockScope(String currentBlockScope) {
+        this.currentBlockScope = currentBlockScope;
+    }
+
+    protected void setCurrentSubScope(String currentSubScope) {
+        this.currentSubScope = currentSubScope;
     }
 
     /**

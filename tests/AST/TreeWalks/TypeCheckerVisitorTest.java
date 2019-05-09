@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TypeCheckerVisitorTest {
 
     private TypeCheckerVisitor typeCheckerVisitor;
-    private SymbolTableInterface symbolTableInterface;
+    private SymbolTable symbolTableInterface;
 
     @BeforeEach
     void makeTypeCheckerVisitor() {

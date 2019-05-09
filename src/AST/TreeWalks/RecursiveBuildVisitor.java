@@ -21,7 +21,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
 
     private SetStack<String> buildStack;
 
-    public RecursiveBuildVisitor(SetStack<String> buildStack, SymbolTableInterface symbolTable) {
+    public RecursiveBuildVisitor(SetStack<String> buildStack, SymbolTable symbolTable) {
         super(symbolTable);
         this.buildStack = buildStack;
         this.typeSystem = new TypeSystem(symbolTable);

@@ -4,6 +4,11 @@ import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
+import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
+import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import Enums.AnsiColor;
 
 /**
@@ -37,6 +42,18 @@ public class Scope {
      * @param node Returns the node of which this is a scope of.
      */
     public void setVariable(NamedIdNode node) {
+        AbstractNode parent = node.getParent();
+        if (node.getParent() instanceof ParamsNode) {
+            AbstractNode grandParent = parent.getParent();
+            boolean isChildOfProcedure = grandParent instanceof ProcedureNode;
+            boolean isChildOfBlueprint = grandParent instanceof BlueprintNode;
+
+            if (isChildOfProcedure || isChildOfBlueprint) {
+                this.scope.setEntry(node.getId(), new VariableEntryOrDefault(node));
+                return; // To avoid multiple set.
+            }
+        }
+
         this.scope.setEntry(node.getId(), new VariableEntry(node));
     }
 

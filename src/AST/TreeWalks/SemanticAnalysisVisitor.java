@@ -15,10 +15,7 @@ import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SemanticAnalysis.FlowChecker;
 import SemanticAnalysis.Datastructures.HashSetStack;
 import SemanticAnalysis.Datastructures.SetStack;
-import SymbolTableImplementation.BlockScope;
-import SymbolTableImplementation.Scope;
-import SymbolTableImplementation.SymbolTableInterface;
-import SymbolTableImplementation.VariableEntry;
+import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
 
@@ -41,7 +38,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
      * The constructor
      * @param symbolTable A symbol table, used for the scope tracker.
      */
-    public SemanticAnalysisVisitor(SymbolTableInterface symbolTable) {
+    public SemanticAnalysisVisitor(SymbolTable symbolTable) {
         super(symbolTable);
         this.flowChecker = new FlowChecker(symbolTable);
         this.buildNodes = new HashSet<>();

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SemanticAnalysisVisitorTest {
 
     // Fields:
-    private SymbolTableInterface symbolTableInterface;
+    private SymbolTable symbolTableInterface;
     private SemanticAnalysisVisitor semanticAnalysisVisitor;
     private BlockNode blockNode;
     private BlueprintNode blueprintNode;

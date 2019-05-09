@@ -11,8 +11,8 @@ import java.util.List;
  * A scope entry representing a variable.
  */
 public class VariableEntry {
-    private NamedIdNode node;
-    private List<NamedIdNode> subTypes;
+    protected NamedIdNode node;
+    protected List<NamedIdNode> subTypes;
 
     /**
      * @param node Create a new variable entry for a specific NamedIdNode
@@ -84,7 +84,7 @@ public class VariableEntry {
      * A helper function for the toString method, which returns subtype part of the toString method.
      * @return A string representation of the subType list.
      */
-    private String getSubTypeToString() {
+    protected String getSubTypeToString() {
         StringBuilder builder = new StringBuilder();
 
         if (this.subTypes.size() == 0) {

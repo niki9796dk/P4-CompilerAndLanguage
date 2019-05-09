@@ -4,11 +4,14 @@ block procedure_05 {
 	mychannel:out output;
 	
 	blueprint() {
-		abc(this.input, build Test(), draw Test, build _Sigmoid(), [25, 20]);
+	    size mySize = [25, 20];
+
+		abc(this.input, build Test(), draw Test, build _Sigmoid(), mySize);
 	}
 	
 	procedure abc(mychannel:in x, block y, blueprint z, operation o, size s) {
-        x -> y -> o -> this.output;
+	    x -> y;
+        (x, y) -> o -> build z() -> this.output;
 	}
 }
 
