@@ -46,7 +46,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
             case CHANNEL_DECLARATIONS:
                 break;
 
-                //// ACTUAL TYPE CHECKING START
+            //// ACTUAL TYPE CHECKING START
 
             case CHAIN:
                 this.typeCheckChain(node);
