@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UnexpectedNodeExceptionTest {
+
     @Test
     void nodeEnum() {
         assertThrows(UnexpectedNodeException.class, () -> {

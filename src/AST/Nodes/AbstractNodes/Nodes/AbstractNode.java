@@ -3,11 +3,13 @@ package AST.Nodes.AbstractNodes.Nodes;
 import AST.Nodes.AbstractNodes.Node;
 import AST.Visitor;
 
-/** All AST nodes are subclasses of this node.  This node knows how to
+/** All AST nodes are subclasses of this node. This node knows how to
   * link itself with other siblings and adopt children.
   * Each node gets a node number to help identify it distinctly in an AST.
   */
 public abstract class AbstractNode implements Node {
+
+   // Fields:
    private static int nodeNums = 0;
    private int nodeNum;
    private AbstractNode mysib;
@@ -15,12 +17,13 @@ public abstract class AbstractNode implements Node {
    private AbstractNode child;
    private AbstractNode firstSib;
 
+   // Constructor:
    public AbstractNode() {
-      parent   = null;
-      mysib    = null;
-      firstSib = this;
-      child    = null;
-      nodeNum = ++nodeNums;
+       this.parent   = null;
+       this.mysib    = null;
+       this.firstSib = this;
+       this.child    = null;
+       this.nodeNum = ++nodeNums;
    }
 
 
@@ -52,9 +55,9 @@ public abstract class AbstractNode implements Node {
    }
 
    /**
-    * Adopt the supplied node and all of its siblings under this nod
+    * Adopt the supplied node and all of its siblings under this node
     * @param n The node to adopt.
-    * @return  a reference to this object.
+    * @return a reference to this object.
     */
    @Override
    public AbstractNode adoptChildren(AbstractNode n) {
@@ -97,7 +100,7 @@ public abstract class AbstractNode implements Node {
 
    /**
     * Turn the child into an orphan.
-    * @return  a reference to this object.
+    * @return A reference to this object.
     */
    @Override
    public AbstractNode orphan() {
@@ -108,7 +111,7 @@ public abstract class AbstractNode implements Node {
 
     /**
      * Nullify the reference to the child node.
-     * @return  a reference to this object.
+     * @return A reference to this object.
      */
    @Override
    public AbstractNode abandonChildren() {
@@ -178,14 +181,6 @@ public abstract class AbstractNode implements Node {
       return count;
    }
 
-   /**
-     * Set the parent of the node.
-     * @param p The node to set as a parent.
-     */
-   private void setParent(AbstractNode p) {
-      this.parent = p;
-   }
-
     /**
      * Get the parent of the node.
      * @return parent of the node.
@@ -221,29 +216,6 @@ public abstract class AbstractNode implements Node {
    public AbstractNode getFirstSib() {
       return(firstSib);
    }
-
-    /**
-     * Returns the empty name of the node.
-     * @return an empty string.
-     */
-   @Override
-   public String getName() { return ""; }
-
-    /**
-     * Returns the name of the node.
-     * @return the nodes name as a string.
-     */
-   @Override
-   public String toString() {
-      return(getName());
-   }
-
-    /**
-     * Get the number of the node, which is based on the amount of nodes created before the node,
-     * @return the number of the node.
-     */
-   @Override
-   public int getNodeNum() { return nodeNum; }
 
     /**
      * Internally walk through the tree of children.

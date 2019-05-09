@@ -15,24 +15,11 @@ import java.util.Objects;
  */
 public class BlockNode extends NamedIdNode {
 
-    private List<String> blockchain;
-
     /**
      * @param id Create a block with the specified node
      */
     public BlockNode(String id) {
         super("Block", id, NodeEnum.BLOCK);
-    }
-
-    public BlockNode(String id, List<String> blockchain) {
-        super("Block", id, NodeEnum.BLOCK);
-        this.blockchain = blockchain;
-    }
-
-    public List<String> getBlockchain() {
-        List<String> blockchainClone = new ArrayList<>(blockchain);
-        blockchainClone.add(this.getId());
-        return  blockchainClone;
     }
 
     @Override

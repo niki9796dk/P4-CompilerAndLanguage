@@ -1,6 +1,7 @@
 package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
@@ -25,75 +26,75 @@ class ScopeCheckerVisitorTest {
 
     @BeforeEach
     void beforeEach() {
-        symbolTableInterface = new SymbolTable();
-        scopeCheckerVisitor = new ScopeCheckerVisitor(symbolTableInterface);
+        this.symbolTableInterface = new SymbolTable();
+        this.scopeCheckerVisitor = new ScopeCheckerVisitor(this.symbolTableInterface);
 
-        blockNode = new BlockNode("blockNodeId");
-        blueprintNode = new BlueprintNode();
+        this.blockNode = new BlockNode("blockNodeId");
+        this.blueprintNode = new BlueprintNode();
 
         // Insert into symbol table
-        symbolTableInterface.openBlockScope(blockNode);
-        symbolTableInterface.openSubScope(blueprintNode);
+        this.symbolTableInterface.openBlockScope(this.blockNode);
+        this.symbolTableInterface.openSubScope(this.blueprintNode);
 
         // Pretend to enter block and blueprint
-        scopeCheckerVisitor.pre(0, blockNode);
-        scopeCheckerVisitor.pre(0, blueprintNode);
+        this.scopeCheckerVisitor.pre(0, this.blockNode);
+        this.scopeCheckerVisitor.pre(0, this.blueprintNode);
     }
 
     @Test
     void preTestDrawBuild01() {
         BuildNode buildNode = new BuildNode("notBlockNodeId");
 
-        assertThrows(NoSuchBlockDeclaredException.class, () -> scopeCheckerVisitor.pre(0, buildNode));
+        assertThrows(NoSuchBlockDeclaredException.class, () -> this.scopeCheckerVisitor.pre(0, buildNode));
     }
 
     @Test
     void preTestDrawBuild02() {
         BlockNode otherBlockNode = new BlockNode("otherBlockNodeId");
-        symbolTableInterface.openBlockScope(otherBlockNode);
+        this.symbolTableInterface.openBlockScope(otherBlockNode);
 
         BuildNode otherBuildNode = new BuildNode("otherBlockNodeId");
 
         // Ensures an exception is not thrown
-        scopeCheckerVisitor.pre(0, otherBuildNode);
+        this.scopeCheckerVisitor.pre(0, otherBuildNode);
         assertTrue(true);
     }
 
     @Test
     void preTestBlock() {
-        scopeCheckerVisitor.pre(1, blockNode);
+        this.scopeCheckerVisitor.pre(1, this.blockNode);
 
-        assertEquals(symbolTableInterface.getBlockScope("blockNodeId"), scopeCheckerVisitor.getCurrentBlockScope());
+        assertEquals(this.symbolTableInterface.getBlockScope("blockNodeId"), this.scopeCheckerVisitor.getCurrentBlockScope());
     }
 
     @Test
     void preTestProcedure() {
         ProcedureNode procedureNode = new ProcedureNode("procedureNodeId");
-        symbolTableInterface.openSubScope(procedureNode);
+        this.symbolTableInterface.openSubScope(procedureNode);
 
-        scopeCheckerVisitor.pre(1, procedureNode);
+        this.scopeCheckerVisitor.pre(1, procedureNode);
 
-        assertEquals(symbolTableInterface.getSubScope("blockNodeId" ,"PROC_procedureNodeId"), scopeCheckerVisitor.getCurrentSubScope());
+        assertEquals(this.symbolTableInterface.getSubScope("blockNodeId" ,"PROC_procedureNodeId"), this.scopeCheckerVisitor.getCurrentSubScope());
     }
 
     @Test
     void preTestBlueprint() {
         BlueprintNode blueprintNode = new BlueprintNode();
-        symbolTableInterface.openSubScope(blueprintNode);
+        this.symbolTableInterface.openSubScope(blueprintNode);
 
-        scopeCheckerVisitor.pre(1, blueprintNode);
+        this.scopeCheckerVisitor.pre(1, blueprintNode);
 
-        assertEquals(symbolTableInterface.getSubScope("blockNodeId" ,"Blueprint"), scopeCheckerVisitor.getCurrentSubScope());
+        assertEquals(this.symbolTableInterface.getSubScope("blockNodeId" ,"Blueprint"), this.scopeCheckerVisitor.getCurrentSubScope());
     }
 
     @Test
     void preTestChannelDeclarations() {
         ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
-        symbolTableInterface.openSubScope(channelDeclarationsNode);
+        this.symbolTableInterface.openSubScope(channelDeclarationsNode);
 
-        scopeCheckerVisitor.pre(1, channelDeclarationsNode);
+        this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
 
-        assertEquals(symbolTableInterface.getSubScope("blockNodeId" ,"ChannelDeclaration"), scopeCheckerVisitor.getCurrentSubScope());
+        assertEquals(this.symbolTableInterface.getSubScope("blockNodeId" ,"ChannelDeclaration"), this.scopeCheckerVisitor.getCurrentSubScope());
     }
 
     @Test
@@ -104,9 +105,9 @@ class ScopeCheckerVisitorTest {
 
         procedureCallNode.adoptAsFirstChild(selectorNode);
 
-        symbolTableInterface.openSubScope(procedureNode);
+        this.symbolTableInterface.openSubScope(procedureNode);
 
-        scopeCheckerVisitor.pre(1, procedureCallNode);
+        this.scopeCheckerVisitor.pre(1, procedureCallNode);
 
         // Ensures an exception is not thrown
         assertTrue(true);

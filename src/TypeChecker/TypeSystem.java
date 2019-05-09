@@ -63,9 +63,9 @@ public class TypeSystem {
      * @param currentBlockScope The current block scope to type check from
      * @param currentSubScope The current sub scope to type check from
      */
-    public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope) {
+    public void assertEqualSuperTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope) {
         try {
-            this.assertEqualTypes(leftNode, rightNode, currentBlockScope, currentSubScope, "Different type on the left and right side node");
+            this.assertEqualSuperTypes(leftNode, rightNode, currentBlockScope, currentSubScope, "Different type on the left and right side node");
         } catch (TypeInconsistencyException e) {
             throw new IncorrectAssignmentTypesException(e);
         }
@@ -79,7 +79,7 @@ public class TypeSystem {
      * @param currentSubScope The current sub scope to type check from
      * @param errorMsgPrefix The error msg prefix.
      */
-    public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope, String errorMsgPrefix) {
+    public void assertEqualSuperTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope, String errorMsgPrefix) {
         // Get the types of both left and right node.
         NodeEnum leftNodeType = this.getSuperTypeOfNode(leftNode, currentBlockScope, currentSubScope);
         NodeEnum rightNodeType = this.getSuperTypeOfNode(rightNode, currentBlockScope, currentSubScope);

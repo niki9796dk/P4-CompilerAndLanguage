@@ -25,11 +25,17 @@ import TypeChecker.TypeSystem;
 import java.util.*;
 
 /**
- * The visitor used for the whole semantic analysis phase of the compiler.
+ * The visitor used for the semantic analysis phase of the compiler (Excluding type- and scope checking).
  */
 public class SemanticAnalysisVisitor extends ScopeTracker {
+
+    // Fields:
     private FlowChecker flowChecker;
     private Set<BlockNode> buildNodes;
+
+    // Constants:
+    private static final int UNARY_INPUT = 1;
+    private static final int BINARY_INPUT = 2;
 
     /**
      * The constructor
@@ -62,12 +68,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             case ASSIGN:
             case CHANNEL_IN_TYPE:
             case CHANNEL_OUT_TYPE:
-                break;
-
-            case BUILD:
-                this.addBuildBlockToSet((BuildNode) node);
-                break;
-
             case PROCEDURE_CALL:
             case PARAMS:
             case DRAW:
@@ -78,19 +78,18 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
+            case SELECTOR:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
                 break;
 
-            case SELECTOR:
+            case BUILD:
+                this.addBuildBlockToSet((BuildNode) node);
                 break;
 
             case CHAIN:
                 this.verifyChain((ChainNode) node);
                 this.extractMyChannelsUses(node);
-                break;
-
-                // Channels
-            case CHANNEL_IN_MY:
-            case CHANNEL_OUT_MY:
                 break;
 
             default:
@@ -498,13 +497,13 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             case "_Multiplication":
             case "_Subtraction":
             case "_Division":
-                return 2;
+                return BINARY_INPUT;
 
             case "_Sigmoid":
             case "_Tanh":
             case "_Relu":
             case "Transpose":
-                return 1;
+                return UNARY_INPUT;
 
             default:
                 throw new ShouldNotHappenException("We were checking a non exsistent operation for it's channels: " + rightNode);
@@ -522,5 +521,9 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
     public FlowChecker getFlowChecker() {
         return flowChecker;
+    }
+
+    public Set<BlockNode> getBuildNodes() {
+        return buildNodes;
     }
 }

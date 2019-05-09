@@ -214,7 +214,7 @@ public class ScopeCheckerVisitor implements Visitor {
     private void verifyCurrentScopeVariable(String id) {
         VariableEntry variable = this.currentSubScope.getVariable(id);
 
-        checkIfNull(variable, this.currentBlockScope.getId(), id);
+        checkIfNull(variable, ((NamedNode) this.currentSubScope.getNode()).getName(), id);
     }
 
     /**
