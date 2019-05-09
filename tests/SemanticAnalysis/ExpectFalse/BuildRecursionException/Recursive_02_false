@@ -4,6 +4,7 @@ block Main {
 
     blueprint() {
         block master = build Master();
+        this.in -> this.out;
     }
 }
 
@@ -13,6 +14,7 @@ block Master {
 
     blueprint() {
         block mySlave = build Slave();
+        this.in -> this.out;
     }
 }
 
@@ -22,5 +24,6 @@ block Slave {
 
     blueprint() {
         block MyMaster = build Master();
+        this.in -> this.out;
     }
 }

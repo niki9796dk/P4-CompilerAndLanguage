@@ -10,13 +10,12 @@ block Master {
 block Slave {
     mychannel:in in1;
     mychannel:in in2;
-    mychannel:out out1;
-    mychannel:out out2;
+    mychannel:out out;
 
     blueprint() {
         operation mult = build Multiplication();
 
-        (this.in1) -> mult -> this.out1;
-        mult -> this.out2;
+        (this.in1) -> mult;
+        this.in2 -> this.out;
     }
 }

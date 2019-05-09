@@ -3,7 +3,6 @@ package AST.TreeWalks;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
@@ -11,13 +10,11 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import AST.Visitor;
-import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.SymbolTableInterface;
-import TypeChecker.Exceptions.ParamsInconsistencyException;
-import TypeChecker.Exceptions.ShouldNotHappenException;
+import TypeChecker.Exceptions.ChannelPlacementTypeException;
+import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
+import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
-import TypeChecker.TypeSystem;
 
 public class TypeCheckerVisitor extends ScopeTracker {
 
@@ -247,7 +244,11 @@ public class TypeCheckerVisitor extends ScopeTracker {
             AbstractNode actual = actualParams.getChild();
             for (int i = 0; i < formalParams.countChildren(); i++) {
                 // Assert equals
-                this.typeSystem.assertEqualTypes(actual, formal, currentBlockScope, currentSubScope, "Procedure call type inconsistency");
+                try {
+                    this.typeSystem.assertEqualTypes(actual, formal, currentBlockScope, currentSubScope, "Procedure call type inconsistency");
+                } catch (TypeInconsistencyException e) {
+                    throw new ParamsTypeInconsistencyException(e);
+                }
 
                 // Update node pointers to the next sib.
                 formal = formal.getSib();
@@ -256,7 +257,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
         } else if (callerOrCalleeIsMissingParams) {
             // Throw an exception, since one of the params is undefined.
-            throw new TypeInconsistencyException("Only one param was defined " + node + ": Formal: " + formalParams + " vs. " + "Actual: " + actualParams);
+            throw new ParamsSizeInconsistencyException("Only one param was defined " + node + ": Formal: " + formalParams + " vs. " + "Actual: " + actualParams);
 
         }
         // else {
@@ -308,7 +309,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
                 return; // The node was of the correct type, so return an do not throw any exceptions
 
             default:
-                throw new TypeInconsistencyException("Node: " + node.toString() + " - Was not of the correct type for it's chain placement (" + nodeType + ")");
+                throw new ChannelPlacementTypeException("Node: " + node.toString() + " - Was not of the correct type for it's chain placement (" + nodeType + ")");
         }
     }
 
@@ -336,11 +337,11 @@ public class TypeCheckerVisitor extends ScopeTracker {
      * Assert that two parameter nodes have the same amount of parameter children, else throw an exception
      * @param actualParams The actual params
      * @param formalParams The formal params
-     * @throws ParamsInconsistencyException Is thrown if there is a size mismatch in the param nodes.
+     * @throws ParamsSizeInconsistencyException Is thrown if there is a size mismatch in the param nodes.
      */
     private void assertEqualParameterCount(ParamsNode actualParams, ParamsNode formalParams) {
         if (actualParams.countChildren() != formalParams.countChildren()) {
-            throw new ParamsInconsistencyException("Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]" );
+            throw new ParamsSizeInconsistencyException("Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]" );
         }
     }
 
