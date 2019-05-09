@@ -1,0 +1,12 @@
+block Ope {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        blueprint sig = draw _Sigmoid;
+
+        block s = build sig();
+
+        this.in -> this.out;
+    }
+}

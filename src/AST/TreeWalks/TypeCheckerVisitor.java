@@ -3,7 +3,6 @@ package AST.TreeWalks;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
@@ -11,13 +10,9 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import AST.Visitor;
-import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.SymbolTableInterface;
 import TypeChecker.Exceptions.ParamsInconsistencyException;
-import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
-import TypeChecker.TypeSystem;
 
 public class TypeCheckerVisitor extends ScopeTracker {
 
@@ -55,10 +50,6 @@ public class TypeCheckerVisitor extends ScopeTracker {
                 this.typeCheckChain(node);
                 break;
 
-            case GROUP:
-                this.verifyInputType(node);
-                break;
-
             case ASSIGN:
                 this.typecheckAssignments(node);
                 break;
@@ -70,6 +61,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
             //// ACTUAL TYPE CHECKING END
 
+            case GROUP:
             case PARAMS:
             case DRAW:  // TODO: Maybe we should check whatever we draw is a block... But this should also be checked in the scope checker
             case SIZE:
@@ -145,7 +137,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
         AbstractNode leftNode = node.getChild();
         AbstractNode rightNode = leftNode.getSib();
 
-        this.typeSystem.assertEqualTypes(leftNode, rightNode, this.currentBlockScope, this.currentSubScope);
+        this.typeSystem.assertEqualSuperTypes(leftNode, rightNode, this.currentBlockScope, this.currentSubScope);
     }
 
     /**
@@ -247,7 +239,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
             AbstractNode actual = actualParams.getChild();
             for (int i = 0; i < formalParams.countChildren(); i++) {
                 // Assert equals
-                this.typeSystem.assertEqualTypes(actual, formal, currentBlockScope, currentSubScope, "Procedure call type inconsistency");
+                this.typeSystem.assertEqualSuperTypes(actual, formal, currentBlockScope, currentSubScope, "Procedure call type inconsistency");
 
                 // Update node pointers to the next sib.
                 formal = formal.getSib();

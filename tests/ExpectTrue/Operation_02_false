@@ -1,0 +1,15 @@
+block Ope {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        blueprint sig = draw _Sigmoid;
+        blueprint mult = draw Multiplication;
+
+        mult = sig;
+
+        block m = build mult();
+
+        this.in -> this.out;
+    }
+}
