@@ -1,0 +1,18 @@
+block NotMain {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(blueprint def) {
+        this.in -> this.out;
+        block b = build StillNotMain();
+    }
+}
+
+block StillNotMain {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        this.in -> this.out;
+    }
+}

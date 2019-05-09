@@ -4,6 +4,7 @@ package SemanticAnalysis;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import SemanticAnalysis.Exceptions.IncorrectChannelUsageException;
 import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
@@ -105,7 +106,7 @@ public class FlowChecker {
 
             // If a channel was not connected
             if (amount == 0 || (myChannel.startsWith("OUT_") && amount > 1)) {
-                throw new SemanticProblemException("Incorrect use of " + myChannel + ". Amount: " + amount);
+                throw new IncorrectChannelUsageException("Incorrect use of " + myChannel + ". Amount: " + amount);
             }
         }
     }

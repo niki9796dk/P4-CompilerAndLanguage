@@ -8,6 +8,9 @@ import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import SemanticAnalysis.Exceptions.ChainConnectionMismatchException;
+import SemanticAnalysis.Exceptions.GroupConnectionMismatchException;
+import SemanticAnalysis.Exceptions.NoMainBlockException;
 import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SemanticAnalysis.FlowChecker;
 import SemanticAnalysis.Datastructures.HashSetStack;
@@ -243,7 +246,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
      */
     private void assertNonZeroMainBlockCount(List<BlockNode> potentialMainBlocks) {
         if (potentialMainBlocks.size() == 0) {
-            throw new SemanticProblemException("The supplied program have NO buildable blocks - All blocks require parameters or there is none.");
+            throw new NoMainBlockException("The supplied program have NO buildable blocks - All blocks require parameters or there is none.");
         }
     }
 
@@ -351,7 +354,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             int rightIn = this.countInChannels(rightNode);
 
             if (leftOut != 1 || rightIn != 1) {
-                throw new SemanticProblemException("A chain was used on an element with more than 1 in/out channel: " + leftNode + "[" + leftOut + "] -> " + rightNode + "[" + rightIn + "]");
+                throw new ChainConnectionMismatchException("A chain was used on an element with more than 1 in/out channel: " + leftNode + "[" + leftOut + "] -> " + rightNode + "[" + rightIn + "]");
             }
         }
     }
@@ -371,7 +374,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
         // Compare the two values, and throw an exception if something is wrong.
         if (groupChildrenCount != rightNodeChildrenCount) {
-            throw new SemanticProblemException("Group connection size mismatch: " + groupNode + ":" + groupChildrenCount + " vs. " + rightNode + ":" + rightNodeChildrenCount);
+            throw new GroupConnectionMismatchException("Group connection size mismatch: " + groupNode + ":" + groupChildrenCount + " vs. " + rightNode + ":" + rightNodeChildrenCount);
         }
     }
 

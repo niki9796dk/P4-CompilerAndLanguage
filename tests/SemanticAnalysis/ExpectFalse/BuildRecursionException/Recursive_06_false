@@ -4,6 +4,7 @@ block A {
 
     blueprint() {
         block child = build A_1(draw A_1);
+        this.in -> this.out;
     }
 }
 
@@ -13,5 +14,6 @@ block A_1 {
 
     blueprint(blueprint B) {
         block WhoDis = build B();
+        this.in -> this.out;
     }
 }

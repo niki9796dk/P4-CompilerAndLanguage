@@ -1,10 +1,13 @@
 package AST.TreeWalks;
 
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockTypeNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
+import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
+import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
+import AST.Nodes.SpecialNodes.UnexpectedNode;
 import AST.TreeWalks.Exceptions.NonexistentBlockException;
+import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
+import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,10 +54,88 @@ class ScopeCheckerVisitorTest {
         BuildNode otherBuildNode = new BuildNode("otherBlockNodeId");
         this.scopeCheckerVisitor.pre(0, otherBuildNode);
         assertTrue(true);
+
+        // Ensures an exception is not thrown
+        scopeCheckerVisitor.pre(0, otherBuildNode);
+        assertTrue(true);
     }
 
     @Test
-    void preTest() {
+    void preTestBlock() {
+        scopeCheckerVisitor.pre(1, blockNode);
+
+        assertEquals(symbolTableInterface.getBlockScope("blockNodeId"), scopeCheckerVisitor.getCurrentBlockScope());
+    }
+
+    @Test
+    void preTestProcedure() {
+        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId");
+        symbolTableInterface.openSubScope(procedureNode);
+
+        scopeCheckerVisitor.pre(1, procedureNode);
+
+        assertEquals(symbolTableInterface.getSubScope("blockNodeId" ,"PROC_procedureNodeId"), scopeCheckerVisitor.getCurrentSubScope());
+    }
+
+    @Test
+    void preTestBlueprint() {
+        BlueprintNode blueprintNode = new BlueprintNode();
+        symbolTableInterface.openSubScope(blueprintNode);
+
+        scopeCheckerVisitor.pre(1, blueprintNode);
+
+        assertEquals(symbolTableInterface.getSubScope("blockNodeId" ,"Blueprint"), scopeCheckerVisitor.getCurrentSubScope());
+    }
+
+    @Test
+    void preTestChannelDeclarations() {
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        symbolTableInterface.openSubScope(channelDeclarationsNode);
+
+        scopeCheckerVisitor.pre(1, channelDeclarationsNode);
+
+        assertEquals(symbolTableInterface.getSubScope("blockNodeId" ,"ChannelDeclaration"), scopeCheckerVisitor.getCurrentSubScope());
+    }
+
+    @Test
+    void preTestProcedureCall01() {
+        ProcedureCallNode procedureCallNode = new ProcedureCallNode();
+        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId");
+        SelectorNode selectorNode = new SelectorNode("procedureNodeId");
+
+        procedureCallNode.adoptAsFirstChild(selectorNode);
+
+        symbolTableInterface.openSubScope(procedureNode);
+
+        scopeCheckerVisitor.pre(1, procedureCallNode);
+
+        // Ensures an exception is not thrown
+        assertTrue(true);
+    }
+
+    @Test
+    void preTestProcedureCall02() {
+        ProcedureCallNode procedureCallNode = new ProcedureCallNode();
+        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId");
+        SelectorNode selectorNode = new SelectorNode("nonExistentProcedureNodeId");
+
+        procedureCallNode.adoptAsFirstChild(selectorNode);
+
+        symbolTableInterface.openSubScope(procedureNode);
+
+        assertThrows(ScopeBoundsViolationException.class, () -> scopeCheckerVisitor.pre(1, procedureCallNode));
+    }
+
+    @Test
+    void preTestSelector() {
+
+    }
+
+    @Test
+    void preUnexpectedNode() {
+        AbstractNode unexpectedNode = new UnexpectedNode("unexpectedNodeId");
+
+        assertThrows(UnexpectedNodeException.class, () -> scopeCheckerVisitor.pre(1, unexpectedNode));
     }
 
     @Test

@@ -10,6 +10,8 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.*;
+import TypeChecker.Exceptions.IncorrectAssignmentTypesException;
+import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
 
@@ -62,7 +64,11 @@ public class TypeSystem {
      * @param currentSubScope The current sub scope to type check from
      */
     public void assertEqualTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope) {
-        this.assertEqualTypes(leftNode, rightNode, currentBlockScope, currentSubScope, "Different type on the left and right side node");
+        try {
+            this.assertEqualTypes(leftNode, rightNode, currentBlockScope, currentSubScope, "Different type on the left and right side node");
+        } catch (TypeInconsistencyException e) {
+            throw new IncorrectAssignmentTypesException(e);
+        }
     }
 
     /**
@@ -80,7 +86,7 @@ public class TypeSystem {
 
         // Then compare them.
         if (leftNodeType != rightNodeType) {
-            throw new TypeInconsistencyException(errorMsgPrefix + ": " + leftNode + "("+ leftNodeType +") = " + rightNode + "("+ rightNodeType +")");
+            throw new ParamsTypeInconsistencyException(errorMsgPrefix + ": " + leftNode + "("+ leftNodeType +") = " + rightNode + "("+ rightNodeType +")");
         }
     }
 
