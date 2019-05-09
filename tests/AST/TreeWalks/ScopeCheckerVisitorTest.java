@@ -1,11 +1,14 @@
 package AST.TreeWalks;
 
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
+import AST.Nodes.SpecialNodes.UnexpectedNode;
 import AST.TreeWalks.Exceptions.NonexistentBlockException;
 import AST.TreeWalks.Exceptions.ScopeBoundsViolationException;
+import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
 import org.junit.jupiter.api.BeforeEach;
@@ -125,6 +128,13 @@ class ScopeCheckerVisitorTest {
     @Test
     void preTestSelector() {
 
+    }
+
+    @Test
+    void preUnexpectedNode() {
+        AbstractNode unexpectedNode = new UnexpectedNode("unexpectedNodeId");
+
+        assertThrows(UnexpectedNodeException.class, () -> scopeCheckerVisitor.pre(1, unexpectedNode));
     }
 
     @Test
