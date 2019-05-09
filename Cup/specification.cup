@@ -41,14 +41,14 @@ parser code {:
         }
         */
 
-        // ##### IMPORTANT IMPLEMENTATION - THE "ScannerException" CLASS IS USED IN TESTING!!! #####
+        // ##### IMPORTANT IMPLEMENTATION - THE "SyntaxAnalysisException" CLASS IS USED IN TESTING!!! #####
         public void unrecovered_syntax_error(Symbol cur_token) throws Exception {
             try {
                 // Call original method implementation
                 super.unrecovered_syntax_error(cur_token);
             } catch (Exception e) {
-                // Rethrow exception as a ScannerException instead of a generic "Exception", to identify in testing.
-                throw new AutoGen.ScannerException(e);
+                // Rethrow exception as a SyntaxAnalysisException instead of a generic "Exception", to identify in testing.
+                throw new AutoGen.SyntaxAnalysisException(e);
             }
         }
 

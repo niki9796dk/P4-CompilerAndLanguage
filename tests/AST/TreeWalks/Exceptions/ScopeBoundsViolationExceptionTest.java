@@ -1,7 +1,6 @@
 package AST.TreeWalks.Exceptions;
 
-import AST.Nodes.AbstractNodes.NodeEnumAble;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
+import ScopeChecker.Exceptions.ScopeBoundsViolationException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
