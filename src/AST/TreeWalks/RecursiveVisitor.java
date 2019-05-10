@@ -5,15 +5,13 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import AST.Visitor;
 import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.ShouldNotHappenException;
-import TypeChecker.TypeSystem;
 
 /**
  * Abstract Visitor class - ScopeTracker.
@@ -104,10 +102,8 @@ public class RecursiveVisitor extends ScopeTracker {
                 break;
 
             case PROCEDURE_CALL:
-                handleRecursiveProcedureCall((ProcedureCallNode) node);
-                break;
-
             case BUILD:
+                handleRecursiveCall(node);
                 break;
 
             default:
@@ -115,23 +111,31 @@ public class RecursiveVisitor extends ScopeTracker {
         }
     }
 
-    private void handleRecursiveProcedureCall(ProcedureCallNode callNode) {
+    private void handleRecursiveCall(NamedNode callNode) {
         System.out.print("\tHandle[" + counter + "]: " + callNode + " - " + callNode.findFirstChildOfClass(SelectorNode.class));
 
         // Find procedure call ID
-        String procedureId = BlockScope.PROCEDURE_PREFIX + callNode.findFirstChildOfClass(SelectorNode.class).getId();
+        String calleeId = this.getCalleeId(callNode);
 
-        // Verify that it exist.
-        Scope procedureSubScope = this.symbolTable.getSubScope(this.currentBlockScope, procedureId);
-        boolean fakeProcedureCall = procedureSubScope == null;
+        if (callNode instanceof BuildNode) {
+            boolean isSource = this.symbolTable.isPredefinedSource(calleeId);
+            boolean isOperation = this.symbolTable.isPredefinedOperation(calleeId);
 
-        if (fakeProcedureCall) {
-            throw new ShouldNotHappenException("No such procedure???: " + callNode);
+            if (isSource || isOperation) {
+                return;
+                // Skip those builds
+            }
         }
+
+        // Get the procedure sub scope
+        Scope calleeSubScope = this.getCalleeSubScope(callNode, calleeId);
+
+        // Assert that it exist
+        this.assertNotNull(calleeSubScope);
 
         // Verify that if params is needed, that they are there!
         ParamsNode callerParams = callNode.findFirstChildOfClass(ParamsNode.class);
-        ParamsNode calleeParams = procedureSubScope.getNode().findFirstChildOfClass(ParamsNode.class);
+        ParamsNode calleeParams = calleeSubScope.getNode().findFirstChildOfClass(ParamsNode.class);
 
         boolean hasParams = callerParams != null;
         boolean needsParams = calleeParams != null;
@@ -154,7 +158,7 @@ public class RecursiveVisitor extends ScopeTracker {
             AbstractNode formalParam = calleeParams.getChild();
             for (int i = 0; i < callerParamsCount; i++) {
                 // Link params
-                ((VariableEntryOrDefault) procedureSubScope.getVariable(formalParam)).setDefaultSubtype(this.convertParamForLinking((NamedNode) actualParam));
+                ((VariableEntryOrDefault) calleeSubScope.getVariable(formalParam)).setDefaultSubtype(this.convertParamForLinking((NamedNode) actualParam));
 
                 // Update params "counter"
                 actualParam = actualParam.getSib();
@@ -163,12 +167,88 @@ public class RecursiveVisitor extends ScopeTracker {
         }
 
         // Recursively call the procedure with the new param bindings.
-        System.out.println(" - Jump to: " + procedureSubScope.getNode() + " - From: " + this.currentBlockScope + ", " + this.currentSubScope);
+        System.out.println(" - Jump to: " + calleeSubScope.getNode() + " - From: " + this.currentBlockScope + ", " + this.currentSubScope);
 
+        this.jumpToCallee(callNode, calleeSubScope, calleeId);
+    }
+
+    private void jumpToCallee(NamedNode node, Scope calleeSubScope, String calleeId) {
+        switch (node.getNodeEnum()) {
+            case PROCEDURE_CALL:
+                this.jumpToProcedure(calleeSubScope, calleeId);
+                break;
+
+            case BUILD:
+                this.jumpToBlock(calleeSubScope, calleeId);
+                break;
+
+            default:
+                throw new UnexpectedNodeException(node);
+        }
+    }
+
+    private void jumpToProcedure(Scope calleeSubScope, String calleeId) {
         String oldSubScope = this.currentSubScope;
-        this.internalVisitor.setCurrentSubScope(procedureId); // Update sub scope
-        procedureSubScope.getNode().walkTree(new RecursiveVisitor(this.symbolTable, this.internalVisitor, this.currentBlockScope, procedureId));
+        this.internalVisitor.setCurrentSubScope(calleeId); // Update sub scope
+        calleeSubScope.getNode().walkTree(new RecursiveVisitor(this.symbolTable, this.internalVisitor, this.currentBlockScope, calleeId));
         this.internalVisitor.setCurrentSubScope(oldSubScope); // Revert sub scope
+    }
+
+    private void jumpToBlock(Scope calleeSubScope, String calleeId) {
+        String oldBlockScope = this.currentBlockScope;
+        String oldSubScope = this.currentSubScope;
+
+        this.internalVisitor.setCurrentBlockScope(calleeId); // Update block scope
+        this.internalVisitor.setCurrentSubScope(calleeId); // Update sub scope
+
+        calleeSubScope.getNode().walkTree(new RecursiveVisitor(this.symbolTable, this.internalVisitor, calleeId, BlockScope.BLUEPRINT));
+
+        this.internalVisitor.setCurrentBlockScope(oldBlockScope); // Revert block scope
+        this.internalVisitor.setCurrentSubScope(oldSubScope); // Revert sub scope
+    }
+
+    private String getCalleeId(NamedNode node) {
+        switch (node.getNodeEnum()) {
+            case PROCEDURE_CALL:
+                return this.getProcedureId((ProcedureCallNode) node);
+            case BUILD:
+                return this.getBuildBlockId((BuildNode) node);
+            default:
+                throw new UnexpectedNodeException(node);
+        }
+    }
+
+    private String getProcedureId(ProcedureCallNode callNode) {
+        return BlockScope.PROCEDURE_PREFIX + callNode.findFirstChildOfClass(SelectorNode.class).getId();
+    }
+
+    private String getBuildBlockId(BuildNode buildNode) {
+        return this.typeSystem.getSubTypeOfNode(buildNode, this.currentBlockScope, this.currentSubScope);
+    }
+
+    private Scope getCalleeSubScope(NamedNode node, String id) {
+        switch (node.getNodeEnum()) {
+            case PROCEDURE_CALL:
+                return this.getProcedureSubScope(id);
+            case BUILD:
+                return this.getBlockBlueprintScope(id);
+            default:
+                throw new UnexpectedNodeException(node);
+        }
+    }
+
+    private Scope getProcedureSubScope(String procedureId) {
+        return this.symbolTable.getSubScope(this.currentBlockScope, procedureId);
+    }
+
+    private Scope getBlockBlueprintScope(String id) {
+        return this.symbolTable.getBlockScope(id).getBlueprintScope();
+    }
+
+    private void assertNotNull(Object obj) {
+        if (obj == null) {
+            throw new NullPointerException("The given object was null!");
+        }
     }
 
     private NamedNode convertParamForLinking(NamedNode node) {
