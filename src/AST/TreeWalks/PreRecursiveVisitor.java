@@ -2,12 +2,15 @@ package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
+import SemanticAnalysis.Datastructures.HashSetStack;
 import SemanticAnalysis.Exceptions.NoMainBlockException;
+import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
 
@@ -29,6 +32,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
      * @param abstractNode The node which is being visited.
      */
     @Override
+    @SuppressWarnings("Duplicates")
     public void pre(int printLevel, AbstractNode abstractNode) {
         super.pre(printLevel, abstractNode);
 
@@ -114,7 +118,6 @@ public class PreRecursiveVisitor extends ScopeTracker {
         }
     }
 
-    @SuppressWarnings("Duplicates")
     private void addBuildBlockToSet(BuildNode node) {
         String buildSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
@@ -131,7 +134,6 @@ public class PreRecursiveVisitor extends ScopeTracker {
      * Method used to start the block recursion testing check.
      * It will first find all potential main blocks, and then perform recursion checking on their build patterns.
      */
-    @SuppressWarnings("Duplicates")
     private void findMainBlocks() {
         // Find all potential main blocks
         List<BlockNode> potentialMainBlocks = this.findPotentialMainBlocks();
@@ -144,6 +146,17 @@ public class PreRecursiveVisitor extends ScopeTracker {
 
         // Store the remaining main blocks.
         this.symbolTable.setMainBlocks(potentialMainBlocks);
+
+        // Assert no build recursions
+        this.assertNoBuildCycles();
+    }
+
+    /**
+     * Method used to start the no build cycle check, for all potential main blocks
+     * @throws SemanticProblemException is there is build recursion within the block.
+     */
+    private void assertNoBuildCycles() {
+        new RecursiveVisitor(this.symbolTable, new RecursiveBuildVisitor(new HashSetStack<>(), this.symbolTable)).startRecursiveWalk();
     }
 
     /**
@@ -152,7 +165,6 @@ public class PreRecursiveVisitor extends ScopeTracker {
      * @param potentialMainBlocks A list of potential main blocks
      * @throws NoMainBlockException if no potential blocks is present in the list.
      */
-    @SuppressWarnings("Duplicates")
     private void assertNonZeroMainBlockCount(List<BlockNode> potentialMainBlocks) {
         if (potentialMainBlocks.size() == 0) {
             throw new NoMainBlockException("The supplied program have NO buildable blocks - All blocks require parameters or there is none.");
@@ -165,7 +177,6 @@ public class PreRecursiveVisitor extends ScopeTracker {
      * and does not depend on anything else than them self to supply data, to any sub block.
      * @return A list of potential main blocks.
      */
-    @SuppressWarnings("Duplicates")
     private List<BlockNode> findPotentialMainBlocks() {
         // Instantiate the list
         List<BlockNode> potentialMainBlocks = new LinkedList<>(); /* Linked list is used, since we only ever iterate it. */
@@ -192,7 +203,6 @@ public class PreRecursiveVisitor extends ScopeTracker {
      * @param block The block to check
      * @return Returns true if the block does not have any build parameters, and false if it has more than zero (0).
      */
-    @SuppressWarnings("Duplicates")
     private boolean checkIfBlockCouldBeAMainBlock(BlockNode block) {
         // Find the blueprint node within the block
         AbstractNode blueprintNode = this.symbolTable

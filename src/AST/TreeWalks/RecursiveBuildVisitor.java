@@ -2,17 +2,12 @@ package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import AST.Visitor;
 import SemanticAnalysis.Datastructures.SetStack;
 import SemanticAnalysis.Exceptions.BuildRecursionException;
-import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.*;
 import TypeChecker.TypeSystem;
-import java_cup.runtime.Symbol;
 
 /**
  * A recursive build visitor, which will **follow** all build statements to verify that no build recursions happen.
@@ -66,7 +61,8 @@ public class RecursiveBuildVisitor extends ScopeTracker {
                 break;
 
             case BUILD:
-                this.handleBuild(node);
+                // TODO: Add procedure call
+                this.handleBuildPre(node);
                 break;
 
             default:
@@ -79,6 +75,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
      * @param abstractNode The node which is being visited.
      */
     @Override
+    @SuppressWarnings("Duplicates")
     public void post(int printLevel, AbstractNode abstractNode) {
         // Update scope counter
         super.post(printLevel, abstractNode);
@@ -113,6 +110,8 @@ public class RecursiveBuildVisitor extends ScopeTracker {
                 break;
 
             case BUILD:
+                // Once done, pop the newly added build
+                this.handleBuildPost(node);
                 break;
 
             default:
@@ -126,7 +125,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
      * and if the same call is still within the stack (no pop) it means there is an recursion, and an exception is thrown.
      * @param node the BuildNode to follow.
      */
-    private void handleBuild(AbstractNode node) {
+    private void handleBuildPre(AbstractNode node) {
         String nodeSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
         boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(nodeSubType);
@@ -143,25 +142,25 @@ public class RecursiveBuildVisitor extends ScopeTracker {
         if (failure) {
             throw new BuildRecursionException("Recursive block building! - " + node);
         }
-        
-        // Find node we are building
-        AbstractNode nodeBeingBuild = this.findNodeBeingBuild(node);
-
-        // Jump to the build node, and walk it instead.
-        nodeBeingBuild.walkTree(new RecursiveBuildVisitor(this.buildStack, this.symbolTable));
-
-        // Once done, pop the newly added build
-        this.buildStack.pop();
     }
 
     /**
-     * Method for finding the root node of the specific block being build.
-     * @param buildNode The BuildNode, from which the subtype will be extracted.
-     * @return a BlockNode, which is the root for the block type extracted from the buildNode param.
+     * Method to handle a BuildNode.
+     * Will check if whatever it is we are building is a block, and then pop the call in a call stack
+     * @param node the BuildNode to follow.
      */
-    private AbstractNode findNodeBeingBuild(AbstractNode buildNode) {
-        String buildSubType = this.typeSystem.getSubTypeOfNode(buildNode, this.currentBlockScope, this.currentSubScope);
-        return this.typeSystem.getBlock(buildSubType);
+    private void handleBuildPost(AbstractNode node) {
+        String nodeSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+        boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(nodeSubType);
+        boolean isOperation = this.typeSystem.getSymbolTable().isPredefinedOperation(nodeSubType);
+
+        if (isSource || isOperation) {
+            // Do nothing
+            return;
+        }
+
+        this.buildStack.pop();
     }
 
     /**

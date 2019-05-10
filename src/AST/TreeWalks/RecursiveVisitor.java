@@ -11,6 +11,7 @@ import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.*;
+import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 
 /**
@@ -48,31 +49,19 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     /**
-     * @param printLevel    the level, used to decide how many indents there should be in the print statement.
-     * @param node          The node which is being visited.
+     * @param printLevel    The level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode  The node which is being visited.
      */
     @Override
-    public void pre(int printLevel, AbstractNode node) {
+    public void pre(int printLevel, AbstractNode abstractNode) {
         for (int i = 0; i < printLevel; i++) {
             System.out.print("\t");
         }
 
-        System.out.println(node);
+        System.out.println(abstractNode);
 
-        super.pre(printLevel, node);
-        this.internalVisitor.pre(printLevel, node);
-    }
-
-    /**
-     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
-     * @param abstractNode The node which is being visited.
-     */
-    @Override
-    public void post(int printLevel, AbstractNode abstractNode) {
-        super.post(printLevel, abstractNode);
-        this.internalVisitor.post(printLevel, abstractNode);
-
-
+        super.pre(printLevel, abstractNode);
+        this.internalVisitor.pre(printLevel, abstractNode);
 
         NamedNode node = (NamedNode) abstractNode;
 
@@ -111,12 +100,23 @@ public class RecursiveVisitor extends ScopeTracker {
         }
     }
 
+    /**
+     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
+     */
+    @Override
+    public void post(int printLevel, AbstractNode abstractNode) {
+        super.post(printLevel, abstractNode);
+        this.internalVisitor.post(printLevel, abstractNode);
+    }
+
     private void handleRecursiveCall(NamedNode callNode) {
         System.out.print("\tHandle[" + counter + "]: " + callNode + " - " + callNode.findFirstChildOfClass(SelectorNode.class));
 
         // Find procedure call ID
         String calleeId = this.getCalleeId(callNode);
 
+        // If it's a build node, and it's a source or operation, simple ignore it.
         if (callNode instanceof BuildNode) {
             boolean isSource = this.symbolTable.isPredefinedSource(calleeId);
             boolean isOperation = this.symbolTable.isPredefinedOperation(calleeId);
@@ -141,7 +141,7 @@ public class RecursiveVisitor extends ScopeTracker {
         boolean needsParams = calleeParams != null;
 
         if (hasParams != needsParams) {
-            throw new ShouldNotHappenException("Inconsistency in the given and expected parameter count: " + callNode);
+            throw new ParamsSizeInconsistencyException("Inconsistency in the given and expected parameter count: " + callNode);
         }
 
         // Verify the parameter count
@@ -150,7 +150,7 @@ public class RecursiveVisitor extends ScopeTracker {
             int calleeParamsCount = calleeParams.countChildren();
 
             if (callerParamsCount != calleeParamsCount) {
-                throw new ShouldNotHappenException("Inconsistency in the given and expected parameter count: " + callNode);
+                throw new ParamsSizeInconsistencyException("Inconsistency in the given and expected parameter count: " + callNode);
             }
 
             // Loop all params and link them.
@@ -173,6 +173,8 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     private void jumpToCallee(NamedNode node, Scope calleeSubScope, String calleeId) {
+        System.out.println(this.symbolTable);
+
         switch (node.getNodeEnum()) {
             case PROCEDURE_CALL:
                 this.jumpToProcedure(calleeSubScope, calleeId);

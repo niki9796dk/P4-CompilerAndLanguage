@@ -30,7 +30,7 @@ block B1 {
     // ######## LEVEL 2 ########
     procedure level2(blueprint ToBuild1, blueprint ToBuild2) {
         level3(ToBuild1, ToBuild2, draw B2);
-        level3_(ToBuild1, ToBuild2);
+        level3_(ToBuild1, ToBuild2, draw B2);
     }
 
     procedure level2_(blueprint ToBuild1, blueprint ToBuild2) {

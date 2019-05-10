@@ -28,7 +28,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
     // Fields:
     private FlowChecker flowChecker;
-    private Set<BlockNode> buildNodes;
 
     // Constants:
     private static final int UNARY_INPUT = 1;
@@ -41,7 +40,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
     public SemanticAnalysisVisitor(SymbolTable symbolTable) {
         super(symbolTable);
         this.flowChecker = new FlowChecker(symbolTable);
-        this.buildNodes = new HashSet<>();
     }
 
     /**
@@ -78,10 +76,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             case SELECTOR:
             case CHANNEL_IN_MY:
             case CHANNEL_OUT_MY:
-                break;
-
             case BUILD:
-                this.addBuildBlockToSet((BuildNode) node);
                 break;
 
             case CHAIN:
@@ -111,7 +106,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
             // No action enums
             case ROOT:
-                this.performBlockRecursionTesting();
                 break;
 
             case BLOCK:
@@ -213,113 +207,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
                 flowChecker.getConnected().add(prefix + node.getId());
             }
         }
-    }
-
-    /**
-     * Method used to start the block recursion testing check.
-     * It will first find all potential main blocks, and then perform recursion checking on their build patterns.
-     */
-    private void performBlockRecursionTesting() {
-        // Find all potential main blocks
-        List<BlockNode> potentialMainBlocks = this.findPotentialMainBlocks();
-
-        // Loop all the potential main blocks and remove the once being build by other
-        potentialMainBlocks.removeIf(this.buildNodes::contains);
-
-        // Assert that there still is remaining potential main blocks
-        this.assertNonZeroMainBlockCount(potentialMainBlocks);
-
-        // For every actual potential main block, verify that there is no build cycles.
-        for (BlockNode mainBlock : potentialMainBlocks) {
-            this.assertNoBuildCycles(mainBlock);
-        }
-    }
-
-    /**
-     * Helper function for block recursion checking - Used for simplification.
-     * Will throw an exception if no potential main blocks is present.
-     * @param potentialMainBlocks A list of potential main blocks
-     * @throws NoMainBlockException if no potential blocks is present in the list.
-     */
-    private void assertNonZeroMainBlockCount(List<BlockNode> potentialMainBlocks) {
-        if (potentialMainBlocks.size() == 0) {
-            throw new NoMainBlockException("The supplied program have NO buildable blocks - All blocks require parameters or there is none.");
-        }
-    }
-
-    /**
-     * Method used to start the no build cycle check, for a single potential main block.
-     * @param mainBlock A potential main block.
-     * @throws SemanticProblemException is there is build recursion within the block.
-     */
-    private void assertNoBuildCycles(BlockNode mainBlock) {
-        mainBlock.walkTree(new RecursiveBuildVisitor(new HashSetStack<>(), this.symbolTable));
-    }
-
-    /**
-     * Helper function for performing build recursion testing.
-     * Simply adds a block to a set over blocks that have been build by other blocks.
-     * @param node The BuildNode.
-     */
-    private void addBuildBlockToSet(BuildNode node) {
-        String buildSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
-
-        if (this.symbolTable.isPredefinedSource(buildSubType) || this.symbolTable.isPredefinedOperation(buildSubType)) {
-            return; // Simply ignore this case.
-        }
-
-        BlockNode blockBeingBuild = this.typeSystem.getBlock(buildSubType);
-
-        this.buildNodes.add(blockBeingBuild);
-    }
-
-    /**
-     * Loops all block definition, and find all those whoes blueprint does not take any parameters.
-     * Blocks with no build parameters are called potential main blocks, since these are the blocks that are fully static
-     * and does not depend on anything else than them self to supply data, to any sub block.
-     * @return A list of potential main blocks.
-     */
-    private List<BlockNode> findPotentialMainBlocks() {
-        // Instantiate the list
-        List<BlockNode> potentialMainBlocks = new LinkedList<>(); /* Linked list is used, since we only ever iterate it. */
-
-        // Find the very fist block definition
-        BlockNode currentBlock = (BlockNode) this.symbolTable.getLatestBlockScope().getNode().getFirstSib();
-
-        // Loop all block definition and if they are a potential main block, store it in the list
-        for (/* Do Nothing */ ; currentBlock != null; currentBlock = (BlockNode) currentBlock.getSib()) {
-            boolean isPotentialMainBlock = this.checkIfBlockCouldBeAMainBlock(currentBlock);
-
-            if (isPotentialMainBlock) {
-                potentialMainBlocks.add(currentBlock);
-            }
-        }
-
-        // Return the list
-        return potentialMainBlocks;
-    }
-
-    /**
-     * Checks if a single given block is a potential main block, by verifying that it does not have any build parameters
-     * for it's blueprint
-     * @param block The block to check
-     * @return Returns true if the block does not have any build parameters, and false if it has more than zero (0).
-     */
-    private boolean checkIfBlockCouldBeAMainBlock(BlockNode block) {
-        // Find the blueprint node within the block
-        AbstractNode blueprintNode = this.symbolTable
-                .getBlockScope(block.getId())
-                .getBlueprintScope()
-                .getNode();
-
-        // Find the parameter node, if such one exsist.
-        ParamsNode paramNode = blueprintNode.findFirstChildOfClass(ParamsNode.class);
-
-        // Count the amount of param nodes
-        int blueprintParamCount = (paramNode != null) ? paramNode.countChildren() : 0;
-
-        // Return true if there are no parameters, and therefor could be a potential main block
-        return blueprintParamCount == 0;
     }
 
     /**
@@ -521,6 +408,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
     }
 
     public Set<BlockNode> getBuildNodes() {
-        return buildNodes;
+        return null;
     }
 }
