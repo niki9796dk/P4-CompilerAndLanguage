@@ -5,7 +5,7 @@ block Main {
     blueprint () {
         blueprint param = draw B2;
 
-        this.in -> build B1(B2) -> this.out;
+        this.in -> build B1(param) -> this.out;
     }
 }
 
