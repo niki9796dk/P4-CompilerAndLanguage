@@ -119,20 +119,6 @@ public abstract class AbstractNode implements Node {
       return this;
    }
 
-   /* private & unused
-   private List<AbstractNode> getChildrenAsList() {
-      if (this.child == null) return null;
-
-      List<AbstractNode> children = new ArrayList<>();
-
-      for (AbstractNode currentChild = this.child; currentChild != null; currentChild = currentChild.mysib) {
-         children.add(currentChild);
-      }
-
-      return children;
-   }
-   */
-
     /**
      * Get the first child of a node, of a given class
      * @param childClass The expected child class

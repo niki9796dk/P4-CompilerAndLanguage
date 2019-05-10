@@ -6,8 +6,10 @@ import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
+import AST.Nodes.NodeClasses.NamedNodes.RootNode;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
 import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
+import ScopeChecker.Exceptions.NoSuchVariableDeclaredException;
 import ScopeChecker.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
@@ -126,9 +128,66 @@ class ScopeCheckerVisitorTest {
         assertThrows(ScopeBoundsViolationException.class, () -> scopeCheckerVisitor.pre(1, procedureCallNode));
     }
 
+    // Check 'this' selector
     @Test
-    void preTestSelector() {
+    void preTestSelector01() {
+        MyInChannelNode node = new MyInChannelNode("in");
 
+        SelectorNode selectorNode = new SelectorNode("this");
+        selectorNode.adoptChildren(node);
+
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        this.symbolTableInterface.openSubScope(channelDeclarationsNode);
+
+        this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
+
+        scopeCheckerVisitor.getCurrentBlockScope().getChannelDeclarationScope().setVariable(node);
+
+        scopeCheckerVisitor.pre(1, selectorNode);
+
+        // Ensure it has thrown no exceptions
+        assertTrue(true);
+    }
+
+    @Test
+    void preTestSelector02() {
+        MyInChannelNode node = new MyInChannelNode("in");
+
+        SelectorNode selectorNode = new SelectorNode("in");
+
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        this.symbolTableInterface.openSubScope(channelDeclarationsNode);
+
+        this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
+
+        scopeCheckerVisitor.getCurrentBlockScope().getChannelDeclarationScope().setVariable(node);
+
+        scopeCheckerVisitor.pre(1, selectorNode);
+
+        // Ensure it has thrown no exceptions
+        assertTrue(true);
+    }
+
+    @Test
+    void preTestSelector03() {
+        MyInChannelNode node = new MyInChannelNode("in");
+
+        SelectorNode selectorNode = new SelectorNode("in");
+
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        this.symbolTableInterface.openSubScope(channelDeclarationsNode);
+
+        this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
+
+        assertThrows(NoSuchVariableDeclaredException.class, () -> scopeCheckerVisitor.pre(1, selectorNode));
+    }
+
+    @Test
+    void preTestDoNothing() {
+        RootNode rootNode = new RootNode();
+        scopeCheckerVisitor.pre(1, rootNode);
+
+        assertTrue(true);
     }
 
     @Test
@@ -139,7 +198,11 @@ class ScopeCheckerVisitorTest {
     }
 
     @Test
-    void post() {
+    void postTestDoNothing() {
+        RootNode rootNode = new RootNode();
+        scopeCheckerVisitor.post(1, rootNode);
+
+        assertTrue(true);
     }
 
     @Test

@@ -6,7 +6,6 @@ import java.util.HashMap;
  * An operation. Used to keep track of operations through Enum functionality, as well as separate the keyword string from the internal data structure.
  */
 public enum Operation {
-    @SuppressWarnings("unused")
     ADDITION("Addition"),
     MULTIPLICATION("Multiplication"),
     SUBTRACTION("Subtraction"),
@@ -20,17 +19,17 @@ public enum Operation {
     TRANSPOSE("Transpose");
 
     /**
+     * The keyword of the operation as a string.
+     */
+    private String keyword;
+
+    /**
      * A map containing all the operation enums. Useful for quickly and efficiently finding an operation using the word.
      * Used in the method {@link #isValid(String)}.
      * Key: Keyword of the operation as a string.
      * Value: The operation with the specified keyword.
      */
     private static HashMap<String, Operation> operations = Operation.createMap();
-
-    /**
-     * The keyword of the operation as a string.
-     */
-    private String keyword;
 
     /**
      * Construct a new operation with a specific single keyword string.
@@ -50,7 +49,6 @@ public enum Operation {
         }
         return values;
     }
-
 
     /**
      * @param keyword A string which represents an operations keyword.
