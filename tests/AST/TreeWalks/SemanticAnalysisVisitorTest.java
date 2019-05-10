@@ -4,8 +4,8 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
+import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
@@ -52,10 +52,34 @@ class SemanticAnalysisVisitorTest {
         assertTrue(this.semanticAnalysisVisitor.getBuildNodes().contains(buildNode));
     }
 
+    @Disabled
     @Test
     void pre_chain() {
         ChainNode chainNode = new ChainNode();
-        this.semanticAnalysisVisitor.pre(0, this.blueprintNode);
+        BlockNode blockNode = new BlockNode("blockNodeA");
+        MyInChannelNode myInChannelNode = new MyInChannelNode("in");
+        MyOutChannelNode myOutChannelNode = new MyOutChannelNode("out");
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        channelDeclarationsNode.adoptChildren(myInChannelNode, myOutChannelNode);
+
+        symbolTableInterface.openBlockScope(blockNode);
+        symbolTableInterface.openSubScope(channelDeclarationsNode);
+
+        BlockTypeNode blockTypeNode = new BlockTypeNode("blockNodeA");
+        symbolTableInterface.getLatestBlockScope().getLatestSubScope().setVariable(blockTypeNode);
+
+
+        SelectorNode selectorNode1 = new SelectorNode("blockNodeA");
+        SelectorNode selectorNode2 = new SelectorNode("blockNodeA");
+        selectorNode1.adoptChildren(blockTypeNode);
+        selectorNode2.adoptChildren(blockTypeNode);
+
+        chainNode.adoptChildren(selectorNode1, selectorNode2);
+
+        symbolTableInterface.openBlockScope(blockNode);
+
+        this.semanticAnalysisVisitor.pre(0, chainNode);
+
         assertTrue(true);
     }
 

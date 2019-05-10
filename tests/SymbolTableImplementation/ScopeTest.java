@@ -7,6 +7,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockTypeNode;
 import Enums.AnsiColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,14 @@ class ScopeTest {
     void getVariable03() {
         Node node = new ChainNode();
         assertThrows(IllegalArgumentException.class, () -> this.s.getVariable(node));
+    }
+
+    @Test
+    void getVariable04() {
+        NamedIdNode node = new BlockTypeNode("id");
+        this.s.setVariable(node);
+        assertSame(this.s.getVariable(node).getNode(), node);
+
     }
 
     @Test

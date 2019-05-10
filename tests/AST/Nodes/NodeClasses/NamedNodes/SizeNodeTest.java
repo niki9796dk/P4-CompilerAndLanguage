@@ -39,4 +39,11 @@ class SizeNodeTest {
         assertEquals(sn1.hashCode(), sn2.hashCode());
         assertTrue(sn1.equals(sn2) && sn2.equals(sn1));
     }
+
+    @Test
+    void toStringTest() {
+        SizeNode sn = new SizeNode(1, 2);
+
+        assertEquals("[-1] Size [1, 2]", sn.toString());
+    }
 }

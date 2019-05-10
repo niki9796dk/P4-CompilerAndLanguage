@@ -24,9 +24,16 @@ class AbstractNodeTest {
     }
 
     @Test
-    void makeSibling() {
+    void makeSibling01() {
         this.node1.makeSibling(this.node2);
         assertSame(this.node2, this.node1.getSib());
+    }
+
+    @Test
+    void makeSibling02() {
+        this.node2.makeSibling(this.node3);
+        this.node1.makeSibling(this.node2);
+        assertSame(this.node3, this.node1.getSib().getSib());
     }
 
     @Test

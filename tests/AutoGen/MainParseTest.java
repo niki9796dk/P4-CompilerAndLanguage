@@ -58,7 +58,7 @@ class MainParseTest {
     // Test all negative files regarding scope checking
     @TestFactory
     Stream<DynamicTest> negativeFiles_ScopeChecking() {
-        String mainPath = "tests/ScopeChecking/ExpectFalse/";
+        String mainPath = "tests/ScopeChecker/ExpectFalse/";
 
         Pair[] pathExceptionPair = {
                 new Pair<>("IllegalProcedureCallScopeException/", IllegalProcedureCallScopeException.class),
