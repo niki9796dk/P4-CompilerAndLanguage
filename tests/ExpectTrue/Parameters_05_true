@@ -1,0 +1,49 @@
+block Main {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        blueprint param = draw B2;
+
+        this.in -> build B1(param) -> this.out;
+    }
+}
+
+block B1 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint (blueprint ToBuild) {
+        level1(ToBuild);
+    }
+
+    procedure level1(blueprint ToBuild) {
+        level2(ToBuild, draw B2);
+    }
+
+    procedure level2(blueprint ToBuild1, blueprint ToBuild2) {
+        level3(ToBuild1, ToBuild2, draw B2);
+    }
+
+    procedure level3(blueprint ToBuild1, blueprint ToBuild2, blueprint ToBuild3) {
+        this.in -> build ToBuild1(draw B3) -> build ToBuild2(draw B3) -> build ToBuild3(draw B3) -> this.out;
+    }
+}
+
+block B2 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint (blueprint blue) {
+        this.in -> build blue() -> this.out;
+    }
+}
+
+block B3 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        this.in -> this.out;
+    }
+}

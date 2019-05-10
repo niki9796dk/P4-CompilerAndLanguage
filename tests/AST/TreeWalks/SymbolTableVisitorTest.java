@@ -33,7 +33,6 @@ class SymbolTableVisitorTest {
 
         blueprintNode = new BlueprintNode();
         symbolTableVisitor.getSymbolTableInterface().openSubScope((BlueprintNode) blueprintNode);
-
     }
 
     @Test

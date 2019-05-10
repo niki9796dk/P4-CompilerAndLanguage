@@ -1,0 +1,28 @@
+block Main {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        blueprint param = draw B2;
+
+        this.in -> build B1(param) -> this.out;
+    }
+}
+
+block B1 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint (blueprint ToBuild) {
+        this.in -> build ToBuild() -> this.out;
+    }
+}
+
+block B2 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        this.in -> this.out;
+    }
+}

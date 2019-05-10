@@ -1,0 +1,23 @@
+block Main {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        blueprint param = draw B1;
+
+        proc(param, param, param, param, param);
+    }
+
+    procedure proc(blueprint blue1, blueprint blue2, blueprint blue3, blueprint blue4, blueprint blue5) {
+        this.in -> build blue1() -> build blue2() -> build blue3() -> build blue4() -> build blue5() -> this.out;
+    }
+}
+
+block B1 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        this.in -> this.out;
+    }
+}
