@@ -1,10 +1,10 @@
 package TypeChecker;
 
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SizeTypeNode;
+import AST.Enums.NodeEnum;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.RootNode;
+import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
+import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +28,10 @@ class TypeSystemTest {
     void beforeEach() {
         this.symbolTableInterface = new SymbolTable();
         this.blockNode = new BlockNode(BLOCK_ID_01);
+        this.blockNode.setNumber(1);
         this.symbolTableInterface.openBlockScope(blockNode);
         this.procedureNode = new ProcedureNode(PROC_ID_01);
+        this.procedureNode.setNumber(2);
         this.symbolTableInterface.openSubScope(procedureNode);
         this.typeSystem = new TypeSystem(symbolTableInterface);
     }
@@ -64,6 +66,30 @@ class TypeSystemTest {
     @Test
     void getSubTypeOfNode03() {
         MyInChannelNode myInChannelNode = new MyInChannelNode("id");
-        assertNull(this.typeSystem.getSubTypeOfNode(myInChannelNode, "", ""));
+        assertEquals("CHANNEL_IN_MY", this.typeSystem.getSubTypeOfNode(myInChannelNode, "", ""));
+    }
+
+    @Test
+    void getSubTypeOfNode04() {
+        SizeNode sizeNode = new SizeNode(1, 2);
+        assertEquals("SIZE_TYPE", this.typeSystem.getSubTypeOfNode(sizeNode, "", ""));
+    }
+
+    @Test
+    void getSubTypeOfNode05() {
+        DrawNode drawNode = new DrawNode("id");
+        assertEquals("id", this.typeSystem.getSubTypeOfNode(drawNode, "", ""));
+    }
+
+    @Test
+    void getSuperTypeOfNode01() {
+        RootNode rootNode = new RootNode();
+        assertNull(typeSystem.getSuperTypeOfNode(rootNode, "", ""));
+    }
+
+    @Test
+    void getSuperTypeOfNode02() {
+        MyInChannelNode myInChannelNode = new MyInChannelNode("id");
+        assertEquals(NodeEnum.CHANNEL_IN_MY, this.typeSystem.getSuperTypeOfNode(myInChannelNode, "", ""));
     }
 }
