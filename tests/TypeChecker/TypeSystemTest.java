@@ -1,5 +1,6 @@
 package TypeChecker;
 
+import AST.Enums.NodeEnum;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.RootNode;
 import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
@@ -89,6 +90,6 @@ class TypeSystemTest {
     @Test
     void getSuperTypeOfNode02() {
         MyInChannelNode myInChannelNode = new MyInChannelNode("id");
-        assertEquals("CHANNEL_IN_MY", this.typeSystem.getSuperTypeOfNode(myInChannelNode, "", ""));
+        assertEquals(NodeEnum.CHANNEL_IN_MY, this.typeSystem.getSuperTypeOfNode(myInChannelNode, "", ""));
     }
 }

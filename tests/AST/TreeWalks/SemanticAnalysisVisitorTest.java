@@ -37,12 +37,12 @@ class SemanticAnalysisVisitorTest {
         this.semanticAnalysisVisitor.pre(0, this.blueprintNode);
     }
 
-    @Test
+    /*@Test
     void pre_build() {
         BuildNode buildNode = new BuildNode("blockNodeId");
         this.semanticAnalysisVisitor.pre(0, buildNode);
         assertTrue(this.semanticAnalysisVisitor.getBuildNodes().contains(buildNode));
-    }
+    }*/
 
     @Test
     void pre_chain() {
