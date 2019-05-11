@@ -9,4 +9,8 @@ public class IllegalProcedureCallScopeException extends ScopeBoundsViolationExce
     public IllegalProcedureCallScopeException(String message) {
         super(message);
     }
+
+    public IllegalProcedureCallScopeException(Throwable cause) {
+        super(cause);
+    }
 }

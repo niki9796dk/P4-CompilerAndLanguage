@@ -60,6 +60,10 @@ public class MainParse {
 
         //prog.walkTree(new TypeCheckerVisitor(symbolTable));
 
+        new RecursiveVisitor(symbolTable, new ScopeCheckerVisitor(symbolTable)).startRecursiveWalk();
+        
+        //
+
         new RecursiveVisitor(symbolTable, new TypeCheckerVisitor(symbolTable)).startRecursiveWalk();
 
         //

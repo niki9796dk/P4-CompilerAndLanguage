@@ -2,6 +2,7 @@ package AST.TreeWalks;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.*;
@@ -200,12 +201,16 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             boolean isLocalVariable = localVariable != null;
 
             if (isLocalVariable) {
-                SelectorNode subtypeNode = (SelectorNode) localVariable.getSubType(node.getNumber());
-                this.handleSelector(subtypeNode);
+                NumberedNode subtypeNode = localVariable.getSubType(node.getNumber());
 
-            } else {
-                flowChecker.getConnected().add(prefix + node.getId());
+                if (subtypeNode instanceof SelectorNode) {
+                    this.handleSelector((SelectorNode) subtypeNode);
+                    return;
+                }
+
             }
+
+            flowChecker.getConnected().add(prefix + node.getId());
         }
     }
 

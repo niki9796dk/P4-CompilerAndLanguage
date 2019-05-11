@@ -24,4 +24,8 @@ public class ScopeBoundsViolationException extends RuntimeException {
     public ScopeBoundsViolationException(String message) {
         super(message);
     }
+
+    public ScopeBoundsViolationException(Throwable cause) {
+        super(cause);
+    }
 }

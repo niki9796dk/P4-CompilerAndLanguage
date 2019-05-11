@@ -25,4 +25,8 @@ public class NoSuchBlockDeclaredException extends ScopeBoundsViolationException 
     public NoSuchBlockDeclaredException(String message) {
         super( DEFAULT_ERROR_MESSAGE + ": " + message);
     }
+
+    public NoSuchBlockDeclaredException(Throwable cause) {
+        super(cause);
+    }
 }

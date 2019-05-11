@@ -10,6 +10,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import ScopeChecker.Exceptions.IllegalProcedureCallScopeException;
 import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
 import TypeChecker.Exceptions.ShouldNotHappenException;
@@ -131,7 +132,11 @@ public class RecursiveVisitor extends ScopeTracker {
         Scope calleeSubScope = this.getCalleeSubScope(callNode, calleeId);
 
         // Assert that it exist
-        this.assertNotNull(calleeSubScope);
+        try {
+            this.assertNotNull(calleeSubScope);
+        } catch (NullPointerException e) {
+            throw new IllegalProcedureCallScopeException(e);
+        }
 
         // Verify that if params is needed, that they are there!
         ParamsNode callerParams = callNode.findFirstChildOfClass(ParamsNode.class);

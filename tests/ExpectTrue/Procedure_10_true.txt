@@ -1,0 +1,24 @@
+// Test of legal char sequences
+block procedure_01 {
+	mychannel:in input;
+	mychannel:out output;
+	
+	blueprint() {
+	    block testBlock = build Test();
+
+		abc(testBlock);
+	}
+	
+	procedure abc(block x) {
+        this.input -> x -> this.output;
+	}
+}
+
+block Test {
+    mychannel:in input;
+    mychannel:out output;
+
+    blueprint() {
+        this.input -> this.output;
+    }
+}

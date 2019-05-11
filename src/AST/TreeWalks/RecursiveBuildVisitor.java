@@ -4,9 +4,11 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
 import SemanticAnalysis.Datastructures.SetStack;
 import SemanticAnalysis.Exceptions.BuildRecursionException;
 import SymbolTableImplementation.*;
+import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
 
 /**
@@ -126,7 +128,13 @@ public class RecursiveBuildVisitor extends ScopeTracker {
      * @param node the BuildNode to follow.
      */
     private void handleBuildPre(AbstractNode node) {
-        String nodeSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+        String nodeSubType;
+
+        try {
+            nodeSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+        } catch (ShouldNotHappenException e) {
+            throw new NoSuchBlockDeclaredException(e);
+        }
 
         boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(nodeSubType);
         boolean isOperation = this.typeSystem.getSymbolTable().isPredefinedOperation(nodeSubType);
