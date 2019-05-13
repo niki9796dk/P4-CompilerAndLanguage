@@ -15,7 +15,7 @@ block Test {
     blueprint(blueprint blue, size s) {
         operation o = build blue(s);
 
-        this.in -> o.in;
+        this.in -> o.A;
         o.out -> this.out;
     }
 }

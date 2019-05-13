@@ -331,7 +331,7 @@ public class TypeSystem {
         } else if (isNotChildOfSelector) {
             VariableEntry variable = this.getVariableFromIdentifier(nodeId, blockScopeId, subScopeId);
 
-            String variableId = variable.getSubType(this.getNumberFromNode(node)).getId();
+            String value = this.getSubTypeOfNode(variable.getSubType(this.getNumberFromNode(node)), blockScopeId, subScopeId);
             String childId = this.getIdFromNode(node.getChild());
 
             NodeEnum superType = variable.getSuperType();
@@ -339,8 +339,8 @@ public class TypeSystem {
             switch (superType) {
                 case BLOCK_TYPE:
                     // Extract the sub scope, and assert that it's not null.
-                    Scope subScope = this.symbolTable.getSubScope(variableId, BlockScope.CHANNELS);
-                    this.assertNotNull(subScope, "No such block defined '" + variableId + "' - " + node);
+                    Scope subScope = this.symbolTable.getSubScope(value, BlockScope.CHANNELS);
+                    this.assertNotNull(subScope, "No such block defined '" + value + "' - " + node);
 
                     // Extract the variable, and assert that it's not null.
                     VariableEntry variableEntryBlock = subScope.getVariable(childId);
@@ -362,7 +362,7 @@ public class TypeSystem {
 
                     } else {
                         // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
-                        throw new ShouldNotHappenException("The operation '" + variableId + "' does not have a channel named '" + childId + "'");
+                        throw new ShouldNotHappenException("The operation '" + value + "' does not have a channel named '" + childId + "'");
                     }
 
             }
