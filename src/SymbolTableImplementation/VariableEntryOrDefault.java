@@ -1,8 +1,10 @@
 package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Node;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
+import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import Enums.AnsiColor;
 
 public class VariableEntryOrDefault extends VariableEntry {
