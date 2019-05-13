@@ -34,7 +34,7 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
     public void acceptReadySignal() {
         if (this.isReady()) {                       // If all inputs are isReady
             this.performOperation();                // Then perform the operation
-            this.getOutputChannel().sendReadySignals();  // And signal that the output channel now is isReady.
+            this.getOutputChannel().acceptReadySignal();  // And signal that the output channel now is isReady.
         }
     }
 

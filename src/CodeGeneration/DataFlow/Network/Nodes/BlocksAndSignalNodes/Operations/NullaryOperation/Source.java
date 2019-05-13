@@ -9,7 +9,7 @@ import LinearAlgebra.Types.Matrices.MatrixBuilder;
  * Contains an  immutable matrix.
  */
 public class Source extends NullaryAbstractOperation {
-    private final Matrix source;
+    private Matrix source;
 
     /**
      * Create a new Source NullaryOperation with a matrix.
@@ -49,5 +49,18 @@ public class Source extends NullaryAbstractOperation {
         super.connectTo(toBlock, fromChannelId, toChannelId);
         this.acceptReadySignal();
         return this;
+    }
+
+    @Override
+    public void performBackpropagationOperation() {
+        final int totalInputLines = 10; // TODO: Connect to something
+        final double learningRate = 0.2;   // TODO: Connect to something
+
+        Matrix derivatives = this.getOutputChannel()    // The output channel
+                .getResultBackpropagation()             // Get the derivatives
+                .compDivision(totalInputLines)          // Get input line average
+                .mult(learningRate);                    // Multiply with learning rate
+
+        this.source = this.source.sub(derivatives);
     }
 }

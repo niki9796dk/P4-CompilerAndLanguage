@@ -61,13 +61,15 @@ public class ListChannel implements Channel {
     public Matrix getResultBackpropagation(Channel ignored) {
         LinkedList<SignalNode> signalNodes = new LinkedList<>(this.getTargets());
 
-        if(signalNodes.isEmpty())
+        if(signalNodes.isEmpty()) {
             throw new RuntimeException("No targets!");
+        }
 
-        Matrix result = signalNodes.pollFirst().getResult();
+        Matrix result = signalNodes.pollFirst().getResultBackpropagation(this);
 
-        while (!signalNodes.isEmpty())
-            result = result.add(signalNodes.pollFirst().getResult());
+        while (!signalNodes.isEmpty()) {
+            result = result.add(signalNodes.pollFirst().getResultBackpropagation(this));
+        }
 
         return result;
     }

@@ -7,6 +7,9 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Abs
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
+import TypeChecker.Exceptions.ShouldNotHappenException;
+
+import java.util.HashMap;
 
 public abstract class UnaryAbstractOperation extends AbstractOperation {
     protected UnaryAbstractOperation() {
@@ -39,17 +42,53 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
         return this.getChannel("out");
     }
 
-    protected abstract Matrix operation(Matrix in);
-
-    protected abstract Matrix operationBackpropagation(Matrix in1, Matrix out);
-
-    protected final Matrix activationFunctionUnitwise(Matrix in, ActivationFunction function) {
-        MatrixBuilder b = new MatrixBuilder(in.getRows(), in.getColumns(), true);
-
-        b.compLoop((r, c, v) -> b.setEntry(r, c, function.function(in.getEntry(r, c))));
-
-        return b.buildDenseMatrix();
+    protected Matrix operation(Matrix in) {
+        return this.getFunction().activation(in);
     }
+
+    @Override
+    public void performBackpropagationOperation() {
+        Matrix in1 = this.getInputValue("in");
+        Matrix out = this.getOutputChannel().getResult();
+
+        if (in1 == null)
+            throw new NullPointerException("in1 is null!");
+
+        if (out == null)
+            throw new NullPointerException("out is null!");
+
+        this.resultBackpropagation = this.operationBackpropagation(
+                this.getChannel("in"),
+                this.getChannel("out")
+        );
+    }
+
+    protected HashMap<Channel, Matrix> operationBackpropagation(Channel in, Channel out) {
+        HashMap<Channel, Matrix> backpropResults = new HashMap<>();
+
+        backpropResults.put(in, this.calculateInDerivatives(in.getResult(), out.getResultBackpropagation()));
+
+        return backpropResults;
+    }
+
+    protected Matrix calculateInDerivatives(Matrix in, Matrix out) {
+        return out.compMult(this.getAfDeri(in, this.result));
+    }
+
+    private Matrix getAfDeri(Matrix net, Matrix out) {
+        switch (this.getFunction().getMatrixPref()) {
+            case NET:
+                return this.getFunction().activationPrime(net);
+
+            case OUT:
+                return this.getFunction().activationPrime(out);
+
+            default:
+                throw new ShouldNotHappenException("No such matrix pref?");
+        }
+    }
+
+    protected abstract ActivationFunction getFunction();
 
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {

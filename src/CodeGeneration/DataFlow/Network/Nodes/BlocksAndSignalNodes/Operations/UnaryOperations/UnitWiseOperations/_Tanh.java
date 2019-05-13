@@ -9,7 +9,7 @@ public class _Tanh extends UnaryAbstractOperation {
     private static ActivationFunction function = new TanhActivation();
 
     @Override
-    protected Matrix operation(Matrix in) {
-        return this.activationFunctionUnitwise(in, function);
+    protected ActivationFunction getFunction() {
+        return function;
     }
 }

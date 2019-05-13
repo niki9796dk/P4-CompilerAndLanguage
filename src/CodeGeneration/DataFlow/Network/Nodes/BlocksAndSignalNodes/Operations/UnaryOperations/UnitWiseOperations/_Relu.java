@@ -4,12 +4,13 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Una
 import LinearAlgebra.Types.Matrices.Matrix;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ReLUActivation;
+import TypeChecker.Exceptions.ShouldNotHappenException;
 
 public class _Relu extends UnaryAbstractOperation {
     private static ActivationFunction function = new ReLUActivation();
 
     @Override
-    protected Matrix operation(Matrix in) {
-        return this.activationFunctionUnitwise(in, function);
+    protected ActivationFunction getFunction() {
+        return function;
     }
 }

@@ -15,4 +15,14 @@ public class _Multiplication extends BinaryAbstractOperation {
     protected Matrix operation(Matrix in1, Matrix in2) {
         return in1.compMult(in2);
     }
+
+    @Override
+    protected Matrix calculateIn1Derivatives(Matrix in2, Matrix out) {
+        return out.compMult(in2);
+    }
+
+    @Override
+    protected Matrix calculateIn2Derivatives(Matrix in1, Matrix out) {
+        return out.compMult(in1);
+    }
 }

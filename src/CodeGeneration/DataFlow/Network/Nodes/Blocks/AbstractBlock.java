@@ -124,7 +124,6 @@ public abstract class AbstractBlock implements Block {
         return this;
     }
 
-
     /**
      * Get channel with given id
      *

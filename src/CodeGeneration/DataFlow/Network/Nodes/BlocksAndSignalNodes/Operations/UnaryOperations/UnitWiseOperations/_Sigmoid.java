@@ -9,7 +9,7 @@ public class _Sigmoid extends UnaryAbstractOperation {
     private static ActivationFunction function = new SigmoidActivation();
 
     @Override
-    protected Matrix operation(Matrix in) {
-        return this.activationFunctionUnitwise(in, function);
+    protected ActivationFunction getFunction() {
+        return function;
     }
 }

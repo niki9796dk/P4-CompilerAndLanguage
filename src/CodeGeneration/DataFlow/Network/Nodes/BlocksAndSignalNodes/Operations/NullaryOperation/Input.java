@@ -90,4 +90,9 @@ public class Input extends NullaryAbstractOperation {
         this.acceptReadySignal();
         return this;
     }
+
+    @Override
+    public void performBackpropagationOperation() {
+        // TODO: DO nothing? Do something?
+    }
 }

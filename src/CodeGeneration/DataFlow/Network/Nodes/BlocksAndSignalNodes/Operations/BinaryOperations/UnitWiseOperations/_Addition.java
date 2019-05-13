@@ -1,7 +1,10 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations;
 
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import LinearAlgebra.Types.Matrices.Matrix;
+
+import java.util.HashMap;
 
 public class _Addition extends BinaryAbstractOperation {
 
@@ -15,5 +18,15 @@ public class _Addition extends BinaryAbstractOperation {
     @Override
     protected Matrix operation(Matrix in1, Matrix in2) {
         return in1.add(in2);
+    }
+
+    @Override
+    protected Matrix calculateIn1Derivatives(Matrix in2, Matrix out) {
+        return out;
+    }
+
+    @Override
+    protected Matrix calculateIn2Derivatives(Matrix in1, Matrix out) {
+        return out;
     }
 }
