@@ -255,7 +255,7 @@ public class TypeSystem {
                 return NodeEnum.BLUEPRINT_TYPE;
 
             case BUILD:
-                return this.getTypeOfBuildStatement(node);
+                return this.getTypeOfBuildStatement(node, blockScopeId, subScopeId);
 
             case ASSIGN:
                 return this.getSuperTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
@@ -273,7 +273,7 @@ public class TypeSystem {
      * @param node The build node to check
      * @return (NodeEnum) The type of the build statement
      */
-    private NodeEnum getTypeOfBuildStatement(AbstractNode node) {
+    private NodeEnum getTypeOfBuildStatement(AbstractNode node, String blockScope, String subScope) {
         String id = this.getIdFromNode(node);
 
         if (this.symbolTable.isPredefinedOperation(id)) {
@@ -283,7 +283,30 @@ public class TypeSystem {
             return NodeEnum.SOURCE_TYPE;
 
         } else {
-            return NodeEnum.BLOCK_TYPE;
+            Scope scope = this.symbolTable.getSubScope(blockScope, subScope);
+            VariableEntry localVariable = scope.getVariable(node);
+
+            boolean isLocalVariable = localVariable != null;
+
+            if (isLocalVariable) {
+                int nodeNumber = ((NumberedNode) node).getNumber();
+                String variableId = localVariable.getSubType(nodeNumber).getId();
+
+                System.out.println(variableId);
+
+                BuildNode varBuild = new BuildNode(variableId);
+                varBuild.setNumber(nodeNumber);
+
+                return this.getTypeOfBuildStatement(varBuild, blockScope, subScope);
+            } else {
+                String subType = this.getSubTypeOfNode(node, blockScope, subScope);
+
+                if (this.getBlock(subType) != null) {
+                    return NodeEnum.BLOCK_TYPE;
+                } else {
+                    throw new ShouldNotHappenException("We are building an undefined block/blueprint thingy - " + node);
+                }
+            }
         }
     }
 
