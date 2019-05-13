@@ -137,7 +137,7 @@ class ScopeCheckerVisitorTest {
         selectorNode.adoptChildren(node);
 
         ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
-        this.symbolTableInterface.openSubScope(channelDeclarationsNode);
+        this.symbolTable.openSubScope(channelDeclarationsNode);
 
         this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
 
@@ -156,7 +156,7 @@ class ScopeCheckerVisitorTest {
         SelectorNode selectorNode = new SelectorNode("in");
 
         ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
-        this.symbolTableInterface.openSubScope(channelDeclarationsNode);
+        this.symbolTable.openSubScope(channelDeclarationsNode);
 
         this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
 
@@ -175,7 +175,7 @@ class ScopeCheckerVisitorTest {
         SelectorNode selectorNode = new SelectorNode("in");
 
         ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
-        this.symbolTableInterface.openSubScope(channelDeclarationsNode);
+        this.symbolTable.openSubScope(channelDeclarationsNode);
 
         this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
 
