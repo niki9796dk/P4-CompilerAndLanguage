@@ -5,6 +5,7 @@ import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
+import javax.print.DocFlavor;
 import java.util.*;
 
 /**
@@ -57,8 +58,11 @@ public class ListChannel implements Channel {
     }
 
     @Override
-    public Matrix getResultBackpropagation() {
+    public Matrix getResultBackpropagation(Channel ignored) {
         LinkedList<SignalNode> signalNodes = new LinkedList<>(this.getTargets());
+
+        if(signalNodes.isEmpty())
+            throw new RuntimeException("No targets!");
 
         Matrix result = signalNodes.pollFirst().getResult();
 

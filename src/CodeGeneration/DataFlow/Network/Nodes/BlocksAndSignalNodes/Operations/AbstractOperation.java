@@ -7,11 +7,13 @@ import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 
+import java.util.HashMap;
+
 public abstract class AbstractOperation extends AbstractBlock implements Operation {
     private boolean isReady = false;
     private boolean isReadyBackpropagation = false;
     protected Matrix result;
-    protected Matrix[] resultBackpropagation = new Matrix[2];
+    protected HashMap<Channel, Matrix> resultBackpropagation = new HashMap<>();
     protected Print print = new Print(AnsiColor.GREEN, "Operation." + this.getClass().getSimpleName());
 
     /**
@@ -77,7 +79,6 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
         }
     }
 
-
     @Override
     public boolean isReadyBackpropagation() {
         if (this.isReadyBackpropagation)
@@ -91,5 +92,13 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
                 return false;
 
         return (this.isReadyBackpropagation = true);
+    }
+
+    @Override
+    public Matrix getResultBackpropagation(Channel channel) {
+        if(!this.getOutputs().contains(channel))
+            throw new IllegalArgumentException("Channel is not a part of this operations outputs! >:(");
+
+        return this.getResultBackpropagation(channel);
     }
 }

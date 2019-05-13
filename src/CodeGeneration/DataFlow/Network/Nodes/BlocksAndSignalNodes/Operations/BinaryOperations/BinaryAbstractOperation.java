@@ -1,12 +1,12 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations;
 
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
-import DataStructures.Pair;
-import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
+
+import java.util.HashMap;
 
 public abstract class BinaryAbstractOperation extends AbstractOperation {
     /**
@@ -60,8 +60,11 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
         if (out == null)
             throw new NullPointerException("out is null!");
 
-        this.operationBackpropagation(in1,in2,out);
-        print.say("performOperation() -> result = " + this.resultBackpropagation[0] + "\n" + this.resultBackpropagation[1]);
+        this.resultBackpropagation = this.operationBackpropagation(
+                this.getChannel("in1"),
+                this.getChannel("in2"),
+                this.getChannel("out")
+        );
     }
 
     /**
@@ -76,18 +79,16 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
 
     protected abstract Matrix operation(Matrix in1, Matrix in2);
 
-    protected abstract Matrix operationBackpropagation(Matrix in1, Matrix in2, Matrix out);
-    //@OverrideoperationBackpropagation
-    //Todo; Make this an abstract method
+    protected abstract HashMap<Channel, Matrix> operationBackpropagation(Channel in1, Channel in2, Channel out);
 
     /*
-    protected void operationBackpropagation(Matrix in1, Matrix in2, Matrix out) {
-        print.say(AnsiColor.RED,"operationBackpropagation() has been called, yet it is not implemented!");
-
-        this.resultBackpropagation[0] = null;
-        this.resultBackpropagation[1] = null;
+    protected HashMap<Channel, Matrix> operationBackpropagation(Channel in1, Channel in2, Channel out) {
+        Matrix matrix1 = in1.getResultBackpropagation();
+        ...
+        etc
     }
     */
+
 
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {

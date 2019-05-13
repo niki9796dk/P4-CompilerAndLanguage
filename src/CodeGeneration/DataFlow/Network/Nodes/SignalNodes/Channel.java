@@ -1,6 +1,7 @@
 package CodeGeneration.DataFlow.Network.Nodes.SignalNodes;
 
 import CodeGeneration.DataFlow.Network.Nodes.SignalNode;
+import LinearAlgebra.Types.Matrices.Matrix;
 
 import java.util.Collection;
 
@@ -21,4 +22,8 @@ public interface Channel extends SignalNode {
     void tether(Channel that);
 
     Collection<SignalNode> getTargets();
+
+    default Matrix getResultBackpropagation() {
+        return this.getResultBackpropagation(null);
+    }
 }

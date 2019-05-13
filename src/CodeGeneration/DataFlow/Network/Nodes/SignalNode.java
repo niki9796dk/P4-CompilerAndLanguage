@@ -1,6 +1,7 @@
 package CodeGeneration.DataFlow.Network.Nodes;
 
 import CodeGeneration.DataFlow.Network.Node;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public interface SignalNode extends Node {
@@ -11,5 +12,5 @@ public interface SignalNode extends Node {
     void acceptReadyBackpropagationSignal();
 
     Matrix getResult();
-    Matrix getResultBackpropagation(); //Have parameter?
+    Matrix getResultBackpropagation(Channel channel); //Have parameter?
 }
