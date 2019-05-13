@@ -28,5 +28,6 @@ public enum NodeEnum {
     SIZE,
     SIZE_TYPE,
     SOURCE_TYPE,
-    NONEXISTENT
+    NONEXISTENT,
+    DUMMY,
 }

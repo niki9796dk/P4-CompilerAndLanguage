@@ -19,6 +19,8 @@ public class SymbolTable implements SymbolTableInterface {
      */
     private NamedTable<BlockScope> blockTable = new NamedTable<>();
 
+    private List<BlockNode> mainBlocks;
+
     /**
      * Constructs an empty {@code SymbolTable} with the default initial capacity
      */
@@ -43,6 +45,22 @@ public class SymbolTable implements SymbolTableInterface {
      */
     private static final HashSet<String> SOURCES = new HashSet<>(Arrays.asList(
             "Source", "FixedSource"));
+
+    /**
+     * Get the list of main blocks
+     * @return List of main blocks
+     */
+    public List<BlockNode> getMainBlocks() {
+        return mainBlocks;
+    }
+
+    /**
+     * Store the list of main blocks
+     * @param mainBlocks The list of main blocks.
+     */
+    public void setMainBlocks(List<BlockNode> mainBlocks) {
+        this.mainBlocks = mainBlocks;
+    }
 
     /**
      * Adds a block table to the symbol table

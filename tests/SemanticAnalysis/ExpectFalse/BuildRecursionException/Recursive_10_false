@@ -1,18 +1,19 @@
-block NotMain {
-    mychannel:in in;
-    mychannel:out out;
-
-    blueprint(blueprint def) {
-        this.in -> this.out;
-        block b = build StillNotMain();
-    }
-}
-
-block StillNotMain {
+block A {
     mychannel:in in;
     mychannel:out out;
 
     blueprint() {
+        block child = build A_1(draw A);
+        this.in -> this.out;
+    }
+}
+
+block A_1 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(blueprint B) {
+        block WhoDis = build B();
         this.in -> this.out;
     }
 }

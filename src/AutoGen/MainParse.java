@@ -4,6 +4,8 @@ import java.io.*;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.TreeWalks.*;
+import AST.Visitor;
+import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
@@ -46,19 +48,35 @@ public class MainParse {
 
         prog.walkTree(symbolTableVisitor);
 
-        SymbolTableInterface symbolTableInterface = symbolTableVisitor.getSymbolTableInterface();
+        SymbolTable symbolTable = (SymbolTable) symbolTableVisitor.getSymbolTableInterface();
 
-        System.out.println(symbolTableInterface.toString());
+        System.out.println(symbolTable.toString());
 
         System.out.println("\n");
 
         prog.walkTree(new PrintTree(System.out));
 
-        prog.walkTree(new ScopeCheckerVisitor(symbolTableInterface));
+        prog.walkTree(new PreRecursiveVisitor(symbolTable));
 
-        prog.walkTree(new TypeCheckerVisitor(symbolTableInterface));
+        //prog.walkTree(new TypeCheckerVisitor(symbolTable));
 
-        prog.walkTree(new SemanticAnalysisVisitor(symbolTableInterface));
+        new RecursiveVisitor(symbolTable, new ScopeCheckerVisitor(symbolTable)).startRecursiveWalk();
+        
+        //
+
+        new RecursiveVisitor(symbolTable, new TypeCheckerVisitor(symbolTable)).startRecursiveWalk();
+
+        //
+
+        new RecursiveVisitor(symbolTable, new SemanticAnalysisVisitor(symbolTable)).startRecursiveWalk();
+
+        /*
+        prog.walkTree(new ScopeCheckerVisitor(symbolTable));
+
+        prog.walkTree(new TypeCheckerVisitor(symbolTable));
+
+        prog.walkTree(new SemanticAnalysisVisitor(symbolTable));
+        */
 
         return true;
     }

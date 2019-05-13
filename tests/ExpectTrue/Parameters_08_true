@@ -4,8 +4,10 @@ block Main {
 
     blueprint () {
         blueprint param = draw B1;
+        blueprint param2;
+        param2 = param;
 
-        proc(param, param);
+        proc(param, param2);
     }
 
     procedure proc(blueprint blue1, blueprint blue2) {

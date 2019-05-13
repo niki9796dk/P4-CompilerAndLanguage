@@ -8,33 +8,25 @@ import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import ScopeChecker.Exceptions.IllegalProcedureCallScopeException;
 import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
-import ScopeChecker.Exceptions.NoSuchChannelDeclaredException;
 import ScopeChecker.Exceptions.NoSuchVariableDeclaredException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import AST.Visitor;
 import SymbolTableImplementation.*;
 
 /**
  * The scope checker visitor, used for checking everything in the scope checking phase of a the compiler.
  */
-public class ScopeCheckerVisitor implements Visitor {
+public class ScopeCheckerVisitor extends ScopeTracker {
 
-    private SymbolTableInterface symbolTableInterface;
-    private BlockScope currentBlockScope;
-    private Scope currentSubScope;
-
-    public ScopeCheckerVisitor(SymbolTableInterface symbolTableInterface) {
-        this.symbolTableInterface = symbolTableInterface;
-        this.currentBlockScope = null;
-        this.currentSubScope = null;
+    public ScopeCheckerVisitor(SymbolTable symbolTable) {
+        super(symbolTable);
     }
 
     public BlockScope getCurrentBlockScope() {
-        return currentBlockScope;
+        return this.symbolTable.getBlockScope(this.currentBlockScope);
     }
 
     public Scope getCurrentSubScope() {
-        return currentSubScope;
+        return this.getCurrentBlockScope().getSubscope(this.currentSubScope);
     }
 
     /**
@@ -44,6 +36,8 @@ public class ScopeCheckerVisitor implements Visitor {
      */
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
+        super.pre(printLevel, abstractNode);
+
         NamedNode node = (NamedNode) abstractNode;
         NamedNode childNode = (NamedNode) node.getChild();
 
@@ -78,28 +72,20 @@ public class ScopeCheckerVisitor implements Visitor {
                 break;
 
             case BLOCK:
-                this.currentBlockScope = this.symbolTableInterface.getBlockScope(id);
-                break;
-
             case PROCEDURE:
-                this.currentSubScope = this.currentBlockScope.getProcedureScope(id);
                 break;
 
             case PROCEDURE_CALL:
                 SelectorNode childSelector = node.findFirstChildOfClass(SelectorNode.class);
 
-                Scope scope = this.currentBlockScope.getProcedureScope(childSelector.getId());
+                Scope scope = this.getCurrentBlockScope().getProcedureScope(childSelector.getId());
                 if (scope == null) {
                     throw new IllegalProcedureCallScopeException("No such procedure: " + childSelector.getId());
                 }
                 break;
 
             case BLUEPRINT:
-                this.currentSubScope = this.currentBlockScope.getBlueprintScope();
-                break;
-
             case CHANNEL_DECLARATIONS:
-                this.currentSubScope = this.currentBlockScope.getChannelDeclarationScope();
                 break;
 
             case SELECTOR:
@@ -131,6 +117,8 @@ public class ScopeCheckerVisitor implements Visitor {
      */
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
+        super.post(printLevel, abstractNode);
+
         NamedNode node = (NamedNode) abstractNode;
 
         switch (node.getNodeEnum()) {
@@ -170,9 +158,9 @@ public class ScopeCheckerVisitor implements Visitor {
      * @return false if the element is buildable or true if it's not.
      */
     private boolean isNotADefinedBuildableElement(String buildId) {
-        boolean isADefinedBlock = this.symbolTableInterface.getBlockScope(buildId) != null;
-        boolean isPredefinedOperation = this.symbolTableInterface.isPredefinedOperation(buildId);
-        boolean isPredefinedSource = this.symbolTableInterface.isPredefinedSource(buildId);
+        boolean isADefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
+        boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
+        boolean isPredefinedSource = this.symbolTable.isPredefinedSource(buildId);
 
         return !(isADefinedBlock || isPredefinedOperation || isPredefinedSource);
     }
@@ -183,7 +171,7 @@ public class ScopeCheckerVisitor implements Visitor {
      * @return false if it's not a local blueprint variable, and true if it is.
      */
     private boolean isNotLocalBlueprintVariable(String buildId) {
-        VariableEntry localVariable = this.currentSubScope.getVariable(buildId);
+        VariableEntry localVariable = this.getCurrentSubScope().getVariable(buildId);
 
         // Check if the build ID is a local variable
         if (localVariable != null) {
@@ -201,7 +189,7 @@ public class ScopeCheckerVisitor implements Visitor {
      * @throws NoSuchVariableDeclaredException if the id is not a channel.
      */
     private void verifyChannelVariable(String id) {
-        VariableEntry variable = this.currentBlockScope.getChannelDeclarationScope().getVariable(id);
+        VariableEntry variable = this.getCurrentBlockScope().getChannelDeclarationScope().getVariable(id);
 
         checkIfNull(variable, "ChannelDeclarations", id);
     }
@@ -212,9 +200,9 @@ public class ScopeCheckerVisitor implements Visitor {
      * @throws NoSuchVariableDeclaredException if the id is not a local variable.
      */
     private void verifyCurrentScopeVariable(String id) {
-        VariableEntry variable = this.currentSubScope.getVariable(id);
+        VariableEntry variable = this.getCurrentSubScope().getVariable(id);
 
-        checkIfNull(variable, ((NamedNode) this.currentSubScope.getNode()).getName(), id);
+        checkIfNull(variable, ((NamedNode) this.getCurrentSubScope().getNode()).getName(), id);
     }
 
     /**
@@ -225,7 +213,7 @@ public class ScopeCheckerVisitor implements Visitor {
      */
     private void checkIfNull(VariableEntry variable, String subScope, String id) {
         if (variable == null) {
-            throw new NoSuchVariableDeclaredException("In scope: " + this.currentBlockScope.getId() + ">" + subScope + ", no such variable: " + id);
+            throw new NoSuchVariableDeclaredException("In scope: " + this.getCurrentBlockScope().getId() + ">" + subScope + ", no such variable: " + id);
         }
     }
 }

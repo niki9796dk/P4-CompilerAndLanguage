@@ -15,7 +15,7 @@ block B1 {
     mychannel:out out;
 
     blueprint(blueprint x, blueprint y) {
-        block bob = build x(y, draw b4);
+        block bob = build x(y, draw B4);
 
         this.in -> bob -> this.out;
     }
@@ -40,7 +40,7 @@ block B3{
     mychannel:out out;
 
     blueprint(blueprint x, blueprint y) {
-        block bob = build x(y, draw b4);
+        block bob = build x(y, draw B4);
 
         this.in -> bob -> this.out;
     }

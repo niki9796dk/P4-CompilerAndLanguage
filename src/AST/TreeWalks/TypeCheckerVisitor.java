@@ -10,6 +10,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
 import TypeChecker.Exceptions.ChannelPlacementTypeException;
 import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
@@ -22,7 +23,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
      * Type checker visitor constructor
      * @param symbolTableInterface A symbol table used as reference.
      */
-    public TypeCheckerVisitor(SymbolTableInterface symbolTableInterface) {
+    public TypeCheckerVisitor(SymbolTable symbolTableInterface) {
         super(symbolTableInterface);
     }
 

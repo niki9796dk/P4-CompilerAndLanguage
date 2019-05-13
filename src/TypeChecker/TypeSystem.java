@@ -203,11 +203,15 @@ public class TypeSystem {
             VariableEntry selectorVariable = this.getVariableFromIdentifier(selectorNode.getId(), blockScope, subScope);
             NamedIdNode subtypeNode = selectorVariable.getSubType(selectorNode.getNumber());
 
+            return this.getSubTypeOfNode(subtypeNode, blockScope, subScope);
+
+            /*
             if (subtypeNode instanceof SelectorNode) {
                 return this.getSubTypeOfSelector((SelectorNode) subtypeNode, blockScope, subScope);
             } else {
                 return subtypeNode.getId();
             }
+            */
         }
     }
 
