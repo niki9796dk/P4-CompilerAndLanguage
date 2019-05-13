@@ -101,9 +101,11 @@ public class ListChannel implements Channel {
 
     @Override
     public void acceptReadyBackpropagationSignal() {
-        for (SignalNode target : targets)
-            if(!target.isReadyBackpropagation())
+        for (SignalNode target : targets) {
+            if(!target.isReadyBackpropagation()) {
                 return;
+            }
+        }
 
         this.backpropagationReady = true;
         this.sendReadyBackpropagationSignals();
