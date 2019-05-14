@@ -92,15 +92,6 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
 
     protected abstract Matrix calculateIn2Derivatives(Matrix in1, Matrix out);
 
-    /*
-    protected HashMap<Channel, Matrix> operationBackpropagation(Channel in1, Channel in2, Channel out) {
-        Matrix matrix1 = in1.getResultBackpropagation();
-        ...
-        etc
-    }
-    */
-
-
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {
         if (!id.equals("in1") && !id.equals("in2"))
