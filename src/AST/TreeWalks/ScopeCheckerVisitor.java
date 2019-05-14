@@ -96,13 +96,32 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
                 } else if (ignoreSelector) {
                     // Do nothing.
-
                 } else if (!(node.getParent() instanceof SelectorNode)) {
                     try {
                         this.verifyCurrentScopeVariable(id);
+
+                        if (node.getChild() != null){
+                            SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId());
+                            dummy.setNumber(node.getNumber());
+                            String theBlock = this.typeSystem.getSubTypeOfNode(dummy, currentBlockScope, currentSubScope);
+
+                            boolean isOperation = this.typeSystem.getSymbolTable().isPredefinedOperation(theBlock);
+                            boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(theBlock);
+
+                            if (!isOperation && !isSource) {
+                                BlockScope blockScope = this.typeSystem.getSymbolTable().getBlockScope(theBlock);
+                                if (blockScope.getChannelDeclarationScope().getVariable(childId) == null) {
+                                    throw new NoSuchVariableDeclaredException("The channel is not there");
+                                }
+                            } else {
+                                // TODO: Operation or source input/output existence verification
+                            }
+                        }
+
                     } catch (NoSuchVariableDeclaredException e) {
                         this.verifyChannelVariable(id);
                     }
+                    // The case where this is for sure the child of a selector. Relies on that block are not allowed to be called "this"
                 }
                 break;
             default:
