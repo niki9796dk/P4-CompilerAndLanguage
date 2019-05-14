@@ -3,6 +3,7 @@ package AST.TreeWalks;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
@@ -151,8 +152,12 @@ public class TypeCheckerVisitor extends ScopeTracker {
         AbstractNode calleeNode = this.findCalleeBlockNodeFromCaller(callerNode);
 
         // If the callee node is null, just return, since this means that we were building something else than a block (eg. source / operation)
-        boolean calleeIsNotBlock = calleeNode == null;
-        if (calleeIsNotBlock) {
+        boolean calleeIsNotBlockOrProc = calleeNode == null;
+        if (calleeIsNotBlockOrProc) {
+            if (callerNode instanceof NamedIdNode && typeSystem.getSymbolTable().isPredefinedOperation(((NamedIdNode) callerNode).getId()) && callerNode.findFirstChildOfClass(ParamsNode.class) != null)
+            {
+                throw new ParamsSizeInconsistencyException("Sources and Operations should not have parameters");
+            }
             return;
         }
 

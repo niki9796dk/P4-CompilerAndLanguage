@@ -1,0 +1,12 @@
+// Test of non-existing channel reference.
+block block_01 {
+	mychannel:in input;
+	mychannel:out output;
+
+	blueprint() {
+	    operation a = build _Addition();
+		input -> a.A;
+		input -> a.B;
+		a.B -> output;
+	}
+}

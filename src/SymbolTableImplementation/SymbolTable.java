@@ -164,14 +164,10 @@ public class SymbolTable implements SymbolTableInterface {
             case DRAW:
             case BUILD:
             case SELECTOR:
+            case SIZE:
                 variableEntry
                         .setSubType(((NamedIdNode) rightSide));    // Set the subtype of that variable.
                 break;
-
-            case SIZE:
-                // Do nothing.
-                break;
-
             default:
                 throw new IllegalArgumentException("Unexpected node.");
         }

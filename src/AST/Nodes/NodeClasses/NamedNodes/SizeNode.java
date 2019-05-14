@@ -2,18 +2,19 @@ package AST.Nodes.NodeClasses.NamedNodes;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 
 import java.util.Objects;
 
 /**
  * A deceleration of a size variable. Contains the specified properties.
  */
-public class SizeNode extends NamedNode {
+public class SizeNode extends NamedIdNode {
     public final Integer first;
     public final Integer second;
 
     public SizeNode(Integer first, Integer second) {
-        super("Size", NodeEnum.SIZE);
+        super("Size", "[" + first + ", " + second + "]", NodeEnum.SIZE);
         this.first = first;
         this.second = second;
     }
@@ -34,6 +35,6 @@ public class SizeNode extends NamedNode {
 
     @Override
     public String toString() {
-        return super.toString() + " [" + first + ", " + second + "]";
+        return super.toString();
     }
 }

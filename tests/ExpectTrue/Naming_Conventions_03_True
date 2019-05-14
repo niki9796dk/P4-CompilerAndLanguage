@@ -1,0 +1,21 @@
+block id_01{
+	mychannel:in input;
+	mychannel:out output;
+
+	blueprint() {
+		blueprint id_02 = draw Multiplication;
+		operation mult = build id_02();
+
+		(input, input) -> mult -> output;
+
+	}
+}
+
+block id_02{
+	mychannel:in input;
+	mychannel:out output;
+
+	blueprint(){
+	    input -> output;
+	}
+}

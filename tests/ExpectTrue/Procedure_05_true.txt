@@ -6,7 +6,7 @@ block procedure_05 {
 	blueprint() {
 	    size mySize = [25, 20];
 
-		abc(this.input, build Test(), draw Test, build _Sigmoid(), mySize);
+		abc(this.input, build Test(), draw Test, build _Addition(), mySize);
 	}
 	
 	procedure abc(mychannel:in x, block y, blueprint z, operation o, size s) {

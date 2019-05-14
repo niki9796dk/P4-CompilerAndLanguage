@@ -159,29 +159,26 @@ public class TypeSystem {
 
         boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
         boolean isPredefinedSource = this.symbolTable.isPredefinedSource(buildId);
+        boolean isLocalVariable = this.getVariableFromIdentifier(buildId, blockScopeId, subScopeId) != null;
+        boolean isDefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
 
-        if (isPredefinedOperation || isPredefinedSource) {
+        // The order here is relevant! We should always check the local scope before the predefined and the set of block scopes!
+        if (isLocalVariable) {
+            // Convert the identifier into an selector
+            SelectorNode selectorNode = new SelectorNode(buildId);
+            selectorNode.setNumber(node.getNumber());
+
+            // Get the sub type of the selector
+            return this.getSubTypeOfNode(selectorNode, blockScopeId, subScopeId);
+
+        } else if (isPredefinedOperation || isPredefinedSource) {
+            return buildId;
+
+        } else if (isDefinedBlock) {
             return buildId;
 
         } else {
-            boolean isLocalVariable = this.getVariableFromIdentifier(buildId, blockScopeId, subScopeId) != null;
-            boolean isDefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
-
-            // The order here is relevant! We should always check the local scope before the set of block scopes!
-            if (isLocalVariable) {
-                // Convert the identifier into an selector
-                SelectorNode selectorNode = new SelectorNode(buildId);
-                selectorNode.setNumber(node.getNumber());
-
-                // Get the sub type of the selector
-                return this.getSubTypeOfNode(selectorNode, blockScopeId, subScopeId);
-
-            } else if (isDefinedBlock) {
-                return buildId;
-
-            } else {
-                throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker!");
-            }
+            throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker!");
         }
     }
 
@@ -255,7 +252,7 @@ public class TypeSystem {
                 return NodeEnum.BLUEPRINT_TYPE;
 
             case BUILD:
-                return this.getTypeOfBuildStatement(node);
+                return this.getTypeOfBuildStatement(node, blockScopeId, subScopeId);
 
             case ASSIGN:
                 return this.getSuperTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
@@ -273,7 +270,7 @@ public class TypeSystem {
      * @param node The build node to check
      * @return (NodeEnum) The type of the build statement
      */
-    private NodeEnum getTypeOfBuildStatement(AbstractNode node) {
+    private NodeEnum getTypeOfBuildStatement(AbstractNode node, String blockScope, String subScope) {
         String id = this.getIdFromNode(node);
 
         if (this.symbolTable.isPredefinedOperation(id)) {
@@ -283,7 +280,30 @@ public class TypeSystem {
             return NodeEnum.SOURCE_TYPE;
 
         } else {
-            return NodeEnum.BLOCK_TYPE;
+            Scope scope = this.symbolTable.getSubScope(blockScope, subScope);
+            VariableEntry localVariable = scope.getVariable(node);
+
+            boolean isLocalVariable = localVariable != null;
+
+            if (isLocalVariable) {
+                int nodeNumber = ((NumberedNode) node).getNumber();
+                String variableId = localVariable.getSubType(nodeNumber).getId();
+
+                System.out.println(variableId);
+
+                BuildNode varBuild = new BuildNode(variableId);
+                varBuild.setNumber(nodeNumber);
+
+                return this.getTypeOfBuildStatement(varBuild, blockScope, subScope);
+            } else {
+                String subType = this.getSubTypeOfNode(node, blockScope, subScope);
+
+                if (this.getBlock(subType) != null) {
+                    return NodeEnum.BLOCK_TYPE;
+                } else {
+                    throw new ShouldNotHappenException("We are building an undefined block/blueprint thingy - " + node);
+                }
+            }
         }
     }
 
@@ -308,7 +328,7 @@ public class TypeSystem {
         } else if (isNotChildOfSelector) {
             VariableEntry variable = this.getVariableFromIdentifier(nodeId, blockScopeId, subScopeId);
 
-            String variableId = variable.getSubType(this.getNumberFromNode(node)).getId();
+            String value = this.getSubTypeOfNode(variable.getSubType(this.getNumberFromNode(node)), blockScopeId, subScopeId);
             String childId = this.getIdFromNode(node.getChild());
 
             NodeEnum superType = variable.getSuperType();
@@ -316,8 +336,8 @@ public class TypeSystem {
             switch (superType) {
                 case BLOCK_TYPE:
                     // Extract the sub scope, and assert that it's not null.
-                    Scope subScope = this.symbolTable.getSubScope(variableId, BlockScope.CHANNELS);
-                    this.assertNotNull(subScope, "No such block defined '" + variableId + "' - " + node);
+                    Scope subScope = this.symbolTable.getSubScope(value, BlockScope.CHANNELS);
+                    this.assertNotNull(subScope, "No such block defined '" + value + "' - " + node);
 
                     // Extract the variable, and assert that it's not null.
                     VariableEntry variableEntryBlock = subScope.getVariable(childId);
@@ -339,7 +359,7 @@ public class TypeSystem {
 
                     } else {
                         // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
-                        throw new ShouldNotHappenException("The operation '" + variableId + "' does not have a channel named '" + childId + "'");
+                        throw new ShouldNotHappenException("The operation '" + value + "' does not have a channel named '" + childId + "'");
                     }
 
             }

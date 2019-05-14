@@ -42,7 +42,7 @@ block B2 {
     blueprint(blueprint x, blueprint y){
         operation mult = build Multiplication();
 
-        block g = build x();
+        block g = build x(draw B5, draw B4);
         block h = build y(draw B5, draw B4);
 
         this.in -> g -> h;
@@ -65,7 +65,7 @@ block B5 {
     mychannel:in in;
     mychannel:out out;
 
-    blueprint(blueprint x){
+    blueprint(blueprint x, blueprint y){
         operation o1 = build _Addition();
         block b4 = build x();
 

@@ -1,0 +1,8 @@
+block Builder {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        operation op = build _Sigmoid(draw _Addition);
+    }
+}
