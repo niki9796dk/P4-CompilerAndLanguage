@@ -1,0 +1,22 @@
+block id_01{
+	mychannel:in input;
+	mychannel:out output;
+
+	blueprint() {
+		blueprint id_02 = draw Multiplication;
+		blueprint pipe = draw _Sigmoid;
+		operation mult = build id_02(pipe);
+
+		input -> mult -> output;
+
+	}
+}
+
+block id_02{
+	mychannel:in input;
+	mychannel:out output;
+
+	blueprint(blueprint o){
+	    input -> build o() -> output;
+	}
+}

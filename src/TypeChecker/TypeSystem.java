@@ -159,29 +159,26 @@ public class TypeSystem {
 
         boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
         boolean isPredefinedSource = this.symbolTable.isPredefinedSource(buildId);
+        boolean isLocalVariable = this.getVariableFromIdentifier(buildId, blockScopeId, subScopeId) != null;
+        boolean isDefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
 
-        if (isPredefinedOperation || isPredefinedSource) {
+        // The order here is relevant! We should always check the local scope before the predefined and the set of block scopes!
+        if (isLocalVariable) {
+            // Convert the identifier into an selector
+            SelectorNode selectorNode = new SelectorNode(buildId);
+            selectorNode.setNumber(node.getNumber());
+
+            // Get the sub type of the selector
+            return this.getSubTypeOfNode(selectorNode, blockScopeId, subScopeId);
+
+        } else if (isPredefinedOperation || isPredefinedSource) {
+            return buildId;
+
+        } else if (isDefinedBlock) {
             return buildId;
 
         } else {
-            boolean isLocalVariable = this.getVariableFromIdentifier(buildId, blockScopeId, subScopeId) != null;
-            boolean isDefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
-
-            // The order here is relevant! We should always check the local scope before the set of block scopes!
-            if (isLocalVariable) {
-                // Convert the identifier into an selector
-                SelectorNode selectorNode = new SelectorNode(buildId);
-                selectorNode.setNumber(node.getNumber());
-
-                // Get the sub type of the selector
-                return this.getSubTypeOfNode(selectorNode, blockScopeId, subScopeId);
-
-            } else if (isDefinedBlock) {
-                return buildId;
-
-            } else {
-                throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker!");
-            }
+            throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker!");
         }
     }
 

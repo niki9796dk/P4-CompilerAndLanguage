@@ -1,0 +1,9 @@
+block Builder {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        size s = [1,2];
+        operation op = build _Sigmoid(s);
+    }
+}
