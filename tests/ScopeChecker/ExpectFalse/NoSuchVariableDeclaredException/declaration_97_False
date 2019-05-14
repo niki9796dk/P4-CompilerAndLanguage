@@ -1,0 +1,17 @@
+block block_01 {
+    mychannel:in input;
+    mychannel:out output;
+
+    blueprint() {
+        bigboi = draw elephant;
+    }
+}
+
+block elephant {
+    mychannel:in input;
+    mychannel:out output;
+
+    blueprint() {
+        input -> output;
+    }
+}
