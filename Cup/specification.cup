@@ -17,10 +17,6 @@ import java.util.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
-action code {:
-    Hashtable root = new Hashtable();
-:};
-
 parser code {:
         private AbstractNode rootNode;
 
@@ -97,7 +93,7 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channe
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
              channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, buildassignopt, channelelementspar,
              channelelement, idpar, mychannel, mychannelelement, mychannelassignopt, mychannelassign, mychannelelementspar,
-             nonnodedeclarationopt, nodedeclarationopt, nodeassigns;
+             nonnodedeclarationopt, nodedeclarationopt, nodeassigns, idelement;
 
 non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
@@ -125,7 +121,6 @@ prog                    ::= blocks:bs
 block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
                         {:
                             RESULT = new BlockNode(ident).adoptChildren(def);
-                            root.put(ident, RESULT);
                         :}
                         ;
 
@@ -365,6 +360,8 @@ nodeelement             ::= nodedeclaration:elem
                         {: RESULT = elem; :}
                         | ID:id dotid:did
                         {: RESULT = (new SelectorNode(id)).adoptChildren(did); :}
+                        | ID:id ASSIGN nodeassigns:elem
+                        {: RESULT = new AssignNode().adoptChildren(new SelectorNode(id)).adoptChildren(elem); :}
                         | THIS DOT ID:id
                         {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
                         | builddeclaration:build
@@ -377,16 +374,24 @@ nonnodeelement          ::= DRAW ID:id
                         {: RESULT = sc; :}
                         ;
 
+nodeassigns             ::= ID:id1 DOT ID:id2
+                        {: RESULT = new SelectorNode(id1).adoptChildren(new SelectorNode(id2)); :}
+                        | THIS DOT ID:id
+                        {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
+                        | builddeclaration:decla
+                        {: RESULT = decla; :}
+                        | ID:id
+                        {: RESULT = new SelectorNode(id); :}
+                        ;
+
+buildelementpar		    ::= buildelement:build
+                        {: RESULT = build; :}
+					    | LPAR buildelement:belem RPAR
+					    {: RESULT = belem; :}
+					    ;
 buildelement		    ::= builddeclaration:build
                         {: RESULT = build; :}
 					    | ID:id
-					    {: RESULT = new SelectorNode(id); :}
-					    | LPAR buildelementpar:belem
-					    {: RESULT = belem; :}
-					    ;
-buildelementpar		    ::= builddeclaration:build RPAR
-                        {: RESULT = build; :}
-					    | ID:id RPAR
                         {: RESULT = new SelectorNode(id); :}
 					    ;
 dotid				    ::= DOT ID:id
@@ -425,7 +430,7 @@ channelelement          ::= ID:id dotid:dotid
                         {: RESULT = new SelectorNode(id).adoptChildren(dotid); :}
                         ;
 
-mychannelelementspar      ::= LPAR mychannelelement:elem RPAR
+mychannelelementspar    ::= LPAR mychannelelement:elem RPAR
                         {: RESULT = elem; :}
                         | mychannelelement:elem
                         {: RESULT = elem; :}
@@ -564,7 +569,7 @@ channelassign           ::= ASSIGN channelelementspar:elem
 mychannelassign         ::= ASSIGN mychannelelementspar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-buildassign             ::= ASSIGN buildelement:elem
+buildassign             ::= ASSIGN buildelementpar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 blueprintassignopt      ::= blueprintassign:assign
