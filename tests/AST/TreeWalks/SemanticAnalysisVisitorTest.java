@@ -116,6 +116,7 @@ class SemanticAnalysisVisitorTest {
         assertNotNull(this.semanticAnalysisVisitor.getFlowChecker());
     }
 
+    @Disabled
     @Test
     void getBuildNodes() {
         assertNotNull(this.semanticAnalysisVisitor.getBuildNodes());

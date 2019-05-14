@@ -14,7 +14,7 @@ block decla_19 {
 		this.input -> build b2() -> blo;
 
 		// Reassign one of the blueprints
-		b2 = draw _Sigmoid();
+		b2 = draw _Multiplication;
 
 		operation ope = build b2();
 

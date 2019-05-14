@@ -1,0 +1,22 @@
+block decla_25 {
+	mychannel:in input;
+	mychannel:out output;
+
+	blueprint() {
+	    block a = build test();
+
+	    channel:in b = a.input;
+	    channel:in c = b;
+
+		this.input -> this.output;
+	}
+}
+
+block test {
+    mychannel:in input;
+	mychannel:out output;
+
+	blueprint() {
+	    this.input -> this.output;
+	}
+}

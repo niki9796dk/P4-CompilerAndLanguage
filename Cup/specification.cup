@@ -17,10 +17,6 @@ import java.util.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
 
-action code {:
-    Hashtable root = new Hashtable();
-:};
-
 parser code {:
         private AbstractNode rootNode;
 
@@ -95,13 +91,19 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channe
              elementlist, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, inchanneldeclaration, outchanneldeclaration, inoutchanneldeclaration,
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
-             channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, builddecla, channelelementspar,
-             channelelement, idpar, mychannel, mychannelelement, mychannelassignopt, mychannelassign, mychannelelementspar;
+             channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, buildassignopt, channelelementspar,
+             channelelement, idpar, mychannel, mychannelelement, mychannelassignopt, mychannelassign, mychannelelementspar,
+             nonnodedeclarationopt, nodedeclarationopt, nodeassigns, nodeselectors;
 
 non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
 non terminal SizeNode sizeconst;
 // TODO: Add precedence and associativity
+
+//precedence left CONNECTION;
+//precedence right ASSIGN;
+//precedence left DOT;
+//precedence left LPAR, RPAR, LSQR, RSQR;
 
 /* The grammar rules */
 start with prog;
@@ -119,7 +121,6 @@ prog                    ::= blocks:bs
 block 			        ::= BLOCK ID:ident LCURLY definition:def RCURLY
                         {:
                             RESULT = new BlockNode(ident).adoptChildren(def);
-                            root.put(ident, RESULT);
                         :}
                         ;
 
@@ -224,13 +225,14 @@ content			        ::= statement:st SEMICOLON content:ct
                            RESULT = (st != null && ct != null) ? st.makeSibling(ct) : ((st != null) ? (st) : (ct)); :}
 					    |
                         ;
+
 statement			    ::= declaration:decl
                         {: RESULT = decl; :}
 					    | ID:id optidstatement:st
 					    {:
 					        // Chain
 					        if (st instanceof StorageNode) {
-					            StorageNode storageNode = (StorageNode) st; 
+					            StorageNode storageNode = (StorageNode) st;
 					            String storageName = storageNode.getName();
 
 					            if ("Chain".equals(storageName)) {
@@ -261,8 +263,9 @@ statement			    ::= declaration:decl
 					    {: RESULT = st.adoptAsFirstChild(new SelectorNode("this").adoptChildren(new SelectorNode(id))); :}
 					    | builddeclaration:bdecl chain:chain
 					    {: RESULT = chain.adoptAsFirstChild(bdecl); :}
-					    |
+                        |
                         ;
+
 procedurecall		    ::= LPAR elementliststart:paras RPAR
                         {:
                             AbstractNode procedure = new ProcedureCallNode();
@@ -274,6 +277,7 @@ procedurecall		    ::= LPAR elementliststart:paras RPAR
                             RESULT = procedure;
                         :}
                         ;
+
 // OPTION SELECT FOR STATEMENTS
 optlparstatement	    ::= LPAR element:elem RPAR groupcon:groupcon
 					    {:
@@ -359,6 +363,8 @@ nodeelement             ::= nodedeclaration:elem
                         {: RESULT = elem; :}
                         | ID:id dotid:did
                         {: RESULT = (new SelectorNode(id)).adoptChildren(did); :}
+                        | ID:id ASSIGN nodeselectors:elem
+                        {: RESULT = new AssignNode().adoptChildren(new SelectorNode(id)).adoptChildren(elem); :}
                         | THIS DOT ID:id
                         {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
                         | builddeclaration:build
@@ -371,16 +377,36 @@ nonnodeelement          ::= DRAW ID:id
                         {: RESULT = sc; :}
                         ;
 
+nodeselectors            ::= ID:id1 DOT ID:id2
+                        {: RESULT = new SelectorNode(id1).adoptChildren(new SelectorNode(id2)); :}
+                        | THIS DOT ID:id
+                        {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
+                        | builddeclaration:decla
+                        {: RESULT = decla; :}
+                        | ID:id
+                        {: RESULT = new SelectorNode(id); :}
+                        ;
+
+nodeassigns             ::= buildassign
+                        {::}
+                        | channelassign
+                        {::}
+                        | mychannelassign
+                        {::}
+                        | blueprintassign
+                        {::}
+                        | sizeassign
+                        {::}
+                        ;
+
+buildelementpar		    ::= buildelement:build
+                        {: RESULT = build; :}
+					    | LPAR buildelement:belem RPAR
+					    {: RESULT = belem; :}
+					    ;
 buildelement		    ::= builddeclaration:build
                         {: RESULT = build; :}
 					    | ID:id
-					    {: RESULT = new SelectorNode(id); :}
-					    | LPAR buildelementpar:belem
-					    {: RESULT = belem; :}
-					    ;
-buildelementpar		    ::= builddeclaration:build RPAR
-                        {: RESULT = build; :}
-					    | ID:id RPAR
                         {: RESULT = new SelectorNode(id); :}
 					    ;
 dotid				    ::= DOT ID:id
@@ -419,7 +445,7 @@ channelelement          ::= ID:id dotid:dotid
                         {: RESULT = new SelectorNode(id).adoptChildren(dotid); :}
                         ;
 
-mychannelelementspar      ::= LPAR mychannelelement:elem RPAR
+mychannelelementspar    ::= LPAR mychannelelement:elem RPAR
                         {: RESULT = elem; :}
                         | mychannelelement:elem
                         {: RESULT = elem; :}
@@ -440,17 +466,84 @@ idpar                   ::= LPAR ID:id RPAR
 // DECLARATION ELEMENT
 nodedeclaration         ::= buildtype:type ID:id buildassign:assign
                         {: RESULT = assign.adoptAsFirstChild(((NamedIdNode) type).setId(id)); :}
+                        | channel:type ID:id channelassign:assign
+                        {: RESULT = assign.adoptAsFirstChild(((NamedIdNode) type).setId(id)); :}
+                        | mychannel:type ID:id mychannelassign:assign
+                        {: RESULT = assign.adoptAsFirstChild(((NamedIdNode) type).setId(id)); :}
                         ;
 
 nonnodedeclaration      ::= BLUEPRINT ID:id blueprintassign:assign
                         {: RESULT = assign.adoptAsFirstChild(new BlueprintTypeNode(id)); :}
                         | SIZE ID:id sizeassign:assign
                         {: RESULT = assign.adoptAsFirstChild(new SizeTypeNode(id)); :}
-                        | channel:type ID:id channelassign:assign
-                        {: RESULT = assign.adoptAsFirstChild(((NamedIdNode) type).setId(id)); :}
                         ;
 
-declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
+nodedeclarationopt      ::= channel:channel ID:id channelassignopt:assign
+                        {:
+                            AbstractNode channelNode = (((NamedIdNode) channel).setId(id));
+
+                            if (assign != null) {
+                                AbstractNode assignNode = ((StorageNode) assign).getNodes()[0];
+                                AbstractNode chainNode = ((StorageNode) assign).getNodes()[1];
+
+                                assignNode.adoptAsFirstChild(channelNode);
+
+                                if (chainNode != null) {
+                                    chainNode.adoptAsFirstChild(assignNode);
+
+                                    RESULT = chainNode;
+                                } else {
+                                    RESULT = assignNode;
+                                }
+                            } else {
+                                RESULT = channelNode;
+                            }
+                        :}
+                        | mychannel:channel ID:id mychannelassignopt:assign
+                        {:
+                            AbstractNode channelNode = (((NamedIdNode) channel).setId(id));
+
+                            if (assign != null) {
+                                AbstractNode assignNode = ((StorageNode) assign).getNodes()[0];
+                                AbstractNode chainNode = ((StorageNode) assign).getNodes()[1];
+
+                                assignNode.adoptAsFirstChild(channelNode);
+
+                                if (chainNode != null) {
+                                    chainNode.adoptAsFirstChild(assignNode);
+
+                                    RESULT = chainNode;
+                                } else {
+                                    RESULT = assignNode;
+                                }
+                            } else {
+                                RESULT = channelNode;
+                            }
+                        :}
+                        | buildtype:type ID:id buildassignopt:assign
+                        {:
+                            AbstractNode typeNode = (((NamedIdNode) type).setId(id));
+
+                            if (assign != null) {
+                                AbstractNode assignNode = ((StorageNode) assign).getNodes()[0];
+                                AbstractNode chainNode = ((StorageNode) assign).getNodes()[1];
+
+                                assignNode.adoptAsFirstChild(typeNode);
+
+                                if (chainNode != null) {
+                                    chainNode.adoptAsFirstChild(assignNode);
+
+                                    RESULT = chainNode;
+                                } else {
+                                    RESULT = assignNode;
+                                }
+                            } else {
+                                RESULT = typeNode;
+                            }
+                        :}
+                        ;
+
+nonnodedeclarationopt   ::= BLUEPRINT ID:id blueprintassignopt:assign
                         {:
                             AbstractNode typeNode = new BlueprintTypeNode(id);
                             RESULT = (assign != null) ? assign.adoptAsFirstChild(typeNode) : typeNode;
@@ -460,52 +553,27 @@ declaration             ::= BLUEPRINT ID:id blueprintassignopt:assign
                             AbstractNode typeNode = new SizeTypeNode(id);
                             RESULT = (assign != null) ? assign.adoptAsFirstChild(typeNode) : typeNode;
                         :}
-                        | channel:channel ID:id channelassignopt:assign
+                        ;
+
+declaration             ::= nodedeclarationopt:decla
                         {:
-                            NamedIdNode channelNode = (NamedIdNode) channel;
-
-                            channelNode.setId(id);
-
-                            RESULT = (assign != null) ? assign.adoptAsFirstChild(channelNode) : channelNode;
+                            RESULT = decla;
                         :}
-                        | mychannel:channel ID:id mychannelassignopt:assign
-                                                {:
-                                                    NamedIdNode channelNode = (NamedIdNode) channel;
-
-                                                    channelNode.setId(id);
-
-                                                    RESULT = (assign != null) ? assign.adoptAsFirstChild(channelNode) : channelNode;
-                                                :}
-                        | buildtype:type ID:id builddecla:decla
+                        | nonnodedeclarationopt:decla
                         {:
-                            AbstractNode typeNode = (((NamedIdNode) type).setId(id));
-
-                            if (decla != null) {
-                                AbstractNode assign = ((StorageNode) decla).getNodes()[0];
-                                AbstractNode chain = ((StorageNode) decla).getNodes()[1];
-
-                                assign.adoptAsFirstChild(typeNode);
-
-                                if (chain != null) {
-                                    chain.adoptAsFirstChild(assign);
-
-                                    RESULT = chain;
-                                } else {
-                                    RESULT = assign;
-                                }
-                            } else {
-                                RESULT = typeNode;
-                            }
+                            RESULT = decla;
                         :}
                         ;
 
-builddecla              ::= buildassign:assign declstoporstay:chain
+buildassignopt          ::= buildassign:assign declstoporstay:chain
                         {: RESULT = new StorageNode(assign, chain); :}
                         |
                         ;
 
 blueprintassign         ::= ASSIGN DRAW idpar:elem
                         {: RESULT = new AssignNode().adoptChildren(new DrawNode(((NamedIdNode) elem).getId())); :}
+                        | ASSIGN idpar:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 sizeassign              ::= ASSIGN sizepar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
@@ -518,7 +586,7 @@ channelassign           ::= ASSIGN channelelementspar:elem
 mychannelassign         ::= ASSIGN mychannelelementspar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
-buildassign             ::= ASSIGN buildelement:elem
+buildassign             ::= ASSIGN buildelementpar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 blueprintassignopt      ::= blueprintassign:assign
@@ -529,13 +597,13 @@ sizeassignopt           ::= sizeassign:assign
                         {: RESULT = assign; :}
                         |
                         ;
-channelassignopt        ::= channelassign:assign
-                        {: RESULT = assign; :}
+channelassignopt        ::= channelassign:assign declstoporstay:chain
+                        {: RESULT = new StorageNode(assign, chain); :}
                         |
                         ;
 
-mychannelassignopt      ::= mychannelassign:assign
-                        {: RESULT = assign; :}
+mychannelassignopt      ::= mychannelassign:assign declstoporstay:chain
+                        {: RESULT = new StorageNode(assign, chain); :}
                         |
                         ;
 
@@ -545,6 +613,8 @@ builddeclaration	    ::= BUILD ID:id LPAR elementliststart:elemlist RPAR
                             RESULT = (elemlist != null) ? buildNode.adoptChildren((new ParamsNode()).adoptChildren(elemlist)) : buildNode;
                         :}
                         ;
+
+
 declstoporstay		    ::= chain:chain
                         {: RESULT = chain; :}
 					    |
