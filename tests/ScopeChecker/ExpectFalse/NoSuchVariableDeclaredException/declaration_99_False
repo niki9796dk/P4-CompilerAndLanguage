@@ -1,0 +1,8 @@
+block block_01 {
+    mychannel:in input;
+    mychannel:out output;
+
+    blueprint() {
+        bigboi = [10, 10];
+    }
+}
