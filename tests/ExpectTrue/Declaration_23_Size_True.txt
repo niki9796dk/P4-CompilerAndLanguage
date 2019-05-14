@@ -1,0 +1,11 @@
+block decla_23 {
+	mychannel:in input;
+	mychannel:out output;
+
+	blueprint() {
+	    size a = [2,3];
+	    size b = a;
+
+		this.input -> this.output;
+	}
+}

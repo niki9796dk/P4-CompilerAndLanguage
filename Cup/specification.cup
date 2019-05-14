@@ -93,7 +93,7 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channe
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
              channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, buildassignopt, channelelementspar,
              channelelement, idpar, mychannel, mychannelelement, mychannelassignopt, mychannelassign, mychannelelementspar,
-             nonnodedeclarationopt, nodedeclarationopt, nodeassigns, idelement;
+             nonnodedeclarationopt, nodedeclarationopt, nodeassigns, nodeselectors;
 
 non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
@@ -225,6 +225,7 @@ content			        ::= statement:st SEMICOLON content:ct
                            RESULT = (st != null && ct != null) ? st.makeSibling(ct) : ((st != null) ? (st) : (ct)); :}
 					    |
                         ;
+
 statement			    ::= declaration:decl
                         {: RESULT = decl; :}
 					    | ID:id optidstatement:st
@@ -264,6 +265,7 @@ statement			    ::= declaration:decl
 					    {: RESULT = chain.adoptAsFirstChild(bdecl); :}
                         |
                         ;
+
 procedurecall		    ::= LPAR elementliststart:paras RPAR
                         {:
                             AbstractNode procedure = new ProcedureCallNode();
@@ -275,6 +277,7 @@ procedurecall		    ::= LPAR elementliststart:paras RPAR
                             RESULT = procedure;
                         :}
                         ;
+
 // OPTION SELECT FOR STATEMENTS
 optlparstatement	    ::= LPAR element:elem RPAR groupcon:groupcon
 					    {:
@@ -360,7 +363,7 @@ nodeelement             ::= nodedeclaration:elem
                         {: RESULT = elem; :}
                         | ID:id dotid:did
                         {: RESULT = (new SelectorNode(id)).adoptChildren(did); :}
-                        | ID:id ASSIGN nodeassigns:elem
+                        | ID:id ASSIGN nodeselectors:elem
                         {: RESULT = new AssignNode().adoptChildren(new SelectorNode(id)).adoptChildren(elem); :}
                         | THIS DOT ID:id
                         {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
@@ -374,7 +377,7 @@ nonnodeelement          ::= DRAW ID:id
                         {: RESULT = sc; :}
                         ;
 
-nodeassigns             ::= ID:id1 DOT ID:id2
+nodeselectors            ::= ID:id1 DOT ID:id2
                         {: RESULT = new SelectorNode(id1).adoptChildren(new SelectorNode(id2)); :}
                         | THIS DOT ID:id
                         {: RESULT = new SelectorNode("this").adoptChildren(new SelectorNode(id)); :}
@@ -382,6 +385,18 @@ nodeassigns             ::= ID:id1 DOT ID:id2
                         {: RESULT = decla; :}
                         | ID:id
                         {: RESULT = new SelectorNode(id); :}
+                        ;
+
+nodeassigns             ::= buildassign
+                        {::}
+                        | channelassign
+                        {::}
+                        | mychannelassign
+                        {::}
+                        | blueprintassign
+                        {::}
+                        | sizeassign
+                        {::}
                         ;
 
 buildelementpar		    ::= buildelement:build
@@ -557,6 +572,8 @@ buildassignopt          ::= buildassign:assign declstoporstay:chain
 
 blueprintassign         ::= ASSIGN DRAW idpar:elem
                         {: RESULT = new AssignNode().adoptChildren(new DrawNode(((NamedIdNode) elem).getId())); :}
+                        | ASSIGN idpar:elem
+                        {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
 sizeassign              ::= ASSIGN sizepar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
