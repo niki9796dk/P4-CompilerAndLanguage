@@ -32,6 +32,8 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
      */
     @Override
     public void acceptReadySignal() {
+        print.say("I have accepted a ready signal");
+
         if (this.isReady()) {                       // If all inputs are isReady
             this.performOperation();                // Then perform the operation
             this.getOutputChannel().acceptReadySignal();  // And signal that the output channel now is isReady.
@@ -71,12 +73,21 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
 
     @Override
     public void acceptReadyBackpropagationSignal() {
+        print.say("I accepted a back prop signal");
+
         if (this.isReadyBackpropagation()) {                       // If all inputs are isReady
             this.performBackpropagationOperation();                // Then perform the operation
 
-            for (Channel inputChannel : this.getInputs())
-                inputChannel.sendReadyBackpropagationSignals();  // And signal that the output channel now is isReady.
+            print.say("And I was Ready");
+
+            for (Channel inputChannel : this.getInputs()) {
+                print.say("Sent to -> " + inputChannel);
+                inputChannel.acceptReadyBackpropagationSignal();  // And signal that the output channel now is isReady.
+            }
         }
+
+        print.say("And I was not Ready");
+
     }
 
     @Override
@@ -88,7 +99,7 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
             return (this.isReadyBackpropagation = true);
 
         for (Channel outputChannel : this.getOutputs())
-            if (!outputChannel.isReady())
+            if (!(outputChannel.isReadyBackpropagation()))
                 return false;
 
         return (this.isReadyBackpropagation = true);

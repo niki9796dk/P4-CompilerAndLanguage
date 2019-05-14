@@ -144,26 +144,13 @@ public abstract class AbstractBlock implements Block {
 
     }
 
-    /*
     @Override
-    public void flip() {
-        Map<String, Channel> temp = this.inputChannels;
-        this.inputChannels = this.outputChannels;
-        this.outputChannels = temp;
+    public Map<String, Channel> getInputChannels() {
+        return this.inputChannels;
     }
-    */
 
-    /*
     @Override
-    public void traverseBackwards() {
-        for(Channel c: this.getInputs()){
-            print.say("traverseBackwards!");
-            c.traverseBackwards();
-        }
+    public Map<String, Channel> getOutputChannels() {
+        return this.outputChannels;
     }
-    */
-
-
-
-
 }

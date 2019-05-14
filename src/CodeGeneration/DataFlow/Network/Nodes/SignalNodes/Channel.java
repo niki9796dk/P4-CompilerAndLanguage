@@ -14,7 +14,6 @@ public interface Channel extends SignalNode {
 
     SignalNode setSource(SignalNode channel);
 
-
     SignalNode addTarget(SignalNode channel);
 
     SignalNode getSource();

@@ -27,7 +27,13 @@ public class _Division extends BinaryAbstractOperation {
 
     @Override
     protected Matrix calculateIn2Derivatives(Matrix in1, Matrix out) {
-        return this.calculateIn2Derivatives(in1, this.getChannel("in2").getResultBackpropagation(), out);
+        Matrix in2BackPropResult = this.getChannel("in2").getResult();
+
+        if (in2BackPropResult == null) {
+            throw new NullPointerException("in2BackPropResult is null");
+        }
+
+        return this.calculateIn2Derivatives(in1, in2BackPropResult, out);
     }
 
     private Matrix calculateIn2Derivatives(Matrix in1, Matrix in2, Matrix out) {

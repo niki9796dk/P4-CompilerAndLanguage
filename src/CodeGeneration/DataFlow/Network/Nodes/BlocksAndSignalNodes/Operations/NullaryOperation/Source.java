@@ -1,6 +1,9 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation;
 
 import CodeGeneration.DataFlow.Network.Nodes.Block;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannelSource;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
@@ -11,12 +14,23 @@ import LinearAlgebra.Types.Matrices.MatrixBuilder;
 public class Source extends NullaryAbstractOperation {
     private Matrix source;
 
+    private Source() {
+        this.getOutputChannels().clear(); // Reset all output channels from super classes
+
+        // Define outputs
+        Channel out = new ListChannelSource(this); // Define as channel source
+
+        // Store channels
+        this.addNewOutputLabel("out", out);
+    }
+
     /**
      * Create a new Source NullaryOperation with a matrix.
      *
      * @param matrix The initial matrix contents.
      */
     public Source(Matrix matrix) {
+        this();
         this.source = matrix;
     }
 
@@ -26,6 +40,7 @@ public class Source extends NullaryAbstractOperation {
      * @param matrix The initial matrix contents.
      */
     public Source(MatrixBuilder matrix) {
+        this();
         this.source = matrix.build();
     }
 
