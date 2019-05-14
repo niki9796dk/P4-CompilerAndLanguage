@@ -87,13 +87,13 @@ terminal Integer INTCONST;
 
 non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channel, blueparam, blueparams,
              blueextparams, statement, declaration, declstoporstay, optidstatement, optlparstatement, optthisstatement,
-             elementrest, chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
+             chain, elementliststart, procedurecall, element, groupcon, dotid, elementpar, chainext, parchain,
              elementlist, elementlistext, elementext, pparams, pextparams, parclosestatement, builddeclaration,
              buildelement, buildelementpar, sizepar, inchanneldeclaration, outchanneldeclaration, inoutchanneldeclaration,
              nodedeclaration, nonnodedeclaration, nodeelement, nonnodeelement, nodeelementpar, blueprintassign, sizeassign,
              channelassign, buildassign, blueprintassignopt, sizeassignopt, channelassignopt, buildassignopt, channelelementspar,
              channelelement, idpar, mychannel, mychannelelement, mychannelassignopt, mychannelassign, mychannelelementspar,
-             nonnodedeclarationopt, nodedeclarationopt, nodeassigns, nodeselectors;
+             nonnodedeclarationopt, nodedeclarationopt, nodeselectors, nonnodeelementpar;
 
 non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
@@ -349,9 +349,7 @@ groupcon			    ::= elementlist:elemlist RPAR CONNECTION elementpar:elem chainext
                          :}
                         ;
 // ELEMENTS
-element			        ::= elementrest:elem
-                        {: RESULT = elem; :}
-					    | nodeelement:elem
+element			        ::= nodeelement:elem
 					    {: RESULT = elem; :}
 					    | nonnodeelement:elem
 					    {: RESULT = elem; :}
@@ -387,18 +385,6 @@ nodeselectors            ::= ID:id1 DOT ID:id2
                         {: RESULT = new SelectorNode(id); :}
                         ;
 
-nodeassigns             ::= buildassign
-                        {::}
-                        | channelassign
-                        {::}
-                        | mychannelassign
-                        {::}
-                        | blueprintassign
-                        {::}
-                        | sizeassign
-                        {::}
-                        ;
-
 buildelementpar		    ::= buildelement:build
                         {: RESULT = build; :}
 					    | LPAR buildelement:belem RPAR
@@ -422,6 +408,12 @@ elementpar		        ::= LPAR element:elem RPAR
 nodeelementpar          ::= LPAR nodeelement:elem RPAR
                         {: RESULT = elem; :}
                         | nodeelement:elem
+                        {: RESULT = elem; :}
+                        ;
+
+nonnodeelementpar       ::= LPAR nonnodeelement:elem RPAR
+                        {: RESULT = elem; :}
+                        | nonnodeelement:elem
                         {: RESULT = elem; :}
                         ;
 
@@ -572,6 +564,8 @@ buildassignopt          ::= buildassign:assign declstoporstay:chain
 
 blueprintassign         ::= ASSIGN DRAW idpar:elem
                         {: RESULT = new AssignNode().adoptChildren(new DrawNode(((NamedIdNode) elem).getId())); :}
+                        | ASSIGN LPAR DRAW idpar:elem RPAR
+                        {: RESULT = new AssignNode().adoptChildren(new DrawNode(((NamedIdNode) elem).getId())); :}
                         | ASSIGN idpar:elem
                         {: RESULT = new AssignNode().adoptChildren(elem); :}
                         ;
@@ -612,8 +606,12 @@ builddeclaration	    ::= BUILD ID:id LPAR elementliststart:elemlist RPAR
                             AbstractNode buildNode = new BuildNode(id);
                             RESULT = (elemlist != null) ? buildNode.adoptChildren((new ParamsNode()).adoptChildren(elemlist)) : buildNode;
                         :}
+                        | BUILD LPAR ID:id LPAR elementliststart:elemlist RPAR RPAR
+                         {:
+                             AbstractNode buildNode = new BuildNode(id);
+                             RESULT = (elemlist != null) ? buildNode.adoptChildren((new ParamsNode()).adoptChildren(elemlist)) : buildNode;
+                         :}
                         ;
-
 
 declstoporstay		    ::= chain:chain
                         {: RESULT = chain; :}
