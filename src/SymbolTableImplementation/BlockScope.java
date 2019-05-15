@@ -6,7 +6,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import Enums.AnsiColor;
 
 /**
- * Keeps track of whichs Procedure, Channel, and Blueprint nodes are within a block's scope.
+ * Keeps track of whichs CodeScope, Channel, and Blueprint nodes are within a block's scope.
  */
 public class BlockScope {
     /**
