@@ -1,10 +1,10 @@
 package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Node;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
+import AST.Nodes.NodeClasses.NamedNodes.AssignNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockTypeNode;
@@ -48,6 +48,12 @@ class ScopeTest {
         paramsNode.adoptChildren(sizeNode);
         this.s.setVariable(sizeNode);
         assertEquals(sizeNode, s.getVariable(sizeNode).getNode());
+    }
+
+    @Test
+    void setVariable02() {
+        Node node = new AssignNode();
+        assertThrows(IllegalArgumentException.class, () -> s.setVariable(node));
     }
 
     @Test

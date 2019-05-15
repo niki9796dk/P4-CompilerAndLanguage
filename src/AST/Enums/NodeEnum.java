@@ -30,4 +30,5 @@ public enum NodeEnum {
     SOURCE_TYPE,
     NONEXISTENT,
     DUMMY,
+    TEMPORARY
 }

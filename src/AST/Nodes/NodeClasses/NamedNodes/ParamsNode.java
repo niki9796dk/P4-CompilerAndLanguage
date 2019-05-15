@@ -4,7 +4,7 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 
 /**
- * Node for parameters for call to a sub scope.
+ * Node for parameters for call connect a sub scope.
  */
 public class ParamsNode extends NamedNode {
     public ParamsNode() {

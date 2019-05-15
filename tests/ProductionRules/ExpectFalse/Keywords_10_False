@@ -1,0 +1,7 @@
+ block Keywords_08 {
+ 	mychannel:out output;
+
+ 	blueprint() {
+ 		block size = draw Keywords_08;
+ 	}
+ }

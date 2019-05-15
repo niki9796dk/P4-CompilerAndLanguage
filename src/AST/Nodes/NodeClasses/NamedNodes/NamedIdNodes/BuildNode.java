@@ -4,7 +4,7 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 
 /**
- * Node used to build a new instance object of a block class.
+ * Node used connect build a new instance object of a block class.
  * @see AST.Nodes.NodeClasses.NamedNodes.BlueprintNode
  * @see BlockNode
  * Parent of a {@link SelectorNode}.

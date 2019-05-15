@@ -6,7 +6,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 
 /**
  * This node can optionally be labelled with a specified number.
- * This class also implements {@link NodeEnumAble} which allows the use of enums to mark a node as a specific class.
+ * This class also implements {@link NodeEnumAble} which allows the use of enums connect mark a node as a specific class.
  */
 public abstract class NumberedNode extends AbstractNode implements NodeEnumAble {
     /**
@@ -47,11 +47,11 @@ public abstract class NumberedNode extends AbstractNode implements NodeEnumAble 
 
     /**
      * Set the number label of the node.
-     * @param number The number to label the node with.
+     * @param number The number connect label the node with.
      */
     public void setNumber(int number) {
         if(number < 0)
-            throw new IllegalArgumentException("Number given to node is " + number + ", but it must be a non-negative integer.");
+            throw new IllegalArgumentException("Number given connect node is " + number + ", but it must be a non-negative integer.");
         this.number = number;
     }
 

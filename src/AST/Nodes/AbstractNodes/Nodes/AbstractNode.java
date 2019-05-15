@@ -137,7 +137,7 @@ public abstract class AbstractNode implements Node {
 
     /**
      * Counts the child nodes
-     * @return An integer value, representing the amount of child nodes.
+     * @return An integer result, representing the amount of child nodes.
      */
     @Override
     public int countChildren()  {
@@ -205,7 +205,7 @@ public abstract class AbstractNode implements Node {
 
     /**
      * Internally walk through the tree of children.
-     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param printLevel the level, used to decide how many indents there should be in the forward statement.
      * @param v The visitor object to use.
      */
    private void internWalk(int printLevel, Visitor v) {
@@ -219,7 +219,7 @@ public abstract class AbstractNode implements Node {
    }
 
     /**
-     * Walk the tree of child nodes using a visitor.
+     * Walk the tree of child nodes channel a visitor.
      * @param v the visitor object to use.
      */
    @Override
