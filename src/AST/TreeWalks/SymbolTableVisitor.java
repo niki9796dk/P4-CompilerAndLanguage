@@ -43,8 +43,8 @@ public class SymbolTableVisitor implements Visitor {
             case SELECTOR:
             case DRAW:
             case BUILD:
-            case SIZE:
             case ASSIGN:
+            case SIZE:
                 // Not relevant
                 break;
 
