@@ -12,8 +12,6 @@ import LinearAlgebra.Types.Matrices.MatrixBuilder;
  * Contains an  immutable matrix.
  */
 public class Source extends NullaryAbstractOperation {
-    private Matrix source;
-
     private Source() {
         this.getOutputChannels().clear(); // Reset all output channels from super classes
 
@@ -31,7 +29,7 @@ public class Source extends NullaryAbstractOperation {
      */
     public Source(Matrix matrix) {
         this();
-        this.source = matrix;
+        this.result = matrix;
     }
 
     /**
@@ -41,7 +39,7 @@ public class Source extends NullaryAbstractOperation {
      */
     public Source(MatrixBuilder matrix) {
         this();
-        this.source = matrix.build();
+        this.result = matrix.build();
     }
 
     /**
@@ -49,21 +47,7 @@ public class Source extends NullaryAbstractOperation {
      */
     @Override
     protected Matrix operation() {
-        return this.source;
-    }
-
-    /**
-     * Connect the Input to a block, and signal that this block is ready.
-     * @param toBlock       the block to connect to
-     * @param fromChannelId the output channel id from this where connection starts
-     * @param toChannelId   the input channel id from toBlock where connection ends
-     * @return a reference to this object.
-     */
-    @Override
-    public Source connectTo(Block toBlock, String fromChannelId, String toChannelId) {
-        super.connectTo(toBlock, fromChannelId, toChannelId);
-        this.acceptReadySignal();
-        return this;
+        return this.result;
     }
 
     @Override
@@ -76,6 +60,7 @@ public class Source extends NullaryAbstractOperation {
                 .compDivision(totalInputLines)          // Get input line average
                 .mult(learningRate);                    // Multiply with learning rate
 
-        this.source = this.source.sub(derivatives);
+        this.result = this.result.sub(derivatives);
     }
+
 }

@@ -14,7 +14,9 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
     private boolean isReadyBackpropagation = false;
     protected Matrix result;
     protected HashMap<Channel, Matrix> resultBackpropagation = new HashMap<>();
-    protected Print print = new Print(AnsiColor.GREEN, "Operation." + this.getClass().getSimpleName());
+
+    protected Print forward = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName());
+    protected Print backprop = new Print(AnsiColor.YELLOW, "Channel." + this.getClass().getSimpleName());
 
     /**
      * Get result of operation
@@ -23,7 +25,7 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
      */
     @Override
     public Matrix getResult() {
-        //print.say("getResult() -> this.result = " + this.result);
+        //forward.say("getResult() -> this.result = " + this.result);
         return result;
     }
 
@@ -32,11 +34,16 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
      */
     @Override
     public void acceptReadySignal() {
-        print.say("I have accepted a ready signal");
+        forward.say("I have accepted a ready signal");
 
         if (this.isReady()) {                       // If all inputs are isReady
+            this.isReadyBackpropagation = false;
+            forward.say("-> And I was ready");
+
             this.performOperation();                // Then perform the operation
             this.getOutputChannel().acceptReadySignal();  // And signal that the output channel now is isReady.
+        } else {
+            forward.say("-> And I was not ready");
         }
     }
 
@@ -73,21 +80,36 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
 
     @Override
     public void acceptReadyBackpropagationSignal() {
-        print.say("I accepted a back prop signal");
+        backprop.say("I accepted a back prop signal");
 
         if (this.isReadyBackpropagation()) {                       // If all inputs are isReady
+            this.isReady = false;
             this.performBackpropagationOperation();                // Then perform the operation
 
-            print.say("And I was Ready");
+            backprop.say("And I was Ready");
 
             for (Channel inputChannel : this.getInputs()) {
-                print.say("Sent to -> " + inputChannel);
+                backprop.say("Sent to -> " + inputChannel);
                 inputChannel.acceptReadyBackpropagationSignal();  // And signal that the output channel now is isReady.
             }
         }
 
-        print.say("And I was not Ready");
+        backprop.say("And I was not Ready");
 
+    }
+
+    @Override
+    public boolean isSource() {
+        for (Channel input : this.getInputChannels().values()) {
+            if (!input.isSource()) {
+                return false;
+            }
+        }
+
+        // Perform the operation, since this node will only update from sources
+        this.performOperation();
+        // Return true, to signal that data is ready.
+        return true;
     }
 
     @Override

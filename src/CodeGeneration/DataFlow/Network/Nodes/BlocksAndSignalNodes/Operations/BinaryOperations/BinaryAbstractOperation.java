@@ -4,15 +4,20 @@ import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
+import CodeGeneration.utility.Print;
+import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 import java.util.HashMap;
 
 public abstract class BinaryAbstractOperation extends AbstractOperation {
+
     /**
      * Operation constructor that makes 2 input-channels which is the operands, and an output-channel which is the result
      */
     protected BinaryAbstractOperation() {
+
+
         // Define inputs
         Channel in1 = new ListChannel().addTarget(this);
         Channel in2 = new ListChannel().addTarget(this);
@@ -42,7 +47,7 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
             throw new NullPointerException("in2 is null!");
 
         this.result = operation(in1, in2);
-        print.say("performOperation() -> result = " + this.result);
+        forward.say("performOperation() -> result = " + this.result);
     }
 
     @Override
@@ -65,6 +70,8 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
                 this.getChannel("in2"),
                 this.getChannel("out")
         );
+
+        backprop.say("performOperation() -> result = " + this.resultBackpropagation.toString());
     }
 
     /**

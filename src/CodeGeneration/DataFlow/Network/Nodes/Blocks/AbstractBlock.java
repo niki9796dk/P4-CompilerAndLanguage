@@ -23,7 +23,7 @@ public abstract class AbstractBlock implements Block {
      * @return a reference to this object.
      */
     public AbstractBlock addNewInputLabel(String id, Channel c) {
-        //print.say("New input: " + id);
+        //forward.say("New input: " + id);
 
         if (c == null)
             throw new NullPointerException("input c is null!");
@@ -40,7 +40,7 @@ public abstract class AbstractBlock implements Block {
      * @return a reference to this object.
      */
     public AbstractBlock addNewOutputLabel(String id, Channel c) {
-        //print.say("New output: " + id);
+        //forward.say("New output: " + id);
         this.outputChannels.put(id, c);
         return this;
     }

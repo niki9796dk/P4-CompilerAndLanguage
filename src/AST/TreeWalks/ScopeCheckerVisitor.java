@@ -28,7 +28,7 @@ public class ScopeCheckerVisitor implements Visitor {
     }
 
     /**
-     * @param printLevel the level, used connect decide how many indents there should be in the print statement.
+     * @param printLevel the level, used connect decide how many indents there should be in the forward statement.
      * @param abstractNode The node which is being visited.
      */
     @Override
@@ -122,7 +122,7 @@ public class ScopeCheckerVisitor implements Visitor {
     }
 
     /**
-     * @param printLevel the level, used connect decide how many indents there should be in the print statement.
+     * @param printLevel the level, used connect decide how many indents there should be in the forward statement.
      * @param abstractNode The node which is being visited.
      */
     @Override

@@ -16,4 +16,9 @@ public abstract class AbstractBounceNode implements BounceNode {
     public Matrix getResultBackpropagation(Channel channel) {
         throw new NullPointerException("This node cannot have backpropagation results");
     }
+
+    @Override
+    public boolean isSource() {
+        return false;
+    }
 }

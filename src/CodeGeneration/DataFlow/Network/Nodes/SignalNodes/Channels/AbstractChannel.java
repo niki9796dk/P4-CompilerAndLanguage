@@ -14,7 +14,8 @@ public abstract class AbstractChannel implements Channel {
     protected SignalNode source;
     protected Collection<SignalNode> targets;
 
-    protected Print print = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName());
+    protected Print forward = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName());
+    protected Print backprop = new Print(AnsiColor.YELLOW, "Channel." + this.getClass().getSimpleName());
 
 
     /**
@@ -82,7 +83,21 @@ public abstract class AbstractChannel implements Channel {
      */
     @Override
     public boolean isReady() {
-        return this.ready;
+        if (this.ready) {
+            return true;
+        }
+
+        return (this.ready = this.isSource());
+    }
+
+    @Override
+    public boolean isSource() {
+        if (this.source instanceof Channel) {
+            return (this.ready = ((Channel) this.source).isReady());
+
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -95,7 +110,7 @@ public abstract class AbstractChannel implements Channel {
 
     @Override
     public void acceptReadySignal() {
-        print.say("I have accepted a ready signal");
+        forward.say("As a channel, I have accepted a ready signal");
 
         this.ready = true;  // Store ready state for later recall
         this.sendReadySignals(); // Signal all outputs that their input is now ready.
@@ -109,14 +124,16 @@ public abstract class AbstractChannel implements Channel {
 
     @Override
     public void acceptReadyBackpropagationSignal() {
-        print.say("I accepted a back prop signal");
-
+        backprop.say("As a channel, I accepted a back prop signal");
 
         for (SignalNode target : targets) {
             if(!target.isReadyBackpropagation()) {
+                backprop.say("-> But I was not ready!");
                 return;
             }
         }
+
+        backprop.say("-> And I was ready!");
 
         this.backpropagationReady = true;
         this.sendReadyBackpropagationSignals();

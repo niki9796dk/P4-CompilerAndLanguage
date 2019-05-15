@@ -233,7 +233,7 @@ public abstract class AbstractNode implements Node {
 
     /**
      * Internally walk through the tree of children.
-     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param printLevel the level, used to decide how many indents there should be in the forward statement.
      * @param v The visitor object to use.
      */
    private void internWalk(int printLevel, Visitor v) {

@@ -60,13 +60,13 @@ public class Print {
         String indent = emptyLine(prefix.length()) + lineMiddle;
         line = line.replaceAll("\n","\n"+indent);
 
-        //If it is the same prefix as last print, just print it with the indent.
+        //If it is the same prefix as last forward, just forward it with the indent.
         if(samePrefix(prefix))
             return indent + line;
 
         line = prefix + lineTop + line;
 
-        //If it is a new line with no newline, just print it with the whole prefix
+        //If it is a new line with no newline, just forward it with the whole prefix
         return line;
     }
 
@@ -85,8 +85,8 @@ public class Print {
     /**
      * Prints a message into the console
      *
-     * @param caller The object calling this print. Very useful for debugging.
-     * @param c      The desired color of the print.
+     * @param caller The object calling this forward. Very useful for debugging.
+     * @param c      The desired color of the forward.
      * @param s      The string output
      * @return The coloured string.
      */
@@ -100,7 +100,7 @@ public class Print {
     /**
      * Prints a message into the console
      *
-     * @param c The desired color of the print.
+     * @param c The desired color of the forward.
      * @param s The string output
      * @return The coloured string.
      */

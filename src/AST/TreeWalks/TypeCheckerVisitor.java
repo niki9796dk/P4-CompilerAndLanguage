@@ -34,7 +34,7 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * The pre order walk type checking of the abstract syntax tree.
-     * @param printLevel (NOT USED) the level, used connect decide how many indents there should be in the print statement.
+     * @param printLevel (NOT USED) the level, used connect decide how many indents there should be in the forward statement.
      * @param abstractNode The node connect type check.
      */
     @Override
@@ -101,7 +101,7 @@ public class TypeCheckerVisitor implements Visitor {
 
     /**
      * The post order walk type checking of the abstract syntax tree.
-     * @param printLevel (NOT USED) The level, used connect decide how many indents there should be in the print statement.
+     * @param printLevel (NOT USED) The level, used connect decide how many indents there should be in the forward statement.
      * @param abstractNode The node connect type check
      */
     @Override

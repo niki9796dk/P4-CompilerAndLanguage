@@ -8,6 +8,8 @@ public interface SignalNode extends Node {
 
     boolean isReadyBackpropagation();
 
+    boolean isSource();
+
     void acceptReadySignal();
     void acceptReadyBackpropagationSignal();
 

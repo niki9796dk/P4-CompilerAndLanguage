@@ -2,19 +2,20 @@ package CodeGeneration.DataFlow.Executions;
 
 import CodeGeneration.DataFlow.Blocks.A_Half;
 import CodeGeneration.DataFlow.Blocks.A_plus_B_mult_B;
+import CodeGeneration.DataFlow.Blocks.A_uSub_B;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.MatrixOperations.Multiplication;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Addition;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Division;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
+import LinearAlgebra.Statics.Matrices;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
-
-import java.util.LinkedList;
 
 public class BlockWrapper extends AbstractBlock {
 
@@ -25,6 +26,19 @@ public class BlockWrapper extends AbstractBlock {
         this.addNewInputLabel("in", new ListChannel());
         this.addNewOutputLabel("out", new ListChannel());
 
+        Block block = new A_uSub_B();
+
+        Source source = new Source(Matrices.randomMatrix(2, 2, 1337));
+
+        source.connectTo(block, "out", "A");
+        this.connectTo(block, "in", "B");
+
+        block.connectTo(this, "out", "out");
+
+        ///////// EOF //////////
+    }
+
+    private void oldBlock() {
         // Blueprint
         ///////// Block Decelerations //////////
 
@@ -49,19 +63,6 @@ public class BlockWrapper extends AbstractBlock {
         operation000.connectTo(block001, "out", "A");
 
         block001.connectTo(this, "out", "out");
-
-        ////////// Sources, must be connected as the last part of the network. //////////
-
-
-
-        ////////// Prints //////////
-        /*
-        print.say("block000: " + block000.getChannel("out").getResult());
-        print.say("operation000: " + operation000.getChannel("out").getResult());
-        print.say("block001: " + block001.getChannel("out").getResult());
-        */
-
-        ///////// EOF //////////
     }
 
 }
