@@ -3,7 +3,7 @@ block procedure_01 {
     mychannel:out out;
 
     blueprint () {
-        source fakeBlock = build Source();
+        source fakeBlock = build Source([4,4]);
 
         abc(fakeBlock);
 

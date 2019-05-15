@@ -121,7 +121,6 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                     } catch (NoSuchVariableDeclaredException e) {
                         this.verifyChannelVariable(id);
                     }
-                    // The case where this is for sure the child of a selector. Relies on that block are not allowed to be called "this"
                 }
                 break;
             default:

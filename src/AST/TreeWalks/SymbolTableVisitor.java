@@ -1,9 +1,11 @@
 package AST.TreeWalks;
 
+import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
+import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import ScopeChecker.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
@@ -12,6 +14,7 @@ import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.VariableEntry;
+import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
 
 public class SymbolTableVisitor implements Visitor {
 
@@ -107,11 +110,12 @@ public class SymbolTableVisitor implements Visitor {
             case CHANNEL_OUT_TYPE:
             case SIZE_TYPE:
             case BLOCK_TYPE:
-            case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
-            case OPERATION_TYPE:
             case CHANNEL_DECLARATIONS:
                 // Not relevant
+                break;
+            case SOURCE_TYPE:
+            case OPERATION_TYPE:
                 break;
 
                 // Im special
