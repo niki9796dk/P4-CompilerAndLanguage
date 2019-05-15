@@ -148,7 +148,6 @@ class SymbolTableTest {
 
     @Test
     void isPredefinedOperation() {
-        assertTrue(this.s.isPredefinedOperation("Addition"));
         assertTrue(this.s.isPredefinedOperation("Multiplication"));
         assertTrue(this.s.isPredefinedOperation("Subtraction"));
         assertTrue(this.s.isPredefinedOperation("_Addition"));

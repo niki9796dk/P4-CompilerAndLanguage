@@ -51,12 +51,6 @@ class ScopeTest {
     }
 
     @Test
-    void setVariable02() {
-        Node node = new AssignNode();
-        assertThrows(IllegalArgumentException.class, () -> s.setVariable(node));
-    }
-
-    @Test
     void getVariable01() {
         BlockNode node = new BlockNode("blocknode_id");
         this.s.setVariable(node);
