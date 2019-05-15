@@ -33,7 +33,7 @@ public class SymbolTable implements SymbolTableInterface {
      */
     private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
             // Matrix arithmetic operations
-            "Addition", "Multiplication", "Subtraction",
+            "Multiplication",
             // Unitwise Arithmetic operations
             "_Addition", "_Multiplication", "_Subtraction", "_Division",
             // Activation functions
@@ -92,8 +92,8 @@ public class SymbolTable implements SymbolTableInterface {
     /**
      * Gets a specific BlockScope from an id
      *
-     * @param id The id of the desired blockscope.
-     * @return The blockscope with the id, or Null if no such blockscope exists.
+     * @param id The id of the desired block scope.
+     * @return The block scope with the id, or Null if no such block scope exists.
      */
     @Override
     public BlockScope getBlockScope(String id) {

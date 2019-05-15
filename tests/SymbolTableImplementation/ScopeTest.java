@@ -1,20 +1,21 @@
 package SymbolTableImplementation;
 
 import AST.Nodes.AbstractNodes.Node;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
+import AST.Nodes.NodeClasses.NamedNodes.AssignNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockTypeNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
+import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
+import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import Enums.AnsiColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ScopeTest {
 
@@ -34,8 +35,19 @@ class ScopeTest {
     }
 
     @Test
-    void setVariable() {
+    void setVariable01() {
         s.setVariable(new BlockNode("blocknode_id"));
+    }
+
+    @Test
+    void setVariable02() {
+        ProcedureNode procedureNode = new ProcedureNode("proc");
+        ParamsNode paramsNode = new ParamsNode();
+        SizeNode sizeNode = new SizeNode(1, 2);
+        procedureNode.adoptChildren(paramsNode);
+        paramsNode.adoptChildren(sizeNode);
+        this.s.setVariable(sizeNode);
+        assertEquals(sizeNode, s.getVariable(sizeNode).getNode());
     }
 
     @Test

@@ -59,7 +59,7 @@
 
     <target name="run" depends="compile">
         <java classname="AutoGen.MainParse">
-            <arg value='${inputFilePath}'/>
+            <arg result='${inputFilePath}'/>
             <classpath refid="lib"/>
             <classpath location="src"/>
         </java>

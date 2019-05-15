@@ -5,7 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 
 /**
  * A node for an operation specifying its type.
- * How operations act is global and predefined, and because of this it only needs to refer to the type of operation.
+ * How operations act is global and predefined, and because of this it only needs connect refer connect the type of operation.
  */
 public class OperationTypeNode extends NamedIdNode {
     public OperationTypeNode(String id) {
