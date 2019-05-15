@@ -18,4 +18,11 @@ class IllegalProcedureCallScopeExceptionTest {
             throw new IllegalProcedureCallScopeException("message");
         });
     }
+
+    @Test
+    void throwable() {
+        assertThrows(RuntimeException.class, () -> {
+            throw new IllegalProcedureCallScopeException(new RuntimeException());
+        });
+    }
 }

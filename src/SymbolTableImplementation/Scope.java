@@ -15,6 +15,7 @@ import Enums.AnsiColor;
  * Keeps track of what variables are within the scope of a node.
  */
 public class Scope {
+
     private String id;
     private NamedTable<VariableEntry> scope;
     private AbstractNode node;
@@ -55,6 +56,17 @@ public class Scope {
         }
 
         this.scope.setEntry(node.getId(), new VariableEntry(node));
+    }
+
+    /**
+     * @param node Returns the node of which this is a scope of.
+     */
+    public void setVariable(Node node) {
+        if (node instanceof NamedIdNode)
+            this.scope.setEntry(((NamedIdNode) node).getId(), new VariableEntry((NamedIdNode) node));
+        else {
+            throw new IllegalArgumentException("Input \"node\" must be subclass of NamedIdNode");
+        }
     }
 
     /**

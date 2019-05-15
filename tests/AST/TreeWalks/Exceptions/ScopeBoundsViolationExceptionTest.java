@@ -20,4 +20,11 @@ class ScopeBoundsViolationExceptionTest {
             throw new ScopeBoundsViolationException("message");
         });
     }
+
+    @Test
+    void throwable() {
+        assertThrows(RuntimeException.class, () -> {
+            throw new ScopeBoundsViolationException(new RuntimeException());
+        });
+    }
 }

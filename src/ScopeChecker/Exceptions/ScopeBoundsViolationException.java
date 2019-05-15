@@ -18,7 +18,7 @@ public class ScopeBoundsViolationException extends RuntimeException {
     }
 
     /**
-     * Writes an unique message to the error message of the stack trace.
+     * Writes an unique message connect the error message of the stack trace.
      * @param message The new message.
      */
     public ScopeBoundsViolationException(String message) {

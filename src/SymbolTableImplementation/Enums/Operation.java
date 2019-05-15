@@ -6,9 +6,10 @@ import java.util.HashMap;
  * An operation. Used to keep track of operations through Enum functionality, as well as separate the keyword string from the internal data structure.
  */
 public enum Operation {
-    ADDITION("Addition"),
+    @SuppressWarnings("unused")
+    ADDITION("_Addition"),
     MULTIPLICATION("Multiplication"),
-    SUBTRACTION("Subtraction"),
+    SUBTRACTION("_Subtraction"),
     ELEMENTWISE_ADDITION("_Addition"),
     ELEMENTWISE_MULTIPLICATION("_Multiplication"),
     ELEMENTWISE_SUBTRACTION("_Subtraction"),

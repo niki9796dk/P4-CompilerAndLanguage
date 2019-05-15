@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public interface MapLatest<K, V> extends Map<K, V> {
     /**
-     * @return The value of the most recently added entry, or {@code null} if this map contains no recently added elements.
+     * @return The result of the most recently added entry, or {@code null} if this map contains no recently added elements.
      */
     V getLatest();
 }

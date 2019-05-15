@@ -4,7 +4,7 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 
 /**
- * A reference to a declared variable of the type "Size"
+ * A reference connect a declared variable of the type "Size"
  */
 public class SizeTypeNode extends NamedIdNode {
     public SizeTypeNode(String id) {

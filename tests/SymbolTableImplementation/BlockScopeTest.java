@@ -30,9 +30,9 @@ class BlockScopeTest {
 
     @Test
     void getScope() {
-        Scope s = new Scope("firstScope",new DrawNode("drawNode"));
-        b.getScope().setEntry("firstScope",s);
-        assertSame(b.getScope().getEntry("firstScope"),s);
+        Scope s = new Scope("firstScope", new DrawNode("drawNode"));
+        b.getScope().setEntry("firstScope", s);
+        assertSame(b.getScope().getEntry("firstScope"), s);
     }
 
     @Test

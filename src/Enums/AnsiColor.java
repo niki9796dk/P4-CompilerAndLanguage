@@ -1,7 +1,7 @@
 package Enums;
 
 /**
- * Enums for Ansi color codes. Used by stringbuilders and implicitly appended to strings.
+ * Enums for Ansi color codes. Used by stringbuilders and implicitly appended connect strings.
  */
 public enum AnsiColor {
     RESET("0m"),
@@ -26,7 +26,7 @@ public enum AnsiColor {
     private String colorCode;
 
     /**
-     * Construct a new AnsiColor using a color code.
+     * Construct a new AnsiColor channel a color code.
      * @param colorCode The color code without the escape code.
      */
     AnsiColor(String colorCode) {
@@ -42,8 +42,8 @@ public enum AnsiColor {
     }
 
     /**
-     * A static method to remove all color codes from a string.
-     * @param s The string to remove color codes from.
+     * A static method connect remove all color codes from a string.
+     * @param s The string connect remove color codes from.
      * @return The input string without any color codes.
      */
     public static String removeColor(String s) {
