@@ -10,6 +10,9 @@ import Enums.AnsiColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SymbolTableTest {
@@ -32,6 +35,17 @@ class SymbolTableTest {
         this.n2 = new SizeTypeNode("n2");
         this.n3 = new SizeTypeNode("n3");
         this.bn = new BlueprintNode();
+    }
+
+    @Test
+    void getMainBlocks() {
+        assertNull(this.s.getMainBlocks());
+    }
+
+    @Test
+    void setMainBlocks() {
+        this.s.setMainBlocks(new ArrayList<>());
+        assertNotNull(this.s.getMainBlocks());
     }
 
     @Test

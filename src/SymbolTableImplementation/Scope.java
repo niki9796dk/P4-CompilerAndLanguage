@@ -15,6 +15,7 @@ import Enums.AnsiColor;
  * Keeps track of what variables are within the scope of a node.
  */
 public class Scope {
+
     private String id;
     private NamedTable<VariableEntry> scope;
     private AbstractNode node;
