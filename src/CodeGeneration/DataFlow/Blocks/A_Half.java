@@ -1,10 +1,10 @@
 package CodeGeneration.DataFlow.Blocks;
 
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operation;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Division;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
 /// (X, Y) -> ApBmB -> Z
@@ -18,7 +18,7 @@ public class A_Half extends AbstractBlock {
                 .addNewOutputLabel("out", new ListChannel());
 
         // Blueprint
-        AbstractOperation div = new _Division();
+        Operation div = new _Division();
 
         Source twoMatrix = new Source(MatrixBuilder.buildConstant(2, 2, 2));
 
