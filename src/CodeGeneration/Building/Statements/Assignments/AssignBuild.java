@@ -6,11 +6,23 @@ import CodeGeneration.Building.Statements.SubStatement;
 
 public class AssignBuild implements Statement {
     private String leftVar;
-    private SubStatement initBuild;
+    private InitBuild initBuild;
+
+    private AssignBuild(String leftVar) {
+        this.leftVar = leftVar;
+    }
+
+    public AssignBuild(String leftVar, InitBuild initBuild) {
+        this(leftVar);
+        this.initBuild = initBuild;
+    }
 
     public AssignBuild(String leftVar, String initBuild) {
-        this.leftVar = leftVar;
-        this.initBuild = new InitBuild(initBuild);
+        this(leftVar, new InitBuild(initBuild));
+    }
+
+    public AssignBuild(String leftVar, String initBuild, Statement ... paramStatements) {
+        this(leftVar, new InitBuild(initBuild, paramStatements));
     }
 
     @Override

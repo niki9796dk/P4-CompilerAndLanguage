@@ -1,8 +1,8 @@
 package CodeGeneration.Building.Statements.Instantiations;
 
-import CodeGeneration.Building.Statements.SubStatement;
+import CodeGeneration.Building.Statement;
 
-public class InitSize implements SubStatement {
+public class InitSize implements Statement {
     private int valueA;
     private int valueB;
 
