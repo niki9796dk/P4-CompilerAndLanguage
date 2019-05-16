@@ -5,12 +5,10 @@ import DataStructures.Pair;
 
 import java.util.List;
 
-public interface CodeScope {
+public interface CodeScope extends ParameterCollection, StatementCollection {
     String getId();
-    List<Statement> getStatements();
-    List<Pair<NodeEnum, String>> getParameters();
-
     void setId(String id);
-    void addStatement(Statement statement);
-    void addParameter(Pair<NodeEnum, String> parameter);
+
+    ParameterCollection getParameters();
+    StatementCollection getStatements();
 }
