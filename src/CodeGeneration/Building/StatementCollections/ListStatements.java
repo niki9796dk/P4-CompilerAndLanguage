@@ -25,7 +25,7 @@ public class ListStatements implements StatementCollection {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("{");
+        builder.append("{\n");
 
         for (Statement statement : this.getStatementList()) {
             builder.append(statement)

@@ -23,13 +23,11 @@ public class InitBuild implements Statement {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("(new ")
+        builder.append("new ")
                 .append(buildId)
                 .append("(");
 
-
-
-        builder.append("))");
+        builder.append(")");
 
         return builder.toString();
     }

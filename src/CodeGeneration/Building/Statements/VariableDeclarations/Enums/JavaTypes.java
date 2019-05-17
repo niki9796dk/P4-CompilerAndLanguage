@@ -3,6 +3,8 @@ package CodeGeneration.Building.Statements.VariableDeclarations.Enums;
 public enum JavaTypes {
     BLOCK("Block"),
     OPERATION("Operation"),
+    SOURCE("Source"),
+    SIZE("Pair<Integer, Integer>"),
     CHANNEL("Channel");
 
     private String str;

@@ -13,6 +13,6 @@ public class InitSize implements Statement {
 
     @Override
     public String toString() {
-        return "(new Pair<Integer, Integer>(" + this.valueA + ", " + this.valueB + "))";
+        return "new Pair<Integer, Integer>(" + this.valueA + ", " + this.valueB + ")";
     }
 }
