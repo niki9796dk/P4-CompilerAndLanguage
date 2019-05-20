@@ -70,6 +70,8 @@ public class MainParse {
 
         new RecursiveVisitor(symbolTable, new SemanticAnalysisVisitor(symbolTable)).startRecursiveWalk();
 
+        prog.walkTree(new CodeGenerationVisitor(symbolTable));
+
         /*
         prog.walkTree(new ScopeCheckerVisitor(symbolTable));
 

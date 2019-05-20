@@ -29,7 +29,7 @@ public class CallParams implements Statement {
                         .append(", ");
             }
 
-            builder.subSequence(0, builder.length()-2); // Remove last ", " sequence
+            builder.delete(builder.length()-2, builder.length()); // Remove last ", " sequence
         }
 
         builder.append(")");

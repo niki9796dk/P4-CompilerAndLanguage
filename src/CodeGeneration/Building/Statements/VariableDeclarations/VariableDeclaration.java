@@ -1,9 +1,10 @@
 package CodeGeneration.Building.Statements.VariableDeclarations;
 
+import CodeGeneration.Building.Parameter;
 import CodeGeneration.Building.Statement;
 import CodeGeneration.Building.Statements.VariableDeclarations.Enums.JavaTypes;
 
-public abstract class VariableDeclaration implements Statement {
+public abstract class VariableDeclaration implements Statement, Parameter {
     private JavaTypes type;
     private String identifier;
 

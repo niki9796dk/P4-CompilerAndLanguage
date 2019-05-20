@@ -31,7 +31,7 @@ public class ListParameters implements ParameterCollection {
                         .append(", ");
             }
 
-            builder.subSequence(0, builder.length()-2); // Remove last ", " sequence
+            builder.delete(builder.length()-2, builder.length()); // Remove last ", " sequence
         }
 
         builder.append(")"); // Append params end

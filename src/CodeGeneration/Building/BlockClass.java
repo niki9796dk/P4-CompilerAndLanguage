@@ -25,6 +25,10 @@ public class BlockClass {
         return blueprint;
     }
 
+    public void addProcedure(CodeScope procedure) {
+        this.procedures.add(procedure);
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(AUTOGEN_MESSAGE);
@@ -85,6 +89,7 @@ public class BlockClass {
         imports.add("CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock");
 
         // Channels
+        imports.add("CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel");
         imports.add("CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel");
 
         // Operations
