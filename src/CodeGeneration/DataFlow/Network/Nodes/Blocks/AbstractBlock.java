@@ -1,5 +1,6 @@
 package CodeGeneration.DataFlow.Network.Nodes.Blocks;
 
+import CodeGeneration.DataFlow.Network.Node;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.utility.Print;
@@ -127,6 +128,26 @@ public abstract class AbstractBlock implements Block {
         myOutChannel.tether(targetChannel);
 
         return null;
+    }
+
+    @Override
+    public Block receiveGroupConnection(Node... nodes) {
+        LinkedList<Channel> inputKeys = new LinkedList<>(this.inputChannels.values());
+
+        if (inputKeys.size() != nodes.length)
+            throw new IllegalArgumentException("The amount of group connections MUST match the amount of inputs.");
+
+        for (Node node : nodes){
+            Channel channel = null;
+
+            if(node instanceof Channel) channel = (Channel) node;
+            else if(node instanceof Block) ((Block) node).getFirstOutput();
+            else throw new IllegalArgumentException("Input must be a block or channel in the current implementation");
+            assert channel != null;
+
+            channel.tether(inputKeys.pollFirst());
+        }
+        return this;
     }
 
     @Override

@@ -13,6 +13,8 @@ public interface Block extends Node {
     Block connectTo(Block toBlock, String fromChannel, String toChannel);
     Block connectTo(Channel channel);
 
+    Block receiveGroupConnection(Node... nodes);
+
     Block receiveGroupConnection(Block... blocks);
 
     Block receiveGroupConnection(Channel... channels);
@@ -21,4 +23,14 @@ public interface Block extends Node {
 
     Map<String, Channel> getInputChannels();
     Map<String, Channel> getOutputChannels();
+
+
+    default Channel getFirstOutput(){
+        return this.getOutputChannels().values().iterator().next();
+    }
+
+    default Channel getFirstInput(){
+        return this.getInputChannels().values().iterator().next();
+    }
+
 }
