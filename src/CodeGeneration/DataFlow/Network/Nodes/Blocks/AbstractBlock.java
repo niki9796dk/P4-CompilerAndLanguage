@@ -5,15 +5,13 @@ import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractBlock implements Block {
     private Print print = new Print(AnsiColor.PURPLE, "Block." + this.getClass().getSimpleName());
 
-    private Map<String, Channel> inputChannels = new HashMap<>(2);
-    private Map<String, Channel> outputChannels = new HashMap<>(1);
+    private LinkedHashMap<String, Channel> inputChannels = new LinkedHashMap<>(2);
+    private LinkedHashMap<String, Channel> outputChannels = new LinkedHashMap<>(1);
 
     /**
      * Add an input channel
@@ -121,6 +119,32 @@ public abstract class AbstractBlock implements Block {
 
 
         ///////
+        return this;
+    }
+
+    public Block recieveGroupConnection(Block... blocks) {
+        for (Block block : blocks)
+            if (block.getOutputChannels().size() != 1)
+                throw new IllegalArgumentException("The amount of outputs in every input block MUST be 1!");
+
+        Channel[] channels = new Channel[blocks.length];
+
+        int i = 0;
+        for(Block block: blocks)
+            channels[i++] = block.getOutputChannels().values().iterator().next();
+
+        return this.recieveGroupConnection(channels);
+    }
+
+    public Block recieveGroupConnection(Channel... channels) {
+        LinkedList<String> inputKeys = new LinkedList<>(this.inputChannels.keySet());
+
+        if (inputKeys.size() != channels.length)
+            throw new IllegalArgumentException("The amount of group connections MUST match the amount of inputs.");
+
+        for (Channel channel : channels)
+            channel.tether(this.inputChannels.get(inputKeys.pollFirst()));
+
         return this;
     }
 
