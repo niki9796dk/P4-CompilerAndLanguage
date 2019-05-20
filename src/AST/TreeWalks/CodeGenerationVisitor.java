@@ -4,13 +4,9 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
-import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
-import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
+import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
-import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import CodeGeneration.Building.BlockClass;
 import CodeGeneration.Building.CodeScope;
@@ -21,7 +17,9 @@ import CodeGeneration.Building.Statements.Assignments.AssignBuild;
 import CodeGeneration.Building.Statements.Assignments.AssignVar;
 import CodeGeneration.Building.Statements.Calls.CallParams;
 import CodeGeneration.Building.Statements.Calls.ProcedureCall;
-import CodeGeneration.Building.Statements.Connections.SingleChain;
+import CodeGeneration.Building.Statements.Connections.GroupChain;
+import CodeGeneration.Building.Statements.Connections.NodeToChannelChain;
+import CodeGeneration.Building.Statements.Connections.TetherChannels;
 import CodeGeneration.Building.Statements.Instantiations.InitBuild;
 import CodeGeneration.Building.Statements.Instantiations.InitSize;
 import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDeclarationIn;
@@ -30,9 +28,6 @@ import CodeGeneration.Building.Statements.Selectors.DotSelector;
 import CodeGeneration.Building.Statements.Selectors.Selector;
 import CodeGeneration.Building.Statements.VariableDeclarations.*;
 import DataStructures.Pair;
-import SemanticAnalysis.Datastructures.HashSetStack;
-import SemanticAnalysis.Exceptions.NoMainBlockException;
-import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.SymbolTable;
 
@@ -92,15 +87,9 @@ public class CodeGenerationVisitor extends ScopeTracker {
 
                 break;
 
-            case PROCEDURE_CALL:
-                this.currentCodeScope.addStatement(this.getStatementFromNode(node));
-                break;
-
-            case CHAIN:
-                this.handleChainNode((ChainNode) node);
-                break;
-
             // No action enums
+            case PROCEDURE_CALL:// Post order
+            case CHAIN:         // Post order
             case SELECTOR:      // Handled by other enums
             case DRAW:          // Handled by other enums
             case SIZE:          // Handled by other enums
@@ -134,8 +123,6 @@ public class CodeGenerationVisitor extends ScopeTracker {
             break;
 
             case GROUP:
-            case CHAIN:
-            case PROCEDURE_CALL:
             case PARAMS:
             case SELECTOR:
             case DRAW:
@@ -154,6 +141,14 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
             case CHANNEL_DECLARATIONS:
+                break;
+
+            case PROCEDURE_CALL:
+                this.currentCodeScope.addStatement(this.getStatementFromNode(node));
+                break;
+
+            case CHAIN:
+                this.handleChainNode((ChainNode) node);
                 break;
 
             case ASSIGN:
@@ -201,19 +196,87 @@ public class CodeGenerationVisitor extends ScopeTracker {
     }
 
     private void singleConnect(AbstractNode leftNode, AbstractNode rightNode) {
-        Pair<String, String> leftInfo = this.transformElemForChaining(leftNode);
-        Pair<String, String> rightInfo = this.transformElemForChaining(rightNode);
+        leftNode = this.transformIfAssign(leftNode);
+        rightNode = this.transformIfAssign(rightNode);
 
-        SingleChain chainStatement = new SingleChain(
-                leftInfo.getKey(), leftInfo.getValue(),
-                rightInfo.getKey(), rightInfo.getValue()
-        );
+        Statement leftStatement = this.getStatementFromNode(leftNode);
+        Statement rightStatement = this.getStatementFromNode(rightNode);
 
-        this.currentCodeScope.addStatement(chainStatement);
+        if ((this.isBlockOperationSource(leftNode) || this.isChannel(leftNode)) && this.isBlockOperationSource(rightNode)) {
+            this.currentCodeScope.addStatement(new GroupChain(rightStatement, leftStatement));
+
+        } else if (this.isChannel(leftNode) && this.isChannel(rightNode)) {
+            this.currentCodeScope.addStatement(new TetherChannels(leftStatement, rightStatement));
+
+        } else if (this.isBlockOperationSource(leftNode) && isChannel(rightNode)) {
+            this.currentCodeScope.addStatement(new NodeToChannelChain(leftStatement, rightStatement));
+
+        } else {
+            throw new RuntimeException("Left: " + leftNode + " - Right: " + rightNode);
+        }
+
+    }
+
+    private AbstractNode transformIfAssign(AbstractNode node) {
+        if (node instanceof AssignNode) {
+            SelectorNode selectorNode = new SelectorNode(((NamedIdNode) node.getChild()).getId());
+            selectorNode.setNumber(((NamedNode) node).getNumber());
+
+            return selectorNode;
+        } else {
+            return node;
+        }
+    }
+
+    private boolean isBlockOperationSource(AbstractNode node) {
+        NodeEnum superType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+        switch (superType) {
+            case BLOCK_TYPE:
+            case OPERATION_TYPE:
+            case SOURCE_TYPE:
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean isChannel(AbstractNode node) {
+        NodeEnum superType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+        switch (superType) {
+            case CHANNEL_OUT_TYPE:
+            case CHANNEL_IN_TYPE:
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
+                return true;
+        }
+
+        return false;
     }
 
     // Pair<Element, channelId>
-    private Pair<String, String> transformElemForChaining(AbstractNode node) {
+    private Pair<Statement, Statement> transformElemForChaining(AbstractNode node) {
+        NodeEnum superType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+        switch (superType) {
+            case BLOCK_TYPE:
+            case OPERATION_TYPE:
+            case SOURCE_TYPE:
+                break;
+
+            case CHANNEL_OUT_TYPE:
+            case CHANNEL_IN_TYPE:
+                break;
+
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
+                break;
+
+            default:
+                throw new UnexpectedNodeException((NamedNode) node);
+        }
+
         return null;
     }
 
@@ -272,7 +335,13 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 if (node.getChild() instanceof SelectorNode) {
                     return new DotSelector(nodeId, ((NamedIdNode) node.getChild()).getId());
                 } else {
-                    return new Selector(nodeId);
+                    NodeEnum nodeSuperType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+                    if (nodeSuperType == NodeEnum.CHANNEL_IN_MY || nodeSuperType == NodeEnum.CHANNEL_OUT_MY) {
+                        return new DotSelector("this", nodeId);
+                    } else {
+                        return new Selector(nodeId);
+                    }
                 }
 
             case PROCEDURE_CALL:

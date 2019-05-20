@@ -16,6 +16,10 @@ public class SingleChain implements Statement {
         this.channelOut = channelOut;
     }
 
+    public SingleChain(Statement elemIn, Statement channelIn, Statement elemOut, Statement channelOut) {
+        this(elemIn.toString(), channelIn.toString(), elemOut.toString(), channelOut.toString());
+    }
+
     @Override
     public String toString() {
         return this.elemIn + ".connectTo("+ this.elemOut +", \""+ this.channelIn +"\", \""+ this.channelOut +"\")";

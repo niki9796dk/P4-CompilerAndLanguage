@@ -96,30 +96,37 @@ public abstract class AbstractBlock implements Block {
     public Block connectTo(Block toBlock, String fromChannelId, String toChannelId) {
 
         ///////
-        Channel outputChannel;
+        Channel outputChannel = this.getChannel(fromChannelId);
 
-        outputChannel = this.outputChannels.get(fromChannelId);
-        if (outputChannel == null)
-            outputChannel = this.inputChannels.get(fromChannelId);
-
-        if (outputChannel == null)
+        if (outputChannel == null) {
             throw new NullPointerException("outputChannel is null!");
+        }
 
         ///////
         Channel targetChannel = toBlock.getChannel(toChannelId);
 
-        if (targetChannel == null)
+        if (targetChannel == null) {
             throw new NullPointerException("targetChannel is null!");
+        }
 
         ///////
         outputChannel.tether(targetChannel);
 
         ///////
-        // Allow back propagation //
-
-
-        ///////
         return this;
+    }
+
+    @Override
+    public Block connectTo(Channel targetChannel) {
+        if (this.outputChannels.values().size() != 1) {
+            throw new RuntimeException("The connectTo(Channel) can only be used, if the block has a total of 1 output channel");
+        }
+
+        Channel myOutChannel = this.getOutputChannels().values().iterator().next();
+
+        myOutChannel.tether(targetChannel);
+
+        return null;
     }
 
     @Override

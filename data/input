@@ -11,6 +11,20 @@ block AnnLayer {
         channel:in oIn = ope.A;
         channel:out oOut = ope.out;
 
+        operation sig1 = build _Sigmoid();
+        operation sig2 = build _Sigmoid();
+
+        sig1 -> sig2;
+
+        build _Sigmoid() -> build _Sigmoid();
+
+        this.in -> sig1;
+        oOut -> sig2;
+        in -> sig1;
+        ope.out -> sig2;
+
+        ope.out -> operation myNewOpe = build _Sigmoid();
+
         myProd(build _Sigmoid());
     }
 
