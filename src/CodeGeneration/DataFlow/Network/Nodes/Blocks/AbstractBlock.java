@@ -134,7 +134,7 @@ public abstract class AbstractBlock implements Block {
             Channel channel = null;
 
             if(node instanceof Channel) channel = (Channel) node;
-            else if(node instanceof Block) ((Block) node).getFirstOutput()
+            else if(node instanceof Block) ((Block) node).getFirstOutput();
             else throw new IllegalArgumentException("Input must be a block or channel in the current implementation");
             assert channel != null;
 
