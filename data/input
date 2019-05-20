@@ -1,42 +1,20 @@
 block AnnLayer {
+    mychannel:in in;
+    mychannel:out out;
 
-  channel:in in1;
-  channel:out out1;
-  channel:in in2;
-  channel:out out2;
+    blueprint(){
+        mychannel:in input = this.in;
+        mychannel:out output = this.out;
 
-  blueprint(size si, blueprint blue){
-    abc();
+        operation ope = build Multiplication();
 
-    block a = build Abs();
+        channel:in oIn = ope.A;
+        channel:out oOut = ope.out;
 
-    block b = build Abs();
+        myProd(build _Sigmoid());
+    }
 
-    a = build Abs();
-    b = a;
-    a = build Abs();
-  }
-
-  procedure abc(block abc, blueprint blue123) {
-
-  }
-}
-
-block Abs {
-  channel:in in;
-  channel:out out;
-
-  blueprint(blueprint blue, size si){
-    ;;;;;
-  }
-}
-
-
-block Hmmm {
-  channel:in in;
-  channel:out out;
-
-  blueprint(blueprint blue, size si){
-    ;;;;;
-  }
+    procedure myProd(operation myBlock) {
+        this.in -> myBlock -> this.out;
+    }
 }
