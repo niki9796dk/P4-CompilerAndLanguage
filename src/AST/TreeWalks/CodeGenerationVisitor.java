@@ -6,6 +6,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DrawNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import CodeGeneration.Building.BlockClass;
@@ -13,14 +14,18 @@ import CodeGeneration.Building.CodeScope;
 import CodeGeneration.Building.CodeScopes.SimpleCodeScope;
 import CodeGeneration.Building.Parameter;
 import CodeGeneration.Building.Statement;
+import CodeGeneration.Building.Statements.Assignments.AssignBlueprint;
 import CodeGeneration.Building.Statements.Assignments.AssignBuild;
+import CodeGeneration.Building.Statements.Assignments.AssignSize;
 import CodeGeneration.Building.Statements.Assignments.AssignVar;
 import CodeGeneration.Building.Statements.Calls.CallParams;
 import CodeGeneration.Building.Statements.Calls.ProcedureCall;
 import CodeGeneration.Building.Statements.Connections.GroupChain;
 import CodeGeneration.Building.Statements.Connections.NodeToChannelChain;
 import CodeGeneration.Building.Statements.Connections.TetherChannels;
+import CodeGeneration.Building.Statements.Instantiations.InitBlueprint;
 import CodeGeneration.Building.Statements.Instantiations.InitBuild;
+import CodeGeneration.Building.Statements.Instantiations.InitBuildBlueprint;
 import CodeGeneration.Building.Statements.Instantiations.InitSize;
 import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDeclarationIn;
 import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDeclarationOut;
@@ -29,6 +34,7 @@ import CodeGeneration.Building.Statements.Selectors.Selector;
 import CodeGeneration.Building.Statements.VariableDeclarations.*;
 import DataStructures.Pair;
 import SymbolTableImplementation.BlockScope;
+import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 
 import java.util.*;
@@ -79,13 +85,16 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case BLOCK_TYPE:
             case SOURCE_TYPE:
             case SIZE_TYPE:
-                if (node.getParent() instanceof ParamsNode) {
-                    this.currentCodeScope.addParameter((Parameter) this.getStatementFromNode(node));
-                } else {
-                    this.currentCodeScope.addStatement(this.getStatementFromNode(node));
-                }
+            case BLUEPRINT_TYPE:
+                Statement statement = this.getStatementFromNode(node);
 
+                if (node.getParent() instanceof ParamsNode) {
+                    this.currentCodeScope.addParameter((Parameter) statement);
+                } else {
+                    this.currentCodeScope.addStatement(statement);
+                }
                 break;
+
 
             // No action enums
             case PROCEDURE_CALL:// Post order
@@ -158,9 +167,16 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 String leftVar = leftNode.getId();
 
                 if (rightNode instanceof BuildNode) {
-                    this.currentCodeScope.addStatement(new AssignBuild(leftVar, (InitBuild) this.getStatementFromNode(rightNode)));
+                    Statement buildStatement = this.getStatementFromNode(rightNode);
+                    Scope subScope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
+
+                    this.currentCodeScope.addStatement(new AssignBuild(subScope, leftVar, buildStatement));
                 } else if (rightNode instanceof SelectorNode) {
                     this.currentCodeScope.addStatement(new AssignVar(leftVar, this.getStatementFromNode(rightNode).toString()));
+                } else if (rightNode instanceof DrawNode) {
+                    this.currentCodeScope.addStatement(new AssignBlueprint(leftVar, (InitBlueprint) this.getStatementFromNode(rightNode)));
+                } else if (rightNode instanceof SizeNode) {
+                    this.currentCodeScope.addStatement(new AssignSize(leftVar, (InitSize) this.getStatementFromNode(rightNode)));
                 } else {
                     throw new IllegalArgumentException("Did not expect this: " + rightNode);
                 }
@@ -255,31 +271,6 @@ public class CodeGenerationVisitor extends ScopeTracker {
         return false;
     }
 
-    // Pair<Element, channelId>
-    private Pair<Statement, Statement> transformElemForChaining(AbstractNode node) {
-        NodeEnum superType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
-
-        switch (superType) {
-            case BLOCK_TYPE:
-            case OPERATION_TYPE:
-            case SOURCE_TYPE:
-                break;
-
-            case CHANNEL_OUT_TYPE:
-            case CHANNEL_IN_TYPE:
-                break;
-
-            case CHANNEL_IN_MY:
-            case CHANNEL_OUT_MY:
-                break;
-
-            default:
-                throw new UnexpectedNodeException((NamedNode) node);
-        }
-
-        return null;
-    }
-
     private Statement getStatementFromNode(AbstractNode abstractNode) {
         NamedNode node = (NamedNode) abstractNode;
 
@@ -302,33 +293,40 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 return new SourceDeclaration(nodeId);
             case SIZE_TYPE:
                 return new SizeDeclaration(nodeId);
+            case BLUEPRINT_TYPE:
+                return new BlueprintDeclaration(nodeId);
 
-            // Init enums
+                // Init enums
             case SIZE:
                 SizeNode sizeNode = (SizeNode) node;
                 return new InitSize(sizeNode.first, sizeNode.second);
 
+            case DRAW:
+                return new InitBlueprint(nodeId);
+
             case BUILD:
-                NodeEnum superType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+                boolean isNotBlueprintBuild = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope).getVariable(nodeId) == null;
 
-                switch (superType) {
-                    case BLOCK_TYPE:
-                    case SOURCE_TYPE:
-                    case OPERATION_TYPE:
-                        String subTypeOfBuild = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+                if (isNotBlueprintBuild) {
+                    String subTypeOfBuild = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
-                        ParamsNode params = node.findFirstChildOfClass(ParamsNode.class);
+                    ParamsNode buildParams = node.findFirstChildOfClass(ParamsNode.class);
 
-                        if (params != null) {
-                            return new InitBuild(subTypeOfBuild, this.getStatementFromNode(params));
+                    if (buildParams != null) {
+                        return new InitBuild(subTypeOfBuild, this.getStatementFromNode(buildParams));
 
-                        } else {
-                            return new InitBuild(subTypeOfBuild);
-                        }
+                    } else {
+                        return new InitBuild(subTypeOfBuild);
+                    }
+                } else {
+                    ParamsNode buildParams = node.findFirstChildOfClass(ParamsNode.class);
 
-                    case BLUEPRINT_TYPE:
-                        return null; // TODO: FIX
+                    if (buildParams != null) {
+                        return new InitBuildBlueprint(nodeId, null, this.getStatementFromNode(buildParams));
 
+                    } else {
+                        return new InitBuildBlueprint(nodeId, null);
+                    }
                 }
 
             case SELECTOR:
@@ -345,24 +343,24 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 }
 
             case PROCEDURE_CALL:
-                ParamsNode params = node.findFirstChildOfClass(ParamsNode.class);
+                ParamsNode procedureParams = node.findFirstChildOfClass(ParamsNode.class);
                 SelectorNode procSelector = node.findFirstChildOfClass(SelectorNode.class);
 
-                if (params != null) {
-                    return new ProcedureCall(procSelector.getId(), (CallParams) this.getStatementFromNode(params));
+                if (procedureParams != null) {
+                    return new ProcedureCall(procSelector.getId(), (CallParams) this.getStatementFromNode(procedureParams));
 
                 } else {
                     return new ProcedureCall(procSelector.getId());
                 }
 
             case PARAMS:
-                List<Statement> buildParams = new ArrayList<>();
+                List<Statement> params = new ArrayList<>();
 
                 for (AbstractNode pNode = node.getChild(); pNode != null; pNode = pNode.getSib()) {
-                    buildParams.add(this.getStatementFromNode(pNode));
+                    params.add(this.getStatementFromNode(pNode));
                 }
 
-                return new CallParams(buildParams.toArray(new Statement[0]));
+                return new CallParams(params.toArray(new Statement[0]));
 
             case CHANNEL_IN_MY:
                 if (BlockScope.CHANNELS.equals(this.currentSubScope)) {
@@ -383,7 +381,6 @@ public class CodeGenerationVisitor extends ScopeTracker {
 
             case GROUP:
             case CHAIN:
-            case DRAW:
             case ASSIGN:
                 break;
 

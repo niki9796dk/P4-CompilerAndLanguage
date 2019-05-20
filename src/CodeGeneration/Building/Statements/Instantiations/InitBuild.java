@@ -1,6 +1,7 @@
 package CodeGeneration.Building.Statements.Instantiations;
 
 import CodeGeneration.Building.Statement;
+import CodeGeneration.Building.Statements.Calls.CallParams;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +22,6 @@ public class InitBuild implements Statement {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("new ")
-                .append(buildId)
-                .append("(");
-
-        builder.append(")");
-
-        return builder.toString();
+        return "new " + buildId + new CallParams(params);
     }
 }

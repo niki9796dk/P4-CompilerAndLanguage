@@ -3,32 +3,16 @@ block AnnLayer {
     mychannel:out out;
 
     blueprint(){
-        mychannel:in input = this.in;
-        mychannel:out output = this.out;
-
-        operation ope = build Multiplication();
-
-        channel:in oIn = ope.A;
-        channel:out oOut = ope.out;
-
-        operation sig1 = build _Sigmoid();
-        operation sig2 = build _Sigmoid();
-
-        sig1 -> sig2;
-
-        build _Sigmoid() -> build _Sigmoid();
-
-        this.in -> sig1;
-        oOut -> sig2;
-        in -> sig1;
-        ope.out -> sig2;
-
-        ope.out -> operation myNewOpe = build _Sigmoid();
-
-        myProd(build _Sigmoid());
+        blueprint julla = draw _Sigmoid;
     }
 
-    procedure myProd(operation myBlock) {
-        this.in -> myBlock -> this.out;
+    procedure myProd(blueprint myOpe) {
+        operation abc = build myOpe();
+
+        this.in -> abc -> this.out;
+    }
+
+    procedure myProd2(blueprint myOpe) {
+        this.in -> build myOpe() -> this.out;
     }
 }
