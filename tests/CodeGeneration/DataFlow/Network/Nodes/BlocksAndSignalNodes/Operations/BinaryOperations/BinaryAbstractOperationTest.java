@@ -6,22 +6,26 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Bin
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Multiplication;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Subtraction;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Input;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.IllegalMethodException;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BinaryAbstractOperationTest {
 
-    ArrayList<BinaryAbstractOperation> operations;
-    ArrayList<Matrix> expectedResults;
-    Input in1, in2;
+    private ArrayList<BinaryAbstractOperation> operations;
+    private ArrayList<Matrix> expectedResultsOperations;
+    private Input in1, in2;
 
     @BeforeEach
     void beforeEach() {
@@ -42,31 +46,31 @@ class BinaryAbstractOperationTest {
                 .addRow(2, 4)
         );
 
-        expectedResults = new ArrayList<>();
+        expectedResultsOperations = new ArrayList<>();
 
-        expectedResults.add(new MatrixBuilder()
+        expectedResultsOperations.add(new MatrixBuilder()
                 .addRow(7, 9)
                 .addRow(17, 19)
                 .buildDenseMatrix()
         );
-        expectedResults.add(new MatrixBuilder()
+        expectedResultsOperations.add(new MatrixBuilder()
                 .addRow(4, 3)
                 .addRow(5, 8)
                 .buildDenseMatrix()
         );
-        expectedResults.add(new MatrixBuilder()
+        expectedResultsOperations.add(new MatrixBuilder()
                 .addRow(1d / 3d, 2)
                 .addRow(1.5, 1)
                 .buildDenseMatrix()
         );
 
-        expectedResults.add(new MatrixBuilder()
+        expectedResultsOperations.add(new MatrixBuilder()
                 .addRow(3, 2)
                 .addRow(6, 16)
                 .buildDenseMatrix()
         );
 
-        expectedResults.add(new MatrixBuilder()
+        expectedResultsOperations.add(new MatrixBuilder()
                 .addRow(-2, 1)
                 .addRow(1, 0)
                 .buildDenseMatrix()
@@ -75,63 +79,55 @@ class BinaryAbstractOperationTest {
 
     }
 
-    @Test
-    void performOperation() {
+    @RepeatedTest(5)
+    void performOperation(RepetitionInfo r) {
+        int i = r.getCurrentRepetition() - 1;
 
-        for (int i = 0; i < operations.size(); i++) {
-            BinaryAbstractOperation op = operations.get(i);
-            Matrix expected = expectedResults.get(i);
+        BinaryAbstractOperation op = operations.get(i);
+        Matrix expected = expectedResultsOperations.get(i);
 
-            in1.connectTo(op, "out", "in1");
-            in2.connectTo(op, "out", "in2");
-            op.performOperation();
-            Matrix result = op.getOutputChannel().getResult();
+        in1.connectTo(op, "out", "in1");
+        in2.connectTo(op, "out", "in2");
+        op.performOperation();
+        Matrix result = op.getOutputChannel().getResult();
 
-            Print.echo(AnsiColor.PURPLE, op.getOutputChannel().getResult().toString());
-            assertEquals(result, expected);
-        }
+        Print.echo(AnsiColor.PURPLE, op.getOutputChannel().getResult().toString());
+        assertEquals(result, expected);
+
     }
 
-    @Test
-    void performBackpropagationOperation() {
+    @RepeatedTest(4)
+    void performOperationBackprop(RepetitionInfo r) {
+        //Todo: This test
         /*
-        for (int i = 0; i < operations.size(); i++) {
-            BinaryAbstractOperation op = operations.get(i);
-            Matrix expected = expectedResults.get(i);
+        int i = r.getCurrentRepetition();
+        BinaryAbstractOperation op = operations.get(i);
+        Matrix expected = expectedResultsOperations.get(i);
 
-            in1.connectTo(op, "out", "in1");
-            in2.connectTo(op, "out", "in2");
-            op.performOperation();
-            Matrix result = op.getOutputChannel().getResultBackpropagation();
+        in1.connectTo(op, "out", "in1");
+        in2.connectTo(op, "out", "in2");
 
-            Print.echo(AnsiColor.PURPLE, op.getOutputChannel().getResult().toString());
-            assertEquals(result, expected);
-        }
+        op.connectTo(new FillerNode(),"out","in");
 
+        op.performOperation();
+        Matrix result = op.getOutputChannel().getResultBackpropagation();
+
+        Print.echo(AnsiColor.PURPLE, "┄──────────┄\n" + result + "\n┄──────────┄");
          */
     }
 
-    @Test
-    void getOutputChannel() {
+    @RepeatedTest(5)
+    void getOutputChannel(RepetitionInfo r) {
+        int i = r.getCurrentRepetition()-1;
+        BinaryAbstractOperation op = operations.get(i);
+
+        assertNotNull(op.getOutputChannel());
     }
 
     @Test
-    void operation() {
-    }
-
-    @Test
-    void operationBackpropagation() {
-    }
-
-    @Test
-    void calculateIn1Derivatives() {
-    }
-
-    @Test
-    void calculateIn2Derivatives() {
-    }
-
-    @Test
-    void addNewInputLabel() {
+    void addInput(){
+        assertThrows(IllegalArgumentException.class, () -> operations.get(0).addNewInputLabel("in3", new ListChannel()));
+        operations.get(0).addNewInputLabel("in1", new ListChannel());
+        operations.get(0).addNewInputLabel("in2", new ListChannel());
     }
 }

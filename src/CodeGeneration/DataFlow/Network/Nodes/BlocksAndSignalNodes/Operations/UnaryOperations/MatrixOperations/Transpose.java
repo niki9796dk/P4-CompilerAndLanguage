@@ -1,11 +1,11 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.MatrixOperations;
 
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnaryAbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnaryFunctionAbstractOperation;
 import LinearAlgebra.Types.Matrices.Matrix;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
 import jdk.jshell.spi.ExecutionControl;
 
-public class Transpose extends UnaryAbstractOperation {
+public class Transpose extends UnaryFunctionAbstractOperation {
 
     @Override
     protected Matrix operation(Matrix in) {
