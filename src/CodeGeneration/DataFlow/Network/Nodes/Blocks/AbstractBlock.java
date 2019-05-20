@@ -122,7 +122,7 @@ public abstract class AbstractBlock implements Block {
         return this;
     }
 
-    public Block recieveGroupConnection(Block... blocks) {
+    public Block receiveGroupConnection(Block... blocks) {
         for (Block block : blocks)
             if (block.getOutputChannels().size() != 1)
                 throw new IllegalArgumentException("The amount of outputs in every input block MUST be 1!");
@@ -133,10 +133,10 @@ public abstract class AbstractBlock implements Block {
         for(Block block: blocks)
             channels[i++] = block.getOutputChannels().values().iterator().next();
 
-        return this.recieveGroupConnection(channels);
+        return this.receiveGroupConnection(channels);
     }
 
-    public Block recieveGroupConnection(Channel... channels) {
+    public Block receiveGroupConnection(Channel... channels) {
         LinkedList<String> inputKeys = new LinkedList<>(this.inputChannels.keySet());
 
         if (inputKeys.size() != channels.length)
