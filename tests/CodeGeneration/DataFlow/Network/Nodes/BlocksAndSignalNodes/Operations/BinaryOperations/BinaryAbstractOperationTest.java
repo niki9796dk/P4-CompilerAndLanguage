@@ -55,7 +55,7 @@ class BinaryAbstractOperationTest {
                 .buildDenseMatrix()
         );
         expectedResults.add(new MatrixBuilder()
-                .addRow(1 d / 3d, 2)
+                .addRow(1d / 3d, 2)
                 .addRow(1.5, 1)
                 .buildDenseMatrix()
         );
@@ -82,22 +82,15 @@ class BinaryAbstractOperationTest {
             BinaryAbstractOperation op = operations.get(i);
             Matrix expected = expectedResults.get(i);
 
+
             in1.connectTo(op, "out", "in1");
             in2.connectTo(op, "out", "in2");
             op.performOperation();
+            Matrix result = op.getOutputChannel().getResult();
 
             Print.echo(AnsiColor.PURPLE, op.getOutputChannel().getResult().toString());
-//            assertEquals(op.getOutputChannel().getResult(), (expected));
-
-            Matrix result = op.getOutputChannel().getResult();
-            assertEquals(expected.getEntry(0,0),result.getEntry(0,0));
-            assertEquals(expected.getEntry(1,0),result.getEntry(1,0));
-            assertEquals(expected.getEntry(0,1),result.getEntry(0,1));
-            assertEquals(expected.getEntry(1,1),result.getEntry(1,1));
-
-
+            assertEquals(result, expected);
         }
-
     }
 
     @Test
