@@ -12,6 +12,10 @@ public interface Block extends Node {
 
     Block connectTo(Block toBlock, String fromChannel, String toChannel);
 
+    Block receiveGroupConnection(Block... blocks);
+
+    Block receiveGroupConnection(Channel... channels);
+
     Channel getChannel(String channelId);
 
     Map<String, Channel> getInputChannels();

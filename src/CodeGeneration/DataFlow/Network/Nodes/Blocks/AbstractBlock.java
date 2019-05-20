@@ -122,6 +122,7 @@ public abstract class AbstractBlock implements Block {
         return this;
     }
 
+    @Override
     public Block receiveGroupConnection(Block... blocks) {
         for (Block block : blocks)
             if (block.getOutputChannels().size() != 1)
@@ -136,6 +137,7 @@ public abstract class AbstractBlock implements Block {
         return this.receiveGroupConnection(channels);
     }
 
+    @Override
     public Block receiveGroupConnection(Channel... channels) {
         LinkedList<String> inputKeys = new LinkedList<>(this.inputChannels.keySet());
 

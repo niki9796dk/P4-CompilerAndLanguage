@@ -82,7 +82,6 @@ class BinaryAbstractOperationTest {
             BinaryAbstractOperation op = operations.get(i);
             Matrix expected = expectedResults.get(i);
 
-
             in1.connectTo(op, "out", "in1");
             in2.connectTo(op, "out", "in2");
             op.performOperation();
@@ -95,6 +94,21 @@ class BinaryAbstractOperationTest {
 
     @Test
     void performBackpropagationOperation() {
+        /*
+        for (int i = 0; i < operations.size(); i++) {
+            BinaryAbstractOperation op = operations.get(i);
+            Matrix expected = expectedResults.get(i);
+
+            in1.connectTo(op, "out", "in1");
+            in2.connectTo(op, "out", "in2");
+            op.performOperation();
+            Matrix result = op.getOutputChannel().getResultBackpropagation();
+
+            Print.echo(AnsiColor.PURPLE, op.getOutputChannel().getResult().toString());
+            assertEquals(result, expected);
+        }
+
+         */
     }
 
     @Test
