@@ -25,4 +25,7 @@ public interface Channel extends SignalNode {
     default Matrix getResultBackpropagation() {
         return this.getResultBackpropagation(null);
     }
+
+    void clearSource();
+    void clearTargets();
 }

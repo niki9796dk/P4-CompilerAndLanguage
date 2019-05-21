@@ -5,7 +5,6 @@ import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public interface SignalNode extends Node {
-
     boolean isReadyBackpropagation();
 
     boolean isSource();
