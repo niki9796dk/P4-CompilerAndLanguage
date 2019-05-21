@@ -87,12 +87,11 @@ public class FlowChecker {
         return flowStack.empty() ? null : flowStack.peek();
     }
 
-    public void addBuild(NamedIdNode buildInstance, String currentSubScope){
-        buildInstance = (NamedIdNode) typeSystem.followNode(buildInstance, currentBlockId, currentSubScope);
-        String builtThing = typeSystem.getSubTypeOfNode(buildInstance, currentBlockId, currentSubScope);
-        BlockScope blockBuilt = typeSystem.getSymbolTable().getBlockScope(builtThing);
-        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(builtThing);
-        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(builtThing);
+    public void addBuild(BuildNode buildInstance, String currentSubScope){
+        String builtThingId = ((NamedIdNode) typeSystem.followNode(buildInstance, currentBlockId, currentSubScope)).getId();
+        BlockScope blockBuilt = typeSystem.getSymbolTable().getBlockScope(builtThingId);
+        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(builtThingId);
+        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(builtThingId);
 
         if (isSource){
             // Handle Source // TODO: This is a bit hacky
@@ -103,7 +102,7 @@ public class FlowChecker {
             inConnectPoints.add(buildInstance + "out");
             outConnectPoints.add(buildInstance + "A");
 
-            if (!builtThing.equals("_Sigmoid")){
+            if (!builtThingId.equals("_Sigmoid")){
                 outConnectPoints.add(buildInstance + "B");
             }
 
@@ -139,87 +138,91 @@ public class FlowChecker {
         }
     }
 
+    @SuppressWarnings("Duplicates")
     private void chainLink(NamedNode chainChildWithSib, String currentSubScope){
-        NamedIdNode value = ((NamedIdNode) typeSystem.followNode(chainChildWithSib, currentBlockId, currentSubScope));
-        boolean isThis = ("this").equals(value.getId());
-        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(value.getId());
-        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(value.getId());
+        NamedIdNode followToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(chainChildWithSib, currentBlockId, currentSubScope));
+        NamedIdNode followToBase = ((NamedIdNode) typeSystem.followNode(chainChildWithSib, currentBlockId, currentSubScope));
+        boolean isThis = ("this").equals(followToBase.getId());
+        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(followToBase.getId());
+        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(followToBase.getId());
         String inString;
         String outString;
 
+        System.out.println("RRRRRRR: " + followToBuild);
+
         if (isThis){
             // "this" case
-            inString = currentBlockId + ((NamedIdNode) value.getChild()).getId();
-            // When giving to chainLinkOut, it actually needs to be chainChildWithSib and NOT value!
-            outString = chainLinkOut((NamedNode) chainChildWithSib.getSib(), currentSubScope);
-            addConnections(inString, outString);
+            inString = currentBlockId + ((NamedIdNode) followToBase.getChild()).getId();
 
         } else if (isSource || isOperation) {
-            // pipe case
+            // source/operation case
             // TODO: Even more Operation and Source mess
-            inString = value.toString()
+            inString = followToBuild.toString()
                     + "out";
-            outString = chainLinkOut((NamedNode) chainChildWithSib.getSib(), currentSubScope);
-            addConnections(inString, outString);
 
-        } else if (value.getNodeEnum().equals(NodeEnum.SELECTOR)
-                && value.getChild() != null) {
+        } else if (followToBase.getNodeEnum().equals(NodeEnum.SELECTOR)
+                && followToBase.getChild() != null) {
             // pipe.channel case
-            String blockInString = follow_SelectorDotSelectorSafe(value, currentSubScope).toString();
+            String blockInString = follow_SelectorDotSelectorSafe(followToBuild, currentSubScope).toString();
 
-            inString = blockInString + ((NamedIdNode) value.getChild()).getId();
-            outString = chainLinkOut((NamedIdNode) chainChildWithSib.getSib(), currentSubScope);
-            addConnections(inString, outString);
+            inString = blockInString + ((NamedIdNode) followToBase.getChild()).getId();
+
+        } else if (followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)) {
+            inString = currentBlockId + followToBase.getId();
 
         } else {
             // channel variable case
-            inString = value.toString()
+            System.out.println("HMMM: " + followToBuild);
+            inString = followToBuild.toString()
                     + typeSystem.getSymbolTable()
-                    .getBlockScope(value.getId())
+                    .getBlockScope(followToBase.getId())
                     .getChannelDeclarationScope().getNode()
                     .findFirstChildOfClass(MyOutChannelNode.class).getId();
-            outString = chainLinkOut((NamedNode) chainChildWithSib.getSib(), currentSubScope);
-            addConnections(inString, outString);
         }
+
+        // When giving to chainLinkOut, it actually needs to be chainChildWithSib and NOT value!
+        outString = chainLinkOut((NamedNode) chainChildWithSib.getSib(), currentSubScope);
+        addConnections(inString, outString);
     }
 
     private String chainLinkOut(NamedNode outPartOfChain, String currentSubScope){
-        NamedIdNode value = (NamedIdNode) typeSystem.followNode(outPartOfChain, currentBlockId, currentSubScope);
-        boolean isThis = ("this").equals(value.getId());
+        NamedIdNode followToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(outPartOfChain, currentBlockId, currentSubScope));
+        NamedIdNode followToBase = ((NamedIdNode) typeSystem.followNode(followToBuild, currentBlockId, currentSubScope));
+        boolean isThis = ("this").equals(followToBase.getId());
 
         if (isThis){
             // "this" case
-            return currentBlockId + ((NamedIdNode) value.getChild()).getId();
+            return currentBlockId + ((NamedIdNode) followToBase.getChild()).getId();
 
-        } else if (value.getNodeEnum().equals(NodeEnum.BUILD)) {
+        } else if (followToBase.getNodeEnum().equals(NodeEnum.BUILD)) {
             // pipe case
             String idPortion;
 
-            if (typeSystem.getSymbolTable().isPredefinedSource(value.getId())){
+            if (typeSystem.getSymbolTable().isPredefinedSource(followToBase.getId())){
                 // Source case
                 throw new ShouldNotHappenException("A chain entering a Source??");
-            } else if (typeSystem.getSymbolTable().isPredefinedOperation(value.getId())){
+            } else if (typeSystem.getSymbolTable().isPredefinedOperation(followToBase.getId())){
                 // Operation case
                 idPortion = "A";
             } else {
                 // Block case
-                 idPortion = typeSystem.getSymbolTable().getBlockScope(value.getId()).getChannelDeclarationScope().getNode().findFirstChildOfClass(MyInChannelNode.class).getId();
+                 idPortion = typeSystem.getSymbolTable().getBlockScope(followToBase.getId()).getChannelDeclarationScope().getNode().findFirstChildOfClass(MyInChannelNode.class).getId();
             }
 
-            return value + idPortion;
+            return followToBuild + idPortion;
 
-        } else if (value.getNodeEnum().equals(NodeEnum.SELECTOR) && value.getChild() != null) {
+        } else if (followToBase.getNodeEnum().equals(NodeEnum.SELECTOR) && followToBase.getChild() != null) {
             // pipe.channel case
-            String blockInString = follow_SelectorDotSelectorSafe(value, currentSubScope).toString();
-            return blockInString + ((NamedIdNode) value.getChild()).getId();
+            String blockInString = follow_SelectorDotSelectorSafe(followToBuild, currentSubScope).toString();
+            return blockInString + ((NamedIdNode) followToBase.getChild()).getId();
 
-        } else if (value.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || value.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)) {
-            return currentBlockId + value.getId();
+        } else if (followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)) {
+            return currentBlockId + followToBase.getId();
 
         } else {
             // channel variable case
-            return value.toString()
-                    + typeSystem.getSymbolTable().getBlockScope(value.getId())
+            return followToBuild.toString()
+                    + typeSystem.getSymbolTable().getBlockScope(followToBase.getId())
                     .getChannelDeclarationScope()
                     .getNode().findFirstChildOfClass(MyInChannelNode.class).getId();
         }
@@ -228,7 +231,7 @@ public class FlowChecker {
 
     /**
      */
-    private void addAllChannelsOfBlockInstance(NamedIdNode instance, BlockScope theBlock) {
+    private void addAllChannelsOfBlockInstance(BuildNode instance, BlockScope theBlock) {
         // Get all channels
         Scope channelDeclarationScope = theBlock.getChannelDeclarationScope();
 
@@ -270,95 +273,99 @@ public class FlowChecker {
     }
 
     private AbstractNode follow_SelectorDotSelectorSafe(AbstractNode node, String currentSubScope){
-        AbstractNode affasffs = typeSystem.followNode(node, currentBlockId, currentSubScope);
+        AbstractNode affasffs = typeSystem.followNodeToBuild(node, currentBlockId, currentSubScope);
 
         if (affasffs instanceof SelectorNode){
             SelectorNode dummy = new SelectorNode(((SelectorNode) affasffs).getId());
             dummy.setNumber(((SelectorNode) affasffs).getNumber());
 
-            affasffs = typeSystem.followNode(dummy, currentBlockId, currentSubScope);
+            affasffs = typeSystem.followNodeToBuild(dummy, currentBlockId, currentSubScope);
         }
 
         return affasffs;
     }
 
+    @SuppressWarnings("Duplicates")
     private void linkFromGroupMember(AbstractNode in, String out, String currentSubScope){
-        NamedIdNode followedIn = (NamedIdNode) typeSystem.followNode(in, currentBlockId, currentSubScope);
-        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(followedIn.getId());
-        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(followedIn.getId());
+        NamedIdNode followedToBuild = (NamedIdNode) typeSystem.followNodeToBuild(in, currentBlockId, currentSubScope);
+        NamedIdNode followedToBase = (NamedIdNode) typeSystem.followNode(in, currentBlockId, currentSubScope);
+        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(followedToBase.getId());
+        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(followedToBase.getId());
         String inString;
 
-        if (followedIn.getNodeEnum().equals(NodeEnum.SELECTOR)){
-            if (followedIn.getId().equals("this")){
+        if (followedToBuild.getNodeEnum().equals(NodeEnum.SELECTOR)){
+            if (followedToBase.getId().equals("this")){
                 // this. case
-                inString = currentBlockId + ((NamedIdNode) followedIn.getChild()).getId();
+                inString = currentBlockId + ((NamedIdNode) followedToBase.getChild()).getId();
 
             } else {
                 // var. case
-                SelectorNode dummy = new SelectorNode(followedIn.getId());
-                dummy.setNumber(followedIn.getNumber());
+                SelectorNode dummy = new SelectorNode(followedToBase.getId());
+                dummy.setNumber(followedToBase.getNumber());
 
-                inString = typeSystem.followNode(dummy, currentBlockId, currentSubScope) + ((NamedIdNode) followedIn.getChild()).getId();
+                inString = typeSystem.followNodeToBuild(dummy, currentBlockId, currentSubScope) + ((NamedIdNode) followedToBase.getChild()).getId();
 
             }
+
         } else if (isSource || isOperation){
             // Source, Operation case
-            inString = followedIn + "out";
+            inString = followedToBuild + "out";
 
-        } else if (followedIn.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY) || followedIn.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY)){
+        } else if (followedToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY) || followedToBuild.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY)){
             // Own channel case
-            inString = currentBlockId + followedIn.getId();
+            inString = currentBlockId + followedToBuild.getId();
 
         } else {
             // Block case
-            inString = followedIn + typeSystem.getSymbolTable()
-                    .getBlockScope(followedIn.getId())
+            inString = followedToBuild + typeSystem.getSymbolTable()
+                    .getBlockScope(followedToBase.getId())
                     .getChannelDeclarationScope().getNode()
                     .findFirstChildOfClass(MyOutChannelNode.class).getId();
-
         }
 
         addConnections(inString, out);
     }
 
-    private Iterator<String> getInChannelIdsOfNode(AbstractNode secondElement, String currentSubScope) {
-        NamedIdNode followedSeconElement = ((NamedIdNode) typeSystem.followNode(secondElement, currentBlockId, currentSubScope));
-        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(followedSeconElement.getId());
-        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(followedSeconElement.getId());
+    private Iterator<String> getInChannelIdsOfNode(AbstractNode node, String currentSubScope) {
+        NamedIdNode followedToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(node, currentBlockId, currentSubScope));
+        NamedIdNode followedToBase = ((NamedIdNode) typeSystem.followNode(followedToBuild, currentBlockId, currentSubScope));
+        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(followedToBase.getId());
+        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(followedToBase.getId());
 
-        List<String> secondElementInChannels = new ArrayList<>();
+        List<String> inChannels = new ArrayList<>();
 
         if (isSource) {
             throw new ShouldNotHappenException("Chain into source??");
         } else if (isOperation) {
             // TODO: OPERATIONS!
-            secondElementInChannels.add(followedSeconElement + "A");
+            inChannels.add(followedToBuild + "A");
             // TODO: This check should be about nr of inputs
-            if (!followedSeconElement.getId().equals("_Sigmoid")) {
-                secondElementInChannels.add(followedSeconElement + "B");
+            if (!followedToBase.getId().equals("_Sigmoid")) {
+                inChannels.add(followedToBuild + "B");
             }
 
-        } else if (followedSeconElement.getNodeEnum().equals(NodeEnum.SELECTOR)) {
+
+        } else if (followedToBase.getNodeEnum().equals(NodeEnum.SELECTOR)) {
             // .notation case
-            if (followedSeconElement.getId().equals("this")){
+            if (followedToBase.getId().equals("this")){
                 // this. case
-                secondElementInChannels.add(currentBlockId + ((NamedIdNode) followedSeconElement.getChild()).getId());
+                inChannels.add(currentBlockId + ((NamedIdNode) followedToBase.getChild()).getId());
 
             } else {
                 // var. case
-                secondElementInChannels.add(followedSeconElement + ((NamedIdNode) followedSeconElement.getChild()).getId());
+                inChannels.add(followedToBuild + ((NamedIdNode) followedToBase.getChild()).getId());
 
             }
 
         } else {
-             for(AbstractNode ab : typeSystem.getSymbolTable()
-                    .getBlockScope(followedSeconElement.getId())
+             for(AbstractNode inChannel : typeSystem.getSymbolTable()
+                    .getBlockScope(followedToBase.getId())
                     .getChannelDeclarationScope().getAllChildrenOfType(NodeEnum.CHANNEL_IN_MY)){
-                 secondElementInChannels.add(secondElement + ((NamedIdNode) ab).getId());
+                 inChannels.add(followedToBuild + ((NamedIdNode) inChannel).getId());
             }
         }
 
-        return secondElementInChannels.iterator();
+        return inChannels.iterator();
     }
 
     public String getCurrentBlockId() {

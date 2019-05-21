@@ -20,6 +20,7 @@ block decla_19 {
 
 		// Create a new chain, which now used the updated blueprint type
 		(blo, build b1()) -> ope -> this.output;
+		input -> b1
 	}
 }
 

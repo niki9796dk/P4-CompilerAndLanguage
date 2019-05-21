@@ -10,6 +10,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import SemanticAnalysis.Datastructures.ModeEnum;
 import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.IncorrectAssignmentTypesException;
 import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
@@ -143,14 +144,22 @@ public class TypeSystem {
         }
     }
 
+    public AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId){
+        return followNode(node, blockScopeId, subScopeId, ModeEnum.DEFAULT);
+    }
+
+    public AbstractNode followNodeToBuild(AbstractNode node, String blockScopeId, String subScopeId){
+        return followNode(node, blockScopeId, subScopeId, ModeEnum.BLOCK_SEEKER);
+    }
+
     /**
      * @param node The node to evaluate
      * @param blockScopeId The current block scope to type check from
      * @param subScopeId The current sub scope to type check from
+    * @param subScopeId The current sub scope to type check from
      */
-    public AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId){
+    private AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId, ModeEnum mode){
         NumberedNode numberedNode = (NumberedNode) node;
-        NamedIdNode namedIdNode = (node instanceof NamedIdNode) ? (NamedIdNode) node : null;
 
         switch (numberedNode.getNodeEnum()) {
             case ROOT:
@@ -184,13 +193,16 @@ public class TypeSystem {
                 return node;
 
             case BUILD:
-                return this.getOriginOfBuildStatement((BuildNode) node, blockScopeId, subScopeId);
-
+                if (mode.equals(ModeEnum.BLOCK_SEEKER)){
+                    return node;
+                } else {
+                    return this.getOriginOfBuildStatement((BuildNode) node, blockScopeId, subScopeId, mode);
+                }
             case ASSIGN:
-                return this.followNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+                return this.followNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId, mode); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
 
             case SELECTOR:
-                return this.followSelector((SelectorNode) node, blockScopeId, subScopeId);
+                return this.followSelector((SelectorNode) node, blockScopeId, subScopeId, mode);
                 // returns a selectornode in dot.notation cases
 
             default:
@@ -205,7 +217,7 @@ public class TypeSystem {
      * @param subScopeId The current sub scope, from which we will compare from
      * @return The sub type of the build statement.
      */
-    private AbstractNode getOriginOfBuildStatement(BuildNode node, String blockScopeId, String subScopeId) {
+    private AbstractNode getOriginOfBuildStatement(BuildNode node, String blockScopeId, String subScopeId, ModeEnum mode) {
         String buildId = node.getId();
 
         boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
@@ -220,7 +232,7 @@ public class TypeSystem {
             selectorNode.setNumber(node.getNumber());
 
             // Get the sub type of the selector
-            return this.followNode(selectorNode, blockScopeId, subScopeId);
+            return this.followNode(selectorNode, blockScopeId, subScopeId, mode);
 
         } else if (isPredefinedOperation || isPredefinedSource) {
             return node;
@@ -240,7 +252,7 @@ public class TypeSystem {
      * @param subScope The current sub scope of then node
      * @return The subtype as a string.
      */
-    private AbstractNode followSelector(SelectorNode selectorNode, String blockScope, String subScope) {
+    private AbstractNode followSelector(SelectorNode selectorNode, String blockScope, String subScope, ModeEnum mode) {
         boolean hasSelectorChild = selectorNode.getChild() instanceof SelectorNode;
         boolean isThis = "this".equals(selectorNode.getId());
 
@@ -259,7 +271,7 @@ public class TypeSystem {
                 subtypeNode = symbolTable.getBlockScope(blockScope).getChannelDeclarationScope().getVariable(selectorNode).getNode();
             }
 
-            return this.followNode(subtypeNode, blockScope, subScope);
+            return this.followNode(subtypeNode, blockScope, subScope, mode);
 
             /*
             if (subtypeNode instanceof SelectorNode) {
