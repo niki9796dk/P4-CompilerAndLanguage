@@ -9,8 +9,6 @@ import Enums.AnsiColor;
 import java.util.*;
 
 public abstract class AbstractBlock implements Block {
-    private Print print = new Print(AnsiColor.PURPLE, "Block." + this.getClass().getSimpleName()).mute();
-
     private LinkedHashMap<String, Channel> inputChannels = new LinkedHashMap<>(2);
     private LinkedHashMap<String, Channel> outputChannels = new LinkedHashMap<>(1);
 

@@ -34,7 +34,6 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
             throw new NullPointerException("in is null!");
 
         this.result = operation(in);
-        forward.say("performOperation() -> result = " + this.result);
     }
 
     @Override

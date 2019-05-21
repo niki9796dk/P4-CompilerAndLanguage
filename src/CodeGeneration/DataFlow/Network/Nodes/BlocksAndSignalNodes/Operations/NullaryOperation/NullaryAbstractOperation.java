@@ -25,7 +25,6 @@ public abstract class NullaryAbstractOperation extends AbstractOperation {
     @Override
     public void performOperation() {
         this.result = operation();
-        forward.say("performOperation() -> result = " + this.result);
     }
 
     /**
