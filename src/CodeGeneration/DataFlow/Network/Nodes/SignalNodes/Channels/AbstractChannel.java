@@ -160,4 +160,14 @@ public abstract class AbstractChannel implements Channel {
         that.setSource(this);
         this.addTarget(that);
     }
+
+    @Override
+    public void clearSource() {
+        this.source = null;
+    }
+
+    @Override
+    public void clearTargets() {
+        this.targets.clear();
+    }
 }

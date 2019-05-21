@@ -56,4 +56,10 @@ public class FeedforwardBounce extends AbstractBounceNode {
         this.target = inputChannel;     // Connect this to that
         inputChannel.setSource(this);   // Connect that to this
     }
+
+    @Override
+    public void releaseFromMainBlock() {
+        this.target.clearSource();
+        this.target = null;
+    }
 }

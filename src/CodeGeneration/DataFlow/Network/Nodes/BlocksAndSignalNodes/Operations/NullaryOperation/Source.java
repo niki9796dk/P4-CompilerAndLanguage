@@ -1,6 +1,7 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation;
 
 import CodeGeneration.DataFlow.Network.Nodes.Block;
+import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannelSource;
@@ -59,8 +60,8 @@ public class Source extends NullaryAbstractOperation {
 
     @Override
     public void performBackpropagationOperation() {
-        final int totalInputLines = 10; // TODO: Connect to something
-        final double learningRate = 0.2;   // TODO: Connect to something
+        final int totalInputLines = AbstractBlock.configuration.getDataRows();
+        final double learningRate = AbstractBlock.configuration.getLearningRate();
 
         Matrix derivatives = this.getOutputChannel()    // The output channel
                 .getResultBackpropagation()             // Get the derivatives

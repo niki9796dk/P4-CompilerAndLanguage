@@ -20,7 +20,6 @@ public class MainBlock {
     public static void main(String[] args) {
         Block block = new ANN();
 
-        /*
         Matrix input = new MatrixBuilder(4, 2, true)
                 .setRow(0, 0, 0)
                 .setRow(1, 0, 1)
@@ -34,24 +33,18 @@ public class MainBlock {
                 .setRow(2, 1)
                 .setRow(3, 0)
                 .build();
-        */
 
+        /*
         Matrix input = Matrices.randomMatrix(1000, 1000, 1337);
         Matrix target = Matrices.randomMatrix(1000, 1000, 1337);
-//
-        BounceNode feedForward = new FeedforwardBounce(input);
-        BounceNode backProp = new backpropagationBounce(target);
-
-        feedForward.connectToMainBlock(block);
-        backProp.connectToMainBlock(block);
-//
+        */
         long start, end, total;
-        int iter = 5;
+        int iter = 10000;
         start = System.currentTimeMillis();
-        for (int i = 0; i < iter; i++) {
-            feedForward.acceptReadySignal();
-        }
+        block.train(input, target, iter);
         end = System.currentTimeMillis();
+
+        System.out.println(block.evaluateInput(input));
 
         total = end - start;
 
