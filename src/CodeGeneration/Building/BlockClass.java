@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockClass {
-
     private String className;
     private String classPackage;
 
@@ -21,12 +20,20 @@ public class BlockClass {
         this.classPackage = classPackage;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
     public CodeScope getBlueprint() {
         return blueprint;
     }
 
     public void addProcedure(CodeScope procedure) {
         this.procedures.add(procedure);
+    }
+
+    public void addImport(String fullImport) {
+        this.imports.add(fullImport);
     }
 
     @Override
@@ -60,9 +67,9 @@ public class BlockClass {
                 .append(this.className)
                 .append(this.blueprint.getParameters()) // Parameters
                 .append(" {\n")                         // Start of content
-                .append("this.blueprint(")              // Start of call to blueprint
-                .append("")                             // Call params TODO: connect to the real params
-                .append(");")                           // End of call to blueprint
+                .append("this.blueprint")              // Start of call to blueprint
+                .append(this.blueprint.getParameters().toCallParameters()) // Call params
+                .append(";")                           // End of call to blueprint
                 .append("}\n\n");                       // End of constructor
 
         // Append the blueprint function

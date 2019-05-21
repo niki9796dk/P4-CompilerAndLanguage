@@ -27,10 +27,16 @@ public class ListStatements implements StatementCollection {
 
         builder.append("{\n");
 
+        builder.append("try { \n");
+
         for (Statement statement : this.getStatementList()) {
             builder.append(statement)
                     .append(";\n");
         }
+
+        builder.append("\n} catch (Exception e) {\n")
+                .append("throw new RuntimeException(e);")
+                .append("\n}\n");
 
         builder.append("}");
 

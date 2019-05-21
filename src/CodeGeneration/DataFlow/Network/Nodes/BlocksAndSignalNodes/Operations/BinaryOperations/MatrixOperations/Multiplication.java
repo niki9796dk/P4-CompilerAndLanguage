@@ -38,6 +38,6 @@ public class Multiplication extends BinaryAbstractOperation {
 
     @Override
     protected Matrix calculateIn2Derivatives(Matrix in1, Matrix out) {
-        return in1.multTrans(out);
+        return in1.transMult(out);
     }
 }

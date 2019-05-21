@@ -11,6 +11,7 @@ public interface Block extends Node {
     boolean hasOutputChannel(String id);
 
     Block connectTo(Block toBlock, String fromChannel, String toChannel);
+    Block connectTo(Channel channel);
 
     Block receiveGroupConnection(Node... nodes);
 
