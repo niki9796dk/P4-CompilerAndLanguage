@@ -4,11 +4,11 @@ block procedure_06 {
 	mychannel:out output;
 	
 	blueprint() {
-		abc(this.input, build Test(), draw Test, build _Sigmoid(), [25, 20], this.output);
+		abc(this.input, build Test(), draw Test, build _Multiplication(), [25, 20], this.output);
 	}
 	
 	procedure abc(mychannel:in x, block y, blueprint z, operation o, size s, mychannel:out c) {
-        x -> c;
+        (x, build Source(s)) -> o -> y -> build z() -> c;
 	}
 }
 
