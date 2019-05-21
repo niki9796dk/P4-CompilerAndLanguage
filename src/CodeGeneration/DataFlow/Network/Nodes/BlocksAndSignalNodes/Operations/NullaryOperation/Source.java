@@ -4,6 +4,8 @@ import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannelSource;
+import DataStructures.Pair;
+import LinearAlgebra.Statics.Matrices;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
@@ -20,6 +22,11 @@ public class Source extends NullaryAbstractOperation {
 
         // Store channels
         this.addNewOutputLabel("out", out);
+    }
+
+    public Source(Pair<Integer, Integer> size) {
+        this();
+        this.result = Matrices.randomMatrix(size.getKey(), size.getValue(), 0, 1);
     }
 
     /**

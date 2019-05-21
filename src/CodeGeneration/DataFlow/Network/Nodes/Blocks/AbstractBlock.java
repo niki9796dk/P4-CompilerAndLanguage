@@ -9,7 +9,7 @@ import Enums.AnsiColor;
 import java.util.*;
 
 public abstract class AbstractBlock implements Block {
-    private Print print = new Print(AnsiColor.PURPLE, "Block." + this.getClass().getSimpleName());
+    private Print print = new Print(AnsiColor.PURPLE, "Block." + this.getClass().getSimpleName()).mute();
 
     private LinkedHashMap<String, Channel> inputChannels = new LinkedHashMap<>(2);
     private LinkedHashMap<String, Channel> outputChannels = new LinkedHashMap<>(1);
@@ -97,30 +97,37 @@ public abstract class AbstractBlock implements Block {
     public Block connectTo(Block toBlock, String fromChannelId, String toChannelId) {
 
         ///////
-        Channel outputChannel;
+        Channel outputChannel = this.getChannel(fromChannelId);
 
-        outputChannel = this.outputChannels.get(fromChannelId);
-        if (outputChannel == null)
-            outputChannel = this.inputChannels.get(fromChannelId);
-
-        if (outputChannel == null)
+        if (outputChannel == null) {
             throw new NullPointerException("outputChannel is null!");
+        }
 
         ///////
         Channel targetChannel = toBlock.getChannel(toChannelId);
 
-        if (targetChannel == null)
+        if (targetChannel == null) {
             throw new NullPointerException("targetChannel is null!");
+        }
 
         ///////
         outputChannel.tether(targetChannel);
 
         ///////
-        // Allow back propagation //
-
-
-        ///////
         return this;
+    }
+
+    @Override
+    public Block connectTo(Channel targetChannel) {
+        if (this.outputChannels.values().size() != 1) {
+            throw new RuntimeException("The connectTo(Channel) can only be used, if the block has a total of 1 output channel");
+        }
+
+        Channel myOutChannel = this.getOutputChannels().values().iterator().next();
+
+        myOutChannel.tether(targetChannel);
+
+        return null;
     }
 
     @Override
@@ -134,7 +141,7 @@ public abstract class AbstractBlock implements Block {
             Channel channel = null;
 
             if(node instanceof Channel) channel = (Channel) node;
-            else if(node instanceof Block) ((Block) node).getFirstOutput();
+            else if(node instanceof Block) channel = ((Block) node).getFirstOutput();
             else throw new IllegalArgumentException("Input must be a block or channel in the current implementation");
             assert channel != null;
 
@@ -165,8 +172,9 @@ public abstract class AbstractBlock implements Block {
         if (inputKeys.size() != channels.length)
             throw new IllegalArgumentException("The amount of group connections MUST match the amount of inputs.");
 
-        for (Channel channel : channels)
+        for (Channel channel : channels) {
             channel.tether(this.inputChannels.get(inputKeys.pollFirst()));
+        }
 
         return this;
     }

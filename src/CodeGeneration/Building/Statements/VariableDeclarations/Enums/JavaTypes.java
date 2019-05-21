@@ -5,7 +5,8 @@ public enum JavaTypes {
     OPERATION("Operation"),
     SOURCE("Source"),
     SIZE("Pair<Integer, Integer>"),
-    CHANNEL("Channel");
+    CHANNEL("Channel"),
+    CLASS("Class");
 
     private String str;
 

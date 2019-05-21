@@ -8,7 +8,7 @@ import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public class FeedforwardBounce extends AbstractBounceNode {
-    private static Print print = new Print(AnsiColor.BLUE, "FeedForwardBouncer");
+    private static Print print = new Print(AnsiColor.BLUE, "FeedForwardBouncer").mute();
 
     private Channel target;
     private Matrix inputs;

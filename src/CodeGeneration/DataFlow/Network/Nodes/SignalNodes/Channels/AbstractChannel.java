@@ -14,8 +14,8 @@ public abstract class AbstractChannel implements Channel {
     protected SignalNode source;
     protected Collection<SignalNode> targets;
 
-    protected Print forward = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName());
-    protected Print backprop = new Print(AnsiColor.YELLOW, "Channel." + this.getClass().getSimpleName());
+    protected Print forward = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName()).mute();
+    protected Print backprop = new Print(AnsiColor.YELLOW, "Channel." + this.getClass().getSimpleName()).mute();
 
 
     /**

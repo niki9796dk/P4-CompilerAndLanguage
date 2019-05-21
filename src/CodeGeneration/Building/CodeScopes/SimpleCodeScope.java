@@ -31,6 +31,11 @@ public class SimpleCodeScope implements CodeScope {
     }
 
     @Override
+    public String toCallParameters() {
+        return this.parameters.toCallParameters();
+    }
+
+    @Override
     public void setId(String id) {
         this.id = id;
     }

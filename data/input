@@ -1,20 +1,23 @@
-block AnnLayer {
+block ANN {
     mychannel:in in;
     mychannel:out out;
 
-    blueprint(){
-        mychannel:in input = this.in;
-        mychannel:out output = this.out;
-
-        operation ope = build Multiplication();
-
-        channel:in oIn = ope.A;
-        channel:out oOut = ope.out;
-
-        myProd(build _Sigmoid());
+    blueprint() {
+        this.in -> build Layer(draw _Sigmoid, [2, 1], [4, 1]) -> this.out;
     }
+}
 
-    procedure myProd(operation myBlock) {
-        this.in -> myBlock -> this.out;
+block Layer {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(blueprint acti, size sourceSize, size biasSize) {
+        source weights = build Source(sourceSize);
+        source bias = build Source(biasSize);
+
+        operation mult = build Multiplication();
+
+        (this.in, weights) -> mult;
+        (multW, bias) -> build _Addition() -> build acti() -> this.out;
     }
 }

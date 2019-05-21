@@ -15,8 +15,8 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
     protected Matrix result;
     protected HashMap<Channel, Matrix> resultBackpropagation = new HashMap<>();
 
-    protected Print forward = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName());
-    protected Print backprop = new Print(AnsiColor.YELLOW, "Channel." + this.getClass().getSimpleName());
+    protected Print forward = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName()).mute();
+    protected Print backprop = new Print(AnsiColor.YELLOW, "Channel." + this.getClass().getSimpleName()).mute();
 
     /**
      * Get result of operation

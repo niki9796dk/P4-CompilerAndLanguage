@@ -1,28 +1,33 @@
 package AST.TreeWalks;
 
 import AST.Enums.NodeEnum;
+import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
-import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
-import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
+import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DrawNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
-import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import CodeGeneration.Building.BlockClass;
 import CodeGeneration.Building.CodeScope;
 import CodeGeneration.Building.CodeScopes.SimpleCodeScope;
 import CodeGeneration.Building.Parameter;
 import CodeGeneration.Building.Statement;
+import CodeGeneration.Building.Statements.Assignments.AssignBlueprint;
 import CodeGeneration.Building.Statements.Assignments.AssignBuild;
+import CodeGeneration.Building.Statements.Assignments.AssignSize;
 import CodeGeneration.Building.Statements.Assignments.AssignVar;
 import CodeGeneration.Building.Statements.Calls.CallParams;
 import CodeGeneration.Building.Statements.Calls.ProcedureCall;
-import CodeGeneration.Building.Statements.Connections.SingleChain;
+import CodeGeneration.Building.Statements.Connections.GroupChain;
+import CodeGeneration.Building.Statements.Connections.NodeToChannelChain;
+import CodeGeneration.Building.Statements.Connections.TetherChannels;
+import CodeGeneration.Building.Statements.Instantiations.InitBlueprint;
 import CodeGeneration.Building.Statements.Instantiations.InitBuild;
+import CodeGeneration.Building.Statements.Instantiations.InitBuildBlueprint;
 import CodeGeneration.Building.Statements.Instantiations.InitSize;
 import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDeclarationIn;
 import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDeclarationOut;
@@ -30,17 +35,24 @@ import CodeGeneration.Building.Statements.Selectors.DotSelector;
 import CodeGeneration.Building.Statements.Selectors.Selector;
 import CodeGeneration.Building.Statements.VariableDeclarations.*;
 import DataStructures.Pair;
-import SemanticAnalysis.Datastructures.HashSetStack;
-import SemanticAnalysis.Exceptions.NoMainBlockException;
-import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.BlockScope;
+import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CodeGenerationVisitor extends ScopeTracker {
     private List<BlockClass> blockClasses = new ArrayList<>();
     private CodeScope currentCodeScope;
+    private Map<Integer, String> placeholderVars = new HashMap<>();
+
+    private static String EXPORT_PATH = "src/AutoGen/CodeGen/";
+    private static String EXPORT_PACKAGE = "AutoGen.CodeGen";
 
     public CodeGenerationVisitor(SymbolTable symbolTable) {
         super(symbolTable);
@@ -62,7 +74,13 @@ public class CodeGenerationVisitor extends ScopeTracker {
         switch (node.getNodeEnum()) {
             // Setup enums
             case BLOCK:
-                this.blockClasses.add(new BlockClass(nodeId, "CodeGeneration.Building"));
+                // Import the new block in all previous defined blocks
+                for (BlockClass blockClass : this.blockClasses) {
+                    blockClass.addImport(EXPORT_PACKAGE + "." + nodeId);
+                }
+
+                // Add the new block to the list of block classes
+                this.blockClasses.add(new BlockClass(nodeId, EXPORT_PACKAGE));
                 break;
 
             case CHANNEL_DECLARATIONS:
@@ -84,27 +102,35 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case BLOCK_TYPE:
             case SOURCE_TYPE:
             case SIZE_TYPE:
+            case BLUEPRINT_TYPE:
+                Statement statement = this.getStatementFromNode(node);
+
                 if (node.getParent() instanceof ParamsNode) {
-                    this.currentCodeScope.addParameter((Parameter) this.getStatementFromNode(node));
+                    this.currentCodeScope.addParameter((Parameter) statement);
                 } else {
-                    this.currentCodeScope.addStatement(this.getStatementFromNode(node));
+                    this.currentCodeScope.addStatement(statement);
                 }
-
                 break;
 
-            case PROCEDURE_CALL:
-                this.currentCodeScope.addStatement(this.getStatementFromNode(node));
-                break;
 
-            case CHAIN:
-                this.handleChainNode((ChainNode) node);
+            case BUILD:         // Also handled by other enums
+                if (node.getParent() instanceof ChainNode) {
+                    // Generate unique var name
+                    String uniqueVarName = this.generateUniqueVariableName(node);
+                    // Add statements to reflect the new variables declaration
+                    this.currentCodeScope.addStatement(new BlockDeclaration(uniqueVarName));
+                    this.currentCodeScope.addStatement(new AssignBuild(uniqueVarName, this.getStatementFromNode(node)));
+                    // Insert the var name into a map for later retrieval (MUST BE PLACED AFTER THE ABOVE STATEMENTS)
+                    this.placeholderVars.put(node.getNumber(), uniqueVarName);
+                }
                 break;
 
             // No action enums
+            case PROCEDURE_CALL:// Post order
+            case CHAIN:         // Post order
             case SELECTOR:      // Handled by other enums
             case DRAW:          // Handled by other enums
             case SIZE:          // Handled by other enums
-            case BUILD:         // Handled by other enums
             case PARAMS:        // Handled in calls / builds
             case GROUP:         // Handled in chain
             case ASSIGN:        // Post Order
@@ -130,12 +156,28 @@ public class CodeGenerationVisitor extends ScopeTracker {
         switch (node.getNodeEnum()) {
             // No action enums
             case ROOT:
-                System.out.println(this.blockClasses.get(0).toString());
+                try {
+                    if (!Files.exists(Paths.get(EXPORT_PATH))) {
+                        Files.createDirectories(Paths.get(EXPORT_PATH));
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                for (BlockClass blockClass : this.blockClasses) {
+                    Path filePath = Paths.get(EXPORT_PATH + blockClass.getClassName() + ".java");
+
+                    try (Writer writer = Files.newBufferedWriter(filePath)) {
+
+                        writer.write(blockClass.toString());
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             break;
 
             case GROUP:
-            case CHAIN:
-            case PROCEDURE_CALL:
             case PARAMS:
             case SELECTOR:
             case DRAW:
@@ -156,6 +198,14 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case CHANNEL_DECLARATIONS:
                 break;
 
+            case PROCEDURE_CALL:
+                this.currentCodeScope.addStatement(this.getStatementFromNode(node));
+                break;
+
+            case CHAIN:
+                this.handleChainNode((ChainNode) node);
+                break;
+
             case ASSIGN:
                 NamedIdNode leftNode = (NamedIdNode) node.getChild();
                 AbstractNode rightNode = leftNode.getSib();
@@ -163,9 +213,16 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 String leftVar = leftNode.getId();
 
                 if (rightNode instanceof BuildNode) {
-                    this.currentCodeScope.addStatement(new AssignBuild(leftVar, (InitBuild) this.getStatementFromNode(rightNode)));
+                    Statement buildStatement = this.getStatementFromNode(rightNode);
+                    Scope subScope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
+
+                    this.currentCodeScope.addStatement(new AssignBuild(subScope, leftVar, buildStatement));
                 } else if (rightNode instanceof SelectorNode) {
                     this.currentCodeScope.addStatement(new AssignVar(leftVar, this.getStatementFromNode(rightNode).toString()));
+                } else if (rightNode instanceof DrawNode) {
+                    this.currentCodeScope.addStatement(new AssignBlueprint(leftVar, (InitBlueprint) this.getStatementFromNode(rightNode)));
+                } else if (rightNode instanceof SizeNode) {
+                    this.currentCodeScope.addStatement(new AssignSize(leftVar, (InitSize) this.getStatementFromNode(rightNode)));
                 } else {
                     throw new IllegalArgumentException("Did not expect this: " + rightNode);
                 }
@@ -174,6 +231,20 @@ public class CodeGenerationVisitor extends ScopeTracker {
             default:
                 throw new UnexpectedNodeException(node);
         }
+    }
+
+    private String generateUniqueVariableName(Node node) {
+        String nodeId = ((NamedIdNode) node).getId();
+        Scope currentScope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
+
+        String uniqueVar;
+        do {
+            int randomNumber = Math.abs(ThreadLocalRandom.current().nextInt());
+
+            uniqueVar = "_" + nodeId + "_" + randomNumber;
+        } while (currentScope.getVariable(uniqueVar) != null);
+
+        return uniqueVar;
     }
 
     private void handleChainNode(ChainNode chainNode) {
@@ -193,28 +264,90 @@ public class CodeGenerationVisitor extends ScopeTracker {
     }
 
     private void groupConnect(AbstractNode groupNode, AbstractNode rightNode) {
+        rightNode = this.transformIfAssign(rightNode);
+        Statement rightStatement = this.getStatementFromNode(rightNode);
+
         int groupElems = groupNode.countChildren();
 
-        for (int i = 0; i < groupElems; i++) {
+        List<Statement> groupElements = new ArrayList<>(groupElems);
 
+        AbstractNode groupElement = groupNode.getChild();
+        for (int i = 0; i < groupElems; i++) {
+            groupElements.add(this.getStatementFromNode(groupElement));
+            groupElement = groupElement.getSib();
         }
+
+        this.currentCodeScope.addStatement(new GroupChain(rightStatement, groupElements.toArray(new Statement[0])));
     }
 
     private void singleConnect(AbstractNode leftNode, AbstractNode rightNode) {
-        Pair<String, String> leftInfo = this.transformElemForChaining(leftNode);
-        Pair<String, String> rightInfo = this.transformElemForChaining(rightNode);
+        leftNode = this.transformIfAssign(leftNode);
+        rightNode = this.transformIfAssign(rightNode);
 
-        SingleChain chainStatement = new SingleChain(
-                leftInfo.getKey(), leftInfo.getValue(),
-                rightInfo.getKey(), rightInfo.getValue()
-        );
+        Statement leftStatement = this.getStatementFromNode(leftNode);
+        Statement rightStatement = this.getStatementFromNode(rightNode);
 
-        this.currentCodeScope.addStatement(chainStatement);
+        if ((this.isBlockOperationSource(leftNode) || this.isChannel(leftNode)) && this.isBlockOperationSource(rightNode)) {
+            this.currentCodeScope.addStatement(new GroupChain(rightStatement, leftStatement));
+
+        } else if (this.isChannel(leftNode) && this.isChannel(rightNode)) {
+            this.currentCodeScope.addStatement(new TetherChannels(leftStatement, rightStatement));
+
+        } else if (this.isBlockOperationSource(leftNode) && isChannel(rightNode)) {
+            this.currentCodeScope.addStatement(new NodeToChannelChain(leftStatement, rightStatement));
+
+        } else {
+            throw new RuntimeException("Left: " + leftNode + " - Right: " + rightNode);
+        }
+
     }
 
-    // Pair<Element, channelId>
-    private Pair<String, String> transformElemForChaining(AbstractNode node) {
-        return null;
+    private AbstractNode transformIfAssign(AbstractNode node) {
+        if (node instanceof AssignNode) {
+            SelectorNode selectorNode = new SelectorNode(((NamedIdNode) node.getChild()).getId());
+            selectorNode.setNumber(((NamedNode) node).getNumber());
+
+            return selectorNode;
+        } else {
+            return node;
+        }
+    }
+
+    private boolean isBlockOperationSource(AbstractNode node) {
+
+        if (node instanceof BuildNode) {
+            return true;
+        } else {
+            NodeEnum superType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+            switch (superType) {
+                case BLOCK_TYPE:
+                case OPERATION_TYPE:
+                case SOURCE_TYPE:
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isChannel(AbstractNode node) {
+
+        if (node instanceof BuildNode) {
+            return false;
+        } else {
+            NodeEnum superType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+            switch (superType) {
+                case CHANNEL_OUT_TYPE:
+                case CHANNEL_IN_TYPE:
+                case CHANNEL_IN_MY:
+                case CHANNEL_OUT_MY:
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private Statement getStatementFromNode(AbstractNode abstractNode) {
@@ -239,61 +372,78 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 return new SourceDeclaration(nodeId);
             case SIZE_TYPE:
                 return new SizeDeclaration(nodeId);
+            case BLUEPRINT_TYPE:
+                return new BlueprintDeclaration(nodeId);
 
-            // Init enums
+                // Init enums
             case SIZE:
                 SizeNode sizeNode = (SizeNode) node;
                 return new InitSize(sizeNode.first, sizeNode.second);
 
+            case DRAW:
+                return new InitBlueprint(nodeId);
+
             case BUILD:
-                NodeEnum superType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+                if (node.getParent() instanceof ChainNode && this.placeholderVars.containsKey(node.getNumber())) {
+                    return new Selector(this.placeholderVars.get(node.getNumber()));
+                }
 
-                switch (superType) {
-                    case BLOCK_TYPE:
-                    case SOURCE_TYPE:
-                    case OPERATION_TYPE:
-                        String subTypeOfBuild = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+                boolean isNotBlueprintBuild = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope).getVariable(nodeId) == null;
 
-                        ParamsNode params = node.findFirstChildOfClass(ParamsNode.class);
+                if (isNotBlueprintBuild) {
+                    String subTypeOfBuild = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
-                        if (params != null) {
-                            return new InitBuild(subTypeOfBuild, this.getStatementFromNode(params));
+                    ParamsNode buildParams = node.findFirstChildOfClass(ParamsNode.class);
 
-                        } else {
-                            return new InitBuild(subTypeOfBuild);
-                        }
+                    if (buildParams != null) {
+                        return new InitBuild(subTypeOfBuild, this.getStatementFromNode(buildParams));
 
-                    case BLUEPRINT_TYPE:
-                        return null; // TODO: FIX
+                    } else {
+                        return new InitBuild(subTypeOfBuild);
+                    }
+                } else {
+                    ParamsNode buildParams = node.findFirstChildOfClass(ParamsNode.class);
 
+                    if (buildParams != null) {
+                        return new InitBuildBlueprint(nodeId,this.getStatementFromNode(buildParams));
+
+                    } else {
+                        return new InitBuildBlueprint(nodeId);
+                    }
                 }
 
             case SELECTOR:
                 if (node.getChild() instanceof SelectorNode) {
                     return new DotSelector(nodeId, ((NamedIdNode) node.getChild()).getId());
                 } else {
-                    return new Selector(nodeId);
+                    NodeEnum nodeSuperType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+                    if (nodeSuperType == NodeEnum.CHANNEL_IN_MY || nodeSuperType == NodeEnum.CHANNEL_OUT_MY) {
+                        return new DotSelector("this", nodeId);
+                    } else {
+                        return new Selector(nodeId);
+                    }
                 }
 
             case PROCEDURE_CALL:
-                ParamsNode params = node.findFirstChildOfClass(ParamsNode.class);
+                ParamsNode procedureParams = node.findFirstChildOfClass(ParamsNode.class);
                 SelectorNode procSelector = node.findFirstChildOfClass(SelectorNode.class);
 
-                if (params != null) {
-                    return new ProcedureCall(procSelector.getId(), (CallParams) this.getStatementFromNode(params));
+                if (procedureParams != null) {
+                    return new ProcedureCall(procSelector.getId(), (CallParams) this.getStatementFromNode(procedureParams));
 
                 } else {
                     return new ProcedureCall(procSelector.getId());
                 }
 
             case PARAMS:
-                List<Statement> buildParams = new ArrayList<>();
+                List<Statement> params = new ArrayList<>();
 
                 for (AbstractNode pNode = node.getChild(); pNode != null; pNode = pNode.getSib()) {
-                    buildParams.add(this.getStatementFromNode(pNode));
+                    params.add(this.getStatementFromNode(pNode));
                 }
 
-                return new CallParams(buildParams.toArray(new Statement[0]));
+                return new CallParams(params.toArray(new Statement[0]));
 
             case CHANNEL_IN_MY:
                 if (BlockScope.CHANNELS.equals(this.currentSubScope)) {
@@ -314,7 +464,6 @@ public class CodeGenerationVisitor extends ScopeTracker {
 
             case GROUP:
             case CHAIN:
-            case DRAW:
             case ASSIGN:
                 break;
 
