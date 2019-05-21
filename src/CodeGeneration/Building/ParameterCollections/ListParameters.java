@@ -20,14 +20,29 @@ public class ListParameters implements ParameterCollection {
     }
 
     @Override
+    public String toCallParameters() {
+        return this.asString(true);
+    }
+
+    @Override
     public String toString() {
+        return this.asString(false);
+    }
+
+    private String asString(boolean asCall) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("("); // Append params start
 
         if (this.getParameterList().size() != 0) {
             for (Parameter parameter : this.getParameterList()) {
-                builder.append(parameter)
+                String parString = parameter.toString();
+
+                if (asCall) {
+                    parString = parString.split(" ")[1];
+                }
+
+                builder.append(parString)
                         .append(", ");
             }
 

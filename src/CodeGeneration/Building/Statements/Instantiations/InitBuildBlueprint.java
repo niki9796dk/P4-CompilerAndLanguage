@@ -21,12 +21,15 @@ public class InitBuildBlueprint implements Statement {
         this(buildId);
         this.params = Arrays.asList(paramStatements);
     }
+
     @Override
     public String toString() {
 
         StringBuilder builder = new StringBuilder();
 
         builder
+                .append("(")
+                .append("(Block) ")
                 .append(buildId)
                 .append(".getConstructor(");
 
@@ -41,8 +44,10 @@ public class InitBuildBlueprint implements Statement {
             builder.delete(builder.length()-2, builder.length()); // Remove last ", " sequence
         }
 
-        builder.append(").newInstance")
-        .append(new CallParams(this.params));
+        builder
+                .append(").newInstance")
+                .append(new CallParams(this.params))
+                .append(")");
 
         return builder.toString();
     }

@@ -3,16 +3,17 @@ block AnnLayer {
     mychannel:out out;
 
     blueprint(){
-        blueprint julla = draw _Sigmoid;
+        this.in -> build Layer(draw _Sigmoid, draw _Relu) -> this.out;
     }
+}
 
-    procedure myProd(blueprint myOpe) {
-        operation abc = build myOpe();
+block Layer {
+    mychannel:in in;
+    mychannel:out out;
 
-        this.in -> abc -> this.out;
-    }
+    blueprint(blueprint helloWorld, blueprint hmm){
+        operation myOpe = build helloWorld();
 
-    procedure myProd2(blueprint myOpe) {
-        this.in -> build myOpe() -> this.out;
+        this.in -> myOpe -> build hmm() -> this.out;
     }
 }

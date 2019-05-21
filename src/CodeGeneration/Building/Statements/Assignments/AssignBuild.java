@@ -2,6 +2,7 @@ package CodeGeneration.Building.Statements.Assignments;
 
 import AST.Enums.NodeEnum;
 import CodeGeneration.Building.Statement;
+import CodeGeneration.Building.Statements.Calls.CallParams;
 import CodeGeneration.Building.Statements.Instantiations.InitBuild;
 import CodeGeneration.Building.Statements.SubStatement;
 import CodeGeneration.Building.Statements.VariableDeclarations.Enums.JavaTypes;
@@ -18,6 +19,11 @@ public class AssignBuild implements Statement {
         this.leftVar = leftVar;
     }
 
+    public AssignBuild(String leftVar, Statement initBuild) {
+        this.leftVar = leftVar;
+        this.initBuild = initBuild;
+    }
+
     public AssignBuild(Scope subScope, String leftVar, Statement initBuild) {
         this(subScope, leftVar);
         this.initBuild = initBuild;
@@ -28,7 +34,7 @@ public class AssignBuild implements Statement {
     }
 
     public AssignBuild(Scope subScope, String leftVar, String initBuild, Statement ... paramStatements) {
-        this(subScope, leftVar, new InitBuild(initBuild, paramStatements));
+        this(subScope, leftVar, new InitBuild(initBuild, new CallParams(paramStatements)));
     }
 
     public void setType(JavaTypes type) {
@@ -51,6 +57,14 @@ public class AssignBuild implements Statement {
 
     @Override
     public String toString() {
-        return leftVar + " = " + initBuild;
+        if (initBuild == null) {
+            throw new NullPointerException("The init build is null?");
+        }
+
+        if (this.type != null) {
+            return leftVar + " = (" + this.type + ") " + initBuild;
+        } else {
+            return leftVar + " = " + initBuild;
+        }
     }
 }
