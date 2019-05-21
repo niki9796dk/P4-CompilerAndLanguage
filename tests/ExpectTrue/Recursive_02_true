@@ -24,6 +24,8 @@ block B1 {
 
 
 
+
+
 block B3 {
     mychannel:in in;
     mychannel:out out;
@@ -34,6 +36,10 @@ block B3 {
        this.in -> there -> this.out;
     }
 }
+
+
+
+
 
 block B2 {
     mychannel:in in;

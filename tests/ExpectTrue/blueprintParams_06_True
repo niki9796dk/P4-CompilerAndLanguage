@@ -7,7 +7,7 @@ block Main {
     }
 }
 
-block b6 {
+block B6 {
 	mychannel:in input;
 	mychannel:out output;
 
