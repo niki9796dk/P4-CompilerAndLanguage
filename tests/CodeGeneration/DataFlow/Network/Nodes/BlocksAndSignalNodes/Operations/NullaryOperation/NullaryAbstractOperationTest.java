@@ -52,4 +52,31 @@ class NullaryAbstractOperationTest {
     void addNewInputLabel() {
         assertThrows(IllegalMethodException.class, () -> operations.get(0).addNewInputLabel("in", new ListChannel()));
     }
+
+    @Test
+    void setInput(){
+        Input input = new Input();
+
+        Matrix matrix000 = new MatrixBuilder()
+                .addRow(1, 2)
+                .addRow(3, 4)
+                .buildDenseMatrix();
+
+        Matrix matrix001 = new MatrixBuilder()
+                .addRow(3, 3)
+                .addRow(3, 3)
+                .buildDenseMatrix();
+
+        assertThrows(NullPointerException.class, ()-> input.getOutputChannel().getResult());
+
+
+        input.setInput(matrix000);
+        assertEquals(matrix000, input.getOutputChannel().getResult());
+
+        input.setInput(matrix001);
+        assertEquals(matrix001, input.getOutputChannel().getResult());
+
+    }
+
+
 }
