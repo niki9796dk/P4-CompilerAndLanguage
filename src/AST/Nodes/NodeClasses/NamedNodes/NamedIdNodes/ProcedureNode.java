@@ -8,6 +8,6 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
  */
 public class ProcedureNode extends NamedIdNode {
     public ProcedureNode(String id) {
-        super("Procedure", id, NodeEnum.PROCEDURE);
+        super("CodeScope", id, NodeEnum.PROCEDURE);
     }
 }

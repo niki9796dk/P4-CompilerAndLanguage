@@ -27,25 +27,21 @@ public class ListChannelSource extends AbstractChannel {
 
     @Override
     public boolean isReady() {
-        forward.say("I was asked if i was ready, which i ofcouse was");
         return true;
     }
 
     @Override
     public boolean isSource() {
-        forward.say("I was asked if i was a source connection, which i ofcouse was");
         return true;
     }
 
     @Override
     public void acceptReadySignal() {
-        forward.say("I as a source channel, accepted a ready signal");
         super.acceptReadySignal();
     }
 
     @Override
     public void acceptReadyBackpropagationSignal() {
-        backprop.say("I as a source channel, accepted a back prop signal");
         super.acceptReadyBackpropagationSignal();
     }
 }

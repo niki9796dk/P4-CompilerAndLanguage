@@ -8,7 +8,6 @@ import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public class FeedforwardBounce extends AbstractBounceNode {
-    private static Print print = new Print(AnsiColor.BLUE, "FeedForwardBouncer");
 
     private Channel target;
     private Matrix inputs;
@@ -24,8 +23,6 @@ public class FeedforwardBounce extends AbstractBounceNode {
 
     @Override
     public void acceptReadySignal() {
-        print.say("Signal has been started.");
-
         // Start the bounce
         this.target.acceptReadySignal();
     }
@@ -33,7 +30,6 @@ public class FeedforwardBounce extends AbstractBounceNode {
     @Override
     public void acceptReadyBackpropagationSignal() {
         // Perform the required bounce logic
-        print.say("Signal has returned to the start.");
 
         // Do not rebounce, otherwise a stackOverflow will happen.
     }
@@ -59,5 +55,11 @@ public class FeedforwardBounce extends AbstractBounceNode {
 
         this.target = inputChannel;     // Connect this to that
         inputChannel.setSource(this);   // Connect that to this
+    }
+
+    @Override
+    public void releaseFromMainBlock() {
+        this.target.clearSource();
+        this.target = null;
     }
 }

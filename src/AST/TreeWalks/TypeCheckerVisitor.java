@@ -268,7 +268,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
             for (int i = 0; i < formalParams.countChildren(); i++) {
                 // Assert equals
                 try {
-                    this.typeSystem.assertEqualSuperTypes(actual, formal, currentBlockScope, currentSubScope, "Procedure call type inconsistency");
+                    this.typeSystem.assertEqualSuperTypes(actual, formal, currentBlockScope, currentSubScope, "CodeScope call type inconsistency");
                 } catch (TypeInconsistencyException e) {
                     throw new ParamsTypeInconsistencyException(e);
                 }

@@ -241,7 +241,7 @@ public class TypeSystem {
             return node;
 
         } else {
-            throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker!");
+            throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker! - " + node +  " : " + buildId);
         }
     }
 

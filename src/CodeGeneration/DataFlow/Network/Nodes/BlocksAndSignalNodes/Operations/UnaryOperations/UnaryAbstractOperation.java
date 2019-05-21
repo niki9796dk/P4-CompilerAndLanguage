@@ -34,7 +34,6 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
             throw new NullPointerException("in is null!");
 
         this.result = operation(in);
-        forward.say("performOperation() -> result = " + this.result);
     }
 
     @Override
@@ -42,9 +41,7 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
         return this.getChannel("out");
     }
 
-    protected Matrix operation(Matrix in) {
-        return this.getFunction().activation(in);
-    }
+    protected abstract Matrix operation(Matrix in);
 
     @Override
     public void performBackpropagationOperation() {
@@ -63,32 +60,7 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
         );
     }
 
-    protected HashMap<Channel, Matrix> operationBackpropagation(Channel in, Channel out) {
-        HashMap<Channel, Matrix> backpropResults = new HashMap<>();
-
-        backpropResults.put(in, this.calculateInDerivatives(in.getResult(), out.getResultBackpropagation()));
-
-        return backpropResults;
-    }
-
-    protected Matrix calculateInDerivatives(Matrix in, Matrix out) {
-        return out.compMult(this.getAfDeri(in, this.result));
-    }
-
-    private Matrix getAfDeri(Matrix net, Matrix out) {
-        switch (this.getFunction().getMatrixPref()) {
-            case NET:
-                return this.getFunction().activationPrime(net);
-
-            case OUT:
-                return this.getFunction().activationPrime(out);
-
-            default:
-                throw new ShouldNotHappenException("No such matrix pref?");
-        }
-    }
-
-    protected abstract ActivationFunction getFunction();
+    protected abstract HashMap<Channel, Matrix> operationBackpropagation(Channel in, Channel out);
 
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {

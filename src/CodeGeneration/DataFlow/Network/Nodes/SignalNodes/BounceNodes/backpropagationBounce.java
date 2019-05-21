@@ -4,13 +4,14 @@ import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
+import LinearAlgebra.Statics.Matrices;
 import LinearAlgebra.Types.Matrices.Matrix;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
 import MachineLearning.NeuralNetwork.Trainer.Costs.CostFunction;
 import MachineLearning.NeuralNetwork.Trainer.Costs.MSECost;
 
 public class backpropagationBounce extends AbstractBounceNode {
-    private static Print print = new Print(AnsiColor.BLUE, "FeedForwardBouncer");
+    private static Print print = new Print(AnsiColor.BLUE, "BackpropagationBouncer").mute();
 
     private Channel source;
     private Matrix outputs;
@@ -28,7 +29,7 @@ public class backpropagationBounce extends AbstractBounceNode {
     @Override
     public void acceptReadySignal() {
         // Perform the required bounce logic
-        print.say("Signal has reached the end.");
+        //print.say("Signal has reached the end.");
 
         // Rebounce
         this.acceptReadyBackpropagationSignal();
@@ -40,12 +41,15 @@ public class backpropagationBounce extends AbstractBounceNode {
         Matrix target = this.outputs;
         Matrix prediction = this.source.getResult();
 
+        //print.say("My prediction => " + prediction);
+        //print.say("The error was => " + Matrices.sumMatrix(costFunction.cost(target, prediction)));
+
         this.derivatives = costFunction.costPrime(target, prediction);
     }
 
     @Override
     public void acceptReadyBackpropagationSignal() {
-        print.say("I have accepted the back prop signal.");
+        //print.say("I have accepted the back prop signal.");
 
 
         // Calcualte the backprop signal
@@ -80,5 +84,11 @@ public class backpropagationBounce extends AbstractBounceNode {
 
         this.source = outputChannel;     // Connect this to that
         outputChannel.addTarget(this);   // Connect that to this
+    }
+
+    @Override
+    public void releaseFromMainBlock() {
+        this.source.clearTargets();
+        this.source = null;
     }
 }

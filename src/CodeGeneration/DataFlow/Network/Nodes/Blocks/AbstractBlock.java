@@ -1,19 +1,21 @@
 package CodeGeneration.DataFlow.Network.Nodes.Blocks;
 
+import CodeGeneration.DataFlow.Network.Node;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNode;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes.FeedforwardBounce;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes.backpropagationBounce;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
+import LinearAlgebra.Types.Matrices.Matrix;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractBlock implements Block {
-    private Print print = new Print(AnsiColor.PURPLE, "Block." + this.getClass().getSimpleName());
-
-    private Map<String, Channel> inputChannels = new HashMap<>(2);
-    private Map<String, Channel> outputChannels = new HashMap<>(1);
+    private LinkedHashMap<String, Channel> inputChannels = new LinkedHashMap<>(2);
+    private LinkedHashMap<String, Channel> outputChannels = new LinkedHashMap<>(1);
+    public static BlockConfiguration configuration;
 
     /**
      * Add an input channel
@@ -98,29 +100,85 @@ public abstract class AbstractBlock implements Block {
     public Block connectTo(Block toBlock, String fromChannelId, String toChannelId) {
 
         ///////
-        Channel outputChannel;
+        Channel outputChannel = this.getChannel(fromChannelId);
 
-        outputChannel = this.outputChannels.get(fromChannelId);
-        if (outputChannel == null)
-            outputChannel = this.inputChannels.get(fromChannelId);
-
-        if (outputChannel == null)
+        if (outputChannel == null) {
             throw new NullPointerException("outputChannel is null!");
+        }
 
         ///////
         Channel targetChannel = toBlock.getChannel(toChannelId);
 
-        if (targetChannel == null)
+        if (targetChannel == null) {
             throw new NullPointerException("targetChannel is null!");
+        }
 
         ///////
         outputChannel.tether(targetChannel);
 
         ///////
-        // Allow back propagation //
+        return this;
+    }
 
+    @Override
+    public Block connectTo(Channel targetChannel) {
+        if (this.outputChannels.values().size() != 1) {
+            throw new RuntimeException("The connectTo(Channel) can only be used, if the block has a total of 1 output channel");
+        }
 
-        ///////
+        Channel myOutChannel = this.getOutputChannels().values().iterator().next();
+
+        myOutChannel.tether(targetChannel);
+
+        return null;
+    }
+
+    @Override
+    public Block receiveGroupConnection(Node... nodes) {
+        LinkedList<Channel> inputKeys = new LinkedList<>(this.inputChannels.values());
+
+        if (inputKeys.size() != nodes.length)
+            throw new IllegalArgumentException("The amount of group connections MUST match the amount of inputs.");
+
+        for (Node node : nodes){
+            Channel channel = null;
+
+            if(node instanceof Channel) channel = (Channel) node;
+            else if(node instanceof Block) channel = ((Block) node).getFirstOutput();
+            else throw new IllegalArgumentException("Input must be a block or channel in the current implementation");
+            assert channel != null;
+
+            channel.tether(inputKeys.pollFirst());
+        }
+        return this;
+    }
+
+    @Override
+    public Block receiveGroupConnection(Block... blocks) {
+        for (Block block : blocks)
+            if (block.getOutputChannels().size() != 1)
+                throw new IllegalArgumentException("The amount of outputs in every input block MUST be 1!");
+
+        Channel[] channels = new Channel[blocks.length];
+
+        int i = 0;
+        for(Block block: blocks)
+            channels[i++] = block.getOutputChannels().values().iterator().next();
+
+        return this.receiveGroupConnection(channels);
+    }
+
+    @Override
+    public Block receiveGroupConnection(Channel... channels) {
+        LinkedList<String> inputKeys = new LinkedList<>(this.inputChannels.keySet());
+
+        if (inputKeys.size() != channels.length)
+            throw new IllegalArgumentException("The amount of group connections MUST match the amount of inputs.");
+
+        for (Channel channel : channels) {
+            channel.tether(this.inputChannels.get(inputKeys.pollFirst()));
+        }
+
         return this;
     }
 
@@ -152,5 +210,44 @@ public abstract class AbstractBlock implements Block {
     @Override
     public Map<String, Channel> getOutputChannels() {
         return this.outputChannels;
+    }
+
+    @Override
+    public Matrix evaluateInput(Matrix inputData) {
+        if (this.getOutputChannels().size() != 1) {
+            throw new IllegalCallerException("This method can only be called on blocks with one input and output");
+        }
+
+        BounceNode feedForward = new FeedforwardBounce(inputData);
+        feedForward.connectToMainBlock(this);
+        feedForward.acceptReadySignal();
+        feedForward.releaseFromMainBlock();
+
+        return this.getFirstOutput().getResult();
+    }
+
+    @Override
+    public void train(Matrix inputData, Matrix targetData, int iterations, double learningRate) {
+        AbstractBlock.configuration = new BlockConfiguration(inputData.getRows(), iterations);
+
+        BounceNode feedForward = new FeedforwardBounce(inputData);
+        BounceNode backProp = new backpropagationBounce(targetData);
+
+        feedForward.connectToMainBlock(this);
+        backProp.connectToMainBlock(this);
+
+        for (int i = 0; i < iterations; i++) {
+            feedForward.acceptReadySignal();
+        }
+
+        feedForward.releaseFromMainBlock();
+        backProp.releaseFromMainBlock();
+
+        AbstractBlock.configuration = null;
+    }
+
+    @Override
+    public void train(Matrix inputData, Matrix targetData, int iterations) {
+        this.train(inputData, targetData, iterations, 0.2);
     }
 }

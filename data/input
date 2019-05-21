@@ -1,42 +1,34 @@
-block AnnLayer {
+block ANN {
+    mychannel:in in;
+    mychannel:out out;
 
-  channel:in in1;
-  channel:out out1;
-  channel:in in2;
-  channel:out out2;
-
-  blueprint(size si, blueprint blue){
-    abc();
-
-    block a = build Abs();
-
-    block b = build Abs();
-
-    a = build Abs();
-    b = a;
-    a = build Abs();
-  }
-
-  procedure abc(block abc, blueprint blue123) {
-
-  }
+    blueprint() {
+        this.in
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> this.out;
+    }
 }
 
-block Abs {
-  channel:in in;
-  channel:out out;
+block Layer {
+    mychannel:in in;
+    mychannel:out out;
 
-  blueprint(blueprint blue, size si){
-    ;;;;;
-  }
-}
+    blueprint() {
+        source weights = build Source([1000, 1000]);
+        source bias = build Source([1000, 1000]);
 
+        operation mult = build Multiplication();
 
-block Hmmm {
-  channel:in in;
-  channel:out out;
-
-  blueprint(blueprint blue, size si){
-    ;;;;;
-  }
+        (this.in, weights) -> mult;
+        (mult, bias) -> build _Addition() -> build _Sigmoid() -> this.out;
+    }
 }

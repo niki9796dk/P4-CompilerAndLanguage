@@ -161,7 +161,6 @@ class SymbolTableTest {
         assertFalse(this.s.isPredefinedOperation("Division"));
         assertFalse(this.s.isPredefinedOperation("_Transpose"));
         assertFalse(this.s.isPredefinedOperation("Lizard"));
-
     }
 
     @Test
