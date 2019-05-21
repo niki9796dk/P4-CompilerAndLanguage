@@ -39,6 +39,10 @@ import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -46,6 +50,9 @@ public class CodeGenerationVisitor extends ScopeTracker {
     private List<BlockClass> blockClasses = new ArrayList<>();
     private CodeScope currentCodeScope;
     private Map<Integer, String> placeholderVars = new HashMap<>();
+
+    private static String EXPORT_PATH = "AutoGen/CodeGen/";
+    private static String EXPORT_PACKAGE = "AutoGen.CodeGen";
 
     public CodeGenerationVisitor(SymbolTable symbolTable) {
         super(symbolTable);
@@ -67,7 +74,13 @@ public class CodeGenerationVisitor extends ScopeTracker {
         switch (node.getNodeEnum()) {
             // Setup enums
             case BLOCK:
-                this.blockClasses.add(new BlockClass(nodeId, "CodeGeneration.Building"));
+                // Import the new block in all previous defined blocks
+                for (BlockClass blockClass : this.blockClasses) {
+                    blockClass.addImport(EXPORT_PACKAGE + "." + nodeId);
+                }
+
+                // Add the new block to the list of block classes
+                this.blockClasses.add(new BlockClass(nodeId, EXPORT_PACKAGE));
                 break;
 
             case CHANNEL_DECLARATIONS:
@@ -143,10 +156,24 @@ public class CodeGenerationVisitor extends ScopeTracker {
         switch (node.getNodeEnum()) {
             // No action enums
             case ROOT:
+                try {
+                    if (!Files.exists(Paths.get(EXPORT_PATH))) {
+                        Files.createDirectories(Paths.get(EXPORT_PATH));
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
                 for (BlockClass blockClass : this.blockClasses) {
-                    System.out.println("###############################");
-                    System.out.println(blockClass.toString());
-                    System.out.println("###############################");
+                    Path filePath = Paths.get(EXPORT_PATH + blockClass.getClassName() + ".java");
+
+                    try (Writer writer = Files.newBufferedWriter(filePath)) {
+
+
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             break;
 

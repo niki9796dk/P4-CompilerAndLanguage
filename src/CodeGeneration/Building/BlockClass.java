@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockClass {
-
     private String className;
     private String classPackage;
 
@@ -21,12 +20,20 @@ public class BlockClass {
         this.classPackage = classPackage;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
     public CodeScope getBlueprint() {
         return blueprint;
     }
 
     public void addProcedure(CodeScope procedure) {
         this.procedures.add(procedure);
+    }
+
+    public void addImport(String fullImport) {
+        this.imports.add(fullImport);
     }
 
     @Override
