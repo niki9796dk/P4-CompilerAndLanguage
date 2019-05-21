@@ -18,6 +18,6 @@ block Layer {
         operation mult = build Multiplication();
 
         (this.in, weights) -> mult;
-        (multW, bias) -> build _Addition() -> build acti() -> this.out;
+        (mult, bias) -> build _Addition() -> build acti() -> this.out;
     }
 }

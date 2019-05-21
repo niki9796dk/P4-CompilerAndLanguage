@@ -1,6 +1,9 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation;
 
 import CodeGeneration.DataFlow.Network.Nodes.Block;
+import CodeGeneration.utility.Print;
+import DataStructures.Pair;
+import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
@@ -9,23 +12,19 @@ import LinearAlgebra.Types.Matrices.MatrixBuilder;
  * Contains a mutable matrix.
  * Whenever its input is changed, it will call acceptReadySignal()
  */
-public class Input extends NullaryAbstractOperation {
-    private Matrix input;
-
-    /**
-     * Create an empty Input object with NULL as its contents.
-     */
-    public Input() {
-        input = null;
-    }
+public class Input extends Source {
 
     /**
      * Create a new input NullaryOperation with a matrix.
      *
-     * @param matrix The initial matrix contents.
      */
+
+    public Input(Pair<Integer, Integer> size) {
+        super(size);
+    }
+
     public Input(Matrix matrix) {
-        this.setInput(matrix);
+        super(matrix);
     }
 
     /**
@@ -34,7 +33,7 @@ public class Input extends NullaryAbstractOperation {
      * @param matrix The initial matrix contents.
      */
     public Input(MatrixBuilder matrix) {
-        this.setInput(matrix.build());
+        super(matrix);
     }
 
 
@@ -44,8 +43,9 @@ public class Input extends NullaryAbstractOperation {
      * @param source The new matrix contents.
      * @return A reference of this object.
      */
+    @Deprecated
     public Input setInput(MatrixBuilder source) {
-        return this.setInput(source.build());
+        return this.setInput(source.buildDenseMatrix());
     }
 
     /**
@@ -55,22 +55,10 @@ public class Input extends NullaryAbstractOperation {
      * @return A reference of this object.
      */
     public Input setInput(Matrix source) {
-        this.input = source;
+        this.result = source;
         this.acceptReadySignal();
         return this;
     }
-
-
-    /**
-     * Perform a nullary operation.
-     *
-     * @return The result of the operation.
-     */
-    @Override
-    protected Matrix operation() {
-        return this.input;
-    }
-
 
     /**
      * Connect the Input to a block, and signal that this block is ready.
@@ -83,16 +71,8 @@ public class Input extends NullaryAbstractOperation {
      */
     @Override
     public Input connectTo(Block toBlock, String fromChannelId, String toChannelId) {
-        if (this.input == null)
-            throw new NullPointerException("Contents of input is NULL!");
-
         super.connectTo(toBlock, fromChannelId, toChannelId);
         this.acceptReadySignal();
         return this;
-    }
-
-    @Override
-    public void performBackpropagationOperation() {
-        // TODO: DO nothing? Do something?
     }
 }

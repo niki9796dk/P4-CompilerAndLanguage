@@ -29,13 +29,12 @@ class NullaryAbstractOperationTest {
                 .addRow(3, 4)
                 .buildDenseMatrix();
 
-        operations.add(new Input());
         operations.add(new Input(input));
         operations.add(new Source(input));
 
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(2)
     void performOperation(RepetitionInfo r) {
         int i = r.getCurrentRepetition() - 1;
 
@@ -55,7 +54,10 @@ class NullaryAbstractOperationTest {
 
     @Test
     void setInput(){
-        Input input = new Input();
+        Input input = new Input(new MatrixBuilder()
+                .addRow(1, 1)
+                .addRow(1, -1)
+                .buildDenseMatrix());
 
         Matrix matrix000 = new MatrixBuilder()
                 .addRow(1, 2)
