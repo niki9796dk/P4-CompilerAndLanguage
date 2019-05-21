@@ -47,7 +47,6 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
             throw new NullPointerException("in2 is null!");
 
         this.result = operation(in1, in2);
-        forward.say("performOperation() -> result = " + this.result);
     }
 
     @Override
@@ -71,7 +70,7 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
                 this.getChannel("out")
         );
 
-        backprop.say("performOperation() -> result = " + this.resultBackpropagation.toString());
+        //backprop.say("performOperation() -> result = " + this.resultBackpropagation.toString());
     }
 
     /**

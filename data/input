@@ -3,7 +3,18 @@ block ANN {
     mychannel:out out;
 
     blueprint() {
-        this.in -> build Layer(draw _Sigmoid, [2, 1], [4, 1]) -> this.out;
+        this.in
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> build Layer()
+        -> this.out;
     }
 }
 
@@ -11,13 +22,13 @@ block Layer {
     mychannel:in in;
     mychannel:out out;
 
-    blueprint(blueprint acti, size sourceSize, size biasSize) {
-        source weights = build Source(sourceSize);
-        source bias = build Source(biasSize);
+    blueprint() {
+        source weights = build Source([1000, 1000]);
+        source bias = build Source([1000, 1000]);
 
         operation mult = build Multiplication();
 
         (this.in, weights) -> mult;
-        (multW, bias) -> build _Addition() -> build acti() -> this.out;
+        (mult, bias) -> build _Addition() -> build _Sigmoid() -> this.out;
     }
 }

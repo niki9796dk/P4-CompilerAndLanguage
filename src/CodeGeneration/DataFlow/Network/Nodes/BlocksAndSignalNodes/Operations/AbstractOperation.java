@@ -15,9 +15,6 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
     protected Matrix result;
     protected HashMap<Channel, Matrix> resultBackpropagation = new HashMap<>();
 
-    protected Print forward = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName()).mute();
-    protected Print backprop = new Print(AnsiColor.YELLOW, "Channel." + this.getClass().getSimpleName()).mute();
-
     /**
      * Get result of operation
      *
@@ -34,16 +31,11 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
      */
     @Override
     public void acceptReadySignal() {
-        forward.say("I have accepted a ready signal");
-
         if (this.isReady()) {                       // If all inputs are isReady
             this.isReadyBackpropagation = false;
-            forward.say("-> And I was ready");
 
             this.performOperation();                // Then perform the operation
             this.getOutputChannel().acceptReadySignal();  // And signal that the output channel now is isReady.
-        } else {
-            forward.say("-> And I was not ready");
         }
     }
 
@@ -80,22 +72,14 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
 
     @Override
     public void acceptReadyBackpropagationSignal() {
-        backprop.say("I accepted a back prop signal");
-
         if (this.isReadyBackpropagation()) {                       // If all inputs are isReady
             this.isReady = false;
             this.performBackpropagationOperation();                // Then perform the operation
 
-            backprop.say("And I was Ready");
-
             for (Channel inputChannel : this.getInputs()) {
-                backprop.say("Sent to -> " + inputChannel);
                 inputChannel.acceptReadyBackpropagationSignal();  // And signal that the output channel now is isReady.
             }
         }
-
-        backprop.say("And I was not Ready");
-
     }
 
     @Override

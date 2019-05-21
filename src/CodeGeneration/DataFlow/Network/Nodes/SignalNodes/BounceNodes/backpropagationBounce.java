@@ -42,7 +42,7 @@ public class backpropagationBounce extends AbstractBounceNode {
         Matrix prediction = this.source.getResult();
 
         //print.say("My prediction => " + prediction);
-        print.say("The error was => " + Matrices.sumMatrix(costFunction.cost(target, prediction)));
+        //print.say("The error was => " + Matrices.sumMatrix(costFunction.cost(target, prediction)));
 
         this.derivatives = costFunction.costPrime(target, prediction);
     }

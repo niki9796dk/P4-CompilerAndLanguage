@@ -14,9 +14,6 @@ public abstract class AbstractChannel implements Channel {
     protected SignalNode source;
     protected Collection<SignalNode> targets;
 
-    protected Print forward = new Print(AnsiColor.GREEN, "Channel." + this.getClass().getSimpleName()).mute();
-    protected Print backprop = new Print(AnsiColor.YELLOW, "Channel." + this.getClass().getSimpleName()).mute();
-
 
     /**
      * Constructor for ListChannel class that sets a source and a number of target SignalNodes
@@ -110,8 +107,6 @@ public abstract class AbstractChannel implements Channel {
 
     @Override
     public void acceptReadySignal() {
-        forward.say("As a channel, I have accepted a ready signal");
-
         this.ready = true;  // Store ready state for later recall
         this.sendReadySignals(); // Signal all outputs that their input is now ready.
     }
@@ -124,16 +119,12 @@ public abstract class AbstractChannel implements Channel {
 
     @Override
     public void acceptReadyBackpropagationSignal() {
-        backprop.say("As a channel, I accepted a back prop signal");
 
         for (SignalNode target : targets) {
             if(!target.isReadyBackpropagation()) {
-                backprop.say("-> But I was not ready!");
                 return;
             }
         }
-
-        backprop.say("-> And I was ready!");
 
         this.backpropagationReady = true;
         this.sendReadyBackpropagationSignals();
