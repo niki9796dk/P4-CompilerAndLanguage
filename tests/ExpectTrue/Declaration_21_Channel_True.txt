@@ -8,7 +8,8 @@ block decla_25 {
 	    channel:in b = a.input;
 	    channel:in c = b;
 
-		this.input -> this.output;
+		this.input -> c;
+		a.output -> this.output;
 	}
 }
 

@@ -6,7 +6,7 @@ block chain_01 {
 	blueprint() {
 		block a = (build Test());
 
-		this.input -> this.output;
+		this.input -> a -> this.output;
 	}
 }
 

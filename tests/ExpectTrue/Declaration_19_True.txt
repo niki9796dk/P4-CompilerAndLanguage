@@ -18,9 +18,10 @@ block decla_19 {
 
 		operation ope = build b2();
 
+		b1 = draw BarbaraStreisand;
+
 		// Create a new chain, which now used the updated blueprint type
 		(blo, build b1()) -> ope -> this.output;
-		input -> b1
 	}
 }
 
@@ -30,5 +31,13 @@ block Singleton {
 
 	blueprint() {
 		this.input -> this.output;
+	}
+}
+
+block BarbaraStreisand {
+	mychannel:out output;
+
+	blueprint() {
+		build Source([3,7]) -> this.output;
 	}
 }
