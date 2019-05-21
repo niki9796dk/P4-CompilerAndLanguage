@@ -110,7 +110,9 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
                             if (!isOperation && !isSource) {
                                 BlockScope blockScope = this.typeSystem.getSymbolTable().getBlockScope(theBlock);
-                                if (blockScope.getChannelDeclarationScope().getVariable(childId) == null) {
+                                if (blockScope
+                                        .getChannelDeclarationScope()
+                                        .getVariable(childId) == null) {
                                     throw new NoSuchVariableDeclaredException("The channel is not there");
                                 }
                             } else {

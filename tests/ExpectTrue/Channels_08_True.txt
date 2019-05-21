@@ -1,0 +1,17 @@
+block channels_01 {
+	mychannel:in input1;
+	mychannel:out output;
+	mychannel:in input2;
+
+	blueprint() {
+	    operation op = build Multiplication();
+
+	    channel:in in1 = op.A;
+	    channel:in in2 = op.B;
+	    channel:out out1 = op.out;
+
+        this.input1 -> in1;
+        this.input2 -> in2;
+        out1 -> this.output;
+	}
+}
