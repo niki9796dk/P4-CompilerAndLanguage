@@ -39,7 +39,8 @@ public class ListParameters implements ParameterCollection {
                 String parString = parameter.toString();
 
                 if (asCall) {
-                    parString = parString.split(" ")[1];
+                    String[] split = parString.split(" ");
+                    parString = split[split.length-1];
                 }
 
                 builder.append(parString)

@@ -51,7 +51,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
     private CodeScope currentCodeScope;
     private Map<Integer, String> placeholderVars = new HashMap<>();
 
-    private static String EXPORT_PATH = "AutoGen/CodeGen/";
+    private static String EXPORT_PATH = "src/AutoGen/CodeGen/";
     private static String EXPORT_PACKAGE = "AutoGen.CodeGen";
 
     public CodeGenerationVisitor(SymbolTable symbolTable) {
@@ -169,7 +169,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
 
                     try (Writer writer = Files.newBufferedWriter(filePath)) {
 
-
+                        writer.write(blockClass.toString());
 
                     } catch (Exception e) {
                         throw new RuntimeException(e);
@@ -264,11 +264,20 @@ public class CodeGenerationVisitor extends ScopeTracker {
     }
 
     private void groupConnect(AbstractNode groupNode, AbstractNode rightNode) {
+        rightNode = this.transformIfAssign(rightNode);
+        Statement rightStatement = this.getStatementFromNode(rightNode);
+
         int groupElems = groupNode.countChildren();
 
-        for (int i = 0; i < groupElems; i++) {
+        List<Statement> groupElements = new ArrayList<>(groupElems);
 
+        AbstractNode groupElement = groupNode.getChild();
+        for (int i = 0; i < groupElems; i++) {
+            groupElements.add(this.getStatementFromNode(groupElement));
+            groupElement = groupElement.getSib();
         }
+
+        this.currentCodeScope.addStatement(new GroupChain(rightStatement, groupElements.toArray(new Statement[0])));
     }
 
     private void singleConnect(AbstractNode leftNode, AbstractNode rightNode) {

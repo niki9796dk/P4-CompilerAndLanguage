@@ -1,9 +1,9 @@
-block AnnLayer {
+block ANN {
     mychannel:in in;
     mychannel:out out;
 
-    blueprint(){
-        this.in -> build Layer(draw _Sigmoid, draw _Relu) -> this.out;
+    blueprint() {
+        this.in -> build Layer(draw _Sigmoid, [2, 1], [4, 1]) -> this.out;
     }
 }
 
@@ -11,9 +11,13 @@ block Layer {
     mychannel:in in;
     mychannel:out out;
 
-    blueprint(blueprint helloWorld, blueprint hmm){
-        operation myOpe = build helloWorld();
+    blueprint(blueprint acti, size sourceSize, size biasSize) {
+        source weights = build Source(sourceSize);
+        source bias = build Source(biasSize);
 
-        this.in -> myOpe -> build hmm() -> this.out;
+        operation mult = build Multiplication();
+
+        (this.in, weights) -> mult;
+        (multW, bias) -> build _Addition() -> build acti() -> this.out;
     }
 }

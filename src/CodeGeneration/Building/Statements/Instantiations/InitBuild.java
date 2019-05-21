@@ -22,6 +22,8 @@ public class InitBuild implements Statement {
 
     @Override
     public String toString() {
-        return "new " + buildId + params;
+        String paramsString = (params != null) ? params.toString() : "()";
+
+        return "new " + buildId + paramsString;
     }
 }

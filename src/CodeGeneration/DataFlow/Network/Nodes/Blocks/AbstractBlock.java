@@ -9,7 +9,7 @@ import Enums.AnsiColor;
 import java.util.*;
 
 public abstract class AbstractBlock implements Block {
-    private Print print = new Print(AnsiColor.PURPLE, "Block." + this.getClass().getSimpleName());
+    private Print print = new Print(AnsiColor.PURPLE, "Block." + this.getClass().getSimpleName()).mute();
 
     private LinkedHashMap<String, Channel> inputChannels = new LinkedHashMap<>(2);
     private LinkedHashMap<String, Channel> outputChannels = new LinkedHashMap<>(1);
@@ -141,7 +141,7 @@ public abstract class AbstractBlock implements Block {
             Channel channel = null;
 
             if(node instanceof Channel) channel = (Channel) node;
-            else if(node instanceof Block) ((Block) node).getFirstOutput();
+            else if(node instanceof Block) channel = ((Block) node).getFirstOutput();
             else throw new IllegalArgumentException("Input must be a block or channel in the current implementation");
             assert channel != null;
 
@@ -172,8 +172,9 @@ public abstract class AbstractBlock implements Block {
         if (inputKeys.size() != channels.length)
             throw new IllegalArgumentException("The amount of group connections MUST match the amount of inputs.");
 
-        for (Channel channel : channels)
+        for (Channel channel : channels) {
             channel.tether(this.inputChannels.get(inputKeys.pollFirst()));
+        }
 
         return this;
     }
