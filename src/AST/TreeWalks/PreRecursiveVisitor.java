@@ -2,17 +2,14 @@ package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import AST.Visitor;
 import SemanticAnalysis.Datastructures.HashSetStack;
 import SemanticAnalysis.Exceptions.NoMainBlockException;
 import SemanticAnalysis.Exceptions.SemanticProblemException;
 import SymbolTableImplementation.SymbolTable;
-import SymbolTableImplementation.SymbolTableInterface;
 
 import java.util.HashSet;
 import java.util.LinkedList;
