@@ -29,10 +29,6 @@ public class _Division extends BinaryAbstractOperation {
     protected Matrix calculateIn2Derivatives(Matrix in1, Matrix out) {
         Matrix in2BackPropResult = this.getChannel("in2").getResult();
 
-        if (in2BackPropResult == null) {
-            throw new NullPointerException("in2BackPropResult is null");
-        }
-
         return this.calculateIn2Derivatives(in1, in2BackPropResult, out);
     }
 

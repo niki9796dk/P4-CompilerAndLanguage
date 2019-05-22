@@ -85,7 +85,7 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
 
     protected abstract Matrix operation(Matrix in1, Matrix in2);
 
-    protected HashMap<Channel, Matrix> operationBackpropagation(Channel in1, Channel in2, Channel out) {
+    public HashMap<Channel, Matrix> operationBackpropagation(Channel in1, Channel in2, Channel out) {
         HashMap<Channel, Matrix> backpropResults = new HashMap<>();
 
         backpropResults.put(in1, this.calculateIn1Derivatives(in2.getResult(), out.getResultBackpropagation()));
