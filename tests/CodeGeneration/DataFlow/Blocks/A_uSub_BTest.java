@@ -4,7 +4,7 @@ import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Subtraction;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Input;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
@@ -20,13 +20,13 @@ class A_uSub_BTest {
         Block block000 = new A_uSub_B();
 
 
-        Input source000 = new Input(
+        Source source000 = new Source(
                 new MatrixBuilder()
                         .addRow(1, 2)
                         .addRow(4, 5)
         );
 
-        Input source001 = new Input(
+        Source source001 = new Source(
                 new MatrixBuilder()
                         .addRow(3, 2)
                         .addRow(4, 3)

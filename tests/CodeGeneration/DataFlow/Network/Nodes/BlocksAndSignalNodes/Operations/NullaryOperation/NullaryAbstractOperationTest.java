@@ -29,55 +29,24 @@ class NullaryAbstractOperationTest {
                 .addRow(3, 4)
                 .buildDenseMatrix();
 
-        operations.add(new Input(input));
         operations.add(new Source(input));
 
     }
 
-    @RepeatedTest(2)
+    @RepeatedTest(1)
     void performOperation(RepetitionInfo r) {
         int i = r.getCurrentRepetition() - 1;
 
         NullaryAbstractOperation op = operations.get(i);
 
-
         op.performOperation();
 
-        if (i == 0) assertNull(op.getResult());
-        else assertEquals(op.getResult(), input);
+        assertEquals(op.getResult(), input);
     }
 
     @Test
     void addNewInputLabel() {
         assertThrows(IllegalMethodException.class, () -> operations.get(0).addNewInputLabel("in", new ListChannel()));
-    }
-
-    @Test
-    void setInput(){
-        Input input = new Input(new MatrixBuilder()
-                .addRow(1, 1)
-                .addRow(1, -1)
-                .buildDenseMatrix());
-
-        Matrix matrix000 = new MatrixBuilder()
-                .addRow(1, 2)
-                .addRow(3, 4)
-                .buildDenseMatrix();
-
-        Matrix matrix001 = new MatrixBuilder()
-                .addRow(3, 3)
-                .addRow(3, 3)
-                .buildDenseMatrix();
-
-        assertThrows(NullPointerException.class, ()-> input.getOutputChannel().getResult());
-
-
-        input.setInput(matrix000);
-        assertEquals(matrix000, input.getOutputChannel().getResult());
-
-        input.setInput(matrix001);
-        assertEquals(matrix001, input.getOutputChannel().getResult());
-
     }
 
 

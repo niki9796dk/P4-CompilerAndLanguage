@@ -1,7 +1,7 @@
 package CodeGeneration.DataFlow.Executions;
 
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Input;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.MatrixOperations.Transpose;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
@@ -17,7 +17,7 @@ public class mainInput {
         ////////// Block Decelerations //////////
 
         /// Sources ///
-        Input input = new Input(new MatrixBuilder()
+        Source input = new Source(new MatrixBuilder()
                 .addRow(0, 999)
                 .addRow(1, 2));
 
@@ -31,9 +31,10 @@ public class mainInput {
         print.say("operation000: " + operation000.getChannel("out").getResult());
 
         //Change input
-        input.setInput(new MatrixBuilder()
+        input = new Source(new MatrixBuilder()
                 .addRow(3, 4)
                 .addRow(1, 32));
+        input.connectTo(operation000, "out", "in");
         print.say("operation000: " + operation000.getChannel("out").getResult());
 
         ///////// EOF //////////

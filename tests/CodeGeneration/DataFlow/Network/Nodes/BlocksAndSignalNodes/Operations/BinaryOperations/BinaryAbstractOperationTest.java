@@ -5,8 +5,7 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Bin
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Division;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Multiplication;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Subtraction;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Input;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.IllegalMethodException;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
@@ -25,7 +24,7 @@ class BinaryAbstractOperationTest {
 
     private ArrayList<BinaryAbstractOperation> operations;
     private ArrayList<Matrix> expectedResultsOperations;
-    private Input in1, in2;
+    private Source in1, in2;
 
     @BeforeEach
     void beforeEach() {
@@ -37,11 +36,11 @@ class BinaryAbstractOperationTest {
         operations.add(new _Multiplication());
         operations.add(new _Subtraction());
 
-        in1 = new Input(new MatrixBuilder()
+        in1 = new Source(new MatrixBuilder()
                 .addRow(1, 2)
                 .addRow(3, 4)
         );
-        in2 = new Input(new MatrixBuilder()
+        in2 = new Source(new MatrixBuilder()
                 .addRow(3, 1)
                 .addRow(2, 4)
         );
