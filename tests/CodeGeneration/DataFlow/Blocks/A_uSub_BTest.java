@@ -41,6 +41,9 @@ class A_uSub_BTest {
 
         source001.connectTo(block000, "out", "B");
 
+        source000.acceptReadySignal();
+        source001.acceptReadySignal();
+
 
         Print.echo(AnsiColor.PURPLE, "" + block000.getOutputChannels().get("out").getResult());
 

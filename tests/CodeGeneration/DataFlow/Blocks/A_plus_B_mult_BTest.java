@@ -39,8 +39,10 @@ class A_plus_B_mult_BTest {
                 .build();
 
         source000.connectTo(block000, "out", "A");
-
         source001.connectTo(block000, "out", "B");
+
+        source000.acceptReadySignal();
+        source001.acceptReadySignal();
 
 
         Print.echo(AnsiColor.PURPLE, "" + block000.getOutputChannels().get("out").getResult());
