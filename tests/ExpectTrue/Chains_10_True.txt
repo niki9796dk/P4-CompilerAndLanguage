@@ -6,7 +6,7 @@ block chain_10 {
 	blueprint() {
 		this.input -> block b = build Test();
 		
-		(this.input, build Source(), b, source s = build Source()) -> build LargeOpe() -> this.output;
+		(this.input, build Source([4,4]), b, source s = build Source([4,4])) -> build LargeOpe() -> this.output;
 	}
 }
 

@@ -13,7 +13,7 @@ block Test {
     mychannel:out out;
 
     blueprint(blueprint blue, size s) {
-        operation o = build blue(s);
+        operation o = build blue();
 
         this.in -> o.A;
         o.out -> this.out;

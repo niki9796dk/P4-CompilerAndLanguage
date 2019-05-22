@@ -9,6 +9,8 @@ block chain_12 {
 		block c = build Test();
 
 		this.input -> a;
+		this.input -> b;
+		this.input -> c;
 		(a.out, b.out, c.out) -> build LargeOpe() -> this.output;
 	}
 }

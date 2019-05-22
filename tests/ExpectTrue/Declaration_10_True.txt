@@ -2,14 +2,18 @@
 block decla_10 {
 	mychannel:in input;
 	mychannel:out output;
+	mychannel:out output2;
 	
 	blueprint() {
 		block b = build Test();
+
+		input -> b -> output;
+
 		b = build Abc();
 	
 		mychannel:in s = (this.input);
 
-		this.input -> this.output;
+		this.input -> b -> this.output2;
 	}
 }
 

@@ -3,7 +3,7 @@ block channels_07 {
 	mychannel:out out;
 
 	blueprint() {
-	    source sour = build Source();
+	    source sour = build Source([4,4]);
 	    block b = build Test();
 
         this.in -> b -> sour;

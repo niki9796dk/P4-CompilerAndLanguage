@@ -41,6 +41,6 @@ block LargeOpe {
         (this.input5, this.input6) -> mult3;
 
         (mult1, mult3) -> mult4;
-        (mult2, mult3) -> mult5 -> this.output;
+        (mult2, mult4) -> mult5 -> this.output;
     }
 }

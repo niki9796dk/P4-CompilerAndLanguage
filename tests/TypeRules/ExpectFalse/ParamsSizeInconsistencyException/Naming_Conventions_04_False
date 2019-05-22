@@ -7,7 +7,7 @@ block id_01{
 		blueprint pipe = draw _Sigmoid;
 		operation mult = build id_02(pipe);
 
-		input -> mult -> output;
+		(input, input) -> mult -> output;
 
 	}
 }

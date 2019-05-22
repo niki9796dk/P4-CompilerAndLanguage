@@ -60,27 +60,15 @@ public class MainParse {
 
         prog.walkTree(new PreRecursiveVisitor(symbolTable));
 
-        //prog.walkTree(new TypeCheckerVisitor(symbolTable));
-
         new RecursiveVisitor(symbolTable, new ScopeCheckerVisitor(symbolTable)).startRecursiveWalk();
-        
-        //
 
         new RecursiveVisitor(symbolTable, new TypeCheckerVisitor(symbolTable)).startRecursiveWalk();
 
-        //
-
         new RecursiveVisitor(symbolTable, new SemanticAnalysisVisitor(symbolTable)).startRecursiveWalk();
 
+        new RecursiveVisitor(symbolTable, new FlowCheckVisitor(symbolTable)).startRecursiveWalk();
+
         prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
-
-        /*
-        prog.walkTree(new ScopeCheckerVisitor(symbolTable));
-
-        prog.walkTree(new TypeCheckerVisitor(symbolTable));
-
-        prog.walkTree(new SemanticAnalysisVisitor(symbolTable));
-        */
 
         return true;
     }

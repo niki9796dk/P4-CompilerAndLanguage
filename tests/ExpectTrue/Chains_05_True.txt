@@ -7,7 +7,8 @@ block chain_05 {
 		block a = build Test();
 		block b = build Test();
 		operation c = build Multiplication();
-		
+
+		this.input -> a;
 		(this.input, a) -> c -> b -> this.output;
 	}
 }
