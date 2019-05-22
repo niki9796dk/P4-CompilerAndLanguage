@@ -111,11 +111,6 @@ class SemanticAnalysisVisitorTest {
         assertThrows(UnexpectedNodeException.class, () -> semanticAnalysisVisitor.post(1, unexpectedNode));
     }
 
-    @Test
-    void getFlowChecker() {
-        assertNotNull(this.semanticAnalysisVisitor.getFlowChecker());
-    }
-
     @Disabled
     @Test
     void getBuildNodes() {

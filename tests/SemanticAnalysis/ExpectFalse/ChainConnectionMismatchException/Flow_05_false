@@ -5,7 +5,7 @@ block Master {
     blueprint() {
         block mySlave = build Slave();
 
-        this.in -> mySlave.in1;
+        this.in -> mySlave;
         this.in -> mySlave.in2;
 
         mySlave.out1 -> this.out;

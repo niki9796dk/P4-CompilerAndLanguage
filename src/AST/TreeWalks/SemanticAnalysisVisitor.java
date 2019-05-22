@@ -28,7 +28,6 @@ import java.util.*;
 public class SemanticAnalysisVisitor extends ScopeTracker {
 
     // Fields:
-    FlowChecker currentFlow;
 
     // Constants:
     private static final int UNARY_INPUT = 1;
@@ -40,7 +39,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
      */
     public SemanticAnalysisVisitor(SymbolTable symbolTable) {
         super(symbolTable);
-        FlowChecker.setup(symbolTable);
     }
 
     /**
@@ -55,16 +53,9 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
 
         // Perform visitor
         switch (((NamedNode) node).getNodeEnum()) {
-            case ROOT:
-                FlowChecker.setup(symbolTable);
-                break;
+            // No action enums
             case BLOCK:
-                break;
-
             case BLUEPRINT:
-                currentFlow = FlowChecker.startBlock(currentBlockScope);
-                break;
-
             case PROCEDURE:
             case CHANNEL_DECLARATIONS:
             case GROUP:
@@ -75,6 +66,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             case PARAMS:
             case DRAW:
             case SIZE:
+            case ROOT:
             case SIZE_TYPE:
             case BLOCK_TYPE:
             case SOURCE_TYPE:
@@ -83,14 +75,11 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             case SELECTOR:
             case CHANNEL_IN_MY:
             case CHANNEL_OUT_MY:
-                break;
-
             case BUILD:
-                this.currentFlow.addBuild((BuildNode) node, currentSubScope);
                 break;
 
             case CHAIN:
-                this.currentFlow.addChain((ChainNode) node, currentSubScope);
+                this.verifyChain((ChainNode) node);
                 break;
 
             default:
@@ -117,12 +106,9 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             case ROOT:
                 break;
 
-            case BLUEPRINT:
-                currentFlow = currentFlow.evaluateBlock();
+            case BLOCK:
                 break;
 
-            case PROCEDURE:
-            case BLOCK:
             case GROUP:
             case BUILD:
             case CHAIN:
@@ -132,6 +118,8 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
             case DRAW:
             case SIZE:
             case ASSIGN:
+            case BLUEPRINT:
+            case PROCEDURE:
             case CHANNEL_DECLARATIONS:
             case CHANNEL_IN_MY:
             case CHANNEL_OUT_MY:
@@ -149,77 +137,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
         }
     }
 
-    /**
-     * Extracts all channel uses within a chain.
-     * @param chainNode The ChainNode.
-     */
-//    private void extractMyChannelsUses(AbstractNode chainNode) {
-//        AbstractNode child = chainNode.getChild();
-//
-//        while (child != null) {
-//            this.handleChannel(child);
-//            child = child.getSib();
-//        }
-//    }
-
-    /**
-     * Helper function used to extract all channel uses within a chain.
-     * If node is instance of a group, all the group children are handled recursively,
-     * else if it's a selector we first check that the selector is for a channel, and then handle that selector,
-     * and ignore everything else.
-     * @param node A single chain element
-     */
-//    private void handleChannel(AbstractNode node) {
-//        if (node instanceof GroupNode) {
-//            for (AbstractNode child = node.getChild(); child != null; child = child.getSib()) {
-//                this.handleChannel(child);
-//            }
-//        } else if (node instanceof SelectorNode) {
-//
-//            NodeEnum nodeSuperType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
-//
-//            if (nodeSuperType == NodeEnum.CHANNEL_IN_MY || nodeSuperType == NodeEnum.CHANNEL_OUT_MY) {
-//                this.handleSelector((SelectorNode) node);
-//            }
-//
-//        }
-//    }
-
-    /**
-     * Helper function used to extract all channel uses within a chain.
-     * Depending on the type of the selector different behaviour is executed.
-     * If it's a straight channel access, the ID is simply stored,
-     * else if it's a selector for another selector, we recursively follow the selectors until we find the channel in use.
-     * @param node The SelectorNode to extract channel uses from.
-     */
-//    private void handleSelector(SelectorNode node) {
-//        boolean isThis = ("this").equals(node.getId());
-//
-//        String prefix = flowChecker.channelPrefix(node, currentBlockScope, currentSubScope);
-//
-//        if (isThis) {
-//            String childId = ((NamedIdNode) node.getChild()).getId();
-//
-//            flowChecker.getConnected().add(prefix + childId);
-//        } else {
-//            Scope scope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
-//            VariableEntry localVariable = scope.getVariable(node);
-//
-//            boolean isLocalVariable = localVariable != null;
-//
-//            if (isLocalVariable) {
-//                NumberedNode subtypeNode = localVariable.getSubType(node.getNumber());
-//
-//                if (subtypeNode instanceof SelectorNode) {
-//                    this.handleSelector((SelectorNode) subtypeNode);
-//                    return;
-//                }
-//
-//            }
-//
-//            flowChecker.getConnected().add(prefix + node.getId());
-//        }
-//    }
 
     /**
      * Verify every child connection within a chain.
@@ -414,11 +331,6 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
     private int countOutChannelsOfOperation(AbstractNode rightNode) {
         return 1; // TODO: Connect this to some definition of operations.
     }
-
-    public FlowChecker getFlowChecker() {
-        return currentFlow;
-    }
-
     public Set<BlockNode> getBuildNodes() {
         return null;
     }
