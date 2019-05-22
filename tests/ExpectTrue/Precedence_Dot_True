@@ -8,7 +8,7 @@ block chain_01 {
 		block b = build Test();
 		block c = build Test();
 		
-		this.input -> a = b -> b -> c -> this.output;
+		this.input -> a -> a = b -> c -> this.output;
 	}
 }
 

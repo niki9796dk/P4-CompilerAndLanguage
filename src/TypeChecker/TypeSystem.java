@@ -3,12 +3,14 @@ package TypeChecker;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import SemanticAnalysis.Datastructures.ModeEnum;
 import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.IncorrectAssignmentTypesException;
 import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
@@ -90,13 +92,7 @@ public class TypeSystem {
         }
     }
 
-    /**
-     * Evaluates the sub type of a given node, and returns that type in the form of a NodeEnum.
-     * @param node The node to evaluate
-     * @param blockScopeId The current block scope to type check from
-     * @param subScopeId The current sub scope to type check from
-     * @return (NodeEnum|null) The type of the given node, as a NodeEnum. Returns null, if the given node does not have a designated type.
-     */
+
     public String getSubTypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
         NumberedNode numberedNode = (NumberedNode) node;
         NamedIdNode namedIdNode = (node instanceof NamedIdNode) ? (NamedIdNode) node : null;
@@ -126,7 +122,6 @@ public class TypeSystem {
             case CHANNEL_IN_TYPE:
                 return numberedNode.getNodeEnum().toString();
 
-
             case SIZE:
                 return NodeEnum.SIZE_TYPE.toString();
 
@@ -134,13 +129,81 @@ public class TypeSystem {
                 return namedIdNode.getId();
 
             case BUILD:
-                return this.getSubtypeOfBuildStatement((BuildNode) node, blockScopeId, subScopeId);
-
             case ASSIGN:
-                return this.getSubTypeOfNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+                return ((NamedIdNode) this.followNode(node, blockScopeId, subScopeId)).getId();
+            case SELECTOR:
+                AbstractNode base = this.followNode(node, blockScopeId, subScopeId);
+                if (base instanceof SelectorNode){
+                    return this.getSuperTypeOfNode(base, blockScopeId, subScopeId).toString();
+                } else {
+                    return ((NamedIdNode) base).getId();
+                }
+
+            default:
+                throw new UnexpectedNodeException(numberedNode.getNodeEnum());
+        }
+    }
+
+    public AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId){
+        return followNode(node, blockScopeId, subScopeId, ModeEnum.DEFAULT);
+    }
+
+    public AbstractNode followNodeToBuild(AbstractNode node, String blockScopeId, String subScopeId){
+        return followNode(node, blockScopeId, subScopeId, ModeEnum.BLOCK_SEEKER);
+    }
+
+    /**
+     * @param node The node to evaluate
+     * @param blockScopeId The current block scope to type check from
+     * @param subScopeId The current sub scope to type check from
+    * @param subScopeId The current sub scope to type check from
+     */
+    private AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId, ModeEnum mode){
+        NumberedNode numberedNode = (NumberedNode) node;
+
+        switch (numberedNode.getNodeEnum()) {
+            case ROOT:
+            case CHAIN:
+            case PROCEDURE_CALL:
+            case PARAMS:
+            case BLOCK:
+            case BLUEPRINT:
+            case PROCEDURE:
+            case CHANNEL_DECLARATIONS:
+            case GROUP:
+                return null; // These nodes don't have a sub type.
+
+            case SIZE_TYPE:
+            case BLOCK_TYPE:
+            case SOURCE_TYPE:
+            case BLUEPRINT_TYPE:
+            case OPERATION_TYPE:
+                return null; // These nodes, while they might have super type, would never actually have a sub type, since they are declarations.
+
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
+            case CHANNEL_OUT_TYPE:
+            case CHANNEL_IN_TYPE:
+                return node;
+
+            case SIZE:
+                return node;
+
+            case DRAW:
+                return node;
+
+            case BUILD:
+                if (mode.equals(ModeEnum.BLOCK_SEEKER)){
+                    return node;
+                } else {
+                    return this.getOriginOfBuildStatement((BuildNode) node, blockScopeId, subScopeId, mode);
+                }
+            case ASSIGN:
+                return this.followNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId, mode); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
 
             case SELECTOR:
-                return this.getSubTypeOfSelector((SelectorNode) node, blockScopeId, subScopeId);
+                return this.followSelector((SelectorNode) node, blockScopeId, subScopeId, mode);
+                // returns a selectornode in dot.notation cases
 
             default:
                 throw new UnexpectedNodeException(numberedNode.getNodeEnum());
@@ -154,7 +217,7 @@ public class TypeSystem {
      * @param subScopeId The current sub scope, from which we will compare from
      * @return The sub type of the build statement.
      */
-    private String getSubtypeOfBuildStatement(BuildNode node, String blockScopeId, String subScopeId) {
+    private AbstractNode getOriginOfBuildStatement(BuildNode node, String blockScopeId, String subScopeId, ModeEnum mode) {
         String buildId = node.getId();
 
         boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
@@ -169,13 +232,13 @@ public class TypeSystem {
             selectorNode.setNumber(node.getNumber());
 
             // Get the sub type of the selector
-            return this.getSubTypeOfNode(selectorNode, blockScopeId, subScopeId);
+            return this.followNode(selectorNode, blockScopeId, subScopeId, mode);
 
         } else if (isPredefinedOperation || isPredefinedSource) {
-            return buildId;
+            return node;
 
         } else if (isDefinedBlock) {
-            return buildId;
+            return node;
 
         } else {
             throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker! - " + node +  " : " + buildId);
@@ -189,18 +252,26 @@ public class TypeSystem {
      * @param subScope The current sub scope of then node
      * @return The subtype as a string.
      */
-    private String getSubTypeOfSelector(SelectorNode selectorNode, String blockScope, String subScope) {
+    private AbstractNode followSelector(SelectorNode selectorNode, String blockScope, String subScope, ModeEnum mode) {
         boolean hasSelectorChild = selectorNode.getChild() instanceof SelectorNode;
         boolean isThis = "this".equals(selectorNode.getId());
 
         if (isThis || hasSelectorChild) {
-            return this.getSuperTypeOfNode(selectorNode, blockScope, subScope).toString();
+            return selectorNode;
 
         } else {
-            VariableEntry selectorVariable = this.getVariableFromIdentifier(selectorNode.getId(), blockScope, subScope);
-            NamedIdNode subtypeNode = selectorVariable.getSubType(selectorNode.getNumber());
+            NamedIdNode subtypeNode;
 
-            return this.getSubTypeOfNode(subtypeNode, blockScope, subScope);
+            VariableEntry selectorVariable = this.getVariableFromIdentifier(selectorNode.getId(), blockScope, subScope);
+
+            if (selectorVariable != null){
+                subtypeNode = selectorVariable.getSubType(selectorNode.getNumber());
+            } else {
+                // Handle this.-less references to channels
+                subtypeNode = symbolTable.getBlockScope(blockScope).getChannelDeclarationScope().getVariable(selectorNode).getNode();
+            }
+
+            return this.followNode(subtypeNode, blockScope, subScope, mode);
 
             /*
             if (subtypeNode instanceof SelectorNode) {

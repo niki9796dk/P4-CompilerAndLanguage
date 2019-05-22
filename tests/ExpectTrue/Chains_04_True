@@ -6,7 +6,8 @@ block chain_04 {
 	blueprint() {
 		block a = build Test();
 		operation c = build Multiplication();
-		
+
+		this.input -> a;
 		(this.input, a) -> c -> this.output;
 	}
 }

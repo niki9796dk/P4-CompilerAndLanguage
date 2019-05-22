@@ -2,15 +2,20 @@ package CodeGeneration.DataFlow.Network.Nodes.Blocks;
 
 import CodeGeneration.DataFlow.Network.Node;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNode;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes.FeedforwardBounce;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes.backpropagationBounce;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
+import LinearAlgebra.Types.Matrices.Matrix;
 
 import java.util.*;
 
 public abstract class AbstractBlock implements Block {
     private LinkedHashMap<String, Channel> inputChannels = new LinkedHashMap<>(2);
     private LinkedHashMap<String, Channel> outputChannels = new LinkedHashMap<>(1);
+    public static BlockConfiguration configuration;
 
     /**
      * Add an input channel
@@ -205,5 +210,44 @@ public abstract class AbstractBlock implements Block {
     @Override
     public Map<String, Channel> getOutputChannels() {
         return this.outputChannels;
+    }
+
+    @Override
+    public Matrix evaluateInput(Matrix inputData) {
+        if (this.getOutputChannels().size() != 1) {
+            throw new IllegalCallerException("This method can only be called on blocks with one input and output");
+        }
+
+        BounceNode feedForward = new FeedforwardBounce(inputData);
+        feedForward.connectToMainBlock(this);
+        feedForward.acceptReadySignal();
+        feedForward.releaseFromMainBlock();
+
+        return this.getFirstOutput().getResult();
+    }
+
+    @Override
+    public void train(Matrix inputData, Matrix targetData, int iterations, double learningRate) {
+        AbstractBlock.configuration = new BlockConfiguration(inputData.getRows(), iterations);
+
+        BounceNode feedForward = new FeedforwardBounce(inputData);
+        BounceNode backProp = new backpropagationBounce(targetData);
+
+        feedForward.connectToMainBlock(this);
+        backProp.connectToMainBlock(this);
+
+        for (int i = 0; i < iterations; i++) {
+            feedForward.acceptReadySignal();
+        }
+
+        feedForward.releaseFromMainBlock();
+        backProp.releaseFromMainBlock();
+
+        AbstractBlock.configuration = null;
+    }
+
+    @Override
+    public void train(Matrix inputData, Matrix targetData, int iterations) {
+        this.train(inputData, targetData, iterations, 0.2);
     }
 }

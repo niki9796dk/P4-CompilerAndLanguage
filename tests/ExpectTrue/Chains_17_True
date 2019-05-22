@@ -7,6 +7,7 @@ block chain_01 {
 		block a = build Test();
 
 		this.input -> channel:in in = a.input;
+		channel:out out = a.output -> output;
 	}
 }
 

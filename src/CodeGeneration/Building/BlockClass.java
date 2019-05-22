@@ -67,9 +67,9 @@ public class BlockClass {
                 .append(this.className)
                 .append(this.blueprint.getParameters()) // Parameters
                 .append(" {\n")                         // Start of content
-                .append("this.blueprint")              // Start of call to blueprint
+                .append("this.blueprint")               // Start of call to blueprint
                 .append(this.blueprint.getParameters().toCallParameters()) // Call params
-                .append(";")                           // End of call to blueprint
+                .append(";")                            // End of call to blueprint
                 .append("}\n\n");                       // End of constructor
 
         // Append the blueprint function

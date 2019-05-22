@@ -19,7 +19,7 @@ public class MainParse {
 
         if (args.length != 1) {
             //parseFile("data/input");
-            parseFile("data/input");
+            parseFile("data\\input");
         } else {
 
             parseFile(args[0]);
@@ -33,6 +33,8 @@ public class MainParse {
         ComplexSymbolFactory csf = new ComplexSymbolFactory();
         // create a buffering scanner wrapper
         ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)),csf));
+
+        String nameOfFile = path.subSequence(path.lastIndexOf('\\')+1, path.length()).toString();
 
         // start parsing
         AutoGen.Parser p = new AutoGen.Parser(lexer,csf);
@@ -58,27 +60,15 @@ public class MainParse {
 
         prog.walkTree(new PreRecursiveVisitor(symbolTable));
 
-        //prog.walkTree(new TypeCheckerVisitor(symbolTable));
-
         new RecursiveVisitor(symbolTable, new ScopeCheckerVisitor(symbolTable)).startRecursiveWalk();
-        
-        //
 
         new RecursiveVisitor(symbolTable, new TypeCheckerVisitor(symbolTable)).startRecursiveWalk();
 
-        //
-
         new RecursiveVisitor(symbolTable, new SemanticAnalysisVisitor(symbolTable)).startRecursiveWalk();
 
-        prog.walkTree(new CodeGenerationVisitor(symbolTable));
+        new RecursiveVisitor(symbolTable, new FlowCheckVisitor(symbolTable)).startRecursiveWalk();
 
-        /*
-        prog.walkTree(new ScopeCheckerVisitor(symbolTable));
-
-        prog.walkTree(new TypeCheckerVisitor(symbolTable));
-
-        prog.walkTree(new SemanticAnalysisVisitor(symbolTable));
-        */
+        prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
 
         return true;
     }

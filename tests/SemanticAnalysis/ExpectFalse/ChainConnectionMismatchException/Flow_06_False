@@ -1,0 +1,23 @@
+block Master {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        block mySlave = build Slave();
+
+        this.in -> mySlave;
+        this.in -> mySlave.in1;
+
+        mySlave.out1 -> this.out;
+    }
+}
+
+block Slave {
+    mychannel:in in1;
+    mychannel:in in2;
+    mychannel:out out1;
+
+    blueprint() {
+
+    }
+}

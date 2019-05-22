@@ -6,8 +6,8 @@ block AnnLayer_long{
 	// Blueprint
 	blueprint(){
 		// Declare sources and sizes
-		source weights = build Source();
-		source bias = build Source();
+		source weights = build Source([3,4]);
+		source bias = build Source([4,4]);
 
 		// Implement first operation: Multiplication
 		operation mult = build Multiplication();

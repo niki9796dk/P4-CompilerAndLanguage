@@ -1,5 +1,6 @@
 package SymbolTableImplementation;
 
+import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
@@ -10,6 +11,9 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import Enums.AnsiColor;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Keeps track of what variables are within the scope of a node.
@@ -104,6 +108,18 @@ public class Scope {
      */
     public AbstractNode getNode() {
         return node;
+    }
+
+    public List<AbstractNode> getAllChildrenOfType(NodeEnum nodeEnum){
+        List<AbstractNode> children = new LinkedList<>();
+
+        for (AbstractNode child = node.getChild(); child != null; child = child.getSib()){
+            if (((NamedNode) child).getNodeEnum().equals(nodeEnum)){
+                children.add(child);
+            }
+        }
+
+        return children;
     }
 
     /**

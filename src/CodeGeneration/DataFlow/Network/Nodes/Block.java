@@ -2,6 +2,7 @@ package CodeGeneration.DataFlow.Network.Nodes;
 
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Node;
+import LinearAlgebra.Types.Matrices.Matrix;
 
 import java.util.Map;
 
@@ -20,6 +21,10 @@ public interface Block extends Node {
     Block receiveGroupConnection(Channel... channels);
 
     Channel getChannel(String channelId);
+
+    Matrix evaluateInput(Matrix inputData);
+    void train(Matrix inputData, Matrix targetData, int iterations, double learningRate);
+    void train(Matrix inputData, Matrix targetData, int iterations);
 
     Map<String, Channel> getInputChannels();
     Map<String, Channel> getOutputChannels();

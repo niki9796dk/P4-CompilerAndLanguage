@@ -29,14 +29,6 @@ public class AssignBuild implements Statement {
         this.initBuild = initBuild;
     }
 
-    public AssignBuild(Scope subScope, String leftVar, String initBuild) {
-        this(subScope, leftVar, new InitBuild(initBuild));
-    }
-
-    public AssignBuild(Scope subScope, String leftVar, String initBuild, Statement ... paramStatements) {
-        this(subScope, leftVar, new InitBuild(initBuild, new CallParams(paramStatements)));
-    }
-
     public void setType(JavaTypes type) {
         this.type = type;
     }

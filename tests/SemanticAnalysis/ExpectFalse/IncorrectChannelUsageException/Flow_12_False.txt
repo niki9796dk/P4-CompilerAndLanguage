@@ -1,5 +1,5 @@
 // Test of channel access groups.
-block chain_13 {
+block chain_12 {
 	mychannel:in input;
 	mychannel:out output;
 	
@@ -8,10 +8,8 @@ block chain_13 {
 		block b = build Test();
 		block c = build Test();
 
-		(this.input) -> (a);
-		(this.input) -> (b);
-		(this.input) -> (c);
-		((a.out), b, (c.out)) -> build LargeOpe() -> (this.output);
+		this.input -> a;
+		(a.out, b.out, c.out) -> build LargeOpe() -> this.output;
 	}
 }
 
@@ -23,7 +21,6 @@ block Test {
         this.in -> this.out;
     }
 }
-
 
 block LargeOpe {
     mychannel:in input1;

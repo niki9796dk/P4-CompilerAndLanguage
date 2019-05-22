@@ -20,8 +20,10 @@ block Slave1 {
         block slave2 = build blue();
 
         (this.in1, this.in2) -> slave2;
-        slave2.out1 -> this.out1;
-        slave2.out1 -> this.out2;
+
+        // This is the part that fails, those are in channels, they should be out
+        slave2.in1 -> this.out1;
+        slave2.in1 -> this.out2;
     }
 }
 

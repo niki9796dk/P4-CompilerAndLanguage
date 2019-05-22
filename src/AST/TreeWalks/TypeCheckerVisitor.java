@@ -153,11 +153,31 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
         // If the callee node is null, just return, since this means that we were building something else than a block (eg. source / operation)
         boolean calleeIsNotBlockOrProc = calleeNode == null;
+
         if (calleeIsNotBlockOrProc) {
-            if (callerNode instanceof NamedIdNode && typeSystem.getSymbolTable().isPredefinedOperation(((NamedIdNode) callerNode).getId()) && callerNode.findFirstChildOfClass(ParamsNode.class) != null)
-            {
-                throw new ParamsSizeInconsistencyException("Sources and Operations should not have parameters");
+            // Operation case
+            if (this.typeSystem.getSymbolTable().isPredefinedOperation(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
+                ParamsNode opParams = callerNode.findFirstChildOfClass(ParamsNode.class);
+                if (opParams != null){
+                    throw new ParamsSizeInconsistencyException("Operations can't have parameters. This is not the case in: " + callerNode);
+                }
+
+                // Source case
+            } else if (this.typeSystem.getSymbolTable().isPredefinedSource(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
+                ParamsNode sourceParams = callerNode.findFirstChildOfClass(ParamsNode.class);
+
+                if (sourceParams == null){
+                    throw new ParamsSizeInconsistencyException("Sources need exactly one [parameter] of type Size. This is not the case in: " + callerNode);
+
+                } else if (this.typeSystem.getSuperTypeOfNode(sourceParams.getChild(), currentBlockScope, currentSubScope) != NodeEnum.SIZE_TYPE){
+                    throw new ParamsSizeInconsistencyException("Sources need exactly one parameter [of type Size]. This is not the case in: " + callerNode);
+
+                } else if (sourceParams.getChild().getSib() != null){
+                    throw new ParamsSizeInconsistencyException("Sources need [exactly one] parameter of type Size. This is not the case in: " + callerNode);
+
+                }
             }
+
             return;
         }
 

@@ -85,4 +85,10 @@ public class backpropagationBounce extends AbstractBounceNode {
         this.source = outputChannel;     // Connect this to that
         outputChannel.addTarget(this);   // Connect that to this
     }
+
+    @Override
+    public void releaseFromMainBlock() {
+        this.source.clearTargets();
+        this.source = null;
+    }
 }
