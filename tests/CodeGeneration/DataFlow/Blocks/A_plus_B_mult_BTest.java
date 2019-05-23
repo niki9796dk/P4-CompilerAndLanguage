@@ -5,7 +5,7 @@ import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.MatrixOperations.Multiplication;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Addition;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Input;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.utility.Print;
 import Enums.AnsiColor;
@@ -21,13 +21,13 @@ class A_plus_B_mult_BTest {
         Block block000 = new A_plus_B_mult_B();
 
 
-        Input source000 = new Input(
+        Source source000 = new Source(
                 new MatrixBuilder()
                         .addRow(1, 2)
                         .addRow(4, 5)
         );
 
-        Input source001 = new Input(
+        Source source001 = new Source(
                 new MatrixBuilder()
                         .addRow(3, 2)
                         .addRow(4, 3)
@@ -38,9 +38,11 @@ class A_plus_B_mult_BTest {
                 .addRow(56, 40)
                 .build();
 
-        source000.connectTo(block000, "out", "A");
+        source000.connectTo(block000, Source.NULLARY_OUT_CHANNEL, "A");
+        source001.connectTo(block000, Source.NULLARY_OUT_CHANNEL, "B");
 
-        source001.connectTo(block000, "out", "B");
+        source000.acceptReadySignal();
+        source001.acceptReadySignal();
 
 
         Print.echo(AnsiColor.PURPLE, "" + block000.getOutputChannels().get("out").getResult());
@@ -60,13 +62,13 @@ class A_plus_B_mult_B extends AbstractBlock {
         AbstractOperation add = new _Addition();
         AbstractOperation mult = new Multiplication();
 
-        this.connectTo(add, "A", "in1");
-        this.connectTo(add, "B", "in2");
+        this.connectTo(add, "A", _Addition.BINARY_IN_A_CHANNEL);
+        this.connectTo(add, "B", _Addition.BINARY_IN_B_CHANNEL);
 
-        add.connectTo(mult, "out", "in1");
+        add.connectTo(mult, _Addition.BINARY_OUT_CHANNEL, Multiplication.BINARY_IN_A_CHANNEL);
 
-        this.connectTo(mult, "B", "in2");
+        this.connectTo(mult, "B", Multiplication.BINARY_IN_B_CHANNEL);
 
-        mult.connectTo(this, "out", "out");
+        mult.connectTo(this, Multiplication.BINARY_OUT_CHANNEL, "out");
     }
 }

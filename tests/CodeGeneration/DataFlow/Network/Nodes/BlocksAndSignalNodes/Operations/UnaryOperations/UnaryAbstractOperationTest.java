@@ -1,16 +1,11 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations;
 
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operation;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Input;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.NullaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.MatrixOperations.Transpose;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnitWiseOperations._Relu;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnitWiseOperations._Sigmoid;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnitWiseOperations._Tanh;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
-import CodeGeneration.utility.Print;
-import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,7 +81,7 @@ class UnaryAbstractOperationTest {
         int i = r.getCurrentRepetition() - 1;
         UnaryAbstractOperation op = operations.get(i);
 
-        new Input(input).connectTo(op, "out", "in");
+        new Source(input).connectTo(op, Source.NULLARY_OUT_CHANNEL, UnaryAbstractOperation.UNARY_IN_CHANNEL);
         op.performOperation();
 
         assertEquals(op.getResult(),results.get(i));
@@ -106,7 +101,7 @@ class UnaryAbstractOperationTest {
         UnaryAbstractOperation op = operations.get(i);
 
         assertThrows(IllegalArgumentException.class, ()-> op.addNewInputLabel("in1",new ListChannel()));
-        op.addNewInputLabel("in",new ListChannel());
+        op.addNewInputLabel(UnaryAbstractOperation.UNARY_IN_CHANNEL, new ListChannel());
 
     }
 }

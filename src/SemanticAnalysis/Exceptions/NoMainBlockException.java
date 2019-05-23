@@ -1,5 +1,7 @@
 package SemanticAnalysis.Exceptions;
 
+import SemanticAnalysis.Exceptions.SemanticProblemException;
+
 /**
  * Runtime exception used for the compiler phase of semantic analysis.
  */

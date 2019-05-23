@@ -56,6 +56,10 @@ public abstract class ScopeTracker implements Visitor {
         this.currentSubScope = currentSubScope;
     }
 
+    protected Scope getCurrentSubScope() {
+        return this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
+    }
+
     /**
      * @param printLevel    the level, used to decide how many indents there should be in the print statement.
      * @param node          The node which is being visited.

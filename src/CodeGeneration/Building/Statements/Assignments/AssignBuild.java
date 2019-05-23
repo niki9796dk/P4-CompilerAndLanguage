@@ -10,10 +10,13 @@ import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 
 public class AssignBuild implements Statement {
+
+    // Fields:
     private String leftVar;
     private Statement initBuild;
     private JavaTypes type;
 
+    // Constructors:
     private AssignBuild(Scope subScope, String leftVar) {
         this.setType(subScope.getVariable(leftVar).getSuperType());
         this.leftVar = leftVar;
@@ -27,14 +30,6 @@ public class AssignBuild implements Statement {
     public AssignBuild(Scope subScope, String leftVar, Statement initBuild) {
         this(subScope, leftVar);
         this.initBuild = initBuild;
-    }
-
-    public AssignBuild(Scope subScope, String leftVar, String initBuild) {
-        this(subScope, leftVar, new InitBuild(initBuild));
-    }
-
-    public AssignBuild(Scope subScope, String leftVar, String initBuild, Statement ... paramStatements) {
-        this(subScope, leftVar, new InitBuild(initBuild, new CallParams(paramStatements)));
     }
 
     public void setType(JavaTypes type) {
@@ -57,14 +52,14 @@ public class AssignBuild implements Statement {
 
     @Override
     public String toString() {
-        if (initBuild == null) {
+        if (this.initBuild == null) {
             throw new NullPointerException("The init build is null?");
         }
 
         if (this.type != null) {
-            return leftVar + " = (" + this.type + ") " + initBuild;
+            return this.leftVar + " = (" + this.type + ") " + this.initBuild;
         } else {
-            return leftVar + " = " + initBuild;
+            return this.leftVar + " = " + this.initBuild;
         }
     }
 }

@@ -1,6 +1,8 @@
 package AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes;
 
 import AST.Enums.NodeEnum;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
+import DataStructures.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +29,14 @@ class SourceTypeNodeTest {
     @Test
     void paramsNodeId() {
         assertEquals("id", sourceTypeNode.getId());
+    }
+
+    @Test
+    void sizeConstructor(){
+        Source source = new Source(new Pair<>(3,2));
+
+        assertEquals(3,source.getResult().getRows());
+        assertEquals(2,source.getResult().getColumns());
     }
 
 }

@@ -39,6 +39,7 @@ import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 
+import java.io.File;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,15 +48,21 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CodeGenerationVisitor extends ScopeTracker {
+
+    // Fields:
     private List<BlockClass> blockClasses = new ArrayList<>();
     private CodeScope currentCodeScope;
     private Map<Integer, String> placeholderVars = new HashMap<>();
+    private String programFileName;
 
-    private static String EXPORT_PATH = "src/AutoGen/CodeGen/";
+    // Constants
+    private static String EXPORT_PATH = "src"+File.separator+"AutoGen"+ File.separator+"CodeGen"+File.separator;
     private static String EXPORT_PACKAGE = "AutoGen.CodeGen";
 
-    public CodeGenerationVisitor(SymbolTable symbolTable) {
+    // Constructor:
+    public CodeGenerationVisitor(SymbolTable symbolTable, String programFileName) {
         super(symbolTable);
+        this.programFileName = programFileName;
     }
 
     /**
@@ -76,11 +83,11 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case BLOCK:
                 // Import the new block in all previous defined blocks
                 for (BlockClass blockClass : this.blockClasses) {
-                    blockClass.addImport(EXPORT_PACKAGE + "." + nodeId);
+                    blockClass.addImport(EXPORT_PACKAGE + "." + programFileName + "." + nodeId);
                 }
 
                 // Add the new block to the list of block classes
-                this.blockClasses.add(new BlockClass(nodeId, EXPORT_PACKAGE));
+                this.blockClasses.add(new BlockClass(nodeId, EXPORT_PACKAGE + "." + programFileName));
                 break;
 
             case CHANNEL_DECLARATIONS:
@@ -156,16 +163,22 @@ public class CodeGenerationVisitor extends ScopeTracker {
         switch (node.getNodeEnum()) {
             // No action enums
             case ROOT:
+                String exportPackagePath = EXPORT_PATH + programFileName + "/";
+
                 try {
                     if (!Files.exists(Paths.get(EXPORT_PATH))) {
                         Files.createDirectories(Paths.get(EXPORT_PATH));
+                    }
+
+                    if (!Files.exists(Paths.get(exportPackagePath))) {
+                        Files.createDirectories(Paths.get(exportPackagePath));
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
 
                 for (BlockClass blockClass : this.blockClasses) {
-                    Path filePath = Paths.get(EXPORT_PATH + blockClass.getClassName() + ".java");
+                    Path filePath = Paths.get(exportPackagePath + blockClass.getClassName() + ".java");
 
                     try (Writer writer = Files.newBufferedWriter(filePath)) {
 
@@ -277,7 +290,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
             groupElement = groupElement.getSib();
         }
 
-        this.currentCodeScope.addStatement(new GroupChain(rightStatement, groupElements.toArray(new Statement[0])));
+        this.currentCodeScope.addStatement(new GroupChain(this.getCurrentSubScope(), rightStatement, groupElements.toArray(new Statement[0])));
     }
 
     private void singleConnect(AbstractNode leftNode, AbstractNode rightNode) {
@@ -288,7 +301,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
         Statement rightStatement = this.getStatementFromNode(rightNode);
 
         if ((this.isBlockOperationSource(leftNode) || this.isChannel(leftNode)) && this.isBlockOperationSource(rightNode)) {
-            this.currentCodeScope.addStatement(new GroupChain(rightStatement, leftStatement));
+            this.currentCodeScope.addStatement(new GroupChain(this.getCurrentSubScope(), rightStatement, leftStatement));
 
         } else if (this.isChannel(leftNode) && this.isChannel(rightNode)) {
             this.currentCodeScope.addStatement(new TetherChannels(leftStatement, rightStatement));
@@ -405,7 +418,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
                     ParamsNode buildParams = node.findFirstChildOfClass(ParamsNode.class);
 
                     if (buildParams != null) {
-                        return new InitBuildBlueprint(nodeId,this.getStatementFromNode(buildParams));
+                        return new InitBuildBlueprint(nodeId, (CallParams) this.getStatementFromNode(buildParams));
 
                     } else {
                         return new InitBuildBlueprint(nodeId);
@@ -430,20 +443,21 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 SelectorNode procSelector = node.findFirstChildOfClass(SelectorNode.class);
 
                 if (procedureParams != null) {
-                    return new ProcedureCall(procSelector.getId(), (CallParams) this.getStatementFromNode(procedureParams));
+                    return new ProcedureCall(this.getCurrentSubScope(), procSelector.getId(), (CallParams) this.getStatementFromNode(procedureParams));
 
                 } else {
-                    return new ProcedureCall(procSelector.getId());
+                    return new ProcedureCall(this.getCurrentSubScope(), procSelector.getId());
                 }
 
             case PARAMS:
                 List<Statement> params = new ArrayList<>();
+                Scope currentScope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
 
                 for (AbstractNode pNode = node.getChild(); pNode != null; pNode = pNode.getSib()) {
                     params.add(this.getStatementFromNode(pNode));
                 }
 
-                return new CallParams(params.toArray(new Statement[0]));
+                return new CallParams(currentScope, params.toArray(new Statement[0]));
 
             case CHANNEL_IN_MY:
                 if (BlockScope.CHANNELS.equals(this.currentSubScope)) {

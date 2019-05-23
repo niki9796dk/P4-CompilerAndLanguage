@@ -11,15 +11,15 @@ import java.util.List;
 
 public class InitBuildBlueprint implements Statement {
     private String buildId;
-    private List<Statement> params = new ArrayList<>();
+    private CallParams paramStatement;
 
     public InitBuildBlueprint(String buildId) {
         this.buildId = buildId;
     }
 
-    public InitBuildBlueprint(String buildId, Statement ... paramStatements) {
+    public InitBuildBlueprint(String buildId, CallParams paramStatement) {
         this(buildId);
-        this.params = Arrays.asList(paramStatements);
+        this.paramStatement = paramStatement;
     }
 
     @Override
@@ -31,22 +31,10 @@ public class InitBuildBlueprint implements Statement {
                 .append("(")
                 .append("(Block) ")
                 .append(buildId)
-                .append(".getConstructor(");
-
-        if (this.params.size() != 0) {
-            for (Statement statement : this.params) {
-                builder.append("(")
-                        .append(statement)
-                        .append(").class")
-                        .append(", ");
-            }
-
-            builder.delete(builder.length()-2, builder.length()); // Remove last ", " sequence
-        }
-
-        builder
-                .append(").newInstance")
-                .append(new CallParams(this.params))
+                .append(".getConstructor")
+                .append(this.paramStatement != null ? this.paramStatement.asConstructorPar() : "()")
+                .append(".newInstance")
+                .append(this.paramStatement != null ? this.paramStatement.toString() : "()")
                 .append(")");
 
         return builder.toString();

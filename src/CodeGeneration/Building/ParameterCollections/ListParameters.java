@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListParameters implements ParameterCollection {
+
+    // Fields:
     private List<Parameter> parameterList = new ArrayList<>();
 
     @Override

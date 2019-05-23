@@ -149,8 +149,6 @@ public class FlowChecker {
         String inString;
         String outString;
 
-        System.out.println("HMMMM: " + chainChildWithSib + " - " + followToBase);
-
         if (isThis){
             // "this" case
             inString = currentBlockId + ((NamedIdNode) followToBase.getChild()).getId();
@@ -198,8 +196,6 @@ public class FlowChecker {
         NamedIdNode followToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(outPartOfChain, currentBlockId, currentSubScope));
         NamedIdNode followToBase = ((NamedIdNode) typeSystem.followNode(followToBuild, currentBlockId, currentSubScope));
         boolean isThis = ("this").equals(followToBase.getId());
-
-        System.out.println("HMMMM: " + outPartOfChain + " - " + followToBase);
 
         if (isThis){
             // "this" case

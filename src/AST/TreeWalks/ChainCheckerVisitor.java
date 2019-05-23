@@ -2,30 +2,21 @@ package AST.TreeWalks;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
-import AST.TreeWalks.Exceptions.RecursiveBlockException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SemanticAnalysis.Exceptions.ChainConnectionMismatchException;
 import SemanticAnalysis.Exceptions.GroupConnectionMismatchException;
-import SemanticAnalysis.Exceptions.NoMainBlockException;
-import SemanticAnalysis.Exceptions.SemanticProblemException;
-import SemanticAnalysis.FlowChecker;
-import SemanticAnalysis.Datastructures.HashSetStack;
-import SemanticAnalysis.Datastructures.SetStack;
 import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.ShouldNotHappenException;
-import TypeChecker.TypeSystem;
 
 import java.util.*;
 
 /**
  * The visitor used for the semantic analysis phase of the compiler (Excluding type- and scope checking).
  */
-public class SemanticAnalysisVisitor extends ScopeTracker {
+public class ChainCheckerVisitor extends ScopeTracker {
 
     // Fields:
 
@@ -37,7 +28,7 @@ public class SemanticAnalysisVisitor extends ScopeTracker {
      * The constructor
      * @param symbolTable A symbol table, used for the scope tracker.
      */
-    public SemanticAnalysisVisitor(SymbolTable symbolTable) {
+    public ChainCheckerVisitor(SymbolTable symbolTable) {
         super(symbolTable);
     }
 

@@ -12,6 +12,10 @@ import java.util.HashMap;
 
 public abstract class BinaryAbstractOperation extends AbstractOperation {
 
+    public static final String BINARY_IN_A_CHANNEL = "A";
+    public static final String BINARY_IN_B_CHANNEL = "B";
+    public static final String BINARY_OUT_CHANNEL = "out";
+
     /**
      * Operation constructor that makes 2 input-channels which is the operands, and an output-channel which is the result
      */
@@ -27,9 +31,9 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
 
         // Store channels
         this
-                .addNewInputLabel("in1", in1)
-                .addNewInputLabel("in2", in2)
-                .addNewOutputLabel("out", out);
+                .addNewInputLabel(BINARY_IN_A_CHANNEL, in1)
+                .addNewInputLabel(BINARY_IN_B_CHANNEL, in2)
+                .addNewOutputLabel(BINARY_OUT_CHANNEL, out);
     }
 
     /**
@@ -37,8 +41,8 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
      */
     @Override
     public void performOperation() {
-        Matrix in1 = this.getInputValue("in1");
-        Matrix in2 = this.getInputValue("in2");
+        Matrix in1 = this.getInputValue(BINARY_IN_A_CHANNEL);
+        Matrix in2 = this.getInputValue(BINARY_IN_B_CHANNEL);
 
         if (in1 == null)
             throw new NullPointerException("in1 is null!");
@@ -51,8 +55,8 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
 
     @Override
     public void performBackpropagationOperation() {
-        Matrix in1 = this.getInputValue("in1");
-        Matrix in2 = this.getInputValue("in2");
+        Matrix in1 = this.getInputValue(BINARY_IN_A_CHANNEL);
+        Matrix in2 = this.getInputValue(BINARY_IN_B_CHANNEL);
         Matrix out = this.getOutputChannel().getResult();
 
         if (in1 == null)
@@ -65,9 +69,9 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
             throw new NullPointerException("out is null!");
 
         this.resultBackpropagation = this.operationBackpropagation(
-                this.getChannel("in1"),
-                this.getChannel("in2"),
-                this.getChannel("out")
+                this.getChannel(BINARY_IN_A_CHANNEL),
+                this.getChannel(BINARY_IN_B_CHANNEL),
+                this.getChannel(BINARY_OUT_CHANNEL)
         );
 
         //backprop.say("performOperation() -> result = " + this.resultBackpropagation.toString());
@@ -80,12 +84,12 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
      */
     @Override
     public Channel getOutputChannel() {
-        return this.getChannel("out");
+        return this.getChannel(BINARY_OUT_CHANNEL);
     }
 
     protected abstract Matrix operation(Matrix in1, Matrix in2);
 
-    protected HashMap<Channel, Matrix> operationBackpropagation(Channel in1, Channel in2, Channel out) {
+    public HashMap<Channel, Matrix> operationBackpropagation(Channel in1, Channel in2, Channel out) {
         HashMap<Channel, Matrix> backpropResults = new HashMap<>();
 
         backpropResults.put(in1, this.calculateIn1Derivatives(in2.getResult(), out.getResultBackpropagation()));
@@ -100,8 +104,8 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
 
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {
-        if (!id.equals("in1") && !id.equals("in2"))
-            throw new IllegalArgumentException("Input channel has to be in1 or in2 for BinaryOperation objects!");
+        if (!id.equals(BINARY_IN_A_CHANNEL) && !id.equals(BINARY_IN_B_CHANNEL))
+            throw new IllegalArgumentException("Input channel has to be "+ BINARY_IN_A_CHANNEL +" or "+ BINARY_IN_B_CHANNEL +" for BinaryOperation objects!");
         return super.addNewInputLabel(id, c);
     }
 }

@@ -1,10 +1,7 @@
 package CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels;
 
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Input;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.MatrixOperations.Transpose;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
-import CodeGeneration.utility.Print;
-import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +32,7 @@ class AbstractChannelTest {
         Channel lChannel001 = new ListChannel();
 
         Matrix m = MatrixBuilder.buildConstant(2, 2, 5);
-        Input in = new Input(m);
+        Source in = new Source(m);
 
         in.getOutputChannel().tether(lChannel000);
         lChannel000.tether(lChannel001);
@@ -54,7 +51,7 @@ class AbstractChannelTest {
         assertFalse(lChannel000.isReady());
 
         Matrix m = MatrixBuilder.buildConstant(2, 2, 5);
-        Input in = new Input(m);
+        Source in = new Source(m);
 
         in.getOutputChannel().tether(lChannel000);
 
@@ -70,7 +67,7 @@ class AbstractChannelTest {
         assertFalse(lChannel001.isSource());
 
         Matrix m = MatrixBuilder.buildConstant(2, 2, 5);
-        Input in = new Input(m);
+        Source in = new Source(m);
 
         in.getOutputChannel().tether(lChannel000);
 

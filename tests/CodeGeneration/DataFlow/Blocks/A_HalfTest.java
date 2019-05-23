@@ -3,8 +3,10 @@ package CodeGeneration.DataFlow.Blocks;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Division;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
@@ -26,7 +28,7 @@ class A_HalfTest {
 
         Matrix expected = MatrixBuilder.buildConstant(2,2,2);
 
-        source.connectTo(block000, "out","A");
+        source.connectTo(block000, Source.NULLARY_OUT_CHANNEL,"A");
 
         source.acceptReadySignal();
 
@@ -46,9 +48,9 @@ class A_Half extends AbstractBlock {
 
         Source twoMatrix = new Source(MatrixBuilder.buildConstant(2, 2, 2));
 
-        this.connectTo(div, "A", "in1");
-        twoMatrix.connectTo(div, "out", "in2");
+        this.connectTo(div, "A", _Division.BINARY_IN_A_CHANNEL);
+        twoMatrix.connectTo(div, "out", _Division.BINARY_IN_B_CHANNEL);
 
-        div.connectTo(this, "out", "out");
+        div.connectTo(this, _Division.BINARY_OUT_CHANNEL, "out");
     }
 }

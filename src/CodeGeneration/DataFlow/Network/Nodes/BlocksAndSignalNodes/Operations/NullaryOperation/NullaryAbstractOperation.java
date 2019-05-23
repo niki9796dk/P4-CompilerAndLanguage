@@ -8,6 +8,8 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Una
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public abstract class NullaryAbstractOperation extends AbstractOperation {
+    public static final String NULLARY_OUT_CHANNEL = "out";
+
     /**
      * Operation constructor that makes 2 input-channels which is the operands, and an output-channel which is the result
      */
@@ -16,7 +18,7 @@ public abstract class NullaryAbstractOperation extends AbstractOperation {
         Channel out = new ListChannel(this);
 
         // Store channels
-        this.addNewOutputLabel("out", out);
+        this.addNewOutputLabel(NULLARY_OUT_CHANNEL, out);
     }
 
     /**
@@ -34,7 +36,7 @@ public abstract class NullaryAbstractOperation extends AbstractOperation {
      */
     @Override
     public Channel getOutputChannel() {
-        return this.getChannel("out");
+        return this.getChannel(NULLARY_OUT_CHANNEL);
     }
 
     /**
