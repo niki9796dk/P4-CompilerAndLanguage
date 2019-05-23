@@ -8,9 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InitBuild implements Statement {
+
+    // Fields:
     private String buildId;
     private Statement params;
 
+    // Constructors:
     public InitBuild(String buildId) {
         this.buildId = buildId;
     }
