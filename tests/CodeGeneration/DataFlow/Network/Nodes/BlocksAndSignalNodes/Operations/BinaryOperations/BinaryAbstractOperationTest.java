@@ -85,8 +85,8 @@ class BinaryAbstractOperationTest {
         BinaryAbstractOperation op = operations.get(i);
         Matrix expected = expectedResultsOperations.get(i);
 
-        in1.connectTo(op, "out", "in1");
-        in2.connectTo(op, "out", "in2");
+        in1.connectTo(op, "out", BinaryAbstractOperation.BINARY_IN_A_CHANNEL);
+        in2.connectTo(op, "out", BinaryAbstractOperation.BINARY_IN_B_CHANNEL);
         op.performOperation();
         Matrix result = op.getOutputChannel().getResult();
 
@@ -126,7 +126,7 @@ class BinaryAbstractOperationTest {
     @Test
     void addInput(){
         assertThrows(IllegalArgumentException.class, () -> operations.get(0).addNewInputLabel("in3", new ListChannel()));
-        operations.get(0).addNewInputLabel("in1", new ListChannel());
-        operations.get(0).addNewInputLabel("in2", new ListChannel());
+        operations.get(0).addNewInputLabel(BinaryAbstractOperation.BINARY_IN_A_CHANNEL, new ListChannel());
+        operations.get(0).addNewInputLabel(BinaryAbstractOperation.BINARY_IN_A_CHANNEL, new ListChannel());
     }
 }

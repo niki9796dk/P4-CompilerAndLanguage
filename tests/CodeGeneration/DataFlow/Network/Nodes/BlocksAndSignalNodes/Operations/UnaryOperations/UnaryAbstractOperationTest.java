@@ -81,7 +81,7 @@ class UnaryAbstractOperationTest {
         int i = r.getCurrentRepetition() - 1;
         UnaryAbstractOperation op = operations.get(i);
 
-        new Source(input).connectTo(op, "out", "in");
+        new Source(input).connectTo(op, Source.NULLARY_OUT_CHANNEL, UnaryAbstractOperation.UNARY_IN_CHANNEL);
         op.performOperation();
 
         assertEquals(op.getResult(),results.get(i));
@@ -101,7 +101,7 @@ class UnaryAbstractOperationTest {
         UnaryAbstractOperation op = operations.get(i);
 
         assertThrows(IllegalArgumentException.class, ()-> op.addNewInputLabel("in1",new ListChannel()));
-        op.addNewInputLabel("in",new ListChannel());
+        op.addNewInputLabel(UnaryAbstractOperation.UNARY_IN_CHANNEL, new ListChannel());
 
     }
 }

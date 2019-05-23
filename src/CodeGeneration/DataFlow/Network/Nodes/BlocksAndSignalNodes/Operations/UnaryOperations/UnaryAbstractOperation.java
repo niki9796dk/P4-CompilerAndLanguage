@@ -12,6 +12,9 @@ import TypeChecker.Exceptions.ShouldNotHappenException;
 import java.util.HashMap;
 
 public abstract class UnaryAbstractOperation extends AbstractOperation {
+    public static final String UNARY_IN_CHANNEL = "A";
+    public static final String OPERATION_OUT_CHANNEL = "out";
+
     protected UnaryAbstractOperation() {
         // Define inputs
         Channel in = new ListChannel();
@@ -22,13 +25,13 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
 
         // Store channels
         this
-                .addNewInputLabel("in", in)
-                .addNewOutputLabel("out", out);
+                .addNewInputLabel(UNARY_IN_CHANNEL, in)
+                .addNewOutputLabel(OPERATION_OUT_CHANNEL, out);
     }
 
     @Override
     public void performOperation() {
-        Matrix in = this.getInputValue("in");
+        Matrix in = this.getInputValue(UNARY_IN_CHANNEL);
 
         if (in == null)
             throw new NullPointerException("in is null!");
@@ -38,25 +41,25 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
 
     @Override
     public Channel getOutputChannel() {
-        return this.getChannel("out");
+        return this.getChannel(OPERATION_OUT_CHANNEL);
     }
 
     protected abstract Matrix operation(Matrix in);
 
     @Override
     public void performBackpropagationOperation() {
-        Matrix in1 = this.getInputValue("in");
+        Matrix in = this.getInputValue(UNARY_IN_CHANNEL);
         Matrix out = this.getOutputChannel().getResult();
 
-        if (in1 == null)
-            throw new NullPointerException("in1 is null!");
+        if (in == null)
+            throw new NullPointerException(UNARY_IN_CHANNEL + " is null!");
 
         if (out == null)
             throw new NullPointerException("out is null!");
 
         this.resultBackpropagation = this.operationBackpropagation(
-                this.getChannel("in"),
-                this.getChannel("out")
+                this.getChannel(UNARY_IN_CHANNEL),
+                this.getChannel(OPERATION_OUT_CHANNEL)
         );
     }
 
@@ -64,7 +67,7 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
 
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {
-        if (!id.equals("in"))
+        if (!id.equals(UNARY_IN_CHANNEL))
             throw new IllegalArgumentException("Input channel has to be in for UnaryOperation objects!");
         return super.addNewInputLabel(id, c);
     }

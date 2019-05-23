@@ -199,9 +199,9 @@ class In_out extends AbstractBlock {
         Block inOut = new In_out2();
 
         // Connections
-        this.connectTo(add, "in", "in1");
-        src.connectTo(add, "out", "in2");
-        add.connectTo(inOut, "out", "in");
+        this.connectTo(add, "in", _Addition.BINARY_IN_A_CHANNEL);
+        src.connectTo(add, "out", _Addition.BINARY_IN_B_CHANNEL);
+        add.connectTo(inOut, _Addition.BINARY_OUT_CHANNEL, "in");
         inOut.connectTo(this, "out", "out");
     }
 
@@ -229,16 +229,16 @@ class testImplementation000 extends AbstractBlock {
         AbstractOperation sub = new _Subtraction();
         AbstractOperation mult = new Multiplication();
 
-        this.connectTo(sub, "A", "in1");
-        this.connectTo(sub, "B", "in2");
+        this.connectTo(sub, "A", _Subtraction.BINARY_IN_A_CHANNEL);
+        this.connectTo(sub, "B", _Subtraction.BINARY_IN_B_CHANNEL);
 
-        sub.connectTo(mult, "out", "in1");
+        sub.connectTo(mult, _Subtraction.BINARY_OUT_CHANNEL, Multiplication.BINARY_IN_A_CHANNEL);
 
         assertThrows(NullPointerException.class, () -> this.connectTo(null, "B", "in2"));
         assertThrows(IllegalArgumentException.class, () -> this.connectTo(mult, "B", "in3"));
-        this.connectTo(mult, "B", "in2");
+        this.connectTo(mult, "B", Multiplication.BINARY_IN_B_CHANNEL);
 
-        mult.connectTo(this, "out", "out");
+        mult.connectTo(this, Multiplication.BINARY_OUT_CHANNEL, "out");
 
         assertTrue(this.getInputs().contains(aChannel));
         assertTrue(this.getOutputs().contains(outChannel));
