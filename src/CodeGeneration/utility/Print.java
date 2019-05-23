@@ -15,8 +15,8 @@ public class Print {
     private static String lastPrefix = null;
     public static int minimalIndent = 35;
 
-    public static boolean samePrefix(String prefix){
-        if(prefix.equals(lastPrefix))
+    public static boolean samePrefix(String prefix) {
+        if (prefix.equals(lastPrefix))
             return true;
 
         Print.lastPrefix = prefix;
@@ -31,19 +31,19 @@ public class Print {
     }
 
     private String getPrefix() {
-        return  withLinePostfix("[" + name + "] says ");
+        return withLinePostfix("[" + name + "] says ");
     }
 
     private String withLinePostfix(String s) {
-        return s + (emptyLine(minimalIndent - s.length()).replace(" ","─"));
+        return s + (emptyLine(minimalIndent - s.length()).replace(" ", "─"));
     }
 
     public String say(String s) {
         return this.say(color, s);
     }
 
-    private static String emptyLine(int length){
-        if(length < 0)
+    private static String emptyLine(int length) {
+        if (length < 0)
             return "";
         char[] chars = new char[length];
         for (int i = 0; i < length; i++)
@@ -55,13 +55,13 @@ public class Print {
     private static String lineMiddle = "├┄ ";
     private static String lineBottom = "├┄ ";
 
-    private static String formatString(String prefix, String line){
+    private static String formatString(String prefix, String line) {
         //The indent line
         String indent = emptyLine(prefix.length()) + lineMiddle;
-        line = line.replaceAll("\n","\n"+indent);
+        line = line.replaceAll("\n", "\n" + indent);
 
         //If it is the same prefix as last forward, just forward it with the indent.
-        if(samePrefix(prefix))
+        if (samePrefix(prefix))
             return indent + line;
 
         line = prefix + lineTop + line;
@@ -104,8 +104,8 @@ public class Print {
      * @param s The string output
      * @return The coloured string.
      */
-    public static String echo(AnsiColor c, String s) {
-        String out = c + s + AnsiColor.RESET;
+    public static String echo(AnsiColor c, Object s) {
+        String out = c + ((s == null)? "\uD835\uDC75\uD835\uDC7C\uD835\uDC73\uD835\uDC73" : s.toString()) + AnsiColor.RESET;
         System.out.println(out);
         return out;
     }

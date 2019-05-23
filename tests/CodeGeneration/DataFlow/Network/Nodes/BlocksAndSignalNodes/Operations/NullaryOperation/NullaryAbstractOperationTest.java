@@ -29,27 +29,25 @@ class NullaryAbstractOperationTest {
                 .addRow(3, 4)
                 .buildDenseMatrix();
 
-        operations.add(new Input());
-        operations.add(new Input(input));
         operations.add(new Source(input));
 
     }
 
-    @RepeatedTest(3)
+    @RepeatedTest(1)
     void performOperation(RepetitionInfo r) {
         int i = r.getCurrentRepetition() - 1;
 
         NullaryAbstractOperation op = operations.get(i);
 
-
         op.performOperation();
 
-        if (i == 0) assertNull(op.getResult());
-        else assertEquals(op.getResult(), input);
+        assertEquals(op.getResult(), input);
     }
 
     @Test
     void addNewInputLabel() {
         assertThrows(IllegalMethodException.class, () -> operations.get(0).addNewInputLabel("in", new ListChannel()));
     }
+
+
 }

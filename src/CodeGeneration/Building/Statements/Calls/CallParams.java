@@ -49,7 +49,7 @@ public class CallParams implements Statement {
                             .append(")");
 
                     if (!statement.toString().endsWith(".class") && !isBlueprintVar) {
-                        builder.append(".class");
+                        builder.append(".getClass()");
                     }
 
                 } else {

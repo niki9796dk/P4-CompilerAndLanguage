@@ -13,9 +13,14 @@ import LinearAlgebra.Types.Matrices.Matrix;
 import java.util.*;
 
 public abstract class AbstractBlock implements Block {
+
+    // Fields:
     private LinkedHashMap<String, Channel> inputChannels = new LinkedHashMap<>(2);
     private LinkedHashMap<String, Channel> outputChannels = new LinkedHashMap<>(1);
     public static BlockConfiguration configuration;
+
+    // Constants:
+    private static final double DEFAULT_LEARNING_RATE = 0.2;
 
     /**
      * Add an input channel
@@ -130,7 +135,7 @@ public abstract class AbstractBlock implements Block {
 
         myOutChannel.tether(targetChannel);
 
-        return null;
+        return this;
     }
 
     @Override
@@ -141,12 +146,11 @@ public abstract class AbstractBlock implements Block {
             throw new IllegalArgumentException("The amount of group connections MUST match the amount of inputs.");
 
         for (Node node : nodes){
-            Channel channel = null;
+            Channel channel;
 
             if(node instanceof Channel) channel = (Channel) node;
             else if(node instanceof Block) channel = ((Block) node).getFirstOutput();
             else throw new IllegalArgumentException("Input must be a block or channel in the current implementation");
-            assert channel != null;
 
             channel.tether(inputKeys.pollFirst());
         }
@@ -248,6 +252,6 @@ public abstract class AbstractBlock implements Block {
 
     @Override
     public void train(Matrix inputData, Matrix targetData, int iterations) {
-        this.train(inputData, targetData, iterations, 0.2);
+        this.train(inputData, targetData, iterations, DEFAULT_LEARNING_RATE);
     }
 }
