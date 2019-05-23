@@ -17,7 +17,7 @@ public class MainParse {
 
         if (args.length != 1) {
             //parseFile("data/input");
-            parseFile("data\\input");
+            parseFile("data" + File.separator + "input");
         } else {
 
             parseFile(args[0]);
@@ -32,7 +32,7 @@ public class MainParse {
         // create a buffering scanner wrapper
         ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)),csf));
 
-        String nameOfFile = path.subSequence(path.lastIndexOf('\\')+1, path.length()).toString();
+        String nameOfFile = path.subSequence(path.lastIndexOf(File.separator)+1, path.length()).toString();
 
         // start parsing
         AutoGen.Parser p = new AutoGen.Parser(lexer,csf);

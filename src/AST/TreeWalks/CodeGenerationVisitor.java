@@ -39,6 +39,7 @@ import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 
+import java.io.File;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,7 +52,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
     private CodeScope currentCodeScope;
     private Map<Integer, String> placeholderVars = new HashMap<>();
     private String programFileName;
-    private static String EXPORT_PATH = "src\\AutoGen\\CodeGen\\";
+    private static String EXPORT_PATH = "src"+File.separator+"AutoGen"+ File.separator+"CodeGen"+File.separator;
     private static String EXPORT_PACKAGE = "AutoGen.CodeGen";
 
     public CodeGenerationVisitor(SymbolTable symbolTable, String programFileName) {
