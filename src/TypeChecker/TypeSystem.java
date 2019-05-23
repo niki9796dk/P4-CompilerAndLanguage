@@ -152,6 +152,10 @@ public class TypeSystem {
         return followNode(node, blockScopeId, subScopeId, ModeEnum.BLOCK_SEEKER);
     }
 
+    public AbstractNode followNodeToBuildOfChannel(AbstractNode node, String blockScopeId, String subScopeId){
+        return followNode(node, blockScopeId, subScopeId, ModeEnum.CHANNEL_INSTANCE);
+    }
+
     /**
      * @param node The node to evaluate
      * @param blockScopeId The current block scope to type check from
@@ -193,7 +197,7 @@ public class TypeSystem {
                 return node;
 
             case BUILD:
-                if (mode.equals(ModeEnum.BLOCK_SEEKER)){
+                if (mode.equals(ModeEnum.BLOCK_SEEKER) || mode.equals(ModeEnum.CHANNEL_INSTANCE)){
                     return node;
                 } else {
                     return this.getOriginOfBuildStatement((BuildNode) node, blockScopeId, subScopeId, mode);
@@ -261,11 +265,21 @@ public class TypeSystem {
 
         } else {
             NamedIdNode subtypeNode;
-
             VariableEntry selectorVariable = this.getVariableFromIdentifier(selectorNode.getId(), blockScope, subScope);
+
+            //
+
 
             if (selectorVariable != null){
                 subtypeNode = selectorVariable.getSubType(selectorNode.getNumber());
+
+                // If we are specifically looking for the origin of a channel variable, and we just reached a myChannel, the selector we just checked is the parameter variable that we need.
+                if (mode.equals(ModeEnum.CHANNEL_INSTANCE)){
+                    if (subtypeNode.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || subtypeNode.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)){
+                        return selectorNode;
+                    }
+                }
+
             } else {
                 // Handle this.-less references to channels
                 subtypeNode = symbolTable.getBlockScope(blockScope).getChannelDeclarationScope().getVariable(selectorNode).getNode();
@@ -359,8 +373,6 @@ public class TypeSystem {
             if (isLocalVariable) {
                 int nodeNumber = ((NumberedNode) node).getNumber();
                 String variableId = localVariable.getSubType(nodeNumber).getId();
-
-                System.out.println(variableId);
 
                 BuildNode varBuild = new BuildNode(variableId);
                 varBuild.setNumber(nodeNumber);
