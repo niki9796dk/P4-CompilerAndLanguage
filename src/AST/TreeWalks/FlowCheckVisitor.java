@@ -10,7 +10,9 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyOutChannelNode;
+import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import SemanticAnalysis.Datastructures.ProcCall;
 import SemanticAnalysis.Exceptions.ChainConnectionMismatchException;
 import SemanticAnalysis.Exceptions.GroupConnectionMismatchException;
 import SemanticAnalysis.FlowChecker;
@@ -66,7 +68,6 @@ public class FlowCheckVisitor extends ScopeTracker {
             case ASSIGN:
             case CHANNEL_IN_TYPE:
             case CHANNEL_OUT_TYPE:
-            case PROCEDURE_CALL:
             case PARAMS:
             case DRAW:
             case SIZE:
@@ -78,6 +79,10 @@ public class FlowCheckVisitor extends ScopeTracker {
             case SELECTOR:
             case CHANNEL_IN_MY:
             case CHANNEL_OUT_MY:
+                break;
+
+            case PROCEDURE_CALL:
+                this.currentFlow.pushProcCall(new ProcCall((ProcedureCallNode) node, typeSystem, currentBlockScope, currentSubScope));
                 break;
 
             case BUILD:
@@ -117,12 +122,15 @@ public class FlowCheckVisitor extends ScopeTracker {
                 currentFlow = currentFlow.evaluateBlock();
                 break;
 
+            case PROCEDURE_CALL:
+                this.currentFlow.popProcCall();
+                break;
+
             case PROCEDURE:
             case BLOCK:
             case GROUP:
             case BUILD:
             case CHAIN:
-            case PROCEDURE_CALL:
             case PARAMS:
             case SELECTOR:
             case DRAW:

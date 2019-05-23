@@ -6,10 +6,9 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyOutChannelNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
+import CodeGeneration.Building.Statements.Calls.ProcedureCall;
+import SemanticAnalysis.Datastructures.ProcCall;
 import SemanticAnalysis.Exceptions.IncorrectChannelUsageException;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
@@ -32,14 +31,16 @@ public class FlowChecker {
     private List<String> inConnections;
     private List<String> outConnections;
     private String currentBlockId;
+    private Stack<ProcCall> procStack;
 
 
-    public FlowChecker(String currentBlockScope) {
+    private FlowChecker(String currentBlockScope) {
         this.currentBlockId = currentBlockScope;
         this.inConnectPoints = new HashSet<>();
         this.outConnectPoints = new HashSet<>();
         this.inConnections = new ArrayList<>();
         this.outConnections = new ArrayList<>();
+        this.procStack = new Stack<>();
     }
 
     public static void setup(SymbolTableInterface symbolTableInterface){
@@ -59,7 +60,7 @@ public class FlowChecker {
         // This is really useful for debugging.
         int i = 0;
         for (String s : inConnections){
-            System.out.print(inConnections.get(i) + " - " + outConnections.get(i) + " :::: ");
+            System.out.print(inConnections.get(i) + " -> " + outConnections.get(i) + " :::: ");
             i++;
         }
         System.out.println(System.lineSeparator() + inConnectPoints);
@@ -148,7 +149,7 @@ public class FlowChecker {
         String inString;
         String outString;
 
-        System.out.println("RRRRRRR: " + followToBuild);
+        System.out.println("HMMMM: " + chainChildWithSib + " - " + followToBase);
 
         if (isThis){
             // "this" case
@@ -168,11 +169,19 @@ public class FlowChecker {
             inString = blockInString + ((NamedIdNode) followToBase.getChild()).getId();
 
         } else if (followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)) {
-            inString = currentBlockId + followToBase.getId();
+            AbstractNode parameterVariable = typeSystem.followNodeToBuildOfChannel(chainChildWithSib, currentBlockId, currentSubScope);
+
+            // The case where followToBase is a myChannel but followNodeToBuildOfChannel returns a Selector, is where we have a parameter we have to follow back to get the build statement of origin.
+            if (((NamedNode) parameterVariable).getNodeEnum().equals(NodeEnum.SELECTOR) && parameterVariable.getChild() == null) {
+                inString = procStack.peek().getBuildOfParameter((NamedIdNode) parameterVariable) + followToBase.getId();
+
+            } else {
+                // otherwise, it is one of the local block's myChannels
+                inString = currentBlockId + followToBuild.getId();
+            }
 
         } else {
             // channel variable case
-            System.out.println("HMMM: " + followToBuild);
             inString = followToBuild.toString()
                     + typeSystem.getSymbolTable()
                     .getBlockScope(followToBase.getId())
@@ -189,6 +198,8 @@ public class FlowChecker {
         NamedIdNode followToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(outPartOfChain, currentBlockId, currentSubScope));
         NamedIdNode followToBase = ((NamedIdNode) typeSystem.followNode(followToBuild, currentBlockId, currentSubScope));
         boolean isThis = ("this").equals(followToBase.getId());
+
+        System.out.println("HMMMM: " + outPartOfChain + " - " + followToBase);
 
         if (isThis){
             // "this" case
@@ -217,7 +228,17 @@ public class FlowChecker {
             return blockInString + ((NamedIdNode) followToBase.getChild()).getId();
 
         } else if (followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)) {
-            return currentBlockId + followToBase.getId();
+
+            AbstractNode parameterVariable = typeSystem.followNodeToBuildOfChannel(outPartOfChain, currentBlockId, currentSubScope);
+
+            // The case where followToBase is a myChannel but followNodeToBuildOfChannel returns a Selector, is where we have a parameter we have to follow back to get the build statement of origin.
+            if (((NamedNode) parameterVariable).getNodeEnum().equals(NodeEnum.SELECTOR) && parameterVariable.getChild() == null) {
+                return procStack.peek().getBuildOfParameter((NamedIdNode) parameterVariable) + followToBase.getId();
+
+            } else {
+                // otherwise, it is one of the local block's myChannels
+                return currentBlockId + followToBuild.getId();
+            }
 
         } else {
             // channel variable case
@@ -375,5 +396,17 @@ public class FlowChecker {
     private void addConnections(String in, String out){
         inConnections.add(in);
         outConnections.add(out);
+    }
+
+    private BlockNode blockNodeOfMyChannel(AbstractNode channel){
+        return (BlockNode) channel.getParent().getParent();
+    }
+
+    public void pushProcCall(ProcCall procCall){
+        procStack.push(procCall);
+    }
+
+    public void popProcCall(){
+        procStack.pop();
     }
 }
