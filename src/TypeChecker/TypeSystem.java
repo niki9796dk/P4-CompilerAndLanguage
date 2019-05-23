@@ -16,6 +16,7 @@ import TypeChecker.Exceptions.IncorrectAssignmentTypesException;
 import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
+import java_cup.runtime.ComplexSymbolFactory;
 
 public class TypeSystem {
     private SymbolTableInterface symbolTable;
@@ -152,6 +153,10 @@ public class TypeSystem {
         return followNode(node, blockScopeId, subScopeId, ModeEnum.BLOCK_SEEKER);
     }
 
+    public AbstractNode followNodeToBuildOfChannel(AbstractNode node, String blockScopeId, String subScopeId){
+        return followNode(node, blockScopeId, subScopeId, ModeEnum.CHANNEL_INSTANCE);
+    }
+
     /**
      * @param node The node to evaluate
      * @param blockScopeId The current block scope to type check from
@@ -193,7 +198,7 @@ public class TypeSystem {
                 return node;
 
             case BUILD:
-                if (mode.equals(ModeEnum.BLOCK_SEEKER)){
+                if (mode.equals(ModeEnum.BLOCK_SEEKER) || mode.equals(ModeEnum.CHANNEL_INSTANCE)){
                     return node;
                 } else {
                     return this.getOriginOfBuildStatement((BuildNode) node, blockScopeId, subScopeId, mode);
@@ -228,7 +233,7 @@ public class TypeSystem {
         // The order here is relevant! We should always check the local scope before the predefined and the set of block scopes!
         if (isLocalVariable) {
             // Convert the identifier into an selector
-            SelectorNode selectorNode = new SelectorNode(buildId);
+            SelectorNode selectorNode = new SelectorNode(buildId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
             selectorNode.setNumber(node.getNumber());
 
             // Get the sub type of the selector
@@ -261,11 +266,21 @@ public class TypeSystem {
 
         } else {
             NamedIdNode subtypeNode;
-
             VariableEntry selectorVariable = this.getVariableFromIdentifier(selectorNode.getId(), blockScope, subScope);
+
+            //
+
 
             if (selectorVariable != null){
                 subtypeNode = selectorVariable.getSubType(selectorNode.getNumber());
+
+                // If we are specifically looking for the origin of a channel variable, and we just reached a myChannel, the selector we just checked is the parameter variable that we need.
+                if (mode.equals(ModeEnum.CHANNEL_INSTANCE)){
+                    if (subtypeNode.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || subtypeNode.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)){
+                        return selectorNode;
+                    }
+                }
+
             } else {
                 // Handle this.-less references to channels
                 subtypeNode = symbolTable.getBlockScope(blockScope).getChannelDeclarationScope().getVariable(selectorNode).getNode();
@@ -360,9 +375,7 @@ public class TypeSystem {
                 int nodeNumber = ((NumberedNode) node).getNumber();
                 String variableId = localVariable.getSubType(nodeNumber).getId();
 
-                System.out.println(variableId);
-
-                BuildNode varBuild = new BuildNode(variableId);
+                BuildNode varBuild = new BuildNode(variableId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
                 varBuild.setNumber(nodeNumber);
 
                 return this.getTypeOfBuildStatement(varBuild, blockScope, subScope);

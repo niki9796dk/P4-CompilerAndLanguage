@@ -7,6 +7,7 @@ import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,10 +28,10 @@ class TypeSystemTest {
     @BeforeEach
     void beforeEach() {
         this.symbolTableInterface = new SymbolTable();
-        this.blockNode = new BlockNode(BLOCK_ID_01);
+        this.blockNode = new BlockNode(BLOCK_ID_01, new ComplexSymbolFactory.Location(-1, -1));
         this.blockNode.setNumber(1);
         this.symbolTableInterface.openBlockScope(blockNode);
-        this.procedureNode = new ProcedureNode(PROC_ID_01);
+        this.procedureNode = new ProcedureNode(PROC_ID_01, new ComplexSymbolFactory.Location(-1, -1));
         this.procedureNode.setNumber(2);
         this.symbolTableInterface.openSubScope(procedureNode);
         this.typeSystem = new TypeSystem(symbolTableInterface);
@@ -59,25 +60,25 @@ class TypeSystemTest {
 
     @Test
     void getSubTypeOfNode02() {
-        SizeTypeNode sizeTypeNode = new SizeTypeNode("id");
+        SizeTypeNode sizeTypeNode = new SizeTypeNode("id", new ComplexSymbolFactory.Location(-1, -1));
         assertNull(this.typeSystem.getSubTypeOfNode(sizeTypeNode, "", ""));
     }
 
     @Test
     void getSubTypeOfNode03() {
-        MyInChannelNode myInChannelNode = new MyInChannelNode("id");
+        MyInChannelNode myInChannelNode = new MyInChannelNode("id", new ComplexSymbolFactory.Location(-1, -1));
         assertEquals("CHANNEL_IN_MY", this.typeSystem.getSubTypeOfNode(myInChannelNode, "", ""));
     }
 
     @Test
     void getSubTypeOfNode04() {
-        SizeNode sizeNode = new SizeNode(1, 2);
+        SizeNode sizeNode = new SizeNode(1, 2, new ComplexSymbolFactory.Location(-1, -1));
         assertEquals("SIZE_TYPE", this.typeSystem.getSubTypeOfNode(sizeNode, "", ""));
     }
 
     @Test
     void getSubTypeOfNode05() {
-        DrawNode drawNode = new DrawNode("id");
+        DrawNode drawNode = new DrawNode("id", new ComplexSymbolFactory.Location(-1, -1));
         assertEquals("id", this.typeSystem.getSubTypeOfNode(drawNode, "", ""));
     }
 
@@ -89,7 +90,7 @@ class TypeSystemTest {
 
     @Test
     void getSuperTypeOfNode02() {
-        MyInChannelNode myInChannelNode = new MyInChannelNode("id");
+        MyInChannelNode myInChannelNode = new MyInChannelNode("id", new ComplexSymbolFactory.Location(-1, -1));
         assertEquals(NodeEnum.CHANNEL_IN_MY, this.typeSystem.getSuperTypeOfNode(myInChannelNode, "", ""));
     }
 }

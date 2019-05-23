@@ -13,6 +13,7 @@ import AST.Nodes.SpecialNodes.UnexpectedNode;
 import ScopeChecker.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.BlockScope;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,10 +29,10 @@ class SymbolTableVisitorTest {
     void makeSymbolTableVisitor() {
         symbolTableVisitor = new SymbolTableVisitor();
 
-        blockNode = new BlockNode("blockId");
+        blockNode = new BlockNode("blockId", new ComplexSymbolFactory.Location(-1, -1));
         symbolTableVisitor.getSymbolTableInterface().openBlockScope((BlockNode) blockNode);
 
-        blueprintNode = new BlueprintNode();
+        blueprintNode = new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1));
         symbolTableVisitor.getSymbolTableInterface().openSubScope((BlueprintNode) blueprintNode);
     }
 
@@ -50,7 +51,7 @@ class SymbolTableVisitorTest {
 
     @Test
     void preTestCheckIfVariableIsDefinedAndInsert01() {
-        AbstractNode blueprintTypeNode = new BlueprintTypeNode("blueprintTypeId");
+        AbstractNode blueprintTypeNode = new BlueprintTypeNode("blueprintTypeId", new ComplexSymbolFactory.Location(-1, -1));
         symbolTableVisitor.pre(0, blueprintTypeNode);
 
         assertEquals(symbolTableVisitor.getSymbolTableInterface().getBlockScope("blockId").getSubscope("Blueprint").getVariable("blueprintTypeId").getNode(), blueprintTypeNode);
@@ -59,7 +60,7 @@ class SymbolTableVisitorTest {
     // Test that if variable is already defined it should throw an error
     @Test
     void preTestCheckIfVariableIsDefinedAndInsert02() {
-        BlueprintTypeNode blueprintTypeNode = new BlueprintTypeNode("blueprintTypeId");
+        BlueprintTypeNode blueprintTypeNode = new BlueprintTypeNode("blueprintTypeId", new ComplexSymbolFactory.Location(-1, -1));
         symbolTableVisitor.pre(0, blueprintTypeNode);
 
         assertThrows(ScopeBoundsViolationException.class, () -> symbolTableVisitor.pre(0, blueprintTypeNode));
@@ -88,9 +89,9 @@ class SymbolTableVisitorTest {
 
     @Test
     void postAssign() {
-        NamedIdNode leftSide = new BlockTypeNode("blockTypeId");
-        NamedNode rightSideBefore = new BlueprintNode();
-        NamedNode assignNodeBefore = new AssignNode();
+        NamedIdNode leftSide = new BlockTypeNode("blockTypeId", new ComplexSymbolFactory.Location(-1, -1));
+        NamedNode rightSideBefore = new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1));
+        NamedNode assignNodeBefore = new AssignNode(new ComplexSymbolFactory.Location(-1, -1));
         leftSide.makeSibling(rightSideBefore);
         assignNodeBefore.adoptAsFirstChild(leftSide);
 
@@ -99,8 +100,8 @@ class SymbolTableVisitorTest {
         symbolTableVisitor.pre(0, assignNodeBefore);
 
 
-        NamedNode rightSideAfter = new BuildNode("buildNode");
-        NamedNode assignNodeAfter = new AssignNode();
+        NamedNode rightSideAfter = new BuildNode("buildNode", new ComplexSymbolFactory.Location(-1, -1));
+        NamedNode assignNodeAfter = new AssignNode(new ComplexSymbolFactory.Location(-1, -1));
         leftSide.orphan();
         leftSide.makeSibling(rightSideAfter);
         assignNodeAfter.adoptAsFirstChild(leftSide);

@@ -3,6 +3,7 @@ package AST.Nodes.NodeClasses.NamedNodes;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import java_cup.runtime.ComplexSymbolFactory;
 
 import java.util.Objects;
 
@@ -13,8 +14,8 @@ public class SizeNode extends NamedIdNode {
     public final Integer first;
     public final Integer second;
 
-    public SizeNode(Integer first, Integer second) {
-        super("Size", "[" + first + ", " + second + "]", NodeEnum.SIZE);
+    public SizeNode(Integer first, Integer second, ComplexSymbolFactory.Location location) {
+        super("Size", "[" + first + ", " + second + "]", NodeEnum.SIZE, location);
         this.first = first;
         this.second = second;
     }

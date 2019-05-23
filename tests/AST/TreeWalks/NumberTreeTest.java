@@ -3,6 +3,7 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.NodeClasses.NamedNodes.AssignNode;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ class NumberTreeTest {
     @BeforeEach
     void makeNumberTree() {
         numberTree = new NumberTree();
-        numberedNode = new AssignNode();
+        numberedNode = new AssignNode(new ComplexSymbolFactory.Location(-1, -1));
     }
 
     @Test

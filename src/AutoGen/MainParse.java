@@ -4,6 +4,7 @@ import java.io.*;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.TreeWalks.*;
+import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
 import SymbolTableImplementation.SymbolTable;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
@@ -14,6 +15,18 @@ public class MainParse {
     public static boolean isTest = false;
 
     public static void main(String args[]) throws Exception {
+
+        /* TODO: Implement this plz
+        Thread.currentThread().setUncaughtExceptionHandler((t, e) -> {
+            if (e instanceof MyCustomExceptionGroup) {
+                AbstractNode errorNode = ((MyCustomExceptionGroup) e).getNode();
+
+                System.out.println("Error happend at: " + errorNode.getLineNumber() + " - Cause: " + e.getMessage());
+            } else {
+                System.out.println("Unknown error occurred");
+            }
+        });
+        */
 
         if (args.length != 1) {
             //parseFile("data/input");

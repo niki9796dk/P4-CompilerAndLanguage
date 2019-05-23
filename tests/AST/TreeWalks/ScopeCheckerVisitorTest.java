@@ -13,6 +13,7 @@ import ScopeChecker.Exceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
+import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.Symbol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +32,8 @@ class ScopeCheckerVisitorTest {
         this.symbolTable = new SymbolTable();
         this.scopeCheckerVisitor = new ScopeCheckerVisitor(this.symbolTable);
 
-        this.blockNode = new BlockNode("blockNodeId");
-        this.blueprintNode = new BlueprintNode();
+        this.blockNode = new BlockNode("blockNodeId", new ComplexSymbolFactory.Location(-1, -1));
+        this.blueprintNode = new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1));
 
         // Insert into symbol table
         this.symbolTable.openBlockScope(this.blockNode);
@@ -45,17 +46,17 @@ class ScopeCheckerVisitorTest {
 
     @Test
     void preTestDrawBuild01() {
-        BuildNode buildNode = new BuildNode("notBlockNodeId");
+        BuildNode buildNode = new BuildNode("notBlockNodeId", new ComplexSymbolFactory.Location(-1, -1));
 
         assertThrows(NoSuchBlockDeclaredException.class, () -> this.scopeCheckerVisitor.pre(0, buildNode));
     }
 
     @Test
     void preTestDrawBuild02() {
-        BlockNode otherBlockNode = new BlockNode("otherBlockNodeId");
+        BlockNode otherBlockNode = new BlockNode("otherBlockNodeId", new ComplexSymbolFactory.Location(-1, -1));
         this.symbolTable.openBlockScope(otherBlockNode);
 
-        BuildNode otherBuildNode = new BuildNode("otherBlockNodeId");
+        BuildNode otherBuildNode = new BuildNode("otherBlockNodeId", new ComplexSymbolFactory.Location(-1, -1));
 
         // Ensures an exception is not thrown
         this.scopeCheckerVisitor.pre(0, otherBuildNode);
@@ -71,7 +72,7 @@ class ScopeCheckerVisitorTest {
 
     @Test
     void preTestProcedure() {
-        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId");
+        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId", new ComplexSymbolFactory.Location(-1, -1));
         this.symbolTable.openSubScope(procedureNode);
 
         this.scopeCheckerVisitor.pre(1, procedureNode);
@@ -81,7 +82,7 @@ class ScopeCheckerVisitorTest {
 
     @Test
     void preTestBlueprint() {
-        BlueprintNode blueprintNode = new BlueprintNode();
+        BlueprintNode blueprintNode = new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1));
         this.symbolTable.openSubScope(blueprintNode);
 
         this.scopeCheckerVisitor.pre(1, blueprintNode);
@@ -91,7 +92,7 @@ class ScopeCheckerVisitorTest {
 
     @Test
     void preTestChannelDeclarations() {
-        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1));
         this.symbolTable.openSubScope(channelDeclarationsNode);
 
         this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
@@ -101,9 +102,9 @@ class ScopeCheckerVisitorTest {
 
     @Test
     void preTestProcedureCall01() {
-        ProcedureCallNode procedureCallNode = new ProcedureCallNode();
-        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId");
-        SelectorNode selectorNode = new SelectorNode("procedureNodeId");
+        ProcedureCallNode procedureCallNode = new ProcedureCallNode(new ComplexSymbolFactory.Location(-1, -1));
+        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId", new ComplexSymbolFactory.Location(-1, -1));
+        SelectorNode selectorNode = new SelectorNode("procedureNodeId", new ComplexSymbolFactory.Location(-1, -1));
 
         procedureCallNode.adoptAsFirstChild(selectorNode);
 
@@ -117,9 +118,9 @@ class ScopeCheckerVisitorTest {
 
     @Test
     void preTestProcedureCall02() {
-        ProcedureCallNode procedureCallNode = new ProcedureCallNode();
-        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId");
-        SelectorNode selectorNode = new SelectorNode("nonExistentProcedureNodeId");
+        ProcedureCallNode procedureCallNode = new ProcedureCallNode(new ComplexSymbolFactory.Location(-1, -1));
+        ProcedureNode procedureNode = new ProcedureNode("procedureNodeId", new ComplexSymbolFactory.Location(-1, -1));
+        SelectorNode selectorNode = new SelectorNode("nonExistentProcedureNodeId", new ComplexSymbolFactory.Location(-1, -1));
 
         procedureCallNode.adoptAsFirstChild(selectorNode);
 
@@ -131,12 +132,12 @@ class ScopeCheckerVisitorTest {
     // Check 'this' selector
     @Test
     void preTestSelector01() {
-        MyInChannelNode node = new MyInChannelNode("in");
+        MyInChannelNode node = new MyInChannelNode("in", new ComplexSymbolFactory.Location(-1, -1));
 
-        SelectorNode selectorNode = new SelectorNode("this");
+        SelectorNode selectorNode = new SelectorNode("this", new ComplexSymbolFactory.Location(-1, -1));
         selectorNode.adoptChildren(node);
 
-        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1));
         this.symbolTable.openSubScope(channelDeclarationsNode);
 
         this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
@@ -151,11 +152,11 @@ class ScopeCheckerVisitorTest {
 
     @Test
     void preTestSelector02() {
-        MyInChannelNode node = new MyInChannelNode("in");
+        MyInChannelNode node = new MyInChannelNode("in", new ComplexSymbolFactory.Location(-1, -1));
 
-        SelectorNode selectorNode = new SelectorNode("in");
+        SelectorNode selectorNode = new SelectorNode("in", new ComplexSymbolFactory.Location(-1, -1));
 
-        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1));
         this.symbolTable.openSubScope(channelDeclarationsNode);
 
         this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
@@ -170,11 +171,11 @@ class ScopeCheckerVisitorTest {
 
     @Test
     void preTestSelector03() {
-        MyInChannelNode node = new MyInChannelNode("in");
+        MyInChannelNode node = new MyInChannelNode("in", new ComplexSymbolFactory.Location(-1, -1));
 
-        SelectorNode selectorNode = new SelectorNode("in");
+        SelectorNode selectorNode = new SelectorNode("in", new ComplexSymbolFactory.Location(-1, -1));
 
-        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1));
         this.symbolTable.openSubScope(channelDeclarationsNode);
 
         this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);

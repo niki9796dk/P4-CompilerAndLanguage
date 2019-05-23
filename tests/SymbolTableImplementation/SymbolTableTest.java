@@ -7,6 +7,7 @@ import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import Enums.AnsiColor;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,10 +32,10 @@ class SymbolTableTest {
     @BeforeEach
     void beforeEach() {
         this.s = new SymbolTable();
-        this.n = new BlockNode("n");
-        this.n2 = new SizeTypeNode("n2");
-        this.n3 = new SizeTypeNode("n3");
-        this.bn = new BlueprintNode();
+        this.n = new BlockNode("n", new ComplexSymbolFactory.Location(-1, -1));
+        this.n2 = new SizeTypeNode("n2", new ComplexSymbolFactory.Location(-1, -1));
+        this.n3 = new SizeTypeNode("n3", new ComplexSymbolFactory.Location(-1, -1));
+        this.bn = new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1));
     }
 
     @Test
@@ -58,9 +59,9 @@ class SymbolTableTest {
         this.s.openBlockScope(this.n);
         this.s.openSubScope(this.bn);
 
-        ChannelDeclarationsNode cdNode = new ChannelDeclarationsNode();
-        ProcedureNode pNode = new ProcedureNode("pNode");
-        SizeNode sNode = new SizeNode(0, 2);
+        ChannelDeclarationsNode cdNode = new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1));
+        ProcedureNode pNode = new ProcedureNode("pNode", new ComplexSymbolFactory.Location(-1, -1));
+        SizeNode sNode = new SizeNode(0, 2, new ComplexSymbolFactory.Location(-1, -1));
 
         this.s.openSubScope(cdNode);
         this.s.openSubScope(pNode);
@@ -88,14 +89,14 @@ class SymbolTableTest {
         this.s.openSubScope(this.bn);
         this.s.insertVariable(this.n2);
 
-        AssignNode assignNode = new AssignNode();
+        AssignNode assignNode = new AssignNode(new ComplexSymbolFactory.Location(-1, -1));
 
         assignNode.adoptChildren(
-                new SelectorNode("SelectorNode"),
-                new BuildNode("BuildNode")
+                new SelectorNode("SelectorNode", new ComplexSymbolFactory.Location(-1, -1)),
+                new BuildNode("BuildNode", new ComplexSymbolFactory.Location(-1, -1))
         );
 
-        this.s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
+        this.s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode", new ComplexSymbolFactory.Location(-1, -1)));
         this.s.reassignVariable(assignNode);
     }
 
@@ -105,14 +106,14 @@ class SymbolTableTest {
         this.s.openSubScope(this.bn);
         this.s.insertVariable(this.n2);
 
-        AssignNode assignNode = new AssignNode();
+        AssignNode assignNode = new AssignNode(new ComplexSymbolFactory.Location(-1, -1));
 
         assignNode.adoptChildren(
-                new SelectorNode("SelectorNode"),
-                new SizeNode(0, 100)
+                new SelectorNode("SelectorNode", new ComplexSymbolFactory.Location(-1, -1)),
+                new SizeNode(0, 100, new ComplexSymbolFactory.Location(-1, -1))
         );
 
-        this.s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
+        this.s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode", new ComplexSymbolFactory.Location(-1, -1)));
         this.s.reassignVariable(assignNode);
     }
 
@@ -122,14 +123,14 @@ class SymbolTableTest {
         this.s.openSubScope(this.bn);
         this.s.insertVariable(this.n2);
 
-        AssignNode assignNode = new AssignNode();
+        AssignNode assignNode = new AssignNode(new ComplexSymbolFactory.Location(-1, -1));
 
         assignNode.adoptChildren(
-                new SelectorNode("SelectorNode"),
-                new SizeTypeNode("SizeTypeNode")
+                new SelectorNode("SelectorNode", new ComplexSymbolFactory.Location(-1, -1)),
+                new SizeTypeNode("SizeTypeNode", new ComplexSymbolFactory.Location(-1, -1))
         );
 
-        s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode"));
+        s.getLatestBlockScope().getLatestSubScope().setVariable(new SelectorNode("SelectorNode", new ComplexSymbolFactory.Location(-1, -1)));
         assertThrows(IllegalArgumentException.class, () -> s.reassignVariable(assignNode));
     }
 
