@@ -3,7 +3,6 @@ package CodeGeneration.DataFlow.Network.Nodes.Blocks;
 
 
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import CodeGeneration.DataFlow.Executions.BlockWrapper;
 import CodeGeneration.DataFlow.Executions.MainBlock;
 import CodeGeneration.DataFlow.Network.Node;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
@@ -170,15 +169,6 @@ class AbstractBlockTest {
             block1.evaluateInput(Matrices.randomMatrix(2,2));
         });
     }
-
-    /*@Test
-    void evaluateInput02() {
-        Block block1 = new In_out();
-        assertEquals(
-                Matrices.constantEntry(10, 10, 2),
-                block1.evaluateInput(Matrices.constantEntry(10, 10, 1))
-        );
-    }*/
 
     @Test
     void train01() {
