@@ -1,82 +1,26 @@
-block master {
+block ANN {
     mychannel:in in;
     mychannel:out out;
 
-    blueprint(){
-        block b1 = build B1(draw B3, draw B2);
-        block b3 = build B3(draw B1, draw B2);
-
-        this.in -> b1 -> b3 -> this.out;
+    blueprint() {
+        this.in
+        -> build Layer()
+        -> build Layer()
+        -> this.out;
     }
 }
 
-block B1 {
+block Layer {
     mychannel:in in;
     mychannel:out out;
 
-    blueprint (blueprint x, blueprint y) {
-        block there = build x(y, draw B3);
+    blueprint() {
+        source weights = build Source([1000, 1000]);
+        source bias = build Source([1000, 1000]);
 
-        this.in -> there -> this.out;
-    }
-}
-
-
-
-
-
-
-block B3 {
-    mychannel:in in;
-    mychannel:out out;
-
-    blueprint (blueprint x, blueprint y) {
-       block there = build x(y, draw B1);
-
-       this.in -> there -> this.out;
-    }
-}
-
-
-
-
-
-block B2 {
-    mychannel:in in;
-    mychannel:out out;
-
-    blueprint(blueprint x, blueprint y){
         operation mult = build Multiplication();
 
-        block g = build x(draw B5, draw B4);
-        block h = build y(draw B5, draw B4);
-
-        this.in -> g -> h;
-        (g, h) -> mult -> this.out;
-    }
-}
-
-block B4 {
-    mychannel:in in;
-    mychannel:out out;
-
-    blueprint(){
-        operation o1 = build _Addition();
-
-        (this.in, this.in) -> o1 -> this.out;
-    }
-}
-
-block B5 {
-    mychannel:in in;
-    mychannel:out out;
-
-    blueprint(blueprint x, blueprint y){
-        operation o1 = build _Addition();
-        block b4 = build x();
-
-        this.in -> b4;
-
-        (this.in, b4) -> o1 -> this.out;
+        (this.in, weights) -> mult;
+        (mult, bias) -> build _Addition() -> build _Sigmoid() -> this.out;
     }
 }
