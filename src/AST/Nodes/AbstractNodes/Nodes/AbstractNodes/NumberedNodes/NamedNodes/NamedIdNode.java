@@ -3,6 +3,7 @@ package AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * A node with a name and Id, both as strings.
@@ -19,8 +20,8 @@ public abstract class NamedIdNode extends NamedNode {
      * @param id The unique id of the node.
      * @param nodeEnum An enum appropriate for a non-abstract class extending this class.
      */
-    public NamedIdNode(String name, String id, NodeEnum nodeEnum) {
-        super(name, nodeEnum);
+    public NamedIdNode(String name, String id, NodeEnum nodeEnum, ComplexSymbolFactory.Location location) {
+        super(name, nodeEnum, location);
         this.id = id;
     }
 

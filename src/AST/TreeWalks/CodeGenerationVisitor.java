@@ -38,6 +38,7 @@ import DataStructures.Pair;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
+import java_cup.runtime.ComplexSymbolFactory;
 
 import java.io.Writer;
 import java.nio.file.Files;
@@ -311,7 +312,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
 
     private AbstractNode transformIfAssign(AbstractNode node) {
         if (node instanceof AssignNode) {
-            SelectorNode selectorNode = new SelectorNode(((NamedIdNode) node.getChild()).getId());
+            SelectorNode selectorNode = new SelectorNode(((NamedIdNode) node.getChild()).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
             selectorNode.setNumber(((NamedNode) node).getNumber());
 
             return selectorNode;

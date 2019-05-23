@@ -14,6 +14,7 @@ import ScopeChecker.Exceptions.IllegalProcedureCallScopeException;
 import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
 import TypeChecker.Exceptions.ShouldNotHappenException;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * Abstract Visitor class - ScopeTracker.
@@ -310,7 +311,7 @@ public class RecursiveVisitor extends ScopeTracker {
 
         } else if (hasSelectorChild) {
             // Problematic since we need to link to another blocks channels, without returning the wrong channel type.
-            SelectorNode newSelector = new SelectorNode(node.getId());
+            SelectorNode newSelector = new SelectorNode(node.getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
             newSelector.setNumber(node.getNumber());
 
             String elementId = this.typeSystem.getSubTypeOfNode(newSelector, this.currentBlockScope, this.currentSubScope);

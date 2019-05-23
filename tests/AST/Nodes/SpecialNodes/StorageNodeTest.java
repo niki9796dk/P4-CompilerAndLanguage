@@ -1,6 +1,7 @@
 package AST.Nodes.SpecialNodes;
 
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ class StorageNodeTest {
 
     @BeforeEach
     void beforeEach() {
-        blockNode = new BlockNode("blockNodeId");
+        blockNode = new BlockNode("blockNodeId", new ComplexSymbolFactory.Location(-1, -1));
         storageNodeNoName = new StorageNode(blockNode);
         storageNodeName = new StorageNode("name", blockNode);
     }

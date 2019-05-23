@@ -11,6 +11,7 @@ import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
 import ScopeChecker.Exceptions.NoSuchVariableDeclaredException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.*;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * The scope checker visitor, used for checking everything in the scope checking phase of a the compiler.
@@ -101,7 +102,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                         this.verifyCurrentScopeVariable(id);
 
                         if (node.getChild() != null){
-                            SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId());
+                            SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
                             dummy.setNumber(node.getNumber());
                             String theBlock = this.typeSystem.getSubTypeOfNode(dummy, currentBlockScope, currentSubScope);
 

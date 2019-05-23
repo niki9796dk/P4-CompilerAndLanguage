@@ -16,6 +16,7 @@ import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
+import java_cup.runtime.ComplexSymbolFactory;
 
 import java.util.*;
 
@@ -276,7 +277,7 @@ public class FlowChecker {
         AbstractNode affasffs = typeSystem.followNodeToBuild(node, currentBlockId, currentSubScope);
 
         if (affasffs instanceof SelectorNode){
-            SelectorNode dummy = new SelectorNode(((SelectorNode) affasffs).getId());
+            SelectorNode dummy = new SelectorNode(((SelectorNode) affasffs).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
             dummy.setNumber(((SelectorNode) affasffs).getNumber());
 
             affasffs = typeSystem.followNodeToBuild(dummy, currentBlockId, currentSubScope);
@@ -300,7 +301,7 @@ public class FlowChecker {
 
             } else {
                 // var. case
-                SelectorNode dummy = new SelectorNode(followedToBase.getId());
+                SelectorNode dummy = new SelectorNode(followedToBase.getId(), new ComplexSymbolFactory.Location(in.getLineNumber(), in.getColumn()));
                 dummy.setNumber(followedToBase.getNumber());
 
                 inString = typeSystem.followNodeToBuild(dummy, currentBlockId, currentSubScope) + ((NamedIdNode) followedToBase.getChild()).getId();

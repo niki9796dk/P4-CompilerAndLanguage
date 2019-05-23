@@ -2,6 +2,7 @@ package AST.Nodes.AbstractNodes.Nodes;
 
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,10 +18,10 @@ class AbstractNodeTest {
 
     @BeforeEach
     void beforeEach() {
-        this.node1 = new BuildNode("build_01");
-        this.node2 = new BuildNode("build_02");
-        this.node3 = new BuildNode("build_03");
-        this.node4_chain = new ChainNode();
+        this.node1 = new BuildNode("build_01", new ComplexSymbolFactory.Location(-1, -1));
+        this.node2 = new BuildNode("build_02", new ComplexSymbolFactory.Location(-1, -1));
+        this.node3 = new BuildNode("build_03", new ComplexSymbolFactory.Location(-1, -1));
+        this.node4_chain = new ChainNode(new ComplexSymbolFactory.Location(-1, -1));
     }
 
     @Test

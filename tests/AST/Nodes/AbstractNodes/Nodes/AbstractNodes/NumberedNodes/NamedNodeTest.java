@@ -1,6 +1,7 @@
 package AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes;
 
 import AST.Nodes.NodeClasses.NamedNodes.AssignNode;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ class NamedNodeTest {
 
     @BeforeEach
     void beforeEach() {
-        this.node1 = new AssignNode();
+        this.node1 = new AssignNode(new ComplexSymbolFactory.Location(-1, -1));
     }
 
     @Test

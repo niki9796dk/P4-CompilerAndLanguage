@@ -2,6 +2,7 @@ package AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
+import java_cup.runtime.ComplexSymbolFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,8 @@ public class BlockNode extends NamedIdNode {
     /**
      * @param id Create a block with the specified node
      */
-    public BlockNode(String id) {
-        super("Block", id, NodeEnum.BLOCK);
+    public BlockNode(String id, ComplexSymbolFactory.Location location) {
+        super("Block", id, NodeEnum.BLOCK, location);
     }
 
     @Override

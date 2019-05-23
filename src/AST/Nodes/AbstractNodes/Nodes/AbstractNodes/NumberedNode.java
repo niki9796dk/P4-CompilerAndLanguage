@@ -3,6 +3,7 @@ package AST.Nodes.AbstractNodes.Nodes.AbstractNodes;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.NodeEnumAble;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * This node can optionally be labelled with a specified number.
@@ -24,7 +25,8 @@ public abstract class NumberedNode extends AbstractNode implements NodeEnumAble 
      * Construct a node with the default number label, and Enum for its class.
      * @param nodeEnum An enum appropriate for the class of the node extending this class.
      */
-    public NumberedNode(NodeEnum nodeEnum) {
+    public NumberedNode(NodeEnum nodeEnum, ComplexSymbolFactory.Location location) {
+        super(location);
         this.nodeEnum = nodeEnum;
     }
 

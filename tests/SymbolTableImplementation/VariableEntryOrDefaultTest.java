@@ -5,6 +5,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,7 @@ class VariableEntryOrDefaultTest {
 
     @Test
     void setDefaultSubtype() {
-        ParamsNode paramsNode = new ParamsNode();
+        ParamsNode paramsNode = new ParamsNode(new ComplexSymbolFactory.Location(-1, -1));
         assertThrows(IllegalArgumentException.class, () -> {
             this.variableEntryOrDefault.setDefaultSubtype(paramsNode);
         });

@@ -1,6 +1,7 @@
 package AST.Nodes.SpecialNodes;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /*
 * Objects of this class has several opportunities for misuse.
@@ -41,6 +42,7 @@ public class StorageNode extends AbstractNode {
      * @param nodes The list of nodes connect allow getting.
      */
     public StorageNode(String name, AbstractNode ... nodes) {
+        super(new ComplexSymbolFactory.Location(-1, -1));
         this.name = name;
         this.nodes = nodes;
     }

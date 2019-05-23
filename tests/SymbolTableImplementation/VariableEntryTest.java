@@ -4,6 +4,7 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import Enums.AnsiColor;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ class VariableEntryTest {
 
     @BeforeEach
     void BeforeEach() {
-        n = new BuildNode("id");
+        n = new BuildNode("id", new ComplexSymbolFactory.Location(-1, -1));
         v = new VariableEntry(n);
         v.getSubType(1);
     }
@@ -35,8 +36,8 @@ class VariableEntryTest {
 
     @Test
     void subTypes() {
-        NamedIdNode a = new BuildNode("a");
-        NamedIdNode b = new BuildNode("b");
+        NamedIdNode a = new BuildNode("a", new ComplexSymbolFactory.Location(-1, -1));
+        NamedIdNode b = new BuildNode("b", new ComplexSymbolFactory.Location(-1, -1));
         a.setNumber(10);
         b.setNumber(30);
         v.setSubType(a);
@@ -67,7 +68,7 @@ class VariableEntryTest {
                         + " | Node: "
                         + AnsiColor.RED + "NONE" + AnsiColor.RESET
                         + "\n");
-        v.setSubType(new BuildNode("buildNode"));
+        v.setSubType(new BuildNode("buildNode", new ComplexSymbolFactory.Location(-1, -1)));
         assertEquals(AnsiColor.removeColor(v.toString()),
                 "\t\t\tEntry: id | SuperType: BUILD | Node: [-1] Build id\n" +
                         "\t\t\t\t\tSubtype: buildNode | Node: [-1] Build buildNode\n"

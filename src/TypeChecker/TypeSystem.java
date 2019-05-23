@@ -16,6 +16,7 @@ import TypeChecker.Exceptions.IncorrectAssignmentTypesException;
 import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
+import java_cup.runtime.ComplexSymbolFactory;
 
 public class TypeSystem {
     private SymbolTableInterface symbolTable;
@@ -228,7 +229,7 @@ public class TypeSystem {
         // The order here is relevant! We should always check the local scope before the predefined and the set of block scopes!
         if (isLocalVariable) {
             // Convert the identifier into an selector
-            SelectorNode selectorNode = new SelectorNode(buildId);
+            SelectorNode selectorNode = new SelectorNode(buildId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
             selectorNode.setNumber(node.getNumber());
 
             // Get the sub type of the selector
@@ -362,7 +363,7 @@ public class TypeSystem {
 
                 System.out.println(variableId);
 
-                BuildNode varBuild = new BuildNode(variableId);
+                BuildNode varBuild = new BuildNode(variableId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
                 varBuild.setNumber(nodeNumber);
 
                 return this.getTypeOfBuildStatement(varBuild, blockScope, subScope);

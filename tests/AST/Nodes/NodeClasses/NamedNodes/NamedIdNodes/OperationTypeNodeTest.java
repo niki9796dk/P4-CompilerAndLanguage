@@ -1,6 +1,7 @@
 package AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes;
 
 import AST.Enums.NodeEnum;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,7 @@ class OperationTypeNodeTest {
 
     @BeforeEach
     void beforeEach() {
-        operationTypeNode = new OperationTypeNode("id");
+        operationTypeNode = new OperationTypeNode("id", new ComplexSymbolFactory.Location(-1, -1));
     }
 
     @Test

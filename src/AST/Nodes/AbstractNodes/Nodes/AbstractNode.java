@@ -2,6 +2,7 @@ package AST.Nodes.AbstractNodes.Nodes;
 
 import AST.Nodes.AbstractNodes.Node;
 import AST.Visitor;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /** All AST nodes are subclasses of this node. This node knows how to
   * link itself with other siblings and adopt children.
@@ -11,6 +12,8 @@ public abstract class AbstractNode implements Node {
 
    // Fields:
    private static int nodeNums = 0;
+   private final int lineNumber;
+   private final int column;
    private int nodeNum;
    private AbstractNode mysib;
    private AbstractNode parent;
@@ -18,14 +21,25 @@ public abstract class AbstractNode implements Node {
    private AbstractNode firstSib;
 
    // Constructor:
-   public AbstractNode() {
-       this.parent   = null;
-       this.mysib    = null;
-       this.firstSib = this;
-       this.child    = null;
-       this.nodeNum = ++nodeNums;
+   public AbstractNode(ComplexSymbolFactory.Location xleft) {
+       this.lineNumber  = xleft.getLine();
+       this.column      = xleft.getColumn();
+       this.parent      = null;
+       this.mysib       = null;
+       this.firstSib    = this;
+       this.child       = null;
+       this.nodeNum     = ++nodeNums;
    }
 
+   @Override
+   public int getLineNumber() {
+      return this.lineNumber;
+   }
+
+   @Override
+   public int getColumn() {
+      return this.column;
+   }
 
    /** Join the end of this sibling's list with the supplied sibling's list
     * @param sib The sibling to add to the end of the list.

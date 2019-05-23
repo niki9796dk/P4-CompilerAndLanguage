@@ -8,6 +8,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -27,8 +28,8 @@ class ChainCheckerVisitorTest {
         this.symbolTableInterface = new SymbolTable();
         this.chainCheckerVisitor = new ChainCheckerVisitor(this.symbolTableInterface);
 
-        this.blockNode = new BlockNode("blockNodeId");
-        this.blueprintNode = new BlueprintNode();
+        this.blockNode = new BlockNode("blockNodeId", new ComplexSymbolFactory.Location(-1, -1));
+        this.blueprintNode = new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1));
 
         // Insert into symbol table
         this.symbolTableInterface.openBlockScope(this.blockNode);
@@ -42,7 +43,7 @@ class ChainCheckerVisitorTest {
     @Disabled
     @Test
     void pre_build() {
-        BuildNode buildNode = new BuildNode("blockNodeId");
+        BuildNode buildNode = new BuildNode("blockNodeId", new ComplexSymbolFactory.Location(-1, -1));
         this.chainCheckerVisitor.pre(0, buildNode);
         assertTrue(this.chainCheckerVisitor.getBuildNodes().contains(buildNode));
     }
@@ -50,22 +51,22 @@ class ChainCheckerVisitorTest {
     @Disabled
     @Test
     void pre_chain() {
-        ChainNode chainNode = new ChainNode();
-        BlockNode blockNode = new BlockNode("blockNodeA");
-        MyInChannelNode myInChannelNode = new MyInChannelNode("in");
-        MyOutChannelNode myOutChannelNode = new MyOutChannelNode("out");
-        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
+        ChainNode chainNode = new ChainNode(new ComplexSymbolFactory.Location(-1, -1));
+        BlockNode blockNode = new BlockNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
+        MyInChannelNode myInChannelNode = new MyInChannelNode("in", new ComplexSymbolFactory.Location(-1, -1));
+        MyOutChannelNode myOutChannelNode = new MyOutChannelNode("out", new ComplexSymbolFactory.Location(-1, -1));
+        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1));
         channelDeclarationsNode.adoptChildren(myInChannelNode, myOutChannelNode);
 
         symbolTableInterface.openBlockScope(blockNode);
         symbolTableInterface.openSubScope(channelDeclarationsNode);
 
-        BlockTypeNode blockTypeNode = new BlockTypeNode("blockNodeA");
+        BlockTypeNode blockTypeNode = new BlockTypeNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
         symbolTableInterface.getLatestBlockScope().getLatestSubScope().setVariable(blockTypeNode);
 
 
-        SelectorNode selectorNode1 = new SelectorNode("blockNodeA");
-        SelectorNode selectorNode2 = new SelectorNode("blockNodeA");
+        SelectorNode selectorNode1 = new SelectorNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
+        SelectorNode selectorNode2 = new SelectorNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
         selectorNode1.adoptChildren(blockTypeNode);
         selectorNode2.adoptChildren(blockTypeNode);
 
