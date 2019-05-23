@@ -39,45 +39,6 @@ class ChainCheckerVisitorTest {
         this.chainCheckerVisitor.pre(0, this.blueprintNode);
     }
 
-    @Disabled
-    @Test
-    void pre_build() {
-        BuildNode buildNode = new BuildNode("blockNodeId");
-        this.chainCheckerVisitor.pre(0, buildNode);
-        assertTrue(this.chainCheckerVisitor.getBuildNodes().contains(buildNode));
-    }
-
-    @Disabled
-    @Test
-    void pre_chain() {
-        ChainNode chainNode = new ChainNode();
-        BlockNode blockNode = new BlockNode("blockNodeA");
-        MyInChannelNode myInChannelNode = new MyInChannelNode("in");
-        MyOutChannelNode myOutChannelNode = new MyOutChannelNode("out");
-        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode();
-        channelDeclarationsNode.adoptChildren(myInChannelNode, myOutChannelNode);
-
-        symbolTableInterface.openBlockScope(blockNode);
-        symbolTableInterface.openSubScope(channelDeclarationsNode);
-
-        BlockTypeNode blockTypeNode = new BlockTypeNode("blockNodeA");
-        symbolTableInterface.getLatestBlockScope().getLatestSubScope().setVariable(blockTypeNode);
-
-
-        SelectorNode selectorNode1 = new SelectorNode("blockNodeA");
-        SelectorNode selectorNode2 = new SelectorNode("blockNodeA");
-        selectorNode1.adoptChildren(blockTypeNode);
-        selectorNode2.adoptChildren(blockTypeNode);
-
-        chainNode.adoptChildren(selectorNode1, selectorNode2);
-
-        symbolTableInterface.openBlockScope(blockNode);
-
-        this.chainCheckerVisitor.pre(0, chainNode);
-
-        assertTrue(true);
-    }
-
     @Test
     void pre_chain_exception() {
 
@@ -104,11 +65,5 @@ class ChainCheckerVisitorTest {
         AbstractNode unexpectedNode = new UnexpectedNode("unexpectedNodeId");
 
         assertThrows(UnexpectedNodeException.class, () -> chainCheckerVisitor.post(1, unexpectedNode));
-    }
-
-    @Disabled
-    @Test
-    void getBuildNodes() {
-        assertNotNull(this.chainCheckerVisitor.getBuildNodes());
     }
 }

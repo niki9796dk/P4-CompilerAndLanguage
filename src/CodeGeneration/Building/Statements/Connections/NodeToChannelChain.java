@@ -4,9 +4,11 @@ import CodeGeneration.Building.Statement;
 
 public class NodeToChannelChain implements Statement {
 
+    // Fields:
     private String left;
     private String right;
 
+    // Constructors:
     public NodeToChannelChain(String left, String right) {
         this.left = left;
         this.right = right;
