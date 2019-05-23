@@ -4,9 +4,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
@@ -317,7 +315,29 @@ public class RecursiveVisitor extends ScopeTracker {
             String elementId = this.typeSystem.getSubTypeOfNode(newSelector, this.currentBlockScope, this.currentSubScope);
             String childId = ((NamedIdNode) node.getChild()).getId();
 
-            return this.symbolTable.getBlockScope(elementId).getChannelDeclarationScope().getVariable(childId).getNode();
+            if (typeSystem.getSymbolTable().isPredefinedSource(elementId)) {
+
+                if (childId.equals("out")) {
+                    return new MyOutChannelNode(childId);
+                } else {
+                    throw new ShouldNotHappenException("Sources only have an out channel, named \"out\"");
+                }
+
+            } else if (typeSystem.getSymbolTable().isPredefinedOperation(elementId)){
+                // TODO: O P E R A T I O N S
+                if (childId.equals("out")) {
+                    return new MyOutChannelNode(childId);
+
+                } else if (childId.equals("A") || childId.equals("B")){
+                    return new MyInChannelNode(childId);
+
+                } else {
+                    throw new ShouldNotHappenException("The Operation doesn't have a gate like that.");
+                }
+
+            } else {
+                return this.symbolTable.getBlockScope(elementId).getChannelDeclarationScope().getVariable(childId).getNode();
+            }
 
         } else {
             VariableEntry selectorVariable = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope).getVariable(node.getId());

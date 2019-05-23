@@ -5,9 +5,12 @@ import CodeGeneration.Building.Statements.Instantiations.InitBlueprint;
 import CodeGeneration.Building.Statements.Instantiations.InitBuild;
 
 public class AssignBlueprint implements Statement {
+
+    // Fields:
     private String leftVar;
     private InitBlueprint initBlueprint;
 
+    // Constructors
     private AssignBlueprint(String leftVar) {
         this.leftVar = leftVar;
     }

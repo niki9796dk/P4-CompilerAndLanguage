@@ -7,12 +7,16 @@ import CodeGeneration.Building.StatementCollections.ListStatements;
 import java.util.Collection;
 
 public class SimpleCodeScope implements CodeScope {
+
+    //Fields:
     protected String id;
-    protected StatementCollection statements = new ListStatements();
-    protected ParameterCollection parameters = new ListParameters();
+    protected StatementCollection statements;
+    protected ParameterCollection parameters;
 
     public SimpleCodeScope(String id) {
         this.setId(id);
+        this.statements = new ListStatements();
+        this.parameters = new ListParameters();
     }
 
     @Override

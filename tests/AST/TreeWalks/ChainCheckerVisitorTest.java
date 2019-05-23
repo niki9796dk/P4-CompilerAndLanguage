@@ -106,10 +106,4 @@ class ChainCheckerVisitorTest {
 
         assertThrows(UnexpectedNodeException.class, () -> chainCheckerVisitor.post(1, unexpectedNode));
     }
-
-    @Disabled
-    @Test
-    void getBuildNodes() {
-        assertNotNull(this.chainCheckerVisitor.getBuildNodes());
-    }
 }
