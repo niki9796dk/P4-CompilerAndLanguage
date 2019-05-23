@@ -334,7 +334,16 @@ public class FlowChecker {
 
         } else if (followedToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY) || followedToBuild.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY)){
             // Own channel case
-            inString = currentBlockId + followedToBuild.getId();
+            AbstractNode parameterVariable = typeSystem.followNodeToBuildOfChannel(in, currentBlockId, currentSubScope);
+
+            // The case where followToBase is a myChannel but followNodeToBuildOfChannel returns a Selector, is where we have a parameter we have to follow back to get the build statement of origin.
+            if (((NamedNode) parameterVariable).getNodeEnum().equals(NodeEnum.SELECTOR) && parameterVariable.getChild() == null) {
+                inString = procStack.peek().getBuildOfParameter((NamedIdNode) parameterVariable) + followedToBase.getId();
+
+            } else {
+                // otherwise, it is one of the local block's myChannels
+                inString = currentBlockId + followedToBuild.getId();
+            }
 
         } else {
             // Block case
