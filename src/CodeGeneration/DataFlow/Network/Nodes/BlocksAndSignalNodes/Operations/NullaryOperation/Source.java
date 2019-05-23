@@ -1,9 +1,7 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation;
 
-import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannelSource;
 import DataStructures.Pair;
 import LinearAlgebra.Statics.Matrices;

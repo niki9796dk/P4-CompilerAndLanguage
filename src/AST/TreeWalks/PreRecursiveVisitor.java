@@ -115,18 +115,6 @@ public class PreRecursiveVisitor extends ScopeTracker {
         }
     }
 
-    private void addBuildBlockToSet(BuildNode node) {
-        String buildSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
-
-        if (this.symbolTable.isPredefinedSource(buildSubType) || this.symbolTable.isPredefinedOperation(buildSubType)) {
-            return; // Simply ignore this case.
-        }
-
-        BlockNode blockBeingBuild = this.typeSystem.getBlock(buildSubType);
-
-        this.buildNodes.add(blockBeingBuild);
-    }
-
     /**
      * Method used to start the block recursion testing check.
      * It will first find all potential main blocks, and then perform recursion checking on their build patterns.

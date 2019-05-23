@@ -24,7 +24,6 @@ public class MainParse {
         }
 
         //testTree();
-
     }
 
     public static boolean parseFile(String path) throws Exception {

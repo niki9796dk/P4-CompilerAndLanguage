@@ -322,7 +322,4 @@ public class ChainCheckerVisitor extends ScopeTracker {
     private int countOutChannelsOfOperation(AbstractNode rightNode) {
         return 1; // TODO: Connect this to some definition of operations.
     }
-    public Set<BlockNode> getBuildNodes() {
-        return null;
-    }
 }
