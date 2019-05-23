@@ -37,9 +37,9 @@ class A_uSub_BTest {
                 .addRow(0, 2)
                 .build();
 
-        source000.connectTo(block000, "out", "A");
+        source000.connectTo(block000, Source.NULLARY_OUT_CHANNEL, "A");
 
-        source001.connectTo(block000, "out", "B");
+        source001.connectTo(block000, Source.NULLARY_OUT_CHANNEL, "B");
 
         source000.acceptReadySignal();
         source001.acceptReadySignal();
@@ -61,9 +61,9 @@ class A_uSub_B extends AbstractBlock {
 
         // Blueprint
         AbstractOperation sub = new _Subtraction();
-        this.connectTo(sub, "A", "in1");
-        this.connectTo(sub, "B", "in2");
+        this.connectTo(sub, "A", _Subtraction.BINARY_IN_A_CHANNEL);
+        this.connectTo(sub, "B", _Subtraction.BINARY_IN_B_CHANNEL);
 
-        sub.connectTo(this, "out", "out");
+        sub.connectTo(this, _Subtraction.BINARY_OUT_CHANNEL, "out");
     }
 }
