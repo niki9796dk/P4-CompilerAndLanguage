@@ -1,36 +1,31 @@
 package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import AST.Nodes.SpecialNodes.UnexpectedNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import SemanticAnalysis.FlowChecker;
 import SymbolTableImplementation.SymbolTable;
-import SymbolTableImplementation.SymbolTableInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SemanticAnalysisVisitorTest {
+class ChainCheckerVisitorTest {
 
     // Fields:
     private SymbolTable symbolTableInterface;
-    private SemanticAnalysisVisitor semanticAnalysisVisitor;
+    private ChainCheckerVisitor chainCheckerVisitor;
     private BlockNode blockNode;
     private BlueprintNode blueprintNode;
 
     @BeforeEach
     void beforeEach() {
         this.symbolTableInterface = new SymbolTable();
-        this.semanticAnalysisVisitor = new SemanticAnalysisVisitor(this.symbolTableInterface);
+        this.chainCheckerVisitor = new ChainCheckerVisitor(this.symbolTableInterface);
 
         this.blockNode = new BlockNode("blockNodeId");
         this.blueprintNode = new BlueprintNode();
@@ -40,16 +35,16 @@ class SemanticAnalysisVisitorTest {
         this.symbolTableInterface.openSubScope(this.blueprintNode);
 
         // Pretend to enter block and blueprint
-        this.semanticAnalysisVisitor.pre(0, this.blockNode);
-        this.semanticAnalysisVisitor.pre(0, this.blueprintNode);
+        this.chainCheckerVisitor.pre(0, this.blockNode);
+        this.chainCheckerVisitor.pre(0, this.blueprintNode);
     }
 
     @Disabled
     @Test
     void pre_build() {
         BuildNode buildNode = new BuildNode("blockNodeId");
-        this.semanticAnalysisVisitor.pre(0, buildNode);
-        assertTrue(this.semanticAnalysisVisitor.getBuildNodes().contains(buildNode));
+        this.chainCheckerVisitor.pre(0, buildNode);
+        assertTrue(this.chainCheckerVisitor.getBuildNodes().contains(buildNode));
     }
 
     @Disabled
@@ -78,7 +73,7 @@ class SemanticAnalysisVisitorTest {
 
         symbolTableInterface.openBlockScope(blockNode);
 
-        this.semanticAnalysisVisitor.pre(0, chainNode);
+        this.chainCheckerVisitor.pre(0, chainNode);
 
         assertTrue(true);
     }
@@ -97,7 +92,7 @@ class SemanticAnalysisVisitorTest {
     void preUnexpectedNode() {
         AbstractNode unexpectedNode = new UnexpectedNode("unexpectedNodeId");
 
-        assertThrows(UnexpectedNodeException.class, () -> semanticAnalysisVisitor.pre(1, unexpectedNode));
+        assertThrows(UnexpectedNodeException.class, () -> chainCheckerVisitor.pre(1, unexpectedNode));
     }
 
     @Test
@@ -108,12 +103,12 @@ class SemanticAnalysisVisitorTest {
     void postUnexpectedNode() {
         AbstractNode unexpectedNode = new UnexpectedNode("unexpectedNodeId");
 
-        assertThrows(UnexpectedNodeException.class, () -> semanticAnalysisVisitor.post(1, unexpectedNode));
+        assertThrows(UnexpectedNodeException.class, () -> chainCheckerVisitor.post(1, unexpectedNode));
     }
 
     @Disabled
     @Test
     void getBuildNodes() {
-        assertNotNull(this.semanticAnalysisVisitor.getBuildNodes());
+        assertNotNull(this.chainCheckerVisitor.getBuildNodes());
     }
 }

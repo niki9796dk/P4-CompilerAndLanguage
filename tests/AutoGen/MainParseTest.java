@@ -1,6 +1,10 @@
 package AutoGen;
 
+import SemanticAnalysis.Exceptions.ChainConnectionMismatchException;
+import SemanticAnalysis.Exceptions.GroupConnectionMismatchException;
+import SemanticAnalysis.Exceptions.IncorrectChannelUsageException;
 import DataStructures.Pair;
+import SemanticAnalysis.Exceptions.NoMainBlockException;
 import ScopeChecker.Exceptions.*;
 import SemanticAnalysis.Exceptions.*;
 import TypeChecker.Exceptions.*;

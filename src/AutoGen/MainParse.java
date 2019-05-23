@@ -4,9 +4,7 @@ import java.io.*;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.TreeWalks.*;
-import AST.Visitor;
 import SymbolTableImplementation.SymbolTable;
-import SymbolTableImplementation.SymbolTableInterface;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
@@ -58,16 +56,22 @@ public class MainParse {
 
         prog.walkTree(new PrintTree(System.out));
 
+        // Create/initialize symbol table
         prog.walkTree(new PreRecursiveVisitor(symbolTable));
 
+        // Do scope checking
         new RecursiveVisitor(symbolTable, new ScopeCheckerVisitor(symbolTable)).startRecursiveWalk();
 
+        // Do type checking
         new RecursiveVisitor(symbolTable, new TypeCheckerVisitor(symbolTable)).startRecursiveWalk();
 
-        new RecursiveVisitor(symbolTable, new SemanticAnalysisVisitor(symbolTable)).startRecursiveWalk();
+        // Do chain checking
+        new RecursiveVisitor(symbolTable, new ChainCheckerVisitor(symbolTable)).startRecursiveWalk();
 
+        // Do flow checking
         new RecursiveVisitor(symbolTable, new FlowCheckVisitor(symbolTable)).startRecursiveWalk();
 
+        // Do code generation
         prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
 
         return true;

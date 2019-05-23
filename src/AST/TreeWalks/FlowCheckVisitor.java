@@ -1,23 +1,12 @@
 package AST.TreeWalks;
 
-import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
-import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
-import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyOutChannelNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import SemanticAnalysis.Exceptions.ChainConnectionMismatchException;
-import SemanticAnalysis.Exceptions.GroupConnectionMismatchException;
 import SemanticAnalysis.FlowChecker;
 import SymbolTableImplementation.SymbolTable;
-import TypeChecker.Exceptions.ShouldNotHappenException;
-
-import java.util.Set;
 
 /**
  * The visitor used for the semantic analysis phase of the compiler (Excluding type- and scope checking).
