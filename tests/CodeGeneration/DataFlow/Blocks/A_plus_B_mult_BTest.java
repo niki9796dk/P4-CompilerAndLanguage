@@ -38,8 +38,8 @@ class A_plus_B_mult_BTest {
                 .addRow(56, 40)
                 .build();
 
-        source000.connectTo(block000, "out", "A");
-        source001.connectTo(block000, "out", "B");
+        source000.connectTo(block000, Source.NULLARY_OUT_CHANNEL, "A");
+        source001.connectTo(block000, Source.NULLARY_OUT_CHANNEL, "B");
 
         source000.acceptReadySignal();
         source001.acceptReadySignal();
@@ -62,13 +62,13 @@ class A_plus_B_mult_B extends AbstractBlock {
         AbstractOperation add = new _Addition();
         AbstractOperation mult = new Multiplication();
 
-        this.connectTo(add, "A", "in1");
-        this.connectTo(add, "B", "in2");
+        this.connectTo(add, "A", _Addition.BINARY_IN_A_CHANNEL);
+        this.connectTo(add, "B", _Addition.BINARY_IN_B_CHANNEL);
 
-        add.connectTo(mult, "out", "in1");
+        add.connectTo(mult, _Addition.BINARY_OUT_CHANNEL, Multiplication.BINARY_IN_A_CHANNEL);
 
-        this.connectTo(mult, "B", "in2");
+        this.connectTo(mult, "B", Multiplication.BINARY_IN_B_CHANNEL);
 
-        mult.connectTo(this, "out", "out");
+        mult.connectTo(this, Multiplication.BINARY_OUT_CHANNEL, "out");
     }
 }

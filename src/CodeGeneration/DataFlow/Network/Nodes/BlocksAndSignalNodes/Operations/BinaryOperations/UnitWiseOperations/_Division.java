@@ -27,7 +27,7 @@ public class _Division extends BinaryAbstractOperation {
 
     @Override
     protected Matrix calculateIn2Derivatives(Matrix in1, Matrix out) {
-        Matrix in2BackPropResult = this.getChannel("in2").getResult();
+        Matrix in2BackPropResult = this.getChannel(BINARY_IN_B_CHANNEL).getResult();
 
         return this.calculateIn2Derivatives(in1, in2BackPropResult, out);
     }

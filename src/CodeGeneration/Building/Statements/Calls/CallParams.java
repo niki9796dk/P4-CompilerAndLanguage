@@ -11,9 +11,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CallParams implements Statement {
+
+    // Fields:
     private List<Statement> params;
     private Scope scope;
 
+    // Constructors:
     public CallParams(Scope scope, Statement... paramStatements) {
         this.scope = scope;
         this.params = Arrays.asList(paramStatements);

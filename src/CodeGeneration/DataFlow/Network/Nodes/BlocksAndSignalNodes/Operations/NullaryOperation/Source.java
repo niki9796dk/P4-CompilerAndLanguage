@@ -22,7 +22,7 @@ public class Source extends NullaryAbstractOperation {
         Channel out = new ListChannelSource(this); // Define as channel source
 
         // Store channels
-        this.addNewOutputLabel("out", out);
+        this.addNewOutputLabel(NULLARY_OUT_CHANNEL, out);
     }
 
     public Source(Pair<Integer, Integer> size) {

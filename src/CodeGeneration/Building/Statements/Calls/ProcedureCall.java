@@ -5,9 +5,12 @@ import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 
 public class ProcedureCall implements Statement{
+
+    // Fields:
     private String procedureId;
     private CallParams callParams;
 
+    // Constructors:
     public ProcedureCall(Scope scope, String procedureId) {
         if (procedureId == null) {
             throw new NullPointerException("The prod id was null ??");

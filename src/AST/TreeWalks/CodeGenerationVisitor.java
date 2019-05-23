@@ -48,13 +48,18 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CodeGenerationVisitor extends ScopeTracker {
+
+    // Fields:
     private List<BlockClass> blockClasses = new ArrayList<>();
     private CodeScope currentCodeScope;
     private Map<Integer, String> placeholderVars = new HashMap<>();
     private String programFileName;
+
+    // Constants
     private static String EXPORT_PATH = "src"+File.separator+"AutoGen"+ File.separator+"CodeGen"+File.separator;
     private static String EXPORT_PACKAGE = "AutoGen.CodeGen";
 
+    // Constructor:
     public CodeGenerationVisitor(SymbolTable symbolTable, String programFileName) {
         super(symbolTable);
         this.programFileName = programFileName;

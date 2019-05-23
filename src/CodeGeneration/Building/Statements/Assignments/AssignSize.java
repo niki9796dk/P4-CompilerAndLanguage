@@ -5,9 +5,12 @@ import CodeGeneration.Building.Statements.Instantiations.InitBlueprint;
 import CodeGeneration.Building.Statements.Instantiations.InitSize;
 
 public class AssignSize implements Statement {
+
+    // Fields:
     private String leftVar;
     private InitSize initSize;
 
+    // Constructors:
     private AssignSize(String leftVar) {
         this.leftVar = leftVar;
     }

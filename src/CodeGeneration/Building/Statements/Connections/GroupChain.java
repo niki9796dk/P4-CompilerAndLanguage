@@ -9,10 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GroupChain implements Statement {
+
+    // Fields:
     private List<Statement> groupElements;
     private Statement rightNode;
     private Scope scope;
 
+    // Constructors:
     public GroupChain(Scope scope, Statement rightNode, List<Statement> groupElements) {
         this.scope = scope;
         this.rightNode = rightNode;

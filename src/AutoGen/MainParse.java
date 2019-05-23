@@ -72,7 +72,7 @@ public class MainParse {
         new RecursiveVisitor(symbolTable, new FlowCheckVisitor(symbolTable)).startRecursiveWalk();
 
         // Do code generation
-        prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
+        //prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
 
         return true;
     }

@@ -68,8 +68,8 @@ class BackPropTests {
     void flawedResult(RepetitionInfo r) {
         BinaryAbstractOperation operation = operations.get(r.getCurrentRepetition() - 1);
 
-        s1.connectTo(operation, "out", "in1");
-        s2.connectTo(operation, "out", "in2");
+        s1.connectTo(operation, Source.NULLARY_OUT_CHANNEL, BinaryAbstractOperation.BINARY_IN_A_CHANNEL);
+        s2.connectTo(operation, Source.NULLARY_OUT_CHANNEL, BinaryAbstractOperation.BINARY_IN_B_CHANNEL);
 
 
         AbstractBlock.configuration = new BlockConfiguration(2, 0.1);
@@ -84,11 +84,8 @@ class BackPropTests {
 
         int expectedIndex = (r.getCurrentRepetition()-1) * 2;
 
-        Print.echo(AnsiColor.YELLOW, "in1:\n" + operation.getResultBackpropagation(operation.getInputChannels().get("in1")));
-        Print.echo(AnsiColor.YELLOW, "in2:\n" + operation.getResultBackpropagation(operation.getInputChannels().get("in2")));
-
-        assertEquals(expectedCosts.get(expectedIndex + 0), operation.getResultBackpropagation(operation.getInputChannels().get("in1")));
-        assertEquals(expectedCosts.get(expectedIndex + 1), operation.getResultBackpropagation(operation.getInputChannels().get("in2")));
+        assertEquals(expectedCosts.get(expectedIndex + 0), operation.getResultBackpropagation(operation.getInputChannels().get(BinaryAbstractOperation.BINARY_IN_A_CHANNEL)));
+        assertEquals(expectedCosts.get(expectedIndex + 1), operation.getResultBackpropagation(operation.getInputChannels().get(BinaryAbstractOperation.BINARY_IN_B_CHANNEL)));
     }
 
     @Test

@@ -94,8 +94,8 @@ class BackPropTestsPerfectResult {
         BinaryAbstractOperation operation = operations.get(r.getCurrentRepetition() - 1);
         Matrix target = targets.get(r.getCurrentRepetition() - 1);
 
-        s1.connectTo(operation, "out", "in1");
-        s2.connectTo(operation, "out", "in2");
+        s1.connectTo(operation, Source.NULLARY_OUT_CHANNEL, BinaryAbstractOperation.BINARY_IN_A_CHANNEL);
+        s2.connectTo(operation, Source.NULLARY_OUT_CHANNEL, BinaryAbstractOperation.BINARY_IN_B_CHANNEL);
 
 
         AbstractBlock.configuration = new BlockConfiguration(2, 0.1);
@@ -108,8 +108,8 @@ class BackPropTestsPerfectResult {
 
         operation.operationBackpropagation(s1.getOutputChannel(), s2.getOutputChannel(), operation.getOutputChannel());
 
-        assertEquals(expectedCost, operation.getResultBackpropagation(operation.getInputChannels().get("in1")));
-        assertEquals(expectedCost, operation.getResultBackpropagation(operation.getInputChannels().get("in2")));
+        assertEquals(expectedCost, operation.getResultBackpropagation(operation.getInputChannels().get(BinaryAbstractOperation.BINARY_IN_A_CHANNEL)));
+        assertEquals(expectedCost, operation.getResultBackpropagation(operation.getInputChannels().get(BinaryAbstractOperation.BINARY_IN_B_CHANNEL)));
     }
 
     @Test
