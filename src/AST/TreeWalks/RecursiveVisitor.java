@@ -318,7 +318,7 @@ public class RecursiveVisitor extends ScopeTracker {
             if (typeSystem.getSymbolTable().isPredefinedSource(elementId)) {
 
                 if (childId.equals("out")) {
-                    return new MyOutChannelNode(childId);
+                    return new MyOutChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
                 } else {
                     throw new ShouldNotHappenException("Sources only have an out channel, named \"out\"");
                 }
@@ -326,10 +326,10 @@ public class RecursiveVisitor extends ScopeTracker {
             } else if (typeSystem.getSymbolTable().isPredefinedOperation(elementId)){
                 // TODO: O P E R A T I O N S
                 if (childId.equals("out")) {
-                    return new MyOutChannelNode(childId);
+                    return new MyOutChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
                 } else if (childId.equals("A") || childId.equals("B")){
-                    return new MyInChannelNode(childId);
+                    return new MyInChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
                 } else {
                     throw new ShouldNotHappenException("The Operation doesn't have a gate like that.");
