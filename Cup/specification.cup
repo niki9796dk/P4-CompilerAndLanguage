@@ -98,7 +98,6 @@ non terminal AbstractNode block, blocks, prog, type, buildtype, bluetype, channe
 non terminal AbstractNode blueprint, content, procedures, definition, channeldeclarations;
 
 non terminal SizeNode sizeconst;
-// TODO: Add precedence and associativity
 
 //precedence left CONNECTION;
 //precedence right ASSIGN;
