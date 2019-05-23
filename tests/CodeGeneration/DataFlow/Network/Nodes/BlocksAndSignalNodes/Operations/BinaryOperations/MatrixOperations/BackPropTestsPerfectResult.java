@@ -20,14 +20,21 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class BackPropTests {
+class BackPropTestsPerfectResult {
+
+    private final double delta = 0.0000000000000001d;
+
+    private void assertClose(double a, double b) {
+        assertTrue(a + delta > b && a - delta < b);
+    }
 
     private Source s1, s2;
-    private Matrix target;
+    private Matrix expectedCost;
     private ArrayList<BinaryAbstractOperation> operations;
-    private ArrayList<Matrix> expectedCosts;
+    private ArrayList<Matrix> targets;
 
     @BeforeEach
     void beforeEach() {
@@ -40,7 +47,7 @@ class BackPropTests {
                 .addRow(2, 4)
         );
 
-        target = MatrixBuilder.buildConstant(2, 2, 1);
+        expectedCost = MatrixBuilder.buildConstant(2, 2, 0);
 
         operations = new ArrayList<>();
 
@@ -50,23 +57,42 @@ class BackPropTests {
         operations.add(new _Multiplication());
         operations.add(new _Subtraction());
 
-        expectedCosts = new ArrayList<>();
+        targets = new ArrayList<>();
 
-        expectedCosts.add(new MatrixBuilder().addRow(0.3899999999999997, 1.4299999999999993).addRow(0.08999999999999792, -1.970000000000002).build());
-        expectedCosts.add(new MatrixBuilder().addRow(-0.10200000000000062, 0.0539999999999996).addRow(-1.138000000000001, -0.0740000000000012).build());
-        expectedCosts.add(new MatrixBuilder().addRow(2.7, 1.7999999999999998).addRow(3.5999999999999996, 6.3).build());
-        expectedCosts.add(new MatrixBuilder().addRow(2.7, 1.7999999999999998).addRow(3.5999999999999996, 6.3).build());
-        expectedCosts.add(new MatrixBuilder().addRow(-0.2211217743525022, 0.702479338842975).addRow(0.2377095534319317, 0.0).build());
-        expectedCosts.add(new MatrixBuilder().addRow(0.07461834907074548, -1.2453042824943645).addRow(-0.3517807013636637, -0.0).build());
-        expectedCosts.add(new MatrixBuilder().addRow(2.986999999999999, 0.6794999999999999).addRow(2.65625, 0.0).build());
-        expectedCosts.add(new MatrixBuilder().addRow(0.7209999999999999, 1.4722499999999998).addRow(5.3125, 0.0).build());
-        expectedCosts.add(new MatrixBuilder().addRow(-2.7, 0.0).addRow(0.0, -0.9000000000000004).build());
-        expectedCosts.add(new MatrixBuilder().addRow(2.7, 0.0).addRow(0.0, 0.9000000000000004).build());
+        targets.add(new MatrixBuilder()
+                .addRow(7, 9)
+                .addRow(17, 19)
+                .buildDenseMatrix()
+        );
+        targets.add(new MatrixBuilder()
+                .addRow(4, 3)
+                .addRow(5, 8)
+                .buildDenseMatrix()
+        );
+        targets.add(new MatrixBuilder()
+                .addRow(1d / 3d, 2)
+                .addRow(1.5, 1)
+                .buildDenseMatrix()
+        );
+
+        targets.add(new MatrixBuilder()
+                .addRow(3, 2)
+                .addRow(6, 16)
+                .buildDenseMatrix()
+        );
+
+        targets.add(new MatrixBuilder()
+                .addRow(-2, 1)
+                .addRow(1, 0)
+                .buildDenseMatrix()
+        );
+
     }
 
     @RepeatedTest(5)
     void flawedResult(RepetitionInfo r) {
         BinaryAbstractOperation operation = operations.get(r.getCurrentRepetition() - 1);
+        Matrix target = targets.get(r.getCurrentRepetition() - 1);
 
         s1.connectTo(operation, "out", "in1");
         s2.connectTo(operation, "out", "in2");
@@ -82,13 +108,8 @@ class BackPropTests {
 
         operation.operationBackpropagation(s1.getOutputChannel(), s2.getOutputChannel(), operation.getOutputChannel());
 
-        int expectedIndex = (r.getCurrentRepetition()-1) * 2;
-
-        Print.echo(AnsiColor.YELLOW, "in1:\n" + operation.getResultBackpropagation(operation.getInputChannels().get("in1")));
-        Print.echo(AnsiColor.YELLOW, "in2:\n" + operation.getResultBackpropagation(operation.getInputChannels().get("in2")));
-
-        assertEquals(expectedCosts.get(expectedIndex + 0), operation.getResultBackpropagation(operation.getInputChannels().get("in1")));
-        assertEquals(expectedCosts.get(expectedIndex + 1), operation.getResultBackpropagation(operation.getInputChannels().get("in2")));
+        assertEquals(expectedCost, operation.getResultBackpropagation(operation.getInputChannels().get("in1")));
+        assertEquals(expectedCost, operation.getResultBackpropagation(operation.getInputChannels().get("in2")));
     }
 
     @Test

@@ -130,7 +130,7 @@ public abstract class AbstractBlock implements Block {
 
         myOutChannel.tether(targetChannel);
 
-        return null;
+        return this;
     }
 
     @Override
