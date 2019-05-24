@@ -1,0 +1,27 @@
+// Test of simple multi chaining.
+ block chain_01 {
+ 	mychannel:in in;
+ 	mychannel:out out;
+
+ 	blueprint() {
+        this.in -> build Test1(draw _Relu) -> this.out;
+ 	}
+ }
+
+ block Test1 {
+     mychannel:in in;
+     mychannel:out out;
+
+     blueprint(blueprint blue) {
+         this.in -> build Test2(blue) -> this.out;
+     }
+ }
+
+  block Test2 {
+      mychannel:in in;
+      mychannel:out out;
+
+      blueprint(blueprint blue) {
+          this.in -> build blue() -> this.out;
+      }
+  }
