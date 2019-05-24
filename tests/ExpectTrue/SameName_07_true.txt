@@ -1,0 +1,30 @@
+// Test of legal char sequences
+block main {
+	mychannel:in in;
+	mychannel:out out;
+	
+	blueprint() {
+	    blueprint NewBlock2 = draw NewBlock1;
+
+        this.in -> build NewBlock2() -> this.out;
+	}
+}
+
+block NewBlock1 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint() {
+        this.in -> this.out;
+    }
+}
+
+block NewBlock2 {
+    mychannel:in in1;
+    mychannel:in in2;
+    mychannel:out out1;
+
+    blueprint() {
+        (this.in1, this.in2) -> build Multiplication() -> this.out1;
+    }
+}
