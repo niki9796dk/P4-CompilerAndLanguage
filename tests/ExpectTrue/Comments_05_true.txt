@@ -8,8 +8,8 @@ block Main {
 }
 
 block Test {
-	mychannel:in inpu;
-	mychannel:out outpu;
+	mychannel:in input;
+	mychannel:out output;
 
 	blueprint(blueprint sig) {
 		this.input -> build sig() -> this.output;
