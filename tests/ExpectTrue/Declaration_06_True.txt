@@ -6,7 +6,7 @@ block decla_06 {
 	blueprint() {
 		blueprint blockBlueprint = draw Test;
 
-		this.input -> this.output;
+		this.input -> build _Sigmoid() -> this.output;
 	}
 }
 
@@ -16,6 +16,6 @@ block Test {
     mychannel:out output;
 
     blueprint() {
-        this.input -> this.output;
+        this.input -> build _Sigmoid() -> this.output;
     }
 }

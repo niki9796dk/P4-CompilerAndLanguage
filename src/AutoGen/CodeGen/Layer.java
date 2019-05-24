@@ -22,18 +22,18 @@ import DataStructures.Pair;
 
 public class Layer extends AbstractBlock {
 
-    public Layer() {
-        this.blueprint();
+    public Layer(int a) {
+        this.blueprint(a);
     }
 
-    private void blueprint() {
+    private void blueprint(int a) {
         try {
             this.addNewInputLabel("in", new ListChannel());
             this.addNewOutputLabel("out", new ListChannel());
             Source weights;
-            weights = (Source) new Source(new Pair<Integer, Integer>(1000, 1000));
+            weights = (Source) new Source(new Pair<Integer, Integer>(1, 1));
             Source bias;
-            bias = (Source) new Source(new Pair<Integer, Integer>(1000, 1000));
+            bias = (Source) new Source(new Pair<Integer, Integer>(1, 1));
             Operation mult;
             mult = (Operation) new Multiplication();
             mult.receiveGroupConnection(this.getChannel("in"), weights);

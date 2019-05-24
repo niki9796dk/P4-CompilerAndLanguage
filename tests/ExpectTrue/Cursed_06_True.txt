@@ -6,7 +6,7 @@ block cursed_06{
         block abc = build Test();
         channel:in a = abc.input;
 
-        source bb = build Source(size qq = [2,3]) -> a;
+        source bb = build Source(size qq = [1,1]) -> a;
         abc.output -> this.output;
     }
 }
@@ -17,6 +17,6 @@ block Test {
     mychannel:out output;
 
     blueprint() {
-        this.input -> this.output;
+        this.input -> build _Sigmoid() -> this.output;
     }
 }

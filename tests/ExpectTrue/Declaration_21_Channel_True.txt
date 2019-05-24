@@ -3,7 +3,7 @@ block decla_25 {
 	mychannel:out output;
 
 	blueprint() {
-	    block a = build test();
+	    block a = build Test();
 
 	    channel:in b = a.input;
 	    channel:in c = b;
@@ -13,11 +13,11 @@ block decla_25 {
 	}
 }
 
-block test {
+block Test {
     mychannel:in input;
-	mychannel:out output;
+    mychannel:out output;
 
-	blueprint() {
-	    this.input -> this.output;
-	}
+    blueprint() {
+        this.input -> build _Sigmoid() -> this.output;
+    }
 }

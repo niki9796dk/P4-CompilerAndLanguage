@@ -12,7 +12,7 @@
         </fileset>
     </path>
 
-    <target name="compile" depends="Clean Codegen">
+    <target name="compile">
         <!-- Clean all previous files -->
         <delete file="src/AutoGen/Lexer.java" />
         <delete file="src/AutoGen/Parser.java" />

@@ -3,18 +3,18 @@ block decla_22 {
 	mychannel:out output;
 
 	blueprint() {
-	    blueprint a = draw test;
+	    blueprint a = draw Test;
 	    blueprint b = a;
 
 		this.input -> this.output;
 	}
 }
 
-block test {
+block Test {
     mychannel:in input;
-	mychannel:out output;
+    mychannel:out output;
 
-	blueprint() {
-	    this.input -> this.output;
-	}
+    blueprint() {
+        this.input -> build _Sigmoid() -> this.output;
+    }
 }

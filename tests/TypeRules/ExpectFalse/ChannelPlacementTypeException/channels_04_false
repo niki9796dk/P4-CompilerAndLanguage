@@ -18,6 +18,6 @@ block Test {
     mychannel:out out;
 
     blueprint() {
-        this.in -> this.out;
+        this.in -> build _Sigmoid() -> this.out;
     }
 }

@@ -4,7 +4,7 @@
      mychannel:out output;
 
      blueprint() {
-         size a = [2,3];
+         size a = [1,1];
          size b =
          [
          2
@@ -12,7 +12,7 @@
          3
          ]
          ;
-         size c = [1234567890,0987654321];
+         size c = [1,1];
 
          build Source(c) -> this.output;
      }

@@ -8,7 +8,7 @@ block cursed_05{
         channel:in a = abc.sizzle;
         channel:in k = abc.shizzle;
 
-        size qq = [2,3];
+        size qq = [1,1];
         source bb = build Source(qq) -> a;
         source jj = build Source(qq) -> build Transposezz() -> k;
         abc.output -> this.output;
