@@ -70,7 +70,7 @@ public class FlowChecker {
             boolean firstTimeInConnected = outConnectPoints.remove(connectedOut);
 
             if (!firstTimeInConnected){
-                throw new IncorrectChannelUsageException(node, "In channel " + connectedOut + " connected at multiple points.");
+                throw new IncorrectChannelUsageException(node, "In channel " + connectedOut + " connected at multiple points, or not at all.");
             }
         }
 
@@ -91,25 +91,33 @@ public class FlowChecker {
     public void addBuild(BuildNode buildInstance, String currentSubScope){
         String builtThingId = ((NamedIdNode) typeSystem.followNode(buildInstance, currentBlockId, currentSubScope)).getId();
         BlockScope blockBuilt = typeSystem.getSymbolTable().getBlockScope(builtThingId);
-        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(builtThingId);
-        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(builtThingId);
+        boolean isSource = typeSystem.isPredefinedSource(builtThingId);
+        boolean isOperation = typeSystem.isPredefinedOperation(builtThingId);
 
         if (isSource){
-            // Handle Source // TODO: This is a bit hacky
-            inConnectPoints.add(buildInstance + "out");
+            // Handle Source
+            List<String> outChannelIds = typeSystem.getOperationOrSourceOutChannelIds(builtThingId);
+
+            for (String id : outChannelIds) {
+                inConnectPoints.add(buildInstance + id);
+            }
+
         } else if (isOperation){
             // Handle Operation
-            // TODO: VERY hacky!
-            inConnectPoints.add(buildInstance + "out");
-            outConnectPoints.add(buildInstance + "A");
+            List<String> outChannelIds = typeSystem.getOperationOrSourceOutChannelIds(builtThingId);
+            List<String> inChannelIds = typeSystem.getOperationInChannelIds(builtThingId);
 
-            if (!builtThingId.equals("_Sigmoid")){
-                outConnectPoints.add(buildInstance + "B");
+            for (String id : outChannelIds) {
+                inConnectPoints.add(buildInstance + id);
+            }
+            for (String id : inChannelIds) {
+                outConnectPoints.add(buildInstance + id);
             }
 
         } else if (blockBuilt != null){
             // Handle Block
             addAllChannelsOfBlockInstance(buildInstance, blockBuilt);
+
         } else {
             throw new ShouldNotHappenException(buildInstance, "Can we build things that aren't blocks, operations or sources??");
         }
@@ -144,8 +152,8 @@ public class FlowChecker {
         NamedIdNode followToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(chainChildWithSib, currentBlockId, currentSubScope));
         NamedIdNode followToBase = ((NamedIdNode) typeSystem.followNode(chainChildWithSib, currentBlockId, currentSubScope));
         boolean isThis = ("this").equals(followToBase.getId());
-        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(followToBase.getId());
-        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(followToBase.getId());
+        boolean isSource = typeSystem.isPredefinedSource(followToBase.getId());
+        boolean isOperation = typeSystem.isPredefinedOperation(followToBase.getId());
         String inString;
         String outString;
 
@@ -155,9 +163,8 @@ public class FlowChecker {
 
         } else if (isSource || isOperation) {
             // source/operation case
-            // TODO: Even more Operation and Source mess
-            inString = followToBuild.toString()
-                    + "out";
+            List<String> outChannelIds = typeSystem.getOperationOrSourceOutChannelIds(followToBase);
+            inString = followToBuild + outChannelIds.get(0);
 
         } else if (followToBase.getNodeEnum().equals(NodeEnum.SELECTOR)
                 && followToBase.getChild() != null) {
@@ -205,12 +212,13 @@ public class FlowChecker {
             // pipe case
             String idPortion;
 
-            if (typeSystem.getSymbolTable().isPredefinedSource(followToBase.getId())){
+            if (typeSystem.isPredefinedSource(followToBase.getId())){
                 // Source case
                 throw new ShouldNotHappenException(outPartOfChain, "A chain entering a Source??");
-            } else if (typeSystem.getSymbolTable().isPredefinedOperation(followToBase.getId())){
+            } else if (typeSystem.isPredefinedOperation(followToBase.getId())){
                 // Operation case
-                idPortion = "A";
+                List<String> inChannelIds = typeSystem.getOperationInChannelIds(followToBase);
+                idPortion = inChannelIds.get(0);
             } else {
                 // Block case
                  idPortion = typeSystem.getSymbolTable().getBlockScope(followToBase.getId()).getChannelDeclarationScope().getNode().findFirstChildOfClass(MyInChannelNode.class).getId();
@@ -305,36 +313,37 @@ public class FlowChecker {
     @SuppressWarnings("Duplicates")
     private void linkFromGroupMember(AbstractNode in, String out, String currentSubScope){
         NamedIdNode followedToBuild = (NamedIdNode) typeSystem.followNodeToBuild(in, currentBlockId, currentSubScope);
-        NamedIdNode followedToBase = (NamedIdNode) typeSystem.followNode(in, currentBlockId, currentSubScope);
-        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(followedToBase.getId());
-        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(followedToBase.getId());
+        NamedIdNode followToBase = (NamedIdNode) typeSystem.followNode(in, currentBlockId, currentSubScope);
+        boolean isSource = typeSystem.isPredefinedSource(followToBase.getId());
+        boolean isOperation = typeSystem.isPredefinedOperation(followToBase.getId());
         String inString;
 
         if (followedToBuild.getNodeEnum().equals(NodeEnum.SELECTOR)){
-            if (followedToBase.getId().equals("this")){
+            if (followToBase.getId().equals("this")){
                 // this. case
-                inString = currentBlockId + ((NamedIdNode) followedToBase.getChild()).getId();
+                inString = currentBlockId + ((NamedIdNode) followToBase.getChild()).getId();
 
             } else {
                 // var. case
-                SelectorNode dummy = new SelectorNode(followedToBase.getId(), new ComplexSymbolFactory.Location(in.getLineNumber(), in.getColumn()));
-                dummy.setNumber(followedToBase.getNumber());
+                SelectorNode dummy = new SelectorNode(followToBase.getId(), new ComplexSymbolFactory.Location(in.getLineNumber(), in.getColumn()));
+                dummy.setNumber(followToBase.getNumber());
 
-                inString = typeSystem.followNodeToBuild(dummy, currentBlockId, currentSubScope) + ((NamedIdNode) followedToBase.getChild()).getId();
+                inString = typeSystem.followNodeToBuild(dummy, currentBlockId, currentSubScope) + ((NamedIdNode) followToBase.getChild()).getId();
 
             }
 
         } else if (isSource || isOperation){
             // Source, Operation case
-            inString = followedToBuild + "out";
+            List<String> outChannelIds = typeSystem.getOperationOrSourceOutChannelIds(followToBase);
+            inString = followToBase + outChannelIds.get(0);
 
-        } else if (followedToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY) || followedToBuild.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY)){
+        } else if (followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY) || followedToBuild.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY)){
             // Own channel case
             AbstractNode parameterVariable = typeSystem.followNodeToBuildOfChannel(in, currentBlockId, currentSubScope);
 
             // The case where followToBase is a myChannel but followNodeToBuildOfChannel returns a Selector, is where we have a parameter we have to follow back to get the build statement of origin.
             if (((NamedNode) parameterVariable).getNodeEnum().equals(NodeEnum.SELECTOR) && parameterVariable.getChild() == null) {
-                inString = procStack.peek().getBuildOfParameter((NamedIdNode) parameterVariable) + followedToBase.getId();
+                inString = procStack.peek().getBuildOfParameter((NamedIdNode) parameterVariable) + followToBase.getId();
 
             } else {
                 // otherwise, it is one of the local block's myChannels
@@ -344,7 +353,7 @@ public class FlowChecker {
         } else {
             // Block case
             inString = followedToBuild + typeSystem.getSymbolTable()
-                    .getBlockScope(followedToBase.getId())
+                    .getBlockScope(followToBase.getId())
                     .getChannelDeclarationScope().getNode()
                     .findFirstChildOfClass(MyOutChannelNode.class).getId();
         }
@@ -355,21 +364,18 @@ public class FlowChecker {
     private Iterator<String> getInChannelIdsOfNode(AbstractNode node, String currentSubScope) {
         NamedIdNode followedToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(node, currentBlockId, currentSubScope));
         NamedIdNode followedToBase = ((NamedIdNode) typeSystem.followNode(followedToBuild, currentBlockId, currentSubScope));
-        boolean isSource = typeSystem.getSymbolTable().isPredefinedSource(followedToBase.getId());
-        boolean isOperation = typeSystem.getSymbolTable().isPredefinedOperation(followedToBase.getId());
+        boolean isSource = typeSystem.isPredefinedSource(followedToBase.getId());
+        boolean isOperation = typeSystem.isPredefinedOperation(followedToBase.getId());
 
         List<String> inChannels = new ArrayList<>();
 
         if (isSource) {
             throw new ShouldNotHappenException(node, "Chain into source??");
         } else if (isOperation) {
-            // TODO: OPERATIONS!
-            inChannels.add(followedToBuild + "A");
-            // TODO: This check should be about nr of inputs
-            if (!followedToBase.getId().equals("_Sigmoid")) {
-                inChannels.add(followedToBuild + "B");
+            List<String> inChannelIds = typeSystem.getOperationInChannelIds(followedToBase);
+            for (String id : inChannelIds) {
+                inChannels.add(followedToBuild + id);
             }
-
 
         } else if (followedToBase.getNodeEnum().equals(NodeEnum.SELECTOR)) {
             // .notation case

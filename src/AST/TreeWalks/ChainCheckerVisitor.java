@@ -318,6 +318,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
      * @return The amount of out channels within the operation.
      */
     private int countOutChannelsOfOperation(AbstractNode rightNode) {
-        return 1; // TODO: Connect this to some definition of operations.
+        AbstractNode followNode = typeSystem.followNode(rightNode, currentBlockScope, currentSubScope);
+        return typeSystem.getOperationOrSourceOutChannelIds(followNode).size();
     }
 }

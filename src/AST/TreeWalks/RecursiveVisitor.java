@@ -108,8 +108,8 @@ public class RecursiveVisitor extends ScopeTracker {
 
         // If it's a build node, and it's a source or operation, simple ignore it.
         if (callNode instanceof BuildNode) {
-            boolean isSource = this.symbolTable.isPredefinedSource(calleeId);
-            boolean isOperation = this.symbolTable.isPredefinedOperation(calleeId);
+            boolean isSource = this.typeSystem.isPredefinedSource(calleeId);
+            boolean isOperation = this.typeSystem.isPredefinedOperation(calleeId);
 
             if (isSource || isOperation) {
                 return;
@@ -210,7 +210,7 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     private String getProcedureId(ProcedureCallNode callNode) {
-        return BlockScope.PROCEDURE_PREFIX + callNode.findFirstChildOfClass(SelectorNode.class).getId();
+        return BlockScope.PROCEDURE_PREFIX + callNode.getTargetId();
     }
 
     private String getBuildBlockId(BuildNode buildNode) {
@@ -300,7 +300,7 @@ public class RecursiveVisitor extends ScopeTracker {
             String elementId = this.typeSystem.getSubTypeOfNode(newSelector, this.currentBlockScope, this.currentSubScope);
             String childId = ((NamedIdNode) node.getChild()).getId();
 
-            if (typeSystem.getSymbolTable().isPredefinedSource(elementId)) {
+            if (typeSystem.isPredefinedSource(elementId)) {
 
                 if (childId.equals("out")) {
                     return new MyOutChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
@@ -308,12 +308,11 @@ public class RecursiveVisitor extends ScopeTracker {
                     throw new ShouldNotHappenException(node, "Sources only have an out channel, named \"out\"");
                 }
 
-            } else if (typeSystem.getSymbolTable().isPredefinedOperation(elementId)){
-                // TODO: O P E R A T I O N S
-                if (childId.equals("out")) {
+            } else if (typeSystem.isPredefinedOperation(elementId)){
+                if (typeSystem.getOperationOrSourceOutChannelIds(elementId).contains(childId)) {
                     return new MyOutChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
-                } else if (childId.equals("A") || childId.equals("B")){
+                } else if (typeSystem.getOperationInChannelIds(elementId).contains(childId)){
                     return new MyInChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
                 } else {

@@ -6,6 +6,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import CompilerExceptions.ScopeExceptions.IllegalBlockNameException;
 import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
 import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
@@ -77,52 +78,67 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                 break;
 
             case PROCEDURE_CALL:
-                SelectorNode childSelector = node.findFirstChildOfClass(SelectorNode.class);
+                String targetId = ((ProcedureCallNode) node).getTargetId();
 
-                Scope scope = this.getCurrentBlockScope().getProcedureScope(childSelector.getId());
+                Scope scope = this.getCurrentBlockScope().getProcedureScope(targetId);
                 if (scope == null) {
-                    throw new IllegalProcedureCallScopeException(node, "No such procedure: " + childSelector.getId());
+                    throw new IllegalProcedureCallScopeException(node, "No such procedure: " + targetId);
                 }
                 break;
 
             case BLUEPRINT:
+                String parentBlockId = ((NamedIdNode) node
+                        .getParent())
+                        .getId();
+                if (this.typeSystem.isPredefined(parentBlockId)) {
+                    throw new IllegalBlockNameException(node, "The block name: " + parentBlockId + " is a reserved name.");
+                }
+                break;
+
             case CHANNEL_DECLARATIONS:
                 break;
 
             case SELECTOR:
                 boolean ignoreSelector = node.getParent() instanceof ProcedureCallNode;
 
-                if ("this".equals(id)) {
+                if (ignoreSelector) {
+                    // Do nothing.
+
+                } else if ("this".equals(id)) {
                     this.verifyChannelVariable(childId, node);
 
-                } else if (ignoreSelector) {
-                    // Do nothing.
                 } else if (!(node.getParent() instanceof SelectorNode)) {
                     try {
+                        // Is it a variable?
                         this.verifyCurrentScopeVariable(id, node);
 
-                        if (node.getChild() != null){
-                            SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
-                            dummy.setNumber(node.getNumber());
-                            String theBlock = this.typeSystem.getSubTypeOfNode(dummy, currentBlockScope, currentSubScope);
+                    } catch (NoSuchVariableDeclaredException e) {
+                        // Else is it a channel of the current block?
+                        this.verifyChannelVariable(id, node);
+                    }
 
-                            boolean isOperation = this.typeSystem.getSymbolTable().isPredefinedOperation(theBlock);
-                            boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(theBlock);
+                    // Else if it is a dot.notation
+                    if (node.getChild() != null){
+                        SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
+                        dummy.setNumber(node.getNumber());
+                        String theBlock = this.typeSystem.getSubTypeOfNode(dummy, currentBlockScope, currentSubScope);
 
-                            if (!isOperation && !isSource) {
-                                BlockScope blockScope = this.typeSystem.getSymbolTable().getBlockScope(theBlock);
-                                if (blockScope
-                                        .getChannelDeclarationScope()
-                                        .getVariable(childId) == null) {
-                                    throw new NoSuchVariableDeclaredException(node, "The channel is not there");
-                                }
-                            } else {
-                                // TODO: Operation or source input/output existence verification
+                        boolean isOperation = this.typeSystem.isPredefinedOperation(theBlock);
+                        boolean isSource = this.typeSystem.isPredefinedSource(theBlock);
+                        boolean isBlock = !isOperation && !isSource;
+
+                        if (isBlock) {
+                            BlockScope blockScope = this.typeSystem.getSymbolTable().getBlockScope(theBlock);
+                            if (blockScope
+                                    .getChannelDeclarationScope()
+                                    .getVariable(childId) == null) {
+                                throw new NoSuchVariableDeclaredException(node, "The channel is not there");
+                            }
+                        } else {
+                            if (!typeSystem.isValidPredefinedElementChannelPair(theBlock, ((NamedIdNode) node.getChild()).getId())){
+                                throw new NoSuchVariableDeclaredException(node, theBlock + " does not have channel: " + node.getChild());
                             }
                         }
-
-                    } catch (NoSuchVariableDeclaredException e) {
-                        this.verifyChannelVariable(id, node);
                     }
                 }
                 break;
@@ -180,8 +196,8 @@ public class ScopeCheckerVisitor extends ScopeTracker {
      */
     private boolean isNotADefinedBuildableElement(String buildId) {
         boolean isADefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
-        boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
-        boolean isPredefinedSource = this.symbolTable.isPredefinedSource(buildId);
+        boolean isPredefinedOperation = this.typeSystem.isPredefinedOperation(buildId);
+        boolean isPredefinedSource = this.typeSystem.isPredefinedSource(buildId);
 
         return !(isADefinedBlock || isPredefinedOperation || isPredefinedSource);
     }

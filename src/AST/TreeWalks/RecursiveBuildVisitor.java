@@ -136,8 +136,8 @@ public class RecursiveBuildVisitor extends ScopeTracker {
             throw new NoSuchBlockDeclaredException(node, e);
         }
 
-        boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(nodeSubType);
-        boolean isOperation = this.typeSystem.getSymbolTable().isPredefinedOperation(nodeSubType);
+        boolean isSource = this.typeSystem.isPredefinedSource(nodeSubType);
+        boolean isOperation = this.typeSystem.isPredefinedOperation(nodeSubType);
 
         if (isSource || isOperation) {
             // Do nothing
@@ -160,8 +160,8 @@ public class RecursiveBuildVisitor extends ScopeTracker {
     private void handleBuildPost(AbstractNode node) {
         String nodeSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
-        boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(nodeSubType);
-        boolean isOperation = this.typeSystem.getSymbolTable().isPredefinedOperation(nodeSubType);
+        boolean isSource = this.typeSystem.isPredefinedSource(nodeSubType);
+        boolean isOperation = this.typeSystem.isPredefinedOperation(nodeSubType);
 
         if (isSource || isOperation) {
             // Do nothing

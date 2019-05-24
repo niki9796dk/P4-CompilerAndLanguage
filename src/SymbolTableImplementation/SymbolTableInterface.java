@@ -60,19 +60,4 @@ public interface SymbolTableInterface {
      */
     void reassignVariable(NamedNode assignNode);
 
-    /**
-     * Check if an operation keyword is one of the final predefined operations.
-     *
-     * @param operation The operation Keyword
-     * @return whether the operation is valid.
-     */
-    boolean isPredefinedOperation(String operation);
-
-    /**
-     * Check if a source keyword is a one of the final predefined operations.
-     *
-     * @param source The source Keyword
-     * @return whether the source is valid.
-     */
-    boolean isPredefinedSource(String source);
 }

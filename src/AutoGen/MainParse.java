@@ -7,6 +7,7 @@ import AST.TreeWalks.*;
 import CompilerExceptions.CompilerException;
 import Enums.AnsiColor;
 import SymbolTableImplementation.SymbolTable;
+import TypeChecker.TypeSystem;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;

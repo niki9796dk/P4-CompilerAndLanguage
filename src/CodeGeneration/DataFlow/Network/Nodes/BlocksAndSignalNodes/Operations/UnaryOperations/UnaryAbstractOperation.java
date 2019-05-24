@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public abstract class UnaryAbstractOperation extends AbstractOperation {
     public static final String UNARY_IN_CHANNEL = "A";
-    public static final String OPERATION_OUT_CHANNEL = "out";
+    public static final String UNARY_OUT_CHANNEL = "out";
 
     protected UnaryAbstractOperation() {
         // Define inputs
@@ -23,7 +23,7 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
         // Store channels
         this
                 .addNewInputLabel(UNARY_IN_CHANNEL, in)
-                .addNewOutputLabel(OPERATION_OUT_CHANNEL, out);
+                .addNewOutputLabel(UNARY_OUT_CHANNEL, out);
     }
 
     @Override
@@ -38,7 +38,7 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
 
     @Override
     public Channel getOutputChannel() {
-        return this.getChannel(OPERATION_OUT_CHANNEL);
+        return this.getChannel(UNARY_OUT_CHANNEL);
     }
 
     protected abstract Matrix operation(Matrix in);
@@ -56,7 +56,7 @@ public abstract class UnaryAbstractOperation extends AbstractOperation {
 
         this.resultBackpropagation = this.operationBackpropagation(
                 this.getChannel(UNARY_IN_CHANNEL),
-                this.getChannel(OPERATION_OUT_CHANNEL)
+                this.getChannel(UNARY_OUT_CHANNEL)
         );
     }
 

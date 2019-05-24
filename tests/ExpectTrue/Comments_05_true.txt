@@ -1,0 +1,17 @@
+block Main {
+	mychannel:in input;
+	mychannel:out output;
+	
+	blueprint() {
+		this.input -> build Test(/* Random comment */ draw _Sigmoid) -> this.output;
+	}
+}
+
+block Test {
+	mychannel:in input;
+	mychannel:out output;
+
+	blueprint(blueprint sig) {
+		this.input -> build sig() -> this.output;
+	}
+}
