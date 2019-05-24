@@ -11,4 +11,3 @@ block procedure_01 {
         x -> this.output;
 	}
 }
-

@@ -197,7 +197,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
         if (callerNode instanceof ProcedureCallNode) {
             // Get the callee ID
-            String nodeId = callerNode.findFirstChildOfClass(SelectorNode.class).getId();
+            String nodeId = ((ProcedureCallNode) callerNode).getTargetId();
 
             return this.typeSystem.getProcedure(currentBlockScope, nodeId);
 
