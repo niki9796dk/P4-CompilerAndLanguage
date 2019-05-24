@@ -13,7 +13,6 @@ import java_cup.runtime.ScannerBuffer;
 
 
 public class MainParse {
-    public static boolean isTest = false;
 
     public static void main(String args[]) throws Exception {
 
@@ -37,14 +36,11 @@ public class MainParse {
         });
 
         if (args.length != 1) {
-            //parseFile("data/input");
             parseFile("data" + File.separator + "input");
         } else {
 
             parseFile(args[0]);
         }
-
-        //testTree();
     }
 
     public static boolean parseFile(String path) throws Exception {
@@ -92,7 +88,7 @@ public class MainParse {
         new RecursiveVisitor(symbolTable, new FlowCheckVisitor(symbolTable)).startRecursiveWalk();
 
         // Do code generation
-        //prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
+        prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
 
         return true;
     }

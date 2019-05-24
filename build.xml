@@ -12,7 +12,7 @@
         </fileset>
     </path>
 
-    <target name="compile">
+    <target name="compile" depends="Clean Codegen">
         <!-- Clean all previous files -->
         <delete file="src/AutoGen/Lexer.java" />
         <delete file="src/AutoGen/Parser.java" />
@@ -46,8 +46,15 @@
 
     </target>
 
+    <target name="Clean Codegen">
+        <delete dir="src/AutoGen/CodeGen" excludes="ANN.java, Layer.java" includeemptydirs="true"/>
+    </target>
+
     <!--
-    Gamle metoder som KUN er her i tilfælde af at vi en dag skulle bruge dem igen...
+    Gamle metoder som KUN er her i tilfælde af at v<target name="Clean Codegen">
+        <delete dir="src/AutoGen/CodeGen" excludes="ANN.java, Layer.java" includeemptydirs="true"/>
+    </target>
+i en dag skulle bruge dem igen...
 
     <target name="clean">
         <delete>
