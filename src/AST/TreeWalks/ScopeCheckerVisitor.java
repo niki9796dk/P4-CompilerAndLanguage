@@ -9,7 +9,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
 import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import SymbolTableImplementation.*;
 import java_cup.runtime.ComplexSymbolFactory;
 

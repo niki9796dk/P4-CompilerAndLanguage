@@ -10,7 +10,7 @@ import AST.Nodes.SpecialNodes.UnexpectedNode;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
 import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
 import CompilerExceptions.ScopeExceptions.ScopeBoundsViolationException;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
 import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;

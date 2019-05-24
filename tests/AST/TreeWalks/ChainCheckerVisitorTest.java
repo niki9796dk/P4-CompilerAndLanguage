@@ -6,7 +6,7 @@ import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
 import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;

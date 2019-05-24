@@ -7,7 +7,7 @@ import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
 import SymbolTableImplementation.*;
 import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;

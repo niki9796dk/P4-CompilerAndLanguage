@@ -4,7 +4,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import SemanticAnalysis.Datastructures.HashSetStack;
 import CompilerExceptions.SemanticExceptions.NoMainBlockException;
 import CompilerExceptions.SemanticExceptions.SemanticProblemException;

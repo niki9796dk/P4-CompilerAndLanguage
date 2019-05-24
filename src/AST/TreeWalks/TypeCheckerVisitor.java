@@ -9,7 +9,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
 import CompilerExceptions.TypeExceptions.ChannelPlacementTypeException;
 import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;

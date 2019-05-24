@@ -8,7 +8,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import SemanticAnalysis.Datastructures.ModeEnum;
 import SymbolTableImplementation.*;
 import CompilerExceptions.TypeExceptions.IncorrectAssignmentTypesException;

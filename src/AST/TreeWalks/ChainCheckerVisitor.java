@@ -5,7 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import CompilerExceptions.SemanticExceptions.ChainConnectionMismatchException;
 import CompilerExceptions.SemanticExceptions.GroupConnectionMismatchException;
 import SymbolTableImplementation.*;

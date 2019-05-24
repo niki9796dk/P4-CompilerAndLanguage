@@ -3,7 +3,7 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
 import SemanticAnalysis.Datastructures.SetStack;
 import CompilerExceptions.SemanticExceptions.BuildRecursionException;

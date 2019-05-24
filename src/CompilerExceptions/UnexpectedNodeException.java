@@ -1,4 +1,4 @@
-package AST.TreeWalks.Exceptions;
+package CompilerExceptions;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.NodeEnumAble;

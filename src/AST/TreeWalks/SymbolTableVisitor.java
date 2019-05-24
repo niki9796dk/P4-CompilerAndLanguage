@@ -5,7 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import CompilerExceptions.ScopeExceptions.ScopeBoundsViolationException;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import AST.Visitor;
 import CompilerExceptions.ScopeExceptions.VariableAlreadyDeclaredException;
 import SymbolTableImplementation.Scope;
