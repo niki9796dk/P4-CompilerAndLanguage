@@ -4,7 +4,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import Enums.AnsiColor;
-import ScopeChecker.Exceptions.NoSuchVariableDeclaredException;
+import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -162,7 +162,7 @@ public class SymbolTable implements SymbolTableInterface {
                         .getLatest().getVariable(leftSideId);    // Get latest subscope and the specific variable
 
         if (variableEntry == null){
-            throw new NoSuchVariableDeclaredException("The right side of this assignment was not declared: " + assignNode);
+            throw new NoSuchVariableDeclaredException(assignNode, "The right side of this assignment was not declared: " + assignNode);
         }
 
         switch (rightSide.getNodeEnum()) {

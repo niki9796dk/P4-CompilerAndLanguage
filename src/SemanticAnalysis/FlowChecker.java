@@ -7,13 +7,12 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
-import CodeGeneration.Building.Statements.Calls.ProcedureCall;
 import SemanticAnalysis.Datastructures.ProcCall;
-import SemanticAnalysis.Exceptions.IncorrectChannelUsageException;
+import CompilerExceptions.SemanticExceptions.IncorrectChannelUsageException;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
-import TypeChecker.Exceptions.ShouldNotHappenException;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
 import java_cup.runtime.ComplexSymbolFactory;
 
@@ -57,7 +56,7 @@ public class FlowChecker {
         return flow;
     }
 
-    public FlowChecker evaluateBlock(){
+    public FlowChecker evaluateBlock(AbstractNode node){
         // This is really useful for debugging.
         int i = 0;
         for (String s : inConnections){
@@ -71,7 +70,7 @@ public class FlowChecker {
             boolean firstTimeInConnected = outConnectPoints.remove(connectedOut);
 
             if (!firstTimeInConnected){
-                throw new IncorrectChannelUsageException("In channel " + connectedOut + " connected at multiple points.");
+                throw new IncorrectChannelUsageException(node, "In channel " + connectedOut + " connected at multiple points.");
             }
         }
 
@@ -80,7 +79,7 @@ public class FlowChecker {
         }
 
         if (!inConnectPoints.isEmpty() || !outConnectPoints.isEmpty()){
-            throw new IncorrectChannelUsageException("Not all channel connection points in " + currentBlockId + " are used:"
+            throw new IncorrectChannelUsageException(node, "Not all channel connection points in " + currentBlockId + " are used:"
                     + System.lineSeparator() + inConnectPoints
                     + System.lineSeparator() + outConnectPoints);
         }
@@ -112,7 +111,7 @@ public class FlowChecker {
             // Handle Block
             addAllChannelsOfBlockInstance(buildInstance, blockBuilt);
         } else {
-            throw new ShouldNotHappenException("Can we build things that aren't blocks, operations or sources??");
+            throw new ShouldNotHappenException(buildInstance, "Can we build things that aren't blocks, operations or sources??");
         }
     }
 
@@ -208,7 +207,7 @@ public class FlowChecker {
 
             if (typeSystem.getSymbolTable().isPredefinedSource(followToBase.getId())){
                 // Source case
-                throw new ShouldNotHappenException("A chain entering a Source??");
+                throw new ShouldNotHappenException(outPartOfChain, "A chain entering a Source??");
             } else if (typeSystem.getSymbolTable().isPredefinedOperation(followToBase.getId())){
                 // Operation case
                 idPortion = "A";
@@ -263,7 +262,7 @@ public class FlowChecker {
                     inConnectPoints.add(instance + node.getId());
                     break;
                 default:
-                    throw new ShouldNotHappenException("A non-mychannel in the channel scope?? " + instance.getId() + " - " + node);
+                    throw new ShouldNotHappenException(instance, "A non-mychannel in the channel scope?? " + instance.getId() + " - " + node);
             }
         }
     }
@@ -285,7 +284,7 @@ public class FlowChecker {
                     outConnectPoints.add(currentBlockId + node.getId());
                     break;
                 default:
-                    throw new ShouldNotHappenException("A non-mychannel in the channel scope?? " + currentBlockId + node);
+                    throw new ShouldNotHappenException(node, "A non-mychannel in the channel scope?? " + currentBlockId + node);
             }
         }
     }
@@ -362,7 +361,7 @@ public class FlowChecker {
         List<String> inChannels = new ArrayList<>();
 
         if (isSource) {
-            throw new ShouldNotHappenException("Chain into source??");
+            throw new ShouldNotHappenException(node, "Chain into source??");
         } else if (isOperation) {
             // TODO: OPERATIONS!
             inChannels.add(followedToBuild + "A");

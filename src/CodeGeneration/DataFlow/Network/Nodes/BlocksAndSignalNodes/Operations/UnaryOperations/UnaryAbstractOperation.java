@@ -5,9 +5,6 @@ import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import LinearAlgebra.Types.Matrices.Matrix;
-import LinearAlgebra.Types.Matrices.MatrixBuilder;
-import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
-import TypeChecker.Exceptions.ShouldNotHappenException;
 
 import java.util.HashMap;
 

@@ -1,5 +1,7 @@
 package TypeChecker.Exceptions;
 
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
+import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,14 +10,14 @@ class ParamsSizeInconsistencyExceptionTest {
     @Test
     void noMessage() {
         assertThrows(ParamsSizeInconsistencyException.class, () -> {
-            throw new ParamsSizeInconsistencyException();
+            throw new ParamsSizeInconsistencyException(new DummyNode());
         });
     }
 
     @Test
     void message() {
         assertThrows(ParamsSizeInconsistencyException.class, () -> {
-            throw new ParamsSizeInconsistencyException("message");
+            throw new ParamsSizeInconsistencyException(new DummyNode(), "message");
         });
     }
 
@@ -23,7 +25,7 @@ class ParamsSizeInconsistencyExceptionTest {
     void throwable() {
         Throwable toThrow = new RuntimeException();
         assertThrows(ParamsSizeInconsistencyException.class, () -> {
-            throw new ParamsSizeInconsistencyException(toThrow);
+            throw new ParamsSizeInconsistencyException(new DummyNode(), toThrow);
         });
     }
 }

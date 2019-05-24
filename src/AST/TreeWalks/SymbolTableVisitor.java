@@ -1,20 +1,17 @@
 package AST.TreeWalks;
 
-import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import ScopeChecker.Exceptions.ScopeBoundsViolationException;
+import CompilerExceptions.ScopeExceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import AST.Visitor;
-import ScopeChecker.Exceptions.VariableAlreadyDeclaredException;
+import CompilerExceptions.ScopeExceptions.VariableAlreadyDeclaredException;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.VariableEntry;
-import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
 
 public class SymbolTableVisitor implements Visitor {
 
@@ -73,7 +70,7 @@ public class SymbolTableVisitor implements Visitor {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
-                checkIfVariableIsDefined(((NamedIdNode) node).getId());
+                checkIfVariableIsDefined(((NamedIdNode) node));
                 symbolTableInterface.insertVariable(node);
                 break;
 
@@ -130,14 +127,14 @@ public class SymbolTableVisitor implements Visitor {
 
     /**
      * Checks if a variable is already defined within the symbol table, and if it is, and exception is thrown.
-     * @param id The variable id to check.
+     * @param node The node with the ID to check
      * @throws ScopeBoundsViolationException thrown if the variable id is already declared.
      */
-    private void checkIfVariableIsDefined(String id) {
+    private void checkIfVariableIsDefined(NamedIdNode node) {
         Scope latestSubScope = this.symbolTableInterface.getLatestBlockScope().getLatestSubScope();
-        VariableEntry variable = latestSubScope.getVariable(id);
+        VariableEntry variable = latestSubScope.getVariable(node.getId());
         if (variable != null) {
-            throw new VariableAlreadyDeclaredException("Variable \"" + id + "\" already declared in scope: " + latestSubScope.getId());
+            throw new VariableAlreadyDeclaredException(node, "Variable \"" + node.getId() + "\" already declared in scope: " + latestSubScope.getId());
         }
     }
 }

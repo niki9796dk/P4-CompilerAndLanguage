@@ -10,7 +10,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockTypeNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlueprintTypeNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
-import ScopeChecker.Exceptions.ScopeBoundsViolationException;
+import CompilerExceptions.ScopeExceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.BlockScope;
 import java_cup.runtime.ComplexSymbolFactory;

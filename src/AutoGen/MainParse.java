@@ -4,7 +4,8 @@ import java.io.*;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.TreeWalks.*;
-import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
+import CompilerExceptions.CompilerException;
+import Enums.AnsiColor;
 import SymbolTableImplementation.SymbolTable;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
@@ -16,17 +17,24 @@ public class MainParse {
 
     public static void main(String args[]) throws Exception {
 
-        /* TODO: Implement this plz
         Thread.currentThread().setUncaughtExceptionHandler((t, e) -> {
-            if (e instanceof MyCustomExceptionGroup) {
-                AbstractNode errorNode = ((MyCustomExceptionGroup) e).getNode();
+            System.out.println("\n\n");
+            System.out.println(AnsiColor.RED);
+            System.out.println("###########################\n");
 
-                System.out.println("Error happend at: " + errorNode.getLineNumber() + " - Cause: " + e.getMessage());
+            if (e instanceof CompilerException) {
+                AbstractNode errorNode = ((CompilerException) e).getErrorNode();
+
+                System.out.println("Error happend at " + errorNode.getLineNumber() + ":" + errorNode.getColumn() + ".\n Cause - " + e.getMessage());
             } else {
-                System.out.println("Unknown error occurred");
+                System.out.println("Unknown error occurred:\n " + e.getMessage());
             }
+
+            System.out.println("\n###########################");
+            System.out.println(AnsiColor.RESET);
+
+            System.exit(0);
         });
-        */
 
         if (args.length != 1) {
             //parseFile("data/input");
@@ -84,7 +92,7 @@ public class MainParse {
         new RecursiveVisitor(symbolTable, new FlowCheckVisitor(symbolTable)).startRecursiveWalk();
 
         // Do code generation
-        prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
+        //prog.walkTree(new CodeGenerationVisitor(symbolTable, nameOfFile));
 
         return true;
     }

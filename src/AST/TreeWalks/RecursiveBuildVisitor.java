@@ -4,11 +4,11 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
+import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
 import SemanticAnalysis.Datastructures.SetStack;
-import SemanticAnalysis.Exceptions.BuildRecursionException;
+import CompilerExceptions.SemanticExceptions.BuildRecursionException;
 import SymbolTableImplementation.*;
-import TypeChecker.Exceptions.ShouldNotHappenException;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
 
 /**
@@ -133,7 +133,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
         try {
             nodeSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
         } catch (ShouldNotHappenException e) {
-            throw new NoSuchBlockDeclaredException(e);
+            throw new NoSuchBlockDeclaredException(node, e);
         }
 
         boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(nodeSubType);
@@ -148,7 +148,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
         boolean failure = !this.buildStack.push(this.convertBuildNodeToString(node));
 
         if (failure) {
-            throw new BuildRecursionException("Recursive block building! - " + node);
+            throw new BuildRecursionException(node, "Recursive block building! - " + node);
         }
     }
 

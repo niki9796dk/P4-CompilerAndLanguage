@@ -1,6 +1,6 @@
-package ScopeChecker.Exceptions;
+package CompilerExceptions.ScopeExceptions;
 
-import ScopeChecker.Exceptions.ScopeBoundsViolationException;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 
 /**
  * An exception thrown when a non-declared block tries to be built or drawn.
@@ -14,19 +14,19 @@ public class NoSuchBlockDeclaredException extends ScopeBoundsViolationException 
     /**
      * Prints the default error message in the stacktrace.
      */
-    public NoSuchBlockDeclaredException() {
-        super(DEFAULT_ERROR_MESSAGE + ".");
+    public NoSuchBlockDeclaredException(AbstractNode node) {
+        super(node, DEFAULT_ERROR_MESSAGE + ".");
     }
 
     /**
      * Appends a unique message to the error message of the stack trace.
      * @param message The appended message.
      */
-    public NoSuchBlockDeclaredException(String message) {
-        super( DEFAULT_ERROR_MESSAGE + ": " + message);
+    public NoSuchBlockDeclaredException(AbstractNode node, String message) {
+        super(node, DEFAULT_ERROR_MESSAGE + ": " + message);
     }
 
-    public NoSuchBlockDeclaredException(Throwable cause) {
-        super(cause);
+    public NoSuchBlockDeclaredException(AbstractNode node, Throwable cause) {
+        super(node, cause);
     }
 }

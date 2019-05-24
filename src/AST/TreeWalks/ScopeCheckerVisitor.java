@@ -6,9 +6,9 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
-import ScopeChecker.Exceptions.IllegalProcedureCallScopeException;
-import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
-import ScopeChecker.Exceptions.NoSuchVariableDeclaredException;
+import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
+import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
+import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.*;
 import java_cup.runtime.ComplexSymbolFactory;
@@ -67,7 +67,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
             case DRAW:
             case BUILD:
                 if (this.isNotADefinedBuildableElement(id) && this.isNotLocalBlueprintVariable(id)) {
-                    throw new NoSuchBlockDeclaredException(node.toString());
+                    throw new NoSuchBlockDeclaredException(node, node.toString());
                 }
 
                 break;
@@ -81,7 +81,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
                 Scope scope = this.getCurrentBlockScope().getProcedureScope(childSelector.getId());
                 if (scope == null) {
-                    throw new IllegalProcedureCallScopeException("No such procedure: " + childSelector.getId());
+                    throw new IllegalProcedureCallScopeException(node, "No such procedure: " + childSelector.getId());
                 }
                 break;
 
@@ -93,13 +93,13 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                 boolean ignoreSelector = node.getParent() instanceof ProcedureCallNode;
 
                 if ("this".equals(id)) {
-                    this.verifyChannelVariable(childId);
+                    this.verifyChannelVariable(childId, node);
 
                 } else if (ignoreSelector) {
                     // Do nothing.
                 } else if (!(node.getParent() instanceof SelectorNode)) {
                     try {
-                        this.verifyCurrentScopeVariable(id);
+                        this.verifyCurrentScopeVariable(id, node);
 
                         if (node.getChild() != null){
                             SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
@@ -114,7 +114,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                                 if (blockScope
                                         .getChannelDeclarationScope()
                                         .getVariable(childId) == null) {
-                                    throw new NoSuchVariableDeclaredException("The channel is not there");
+                                    throw new NoSuchVariableDeclaredException(node, "The channel is not there");
                                 }
                             } else {
                                 // TODO: Operation or source input/output existence verification
@@ -122,7 +122,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                         }
 
                     } catch (NoSuchVariableDeclaredException e) {
-                        this.verifyChannelVariable(id);
+                        this.verifyChannelVariable(id, node);
                     }
                 }
                 break;
@@ -209,10 +209,10 @@ public class ScopeCheckerVisitor extends ScopeTracker {
      * @param id the channel id to check.
      * @throws NoSuchVariableDeclaredException if the id is not a channel.
      */
-    private void verifyChannelVariable(String id) {
+    private void verifyChannelVariable(String id, AbstractNode errorNode) {
         VariableEntry variable = this.getCurrentBlockScope().getChannelDeclarationScope().getVariable(id);
 
-        checkIfNull(variable, "ChannelDeclarations", id);
+        checkIfNull(variable, "ChannelDeclarations", id, errorNode);
     }
 
     /**
@@ -220,10 +220,10 @@ public class ScopeCheckerVisitor extends ScopeTracker {
      * @param id The variable id to check
      * @throws NoSuchVariableDeclaredException if the id is not a local variable.
      */
-    private void verifyCurrentScopeVariable(String id) {
+    private void verifyCurrentScopeVariable(String id, AbstractNode errorNode) {
         VariableEntry variable = this.getCurrentSubScope().getVariable(id);
 
-        checkIfNull(variable, ((NamedNode) this.getCurrentSubScope().getNode()).getName(), id);
+        checkIfNull(variable, ((NamedNode) this.getCurrentSubScope().getNode()).getName(), id, errorNode);
     }
 
     /**
@@ -232,9 +232,9 @@ public class ScopeCheckerVisitor extends ScopeTracker {
      * @param subScope The subscope the variable entry was extracted from - Used for error messages.
      * @param id The variable id the variable entry was extracted with - Used for error messages .
      */
-    private void checkIfNull(VariableEntry variable, String subScope, String id) {
+    private void checkIfNull(VariableEntry variable, String subScope, String id, AbstractNode errorNode) {
         if (variable == null) {
-            throw new NoSuchVariableDeclaredException("In scope: " + this.getCurrentBlockScope().getId() + ">" + subScope + ", no such variable: " + id);
+            throw new NoSuchVariableDeclaredException(errorNode, "In scope: " + this.getCurrentBlockScope().getId() + ">" + subScope + ", no such variable: " + id);
         }
     }
 }

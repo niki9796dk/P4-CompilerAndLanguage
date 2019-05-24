@@ -7,14 +7,12 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.RootNode;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
-import ScopeChecker.Exceptions.NoSuchBlockDeclaredException;
-import ScopeChecker.Exceptions.NoSuchVariableDeclaredException;
-import ScopeChecker.Exceptions.ScopeBoundsViolationException;
+import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
+import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
+import CompilerExceptions.ScopeExceptions.ScopeBoundsViolationException;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
-import SymbolTableImplementation.SymbolTableInterface;
 import java_cup.runtime.ComplexSymbolFactory;
-import java_cup.runtime.Symbol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,13 +1,12 @@
 package AutoGen;
 
-import SemanticAnalysis.Exceptions.ChainConnectionMismatchException;
-import SemanticAnalysis.Exceptions.GroupConnectionMismatchException;
-import SemanticAnalysis.Exceptions.IncorrectChannelUsageException;
+import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
+import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
+import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
+import CompilerExceptions.ScopeExceptions.VariableAlreadyDeclaredException;
+import CompilerExceptions.SemanticExceptions.*;
+import CompilerExceptions.TypeExceptions.*;
 import DataStructures.Pair;
-import SemanticAnalysis.Exceptions.NoMainBlockException;
-import ScopeChecker.Exceptions.*;
-import SemanticAnalysis.Exceptions.*;
-import TypeChecker.Exceptions.*;
 import org.junit.jupiter.api.*;
 
 import java.io.File;

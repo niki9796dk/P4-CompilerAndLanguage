@@ -3,12 +3,11 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SemanticAnalysis.Datastructures.HashSetStack;
-import SemanticAnalysis.Exceptions.NoMainBlockException;
-import SemanticAnalysis.Exceptions.SemanticProblemException;
+import CompilerExceptions.SemanticExceptions.NoMainBlockException;
+import CompilerExceptions.SemanticExceptions.SemanticProblemException;
 import SymbolTableImplementation.SymbolTable;
 
 import java.util.HashSet;
@@ -83,7 +82,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
         switch (node.getNodeEnum()) {
             // No action enums
             case ROOT:
-                this.findMainBlocks();
+                this.findMainBlocks(node);
                 break;
 
             case GROUP:
@@ -119,7 +118,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
      * Method used to start the block recursion testing check.
      * It will first find all potential main blocks, and then perform recursion checking on their build patterns.
      */
-    private void findMainBlocks() {
+    private void findMainBlocks(AbstractNode errorNode) {
         // Find all potential main blocks
         List<BlockNode> potentialMainBlocks = this.findPotentialMainBlocks();
 
@@ -127,7 +126,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
         potentialMainBlocks.removeIf(this.buildNodes::contains);
 
         // Assert that there still is remaining potential main blocks
-        this.assertNonZeroMainBlockCount(potentialMainBlocks);
+        this.assertNonZeroMainBlockCount(potentialMainBlocks, errorNode);
 
         // Store the remaining main blocks.
         this.symbolTable.setMainBlocks(potentialMainBlocks);
@@ -150,9 +149,9 @@ public class PreRecursiveVisitor extends ScopeTracker {
      * @param potentialMainBlocks A list of potential main blocks
      * @throws NoMainBlockException if no potential blocks is present in the list.
      */
-    private void assertNonZeroMainBlockCount(List<BlockNode> potentialMainBlocks) {
+    private void assertNonZeroMainBlockCount(List<BlockNode> potentialMainBlocks, AbstractNode errorNode) {
         if (potentialMainBlocks.size() == 0) {
-            throw new NoMainBlockException("The supplied program have NO buildable blocks - All blocks require parameters or there is none.");
+            throw new NoMainBlockException(errorNode, "The supplied program have NO buildable blocks - All blocks require parameters or there is none.");
         }
     }
 

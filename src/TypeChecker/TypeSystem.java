@@ -3,7 +3,6 @@ package TypeChecker;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
@@ -12,10 +11,10 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SemanticAnalysis.Datastructures.ModeEnum;
 import SymbolTableImplementation.*;
-import TypeChecker.Exceptions.IncorrectAssignmentTypesException;
-import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
-import TypeChecker.Exceptions.ShouldNotHappenException;
-import TypeChecker.Exceptions.TypeInconsistencyException;
+import CompilerExceptions.TypeExceptions.IncorrectAssignmentTypesException;
+import CompilerExceptions.TypeExceptions.ParamsTypeInconsistencyException;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import CompilerExceptions.TypeExceptions.TypeInconsistencyException;
 import java_cup.runtime.ComplexSymbolFactory;
 
 public class TypeSystem {
@@ -70,7 +69,7 @@ public class TypeSystem {
         try {
             this.assertEqualSuperTypes(leftNode, rightNode, currentBlockScope, currentSubScope, "Different type on the left and right side node");
         } catch (TypeInconsistencyException e) {
-            throw new IncorrectAssignmentTypesException(e);
+            throw new IncorrectAssignmentTypesException(leftNode, e);
         }
     }
 
@@ -89,7 +88,7 @@ public class TypeSystem {
 
         // Then compare them.
         if (leftNodeType != rightNodeType) {
-            throw new ParamsTypeInconsistencyException(errorMsgPrefix + ": " + leftNode + "("+ leftNodeType +") = " + rightNode + "("+ rightNodeType +")");
+            throw new ParamsTypeInconsistencyException(leftNode, errorMsgPrefix + ": " + leftNode + "("+ leftNodeType +") = " + rightNode + "("+ rightNodeType +")");
         }
     }
 
@@ -246,7 +245,7 @@ public class TypeSystem {
             return node;
 
         } else {
-            throw new ShouldNotHappenException("We are building something which is not defined? Should have been caught in the scope checker! - " + node +  " : " + buildId);
+            throw new ShouldNotHappenException(node, "We are building something which is not defined? Should have been caught in the scope checker! - " + node +  " : " + buildId);
         }
     }
 
@@ -385,7 +384,7 @@ public class TypeSystem {
                 if (this.getBlock(subType) != null) {
                     return NodeEnum.BLOCK_TYPE;
                 } else {
-                    throw new ShouldNotHappenException("We are building an undefined block/blueprint thingy - " + node);
+                    throw new ShouldNotHappenException(node, "We are building an undefined block/blueprint thingy - " + node);
                 }
             }
         }
@@ -421,11 +420,11 @@ public class TypeSystem {
                 case BLOCK_TYPE:
                     // Extract the sub scope, and assert that it's not null.
                     Scope subScope = this.symbolTable.getSubScope(value, BlockScope.CHANNELS);
-                    this.assertNotNull(subScope, "No such block defined '" + value + "' - " + node);
+                    this.assertNotNull(subScope, "No such block defined '" + value + "' - " + node, node);
 
                     // Extract the variable, and assert that it's not null.
                     VariableEntry variableEntryBlock = subScope.getVariable(childId);
-                    this.assertNotNull(variableEntryBlock, "No such channel defined '" + childId + "' - " + node.getChild());
+                    this.assertNotNull(variableEntryBlock, "No such channel defined '" + childId + "' - " + node.getChild(), node.getChild());
 
                     // Get the super type from the variable
                     NodeEnum type = variableEntryBlock.getSuperType();
@@ -443,7 +442,7 @@ public class TypeSystem {
 
                     } else {
                         // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
-                        throw new ShouldNotHappenException("The operation '" + value + "' does not have a channel named '" + childId + "'");
+                        throw new ShouldNotHappenException(node, "The operation '" + value + "' does not have a channel named '" + childId + "'");
                     }
 
             }
@@ -462,9 +461,9 @@ public class TypeSystem {
      * @param errorMsg The error messages to throw if the object is null.
      * @throws ShouldNotHappenException Is thrown if the object is null.
      */
-    private void assertNotNull(Object object, String errorMsg) {
+    private void assertNotNull(Object object, String errorMsg, AbstractNode errorNode) {
         if (object == null) {
-            throw new ShouldNotHappenException(errorMsg);
+            throw new ShouldNotHappenException(errorNode, errorMsg);
         }
     }
 
@@ -517,7 +516,7 @@ public class TypeSystem {
             return type;
         } else {
             // If the type is null, there is no such identifier defined... Which should have been caught in the scope checking!!!
-            throw new ShouldNotHappenException("Identifier not defined: " + (isThis ? ("this." + node.getChild()) : node) + " - THIS ERROR SHOULD HAVE BEEN DETECTED IN SCOPE CHECKING AND NOT TYPE CHECKING");
+            throw new ShouldNotHappenException(node, "Identifier not defined: " + (isThis ? ("this." + node.getChild()) : node) + " - THIS ERROR SHOULD HAVE BEEN DETECTED IN SCOPE CHECKING AND NOT TYPE CHECKING");
         }
     }
 

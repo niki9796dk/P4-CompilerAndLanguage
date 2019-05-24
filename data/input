@@ -6,7 +6,7 @@ block ANN {
         this.in
         -> build Layer()
         -> build Layer()
-        -> this.out;
+        -> this.in;
     }
 }
 

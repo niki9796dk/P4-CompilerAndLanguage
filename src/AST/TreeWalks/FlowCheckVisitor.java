@@ -4,13 +4,9 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyOutChannelNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
 import SemanticAnalysis.Datastructures.ProcCall;
-import SemanticAnalysis.Exceptions.ChainConnectionMismatchException;
-import SemanticAnalysis.Exceptions.GroupConnectionMismatchException;
 import SemanticAnalysis.FlowChecker;
 import SymbolTableImplementation.SymbolTable;
 
@@ -112,7 +108,7 @@ public class FlowCheckVisitor extends ScopeTracker {
                 break;
 
             case BLUEPRINT:
-                currentFlow = currentFlow.evaluateBlock();
+                currentFlow = currentFlow.evaluateBlock(node);
                 break;
 
             case PROCEDURE_CALL:

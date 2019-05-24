@@ -1,4 +1,6 @@
-package SemanticAnalysis.Exceptions;
+package CompilerExceptions.SemanticExceptions;
+
+import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 
 /**
  * Runtime exception used for the compiler phase of semantic analysis.
@@ -8,15 +10,15 @@ public class BuildRecursionException extends SemanticProblemException {
     /**
      * Default constructor with no message - Calls super
      */
-    public BuildRecursionException() {
-        super();
+    public BuildRecursionException(AbstractNode node) {
+        super(node);
     }
 
     /**
      * Constructor for custom exception message - Calls super
      * @param message The exception message
      */
-    public BuildRecursionException(String message) {
-        super(message);
+    public BuildRecursionException(AbstractNode node, String message) {
+        super(node, message);
     }
 }

@@ -8,10 +8,10 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import ScopeChecker.Exceptions.IllegalProcedureCallScopeException;
+import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
 import SymbolTableImplementation.*;
-import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
-import TypeChecker.Exceptions.ShouldNotHappenException;
+import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import java_cup.runtime.ComplexSymbolFactory;
 
 /**
@@ -134,7 +134,7 @@ public class RecursiveVisitor extends ScopeTracker {
         try {
             this.assertNotNull(calleeSubScope);
         } catch (NullPointerException e) {
-            throw new IllegalProcedureCallScopeException(e);
+            throw new IllegalProcedureCallScopeException(callNode, e);
         }
 
         // Verify that if params is needed, that they are there!
@@ -145,7 +145,7 @@ public class RecursiveVisitor extends ScopeTracker {
         boolean needsParams = calleeParams != null;
 
         if (hasParams != needsParams) {
-            throw new ParamsSizeInconsistencyException("Inconsistency in the given and expected parameter count: " + callNode);
+            throw new ParamsSizeInconsistencyException(callNode, "Inconsistency in the given and expected parameter count: " + callNode);
         }
 
         // Verify the parameter count
@@ -154,7 +154,7 @@ public class RecursiveVisitor extends ScopeTracker {
             int calleeParamsCount = calleeParams.countChildren();
 
             if (callerParamsCount != calleeParamsCount) {
-                throw new ParamsSizeInconsistencyException("Inconsistency in the given and expected parameter count: " + callNode);
+                throw new ParamsSizeInconsistencyException(callNode, "Inconsistency in the given and expected parameter count: " + callNode);
             }
 
             // Loop all params and link them.
@@ -320,7 +320,7 @@ public class RecursiveVisitor extends ScopeTracker {
                 if (childId.equals("out")) {
                     return new MyOutChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
                 } else {
-                    throw new ShouldNotHappenException("Sources only have an out channel, named \"out\"");
+                    throw new ShouldNotHappenException(node, "Sources only have an out channel, named \"out\"");
                 }
 
             } else if (typeSystem.getSymbolTable().isPredefinedOperation(elementId)){
@@ -332,7 +332,7 @@ public class RecursiveVisitor extends ScopeTracker {
                     return new MyInChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
                 } else {
-                    throw new ShouldNotHappenException("The Operation doesn't have a gate like that.");
+                    throw new ShouldNotHappenException(node, "The Operation doesn't have a gate like that.");
                 }
 
             } else {
