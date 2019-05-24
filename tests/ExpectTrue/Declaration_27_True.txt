@@ -6,7 +6,7 @@ block chain_01 {
 	blueprint() {
 		blueprint c = (draw Test);
 
-		this.input -> this.output;
+		this.input -> build _Sigmoid() -> this.output;
 	}
 }
 

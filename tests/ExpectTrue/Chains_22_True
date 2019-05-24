@@ -4,6 +4,6 @@ block chain_01 {
 	mychannel:out output;
 
 	blueprint() {
-		mychannel:in in = this.input -> mychannel:out out = this.output;
+		mychannel:in in = this.input -> build _Sigmoid() -> mychannel:out out = this.output;
 	}
 }

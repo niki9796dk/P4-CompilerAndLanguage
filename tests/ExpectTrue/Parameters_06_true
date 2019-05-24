@@ -5,7 +5,7 @@ block Main {
     blueprint () {
         blueprint param = draw B2;
 
-        this.in -> build B1(param) -> this.out;
+        this.in -> build B1(param) -> build _Sigmoid() -> this.out;
     }
 }
 
@@ -54,7 +54,7 @@ block B1 {
         block b2 = build ToBuild2(draw B3);
         block b3 = build ToBuild3(draw B3);
 
-        this.in -> b1 -> b2 -> b3 -> next;
+        this.in -> build _Sigmoid() -> b1 -> b2 -> b3 -> next;
     }
 }
 
@@ -63,7 +63,7 @@ block B2 {
     mychannel:out out;
 
     blueprint (blueprint blue) {
-        this.in -> build blue() -> this.out;
+        this.in -> -> build _Sigmoid() build blue() -> this.out;
     }
 }
 
@@ -72,6 +72,6 @@ block B3 {
     mychannel:out out;
 
     blueprint () {
-        this.in -> this.out;
+        this.in -> build _Sigmoid() -> this.out;
     }
 }

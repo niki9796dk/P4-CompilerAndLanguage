@@ -14,7 +14,7 @@ block random_02 {
 	}
 	
 	procedure abcde(mychannel:in hmm) {
-		hmm -> this.output;
+		hmm -> build _Sigmoid() -> this.output;
 		;;;
 		abc();
 	}

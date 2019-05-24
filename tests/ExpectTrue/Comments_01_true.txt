@@ -3,6 +3,6 @@ block Main {
 	mychannel:out output;
 	
 	blueprint() {
-		this.input /* Random comment */ -> this.output;
+		this.input -> build _Sigmoid() /* Random comment */ -> this.output;
 	}
 }

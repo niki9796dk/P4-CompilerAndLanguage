@@ -31,6 +31,6 @@ block Transposezz {
     mychannel:in input;
 
     blueprint() {
-        this.input -> this.output;
+        this.input -> build _Sigmoid() -> this.output;
     }
 }

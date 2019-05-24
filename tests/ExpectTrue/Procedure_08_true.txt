@@ -8,6 +8,6 @@ block procedure_06 {
 	}
 	
 	procedure abc() {
-	    this.input -> this.output;
+	    this.input -> build _Sigmoid() -> this.output;
 	}
 }

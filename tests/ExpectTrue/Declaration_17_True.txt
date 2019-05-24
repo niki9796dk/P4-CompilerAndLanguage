@@ -4,6 +4,6 @@ block decla_17 {
 
 	blueprint() {
 		source abc;
-		this.input -> this.output;
+		this.input -> build _Sigmoid() -> this.output;
 	}
 }

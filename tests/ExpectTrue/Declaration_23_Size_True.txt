@@ -6,6 +6,6 @@ block decla_23 {
 	    size a = [2,3];
 	    size b = a;
 
-		this.input -> this.output;
+		this.input -> build _Sigmoid() -> this.output;
 	}
 }

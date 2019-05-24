@@ -33,6 +33,6 @@ block Abc {
     mychannel:out output;
 
     blueprint() {
-        this.input -> this.output;
+        this.input -> build _Sigmoid() -> this.output;
     }
 }

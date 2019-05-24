@@ -4,6 +4,7 @@ block Main {
 	
 	blueprint() {
 		this.input // Random comment
+		 -> build _Sigmoid()
 		 -> this.output;
 	}
 }

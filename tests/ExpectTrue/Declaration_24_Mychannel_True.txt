@@ -6,6 +6,6 @@ block decla_24 {
 	    mychannel:in a = this.input;
 	    mychannel:in b = a;
 
-		this.input -> this.output;
+		this.input -> build _Sigmoid() -> this.output;
 	}
 }

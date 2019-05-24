@@ -8,6 +8,6 @@ block procedure_01 {
 	}
 	
 	procedure abc(mychannel:in x) {
-        x -> this.output;
+        x -> build _Sigmoid() -> this.output;
 	}
 }

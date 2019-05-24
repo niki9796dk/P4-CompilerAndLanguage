@@ -8,11 +8,11 @@
  	}
  }
 
- block Test1 {
-     mychannel:in in;
-     mychannel:out out;
+block Test1 {
+    mychannel:in in;
+    mychannel:out out;
 
-     blueprint() {
-         this.in -> this.out;
-     }
- }
+    blueprint() {
+       this.in -> build _Sigmoid() -> this.out;
+    }
+}

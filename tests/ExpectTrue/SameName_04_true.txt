@@ -4,7 +4,7 @@ block main {
 	mychannel:out output;
 	
 	blueprint() {
-		input -> output;
+		input -> build _Sigmoid() -> output;
 		input();
 	}
 

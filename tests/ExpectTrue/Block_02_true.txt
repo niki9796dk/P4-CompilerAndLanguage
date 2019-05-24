@@ -24,6 +24,6 @@ block Singleton {
     mychannel:out out;
 
     blueprint(size s) {
-        this.in -> this.out;
+        this.in -> build _Sigmoid() -> this.out;
     }
 }

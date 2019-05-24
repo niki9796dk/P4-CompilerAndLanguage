@@ -6,7 +6,7 @@ block decla_22 {
 	    blueprint a = draw Test;
 	    blueprint b = a;
 
-		this.input -> this.output;
+		this.input -> build _Sigmoid() -> this.output;
 	}
 }
 
