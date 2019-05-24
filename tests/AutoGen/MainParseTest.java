@@ -132,7 +132,7 @@ class MainParseTest {
     }
 
     private boolean isValidMainBlock(File file) {
-        Class<Block> blockClass = null;
+        Class<Block> blockClass;
         try {
             blockClass = getBlockClassFromFile(file);
         } catch (ClassNotFoundException e) {
@@ -140,8 +140,16 @@ class MainParseTest {
         }
 
         try {
+            // Check that an constructor with no arguments exist - Otherwise an exception is thrown.
             blockClass.getConstructor();
-        } catch (NoSuchMethodException e) {
+
+            // Get a new instance of the class, from the default no argument constructor
+            Block block = blockClass.newInstance();
+
+            if (block.getInputChannels().size() != 1 || block.getOutputChannels().size() != 1) {
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
 

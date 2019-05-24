@@ -26,7 +26,7 @@ block B1 {
     }
 
     procedure level1_(blueprint ToBuild, channel:in next) {
-        source s = build Source([2,2]);
+        source s = build Source([1,1]);
         block b = build ToBuild(draw B3);
         s -> b -> next;
     }

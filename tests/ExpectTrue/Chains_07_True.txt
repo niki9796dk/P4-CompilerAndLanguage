@@ -4,7 +4,7 @@ block chain_07 {
 	mychannel:out output;
 	
 	blueprint() {	
-		(this.input, build Source([4,4])) -> operation m = build Multiplication() -> block b = build Test();
+		(this.input, build Source([1,1])) -> operation m = build Multiplication() -> block b = build Test();
 		
 		(m, b) -> build Multiplication() -> this.output;
 	}
