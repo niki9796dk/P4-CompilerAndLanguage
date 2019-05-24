@@ -38,9 +38,7 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     public void startRecursiveWalk() {
-        System.out.println("#############################\n");
         for (BlockNode mainBlock : this.symbolTable.getMainBlocks()) {
-            System.out.println("Walking: " + mainBlock.toString().stripLeading());
 
             this.setCurrentBlockScope(mainBlock.getId());
             this.internalVisitor.setCurrentBlockScope(mainBlock.getId());
@@ -54,12 +52,6 @@ public class RecursiveVisitor extends ScopeTracker {
      */
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
-        for (int i = 0; i < printLevel; i++) {
-            System.out.print("\t");
-        }
-
-        System.out.println(abstractNode);
-
         super.pre(printLevel, abstractNode);
         this.internalVisitor.pre(printLevel, abstractNode);
 
@@ -111,8 +103,6 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     private void handleRecursiveCall(NamedNode callNode) {
-        System.out.print("\tHandle[" + counter + "]: " + callNode + " - " + callNode.findFirstChildOfClass(SelectorNode.class));
-
         // Find procedure call ID
         String calleeId = this.getCalleeId(callNode);
 
@@ -170,15 +160,10 @@ public class RecursiveVisitor extends ScopeTracker {
             }
         }
 
-        // Recursively call the procedure with the new param bindings.
-        System.out.println(" - Jump to: " + calleeSubScope.getNode() + " - From: " + this.currentBlockScope + ", " + this.currentSubScope);
-
         this.jumpToCallee(callNode, calleeSubScope, calleeId);
     }
 
     private void jumpToCallee(NamedNode node, Scope calleeSubScope, String calleeId) {
-        System.out.println(this.symbolTable);
-
         switch (node.getNodeEnum()) {
             case PROCEDURE_CALL:
                 this.jumpToProcedure(calleeSubScope, calleeId);
