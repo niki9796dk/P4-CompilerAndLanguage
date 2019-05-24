@@ -428,24 +428,30 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 if (node.getChild() instanceof SelectorNode) {
                     return new DotSelector(nodeId, ((NamedIdNode) node.getChild()).getId());
                 } else {
-                    NodeEnum nodeSuperType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+                    boolean isLocalVariable = this.getCurrentSubScope().getVariable(nodeId) != null;
 
-                    if (nodeSuperType == NodeEnum.CHANNEL_IN_MY || nodeSuperType == NodeEnum.CHANNEL_OUT_MY) {
-                        return new DotSelector("this", nodeId);
-                    } else {
+                    if (isLocalVariable) {
                         return new Selector(nodeId);
+                    } else {
+                        NodeEnum nodeSuperType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
+
+                        if (nodeSuperType == NodeEnum.CHANNEL_IN_MY || nodeSuperType == NodeEnum.CHANNEL_OUT_MY) {
+                            return new DotSelector("this", nodeId);
+                        } else {
+                            return new Selector(nodeId);
+                        }
                     }
                 }
 
             case PROCEDURE_CALL:
                 ParamsNode procedureParams = node.findFirstChildOfClass(ParamsNode.class);
-                SelectorNode procSelector = node.findFirstChildOfClass(SelectorNode.class);
+                String targetId = ((ProcedureCallNode) node).getTargetId();
 
                 if (procedureParams != null) {
-                    return new ProcedureCall(this.getCurrentSubScope(), procSelector.getId(), (CallParams) this.getStatementFromNode(procedureParams));
+                    return new ProcedureCall(this.getCurrentSubScope(), targetId, (CallParams) this.getStatementFromNode(procedureParams));
 
                 } else {
-                    return new ProcedureCall(this.getCurrentSubScope(), procSelector.getId());
+                    return new ProcedureCall(this.getCurrentSubScope(), targetId);
                 }
 
             case PARAMS:
