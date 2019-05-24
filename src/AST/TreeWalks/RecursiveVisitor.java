@@ -7,11 +7,12 @@ import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import ScopeChecker.Exceptions.IllegalProcedureCallScopeException;
+import CompilerExceptions.UnexpectedNodeException;
+import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
 import SymbolTableImplementation.*;
-import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
-import TypeChecker.Exceptions.ShouldNotHappenException;
+import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * Abstract Visitor class - ScopeTracker.
@@ -37,9 +38,7 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     public void startRecursiveWalk() {
-        System.out.println("#############################\n");
         for (BlockNode mainBlock : this.symbolTable.getMainBlocks()) {
-            System.out.println("Walking: " + mainBlock.toString().stripLeading());
 
             this.setCurrentBlockScope(mainBlock.getId());
             this.internalVisitor.setCurrentBlockScope(mainBlock.getId());
@@ -53,12 +52,6 @@ public class RecursiveVisitor extends ScopeTracker {
      */
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
-        for (int i = 0; i < printLevel; i++) {
-            System.out.print("\t");
-        }
-
-        System.out.println(abstractNode);
-
         super.pre(printLevel, abstractNode);
         this.internalVisitor.pre(printLevel, abstractNode);
 
@@ -110,8 +103,6 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     private void handleRecursiveCall(NamedNode callNode) {
-        System.out.print("\tHandle[" + counter + "]: " + callNode + " - " + callNode.findFirstChildOfClass(SelectorNode.class));
-
         // Find procedure call ID
         String calleeId = this.getCalleeId(callNode);
 
@@ -133,7 +124,7 @@ public class RecursiveVisitor extends ScopeTracker {
         try {
             this.assertNotNull(calleeSubScope);
         } catch (NullPointerException e) {
-            throw new IllegalProcedureCallScopeException(e);
+            throw new IllegalProcedureCallScopeException(callNode, e);
         }
 
         // Verify that if params is needed, that they are there!
@@ -144,7 +135,7 @@ public class RecursiveVisitor extends ScopeTracker {
         boolean needsParams = calleeParams != null;
 
         if (hasParams != needsParams) {
-            throw new ParamsSizeInconsistencyException("Inconsistency in the given and expected parameter count: " + callNode);
+            throw new ParamsSizeInconsistencyException(callNode, "Inconsistency in the given and expected parameter count: " + callNode);
         }
 
         // Verify the parameter count
@@ -153,7 +144,7 @@ public class RecursiveVisitor extends ScopeTracker {
             int calleeParamsCount = calleeParams.countChildren();
 
             if (callerParamsCount != calleeParamsCount) {
-                throw new ParamsSizeInconsistencyException("Inconsistency in the given and expected parameter count: " + callNode);
+                throw new ParamsSizeInconsistencyException(callNode, "Inconsistency in the given and expected parameter count: " + callNode);
             }
 
             // Loop all params and link them.
@@ -169,15 +160,10 @@ public class RecursiveVisitor extends ScopeTracker {
             }
         }
 
-        // Recursively call the procedure with the new param bindings.
-        System.out.println(" - Jump to: " + calleeSubScope.getNode() + " - From: " + this.currentBlockScope + ", " + this.currentSubScope);
-
         this.jumpToCallee(callNode, calleeSubScope, calleeId);
     }
 
     private void jumpToCallee(NamedNode node, Scope calleeSubScope, String calleeId) {
-        System.out.println(this.symbolTable);
-
         switch (node.getNodeEnum()) {
             case PROCEDURE_CALL:
                 this.jumpToProcedure(calleeSubScope, calleeId);
@@ -308,28 +294,29 @@ public class RecursiveVisitor extends ScopeTracker {
 
         } else if (hasSelectorChild) {
             // Problematic since we need to link to another blocks channels, without returning the wrong channel type.
-            SelectorNode newSelector = new SelectorNode(node.getId());
+            SelectorNode newSelector = new SelectorNode(node.getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
             newSelector.setNumber(node.getNumber());
 
             String elementId = this.typeSystem.getSubTypeOfNode(newSelector, this.currentBlockScope, this.currentSubScope);
             String childId = ((NamedIdNode) node.getChild()).getId();
 
             if (typeSystem.isPredefinedSource(elementId)) {
-                if (typeSystem.getOperationOrSourceOutChannelIds(elementId).contains(childId)) {
-                    return new MyOutChannelNode(childId);
+
+                if (childId.equals("out")) {
+                    return new MyOutChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
                 } else {
-                    throw new ShouldNotHappenException("Sources only have an out channel");
+                    throw new ShouldNotHappenException(node, "Sources only have an out channel, named \"out\"");
                 }
 
             } else if (typeSystem.isPredefinedOperation(elementId)){
                 if (typeSystem.getOperationOrSourceOutChannelIds(elementId).contains(childId)) {
-                    return new MyOutChannelNode(childId);
+                    return new MyOutChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
                 } else if (typeSystem.getOperationInChannelIds(elementId).contains(childId)){
-                    return new MyInChannelNode(childId);
+                    return new MyInChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
                 } else {
-                    throw new ShouldNotHappenException("The Operation doesn't have a gate like that.");
+                    throw new ShouldNotHappenException(node, "The Operation doesn't have a gate like that.");
                 }
 
             } else {

@@ -9,6 +9,7 @@ import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import SymbolTableImplementation.BlockScope;
 import TypeChecker.TypeSystem;
+import java_cup.runtime.ComplexSymbolFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class ProcCall {
 
                 } else if (toBuild.getNodeEnum().equals(NodeEnum.SELECTOR) && toBuild.getChild() != null){
                     // Channel case
-                    SelectorNode select = new SelectorNode(toBuild.getId());
+                    SelectorNode select = new SelectorNode(toBuild.getId(), new ComplexSymbolFactory.Location(proc.getLineNumber(), proc.getColumn()));
                     select.setNumber(toBuild.getNumber());
 
                     toBuild = (NamedIdNode) typeSystem.followNodeToBuild(select, currentBlockId, currentSubScope);

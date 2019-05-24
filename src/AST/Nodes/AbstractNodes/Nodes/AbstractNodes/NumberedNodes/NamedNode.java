@@ -2,6 +2,7 @@ package AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * A node which can be labelled channel a String containing its name.
@@ -17,8 +18,8 @@ public abstract class NamedNode extends NumberedNode {
      * @param name The name of the node.
      * @param nodeEnum An enum appropriate for a non-abstract class extending this class.
      */
-    public NamedNode(String name, NodeEnum nodeEnum) {
-        super(nodeEnum);
+    public NamedNode(String name, NodeEnum nodeEnum, ComplexSymbolFactory.Location location) {
+        super(nodeEnum, location);
         this.name = name;
     }
 

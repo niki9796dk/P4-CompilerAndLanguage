@@ -48,12 +48,14 @@ public class CallParams implements Statement {
                     boolean isBlueprintVar = statement instanceof Selector && (scope.getVariable(statement.toString()).getSuperType() == NodeEnum.BLUEPRINT_TYPE);
 
                     builder.append("(")
+                            .append("(Class) ")
+                            .append("(")
                             .append(statement)
                             .append(")");
 
-                    if (!statement.toString().endsWith(".class") && !isBlueprintVar) {
-                        builder.append(".getClass()");
-                    }
+                    builder.append(".getClass()");
+
+                    builder.append(")");
 
                 } else {
                     builder.append(statement);

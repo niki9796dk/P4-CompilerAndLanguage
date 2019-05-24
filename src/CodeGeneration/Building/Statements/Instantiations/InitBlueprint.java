@@ -7,8 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InitBlueprint implements Statement {
+
+    // Fields:
     private String buildId;
 
+    // Constructor:
     public InitBlueprint(String buildId) {
         this.buildId = buildId;
     }

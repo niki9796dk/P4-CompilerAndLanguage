@@ -1,5 +1,7 @@
 package TypeChecker.Exceptions;
 
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
+import CompilerExceptions.TypeExceptions.IncorrectAssignmentTypesException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,14 +10,14 @@ class IncorrectAssignmentTypesExceptionTest {
     @Test
     void noMessage() {
         assertThrows(IncorrectAssignmentTypesException.class, () -> {
-            throw new IncorrectAssignmentTypesException();
+            throw new IncorrectAssignmentTypesException(new DummyNode());
         });
     }
 
     @Test
     void message() {
         assertThrows(IncorrectAssignmentTypesException.class, () -> {
-            throw new IncorrectAssignmentTypesException("message");
+            throw new IncorrectAssignmentTypesException(new DummyNode(), "message");
         });
     }
 
@@ -23,7 +25,7 @@ class IncorrectAssignmentTypesExceptionTest {
     void throwable() {
         Throwable toThrow = new RuntimeException();
         assertThrows(IncorrectAssignmentTypesException.class, () -> {
-            throw new IncorrectAssignmentTypesException(toThrow);
+            throw new IncorrectAssignmentTypesException(new DummyNode(), toThrow);
         });
     }
 }

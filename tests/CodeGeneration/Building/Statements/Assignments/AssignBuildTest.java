@@ -9,6 +9,7 @@ import CodeGeneration.Building.Statements.Selectors.Selector;
 import CodeGeneration.Building.Statements.VariableDeclarations.Enums.JavaTypes;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.VariableEntry;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +26,8 @@ class AssignBuildTest {
 
     @BeforeEach
     void beforeEach() {
-        Scope scope = new Scope(DEFAULT_ID, new BlueprintNode());
-        scope.setVariable(new BlockNode(DEFAULT_ID));
+        Scope scope = new Scope(DEFAULT_ID, new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1)));
+        scope.setVariable(new BlockNode(DEFAULT_ID, new ComplexSymbolFactory.Location(-1, -1)));
 
         Statement statement = new Selector(DEFAULT_ID);
         this.assignBuild01 = new AssignBuild(DEFAULT_ID, statement);

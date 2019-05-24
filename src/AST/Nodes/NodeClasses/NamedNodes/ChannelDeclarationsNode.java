@@ -2,6 +2,7 @@ package AST.Nodes.NodeClasses.NamedNodes;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * The node containing the channel decelerations.
@@ -9,7 +10,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
  * @see AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode
  */
 public class ChannelDeclarationsNode extends NamedNode {
-    public ChannelDeclarationsNode() {
-        super("ChannelDeclarations", NodeEnum.CHANNEL_DECLARATIONS);
+    public ChannelDeclarationsNode(ComplexSymbolFactory.Location location) {
+        super("ChannelDeclarations", NodeEnum.CHANNEL_DECLARATIONS, location);
     }
 }

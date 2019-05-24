@@ -3,20 +3,18 @@ package AST.TreeWalks;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
-import SymbolTableImplementation.SymbolTableInterface;
-import TypeChecker.Exceptions.ChannelPlacementTypeException;
-import TypeChecker.Exceptions.ParamsSizeInconsistencyException;
-import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
-import TypeChecker.Exceptions.TypeInconsistencyException;
+import CompilerExceptions.TypeExceptions.ChannelPlacementTypeException;
+import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;
+import CompilerExceptions.TypeExceptions.ParamsTypeInconsistencyException;
+import CompilerExceptions.TypeExceptions.TypeInconsistencyException;
 
 public class TypeCheckerVisitor extends ScopeTracker {
 
@@ -159,7 +157,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
             if (this.typeSystem.isPredefinedOperation(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
                 ParamsNode opParams = callerNode.findFirstChildOfClass(ParamsNode.class);
                 if (opParams != null){
-                    throw new ParamsSizeInconsistencyException("Operations can't have parameters. This is not the case in: " + callerNode);
+                    throw new ParamsSizeInconsistencyException(callerNode, "Operations can't have parameters. This is not the case in: " + callerNode);
                 }
 
                 // Source case
@@ -167,13 +165,13 @@ public class TypeCheckerVisitor extends ScopeTracker {
                 ParamsNode sourceParams = callerNode.findFirstChildOfClass(ParamsNode.class);
 
                 if (sourceParams == null){
-                    throw new ParamsSizeInconsistencyException("Sources need exactly one [parameter] of type Size. This is not the case in: " + callerNode);
+                    throw new ParamsSizeInconsistencyException(callerNode, "Sources need exactly one [parameter] of type Size. This is not the case in: " + callerNode);
 
                 } else if (this.typeSystem.getSuperTypeOfNode(sourceParams.getChild(), currentBlockScope, currentSubScope) != NodeEnum.SIZE_TYPE){
-                    throw new ParamsSizeInconsistencyException("Sources need exactly one parameter [of type Size]. This is not the case in: " + callerNode);
+                    throw new ParamsSizeInconsistencyException(callerNode, "Sources need exactly one parameter [of type Size]. This is not the case in: " + callerNode);
 
                 } else if (sourceParams.getChild().getSib() != null){
-                    throw new ParamsSizeInconsistencyException("Sources need [exactly one] parameter of type Size. This is not the case in: " + callerNode);
+                    throw new ParamsSizeInconsistencyException(callerNode, "Sources need [exactly one] parameter of type Size. This is not the case in: " + callerNode);
 
                 }
             }
@@ -270,7 +268,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
                 try {
                     this.typeSystem.assertEqualSuperTypes(actual, formal, currentBlockScope, currentSubScope, "CodeScope call type inconsistency");
                 } catch (TypeInconsistencyException e) {
-                    throw new ParamsTypeInconsistencyException(e);
+                    throw new ParamsTypeInconsistencyException(node, e);
                 }
 
                 // Update node pointers to the next sib.
@@ -280,7 +278,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
         } else if (callerOrCalleeIsMissingParams) {
             // Throw an exception, since one of the params is undefined.
-            throw new ParamsSizeInconsistencyException("Only one param was defined " + node + ": Formal: " + formalParams + " vs. " + "Actual: " + actualParams);
+            throw new ParamsSizeInconsistencyException(node, "Only one param was defined " + node + ": Formal: " + formalParams + " vs. " + "Actual: " + actualParams);
 
         }
         // else {
@@ -332,7 +330,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
                 return; // The node was of the correct type, so return an do not throw any exceptions
 
             default:
-                throw new ChannelPlacementTypeException("Node: " + node.toString() + " - Was not of the correct type for it's chain placement (" + nodeType + ")");
+                throw new ChannelPlacementTypeException(node, "Node: " + node.toString() + " - Was not of the correct type for it's chain placement (" + nodeType + ")");
         }
     }
 
@@ -364,7 +362,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
      */
     private void assertEqualParameterCount(ParamsNode actualParams, ParamsNode formalParams) {
         if (actualParams.countChildren() != formalParams.countChildren()) {
-            throw new ParamsSizeInconsistencyException("Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]" );
+            throw new ParamsSizeInconsistencyException(actualParams, "Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]" );
         }
     }
 
@@ -389,7 +387,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
      */
     private void assertNonNullType(AbstractNode node, NodeEnum type) {
         if (type == null) {
-            throw new TypeInconsistencyException("Node: " + node.toString() + " - Is a typeless node, and therefore cannot be placed within a chain.");
+            throw new TypeInconsistencyException(node, "Node: " + node.toString() + " - Is a typeless node, and therefore cannot be placed within a chain.");
         }
     }
 }

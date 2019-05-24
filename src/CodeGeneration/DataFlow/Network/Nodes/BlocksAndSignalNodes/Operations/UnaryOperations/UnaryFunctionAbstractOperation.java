@@ -1,9 +1,10 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations;
 
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import LinearAlgebra.Types.Matrices.Matrix;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
-import TypeChecker.Exceptions.ShouldNotHappenException;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 
 import java.util.HashMap;
 
@@ -34,7 +35,7 @@ public abstract class UnaryFunctionAbstractOperation extends UnaryAbstractOperat
                 return this.getFunction().activationPrime(out);
 
             default:
-                throw new ShouldNotHappenException("No such matrix pref?");
+                throw new ShouldNotHappenException(new DummyNode(), "No such matrix pref?");
         }
     }
 

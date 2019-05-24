@@ -12,6 +12,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import Enums.AnsiColor;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,7 @@ class ScopeTest {
 
     @BeforeEach
     void beforeEach() {
-        this.n = new GroupNode();
+        this.n = new GroupNode(new ComplexSymbolFactory.Location(-1, -1));
         this.s = new Scope("id", this.n);
     }
 
@@ -36,14 +37,14 @@ class ScopeTest {
 
     @Test
     void setVariable01() {
-        s.setVariable(new BlockNode("blocknode_id"));
+        s.setVariable(new BlockNode("blocknode_id", new ComplexSymbolFactory.Location(-1, -1)));
     }
 
     @Test
     void setVariable02() {
-        ProcedureNode procedureNode = new ProcedureNode("proc");
-        ParamsNode paramsNode = new ParamsNode();
-        SizeNode sizeNode = new SizeNode(1, 2);
+        ProcedureNode procedureNode = new ProcedureNode("proc", new ComplexSymbolFactory.Location(-1, -1));
+        ParamsNode paramsNode = new ParamsNode(new ComplexSymbolFactory.Location(-1, -1));
+        SizeNode sizeNode = new SizeNode(1, 2, new ComplexSymbolFactory.Location(-1, -1));
         procedureNode.adoptChildren(paramsNode);
         paramsNode.adoptChildren(sizeNode);
         this.s.setVariable(sizeNode);
@@ -52,27 +53,27 @@ class ScopeTest {
 
     @Test
     void getVariable01() {
-        BlockNode node = new BlockNode("blocknode_id");
+        BlockNode node = new BlockNode("blocknode_id", new ComplexSymbolFactory.Location(-1, -1));
         this.s.setVariable(node);
         assertSame(this.s.getVariable("blocknode_id").getNode(), node);
     }
 
     @Test
     void getVariable02() {
-        Node node = new BlockNode("blocknode_id");
+        Node node = new BlockNode("blocknode_id", new ComplexSymbolFactory.Location(-1, -1));
         this.s.setVariable((NamedIdNode) node);
         assertSame(this.s.getVariable(node).getNode(), node);
     }
 
     @Test
     void getVariable03() {
-        Node node = new ChainNode();
+        Node node = new ChainNode(new ComplexSymbolFactory.Location(-1, -1));
         assertThrows(IllegalArgumentException.class, () -> this.s.getVariable(node));
     }
 
     @Test
     void getVariable04() {
-        NamedIdNode node = new BlockTypeNode("id");
+        NamedIdNode node = new BlockTypeNode("id", new ComplexSymbolFactory.Location(-1, -1));
         this.s.setVariable(node);
         assertSame(this.s.getVariable(node).getNode(), node);
 

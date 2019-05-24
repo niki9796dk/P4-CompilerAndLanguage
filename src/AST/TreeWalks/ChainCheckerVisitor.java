@@ -5,13 +5,11 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
-import SemanticAnalysis.Exceptions.ChainConnectionMismatchException;
-import SemanticAnalysis.Exceptions.GroupConnectionMismatchException;
+import CompilerExceptions.UnexpectedNodeException;
+import CompilerExceptions.SemanticExceptions.ChainConnectionMismatchException;
+import CompilerExceptions.SemanticExceptions.GroupConnectionMismatchException;
 import SymbolTableImplementation.*;
-import TypeChecker.Exceptions.ShouldNotHappenException;
-
-import java.util.*;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 
 /**
  * The visitor used for the semantic analysis phase of the compiler (Excluding type- and scope checking).
@@ -158,7 +156,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
             int rightIn = this.countInChannels(rightNode);
 
             if (leftOut != 1 || rightIn != 1) {
-                throw new ChainConnectionMismatchException("A chain was used on an element with more than 1 in/out channel: " + leftNode + "[" + leftOut + "] -> " + rightNode + "[" + rightIn + "]");
+                throw new ChainConnectionMismatchException(leftNode, "A chain was used on an element with more than 1 in/out channel: " + leftNode + "[" + leftOut + "] -> " + rightNode + "[" + rightIn + "]");
             }
         }
     }
@@ -178,7 +176,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
         // Compare the two values, and throw an exception if something is wrong.
         if (groupChildrenCount != rightNodeChildrenCount) {
-            throw new GroupConnectionMismatchException("Group connection size mismatch: " + groupNode + ":" + groupChildrenCount + " vs. " + rightNode + ":" + rightNodeChildrenCount);
+            throw new GroupConnectionMismatchException(groupNode, "Group connection size mismatch: " + groupNode + ":" + groupChildrenCount + " vs. " + rightNode + ":" + rightNodeChildrenCount);
         }
     }
 
@@ -196,7 +194,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
                 break;
 
             default:
-                throw new ShouldNotHappenException("Whatever the group connects to, is NOT ALLOWED: " + rightNode);
+                throw new ShouldNotHappenException(rightNode, "Whatever the group connects to, is NOT ALLOWED: " + rightNode);
         }
     }
 
@@ -310,7 +308,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
                 return UNARY_INPUT;
 
             default:
-                throw new ShouldNotHappenException("We were checking a non exsistent operation for it's channels: " + rightNode);
+                throw new ShouldNotHappenException(rightNode, "We were checking a non exsistent operation for it's channels: " + rightNode);
         }
     }
 
@@ -322,8 +320,5 @@ public class ChainCheckerVisitor extends ScopeTracker {
     private int countOutChannelsOfOperation(AbstractNode rightNode) {
         AbstractNode followNode = typeSystem.followNode(rightNode, currentBlockScope, currentSubScope);
         return typeSystem.getOperationOrSourceOutChannelIds(followNode).size();
-    }
-    public Set<BlockNode> getBuildNodes() {
-        return null;
     }
 }

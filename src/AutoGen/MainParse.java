@@ -4,6 +4,8 @@ import java.io.*;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.TreeWalks.*;
+import CompilerExceptions.CompilerException;
+import Enums.AnsiColor;
 import SymbolTableImplementation.SymbolTable;
 import TypeChecker.TypeSystem;
 import java_cup.runtime.*;
@@ -12,20 +14,34 @@ import java_cup.runtime.ScannerBuffer;
 
 
 public class MainParse {
-    public static boolean isTest = false;
 
     public static void main(String args[]) throws Exception {
 
+        Thread.currentThread().setUncaughtExceptionHandler((t, e) -> {
+            System.out.println("\n\n");
+            System.out.println(AnsiColor.RED);
+            System.out.println("###########################\n");
+
+            if (e instanceof CompilerException) {
+                AbstractNode errorNode = ((CompilerException) e).getErrorNode();
+
+                System.out.println("Error happend at " + errorNode.getLineNumber() + ":" + errorNode.getColumn() + ".\n Cause - " + e.getMessage());
+            } else {
+                System.out.println("Unknown error occurred:\n " + e.getMessage());
+            }
+
+            System.out.println("\n###########################");
+            System.out.println(AnsiColor.RESET);
+
+            System.exit(0);
+        });
+
         if (args.length != 1) {
-            //parseFile("data/input");
             parseFile("data" + File.separator + "input");
         } else {
 
             parseFile(args[0]);
         }
-
-        //testTree();
-
     }
 
     public static boolean parseFile(String path) throws Exception {

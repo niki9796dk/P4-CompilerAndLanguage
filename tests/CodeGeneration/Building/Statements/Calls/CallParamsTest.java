@@ -6,6 +6,7 @@ import CodeGeneration.Building.Statement;
 import CodeGeneration.Building.StatementCollections.ListStatements;
 import CodeGeneration.Building.Statements.Selectors.Selector;
 import SymbolTableImplementation.Scope;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,8 +24,8 @@ class CallParamsTest {
 
     @BeforeEach
     void beforeEach() {
-        Scope scope = new Scope(DEFAULT_ID, new BlueprintNode());
-        scope.setVariable(new BlockNode(DEFAULT_ID));
+        Scope scope = new Scope(DEFAULT_ID, new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1)));
+        scope.setVariable(new BlockNode(DEFAULT_ID, new ComplexSymbolFactory.Location(-1, -1)));
         this.callParams01 = new CallParams(scope, new Selector(DEFAULT_ID));
         CallParams callParams02 = new CallParams(scope, new ArrayList<>());
     }

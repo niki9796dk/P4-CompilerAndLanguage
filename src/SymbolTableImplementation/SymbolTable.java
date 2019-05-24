@@ -7,7 +7,7 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Bin
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.NullaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnaryAbstractOperation;
 import Enums.AnsiColor;
-import ScopeChecker.Exceptions.NoSuchVariableDeclaredException;
+import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -144,7 +144,7 @@ public class SymbolTable implements SymbolTableInterface {
                         .getLatest().getVariable(leftSideId);    // Get latest subscope and the specific variable
 
         if (variableEntry == null){
-            throw new NoSuchVariableDeclaredException("The right side of this assignment was not declared: " + assignNode);
+            throw new NoSuchVariableDeclaredException(assignNode, "The right side of this assignment was not declared: " + assignNode);
         }
 
         switch (rightSide.getNodeEnum()) {

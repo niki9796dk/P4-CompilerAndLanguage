@@ -3,14 +3,13 @@ package AST.TreeWalks;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Node;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DrawNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
-import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CompilerExceptions.UnexpectedNodeException;
 import CodeGeneration.Building.BlockClass;
 import CodeGeneration.Building.CodeScope;
 import CodeGeneration.Building.CodeScopes.SimpleCodeScope;
@@ -34,10 +33,10 @@ import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDecl
 import CodeGeneration.Building.Statements.Selectors.DotSelector;
 import CodeGeneration.Building.Statements.Selectors.Selector;
 import CodeGeneration.Building.Statements.VariableDeclarations.*;
-import DataStructures.Pair;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
+import java_cup.runtime.ComplexSymbolFactory;
 
 import java.io.File;
 import java.io.Writer;
@@ -317,7 +316,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
 
     private AbstractNode transformIfAssign(AbstractNode node) {
         if (node instanceof AssignNode) {
-            SelectorNode selectorNode = new SelectorNode(((NamedIdNode) node.getChild()).getId());
+            SelectorNode selectorNode = new SelectorNode(((NamedIdNode) node.getChild()).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
             selectorNode.setNumber(((NamedNode) node).getNumber());
 
             return selectorNode;
@@ -476,13 +475,13 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case CHANNEL_OUT_TYPE:
                 return new ChannelDeclaration(nodeId);
 
-            case GROUP:
-            case CHAIN:
             case ASSIGN:
-                break;
+                return new Selector(((NamedIdNode) node.getChild()).getId());
 
             // No action enums
             case ROOT:
+            case GROUP:
+            case CHAIN:
 
             default:
                 throw new UnexpectedNodeException(node);

@@ -10,9 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InitBuildBlueprint implements Statement {
+
+    // Fields:
     private String buildId;
     private CallParams paramStatement;
 
+    // Constructors:
     public InitBuildBlueprint(String buildId) {
         this.buildId = buildId;
     }

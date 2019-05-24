@@ -1,6 +1,7 @@
 package AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes;
 
 import AST.Enums.NodeEnum;
+import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ class OutChannelTypeNodeTest {
 
     @BeforeEach
     void beforeEach() {
-        outChannelTypeNode = new OutChannelTypeNode("id");
+        outChannelTypeNode = new OutChannelTypeNode("id", new ComplexSymbolFactory.Location(-1, -1));
     }
 
     @Test

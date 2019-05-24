@@ -1,0 +1,14 @@
+// Test of legal char sequences
+block main {
+	mychannel:in input;
+	mychannel:out output;
+	
+	blueprint() {
+		input -> output;
+		main();
+	}
+
+	procedure main() {
+	    // Do nothing
+	}
+}

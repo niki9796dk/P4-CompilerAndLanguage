@@ -1,6 +1,7 @@
 package AST.TreeWalks.Exceptions;
 
-import ScopeChecker.Exceptions.ScopeBoundsViolationException;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
+import CompilerExceptions.ScopeExceptions.ScopeBoundsViolationException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,21 +11,21 @@ class ScopeBoundsViolationExceptionTest {
     @Test
     void noMessage() {
         assertThrows(ScopeBoundsViolationException.class, () -> {
-            throw new ScopeBoundsViolationException();
+            throw new ScopeBoundsViolationException(new DummyNode());
         });
     }
 
     @Test
     void message() {
         assertThrows(ScopeBoundsViolationException.class, () -> {
-            throw new ScopeBoundsViolationException("message");
+            throw new ScopeBoundsViolationException(new DummyNode(), "message");
         });
     }
 
     @Test
     void throwable() {
         assertThrows(RuntimeException.class, () -> {
-            throw new ScopeBoundsViolationException(new RuntimeException());
+            throw new ScopeBoundsViolationException(new DummyNode(), new RuntimeException());
         });
     }
 }

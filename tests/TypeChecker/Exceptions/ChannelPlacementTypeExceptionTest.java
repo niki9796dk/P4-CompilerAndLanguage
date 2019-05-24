@@ -1,5 +1,7 @@
 package TypeChecker.Exceptions;
 
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
+import CompilerExceptions.TypeExceptions.ChannelPlacementTypeException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,14 +10,14 @@ class ChannelPlacementTypeExceptionTest {
     @Test
     void noMessage() {
         assertThrows(ChannelPlacementTypeException.class, () -> {
-            throw new ChannelPlacementTypeException();
+            throw new ChannelPlacementTypeException(new DummyNode());
         });
     }
 
     @Test
     void message() {
         assertThrows(ChannelPlacementTypeException.class, () -> {
-            throw new ChannelPlacementTypeException("message");
+            throw new ChannelPlacementTypeException(new DummyNode(), "message");
         });
     }
 
@@ -23,7 +25,7 @@ class ChannelPlacementTypeExceptionTest {
     void throwable() {
         Throwable toThrow = new RuntimeException();
         assertThrows(ChannelPlacementTypeException.class, () -> {
-            throw new ChannelPlacementTypeException(toThrow);
+            throw new ChannelPlacementTypeException(new DummyNode(), toThrow);
         });
     }
 }

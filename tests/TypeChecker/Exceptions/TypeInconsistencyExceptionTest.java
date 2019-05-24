@@ -1,6 +1,7 @@
 package TypeChecker.Exceptions;
 
-import SemanticAnalysis.Exceptions.BuildRecursionException;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
+import CompilerExceptions.TypeExceptions.TypeInconsistencyException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,14 +10,14 @@ class TypeInconsistencyExceptionTest {
     @Test
     void noMessage() {
         assertThrows(TypeInconsistencyException.class, () -> {
-            throw new TypeInconsistencyException();
+            throw new TypeInconsistencyException(new DummyNode());
         });
     }
 
     @Test
     void message() {
         assertThrows(TypeInconsistencyException.class, () -> {
-            throw new TypeInconsistencyException("message");
+            throw new TypeInconsistencyException(new DummyNode(), "message");
         });
     }
 
@@ -24,7 +25,7 @@ class TypeInconsistencyExceptionTest {
     void throwable() {
         Throwable toThrow = new RuntimeException();
         assertThrows(TypeInconsistencyException.class, () -> {
-            throw new TypeInconsistencyException(toThrow);
+            throw new TypeInconsistencyException(new DummyNode(), toThrow);
         });
     }
 }
