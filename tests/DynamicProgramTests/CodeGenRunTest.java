@@ -1,5 +1,6 @@
-package AutoGen;
+package DynamicProgramTests;
 
+import AutoGen.MainParse;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import LinearAlgebra.Statics.Matrices;
 import org.junit.jupiter.api.DynamicTest;
@@ -16,10 +17,14 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CodeGenTest {
+public class CodeGenRunTest {
     // Test all positive files
     @TestFactory
-    Stream<DynamicTest> codeGen_TRUE() {
+    Stream<DynamicTest> codeGenRun_TRUE()  {
+
+        // Compile all trueFiles to test that they can be run
+        // TODO: Fix error where class is not found on initial run of test
+        compileTrueFiles();
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
@@ -80,7 +85,7 @@ public class CodeGenTest {
         try {
             blockClass = getBlockClassFromFile(file);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("No class found with in the path " + file.getPath() + "\nShould not happen, implementation is wrong");
+            throw new RuntimeException("No class found within the path " + file.getPath() + "\nShould not happen");
         }
 
         try {
@@ -102,9 +107,24 @@ public class CodeGenTest {
 
     @SuppressWarnings("unchecked")
     private Class<Block> getBlockClassFromFile(File file) throws ClassNotFoundException {
+        System.out.println(file.getName() + "  "  + file.getPath() + "  " + file.exists() + "  ");
+
         return  (Class<Block>) Class.forName(file.getPath()
                 .replace(File.separatorChar, '.')
                 .replaceAll("src.", "")
                 .replaceAll(".class", ""));
+    }
+
+    private void compileTrueFiles() {
+        File trueFolder = new File("tests" + File.separator + "ExpectTrue" + File.separator);
+        List<File> trueFiles = Arrays.asList(Objects.requireNonNull(trueFolder.listFiles()));
+
+        trueFiles.forEach(file -> {
+            try {
+                MainParse.compileProgram(file.getPath());
+            } catch (Exception e) {
+                System.out.println("The true test: [" + file.getName() + "] has failed");
+            }
+        });
     }
 }

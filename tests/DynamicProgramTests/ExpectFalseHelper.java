@@ -1,29 +1,10 @@
-package AutoGen;
+package DynamicProgramTests;
 
-import CodeGeneration.DataFlow.Network.Nodes.Block;
-import CompilerExceptions.ScopeExceptions.*;
-import CodeGeneration.DataFlow.Network.Nodes.Block;
-import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
-import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
-import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
-import CompilerExceptions.ScopeExceptions.VariableAlreadyDeclaredException;
-import CompilerExceptions.SemanticExceptions.*;
-import CompilerExceptions.TypeExceptions.*;
+import AutoGen.MainParse;
 import DataStructures.Pair;
-import LinearAlgebra.Statics.Matrices;
 import org.junit.jupiter.api.*;
 
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +14,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MainParseTest {
+class ExpectFalseHelper {
     static Stream<DynamicTest> multipleExpectFalse(String mainPath, Pair<String, Class>[] pathExceptionPair) {
         if ("".equals(mainPath)) {
             throw new IllegalArgumentException("No main path given");
@@ -70,7 +51,7 @@ class MainParseTest {
 
         return falseFiles.stream()
                 .map(file -> DynamicTest.dynamicTest("Testing: '" + file.getName() + "'",
-                        () -> assertThrows(expectedExceptionClass, () -> MainParse.parseFile(file.getPath()))));
+                        () -> assertThrows(expectedExceptionClass, () -> MainParse.compileProgram(file.getPath()))));
     }
 }
 

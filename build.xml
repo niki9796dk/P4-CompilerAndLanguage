@@ -46,7 +46,11 @@
 
     </target>
 
-    <target name="Clean Codegen">
+    <target name="Clean Codegen classes">
+        <delete dir="src/AutoGen/CodeGen" includes="**/*.class" excludes="ANN.java, Layer.java" includeemptydirs="true"/>
+    </target>
+
+    <target name="Clean Codegen all">
         <delete dir="src/AutoGen/CodeGen" excludes="ANN.java, Layer.java" includeemptydirs="true"/>
     </target>
 

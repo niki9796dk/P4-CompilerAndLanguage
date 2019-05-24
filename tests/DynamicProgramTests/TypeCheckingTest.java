@@ -1,4 +1,4 @@
-package AutoGen;
+package DynamicProgramTests;
 
 import CompilerExceptions.TypeExceptions.*;
 import DataStructures.Pair;
@@ -21,6 +21,6 @@ public class TypeCheckingTest {
                 new Pair<>("ChannelPlacementTypeException/", ChannelPlacementTypeException.class),
         };
 
-        return MainParseTest.multipleExpectFalse(mainPath, pathExceptionPair);
+        return ExpectFalseHelper.multipleExpectFalse(mainPath, pathExceptionPair);
     }
 }

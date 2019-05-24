@@ -1,5 +1,6 @@
-package AutoGen;
+package DynamicProgramTests;
 
+import CompilerExceptions.SyntaxExceptions.SyntaxAnalysisException;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
@@ -13,6 +14,6 @@ public class SyntaxAnalysisTest {
     Stream<DynamicTest> negativeFiles_SyntaxAnalysis() {
         File falseFolder = new File("tests/SyntaxAnalysis/ExpectFalse/");
 
-        return MainParseTest.expectedFalse(falseFolder, AutoGen.SyntaxAnalysisException.class);
+        return ExpectFalseHelper.expectedFalse(falseFolder, SyntaxAnalysisException.class);
     }
 }
