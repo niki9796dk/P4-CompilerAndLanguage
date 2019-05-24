@@ -9,7 +9,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.SpecialNodes.*;
 import AST.Enums.*;
 import AST.TreeWalks.*;
-import AST.TreeWalks.Exceptions.*;
+import CompilerExceptions.*;
 import java.io.*;
 import java_cup.runtime.*;
 import java.util.*;
