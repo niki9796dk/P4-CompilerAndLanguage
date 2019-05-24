@@ -210,7 +210,7 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     private String getProcedureId(ProcedureCallNode callNode) {
-        return BlockScope.PROCEDURE_PREFIX + callNode.findFirstChildOfClass(SelectorNode.class).getId();
+        return BlockScope.PROCEDURE_PREFIX + callNode.getTargetId();
     }
 
     private String getBuildBlockId(BuildNode buildNode) {

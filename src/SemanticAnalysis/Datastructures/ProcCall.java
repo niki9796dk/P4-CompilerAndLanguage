@@ -27,7 +27,7 @@ public class ProcCall {
         ParamsNode params = proc.findFirstChildOfClass(ParamsNode.class);
 
         if (params != null){
-            ParamsNode destinationParams = typeSystem.getSymbolTable().getSubScope(currentBlockId, BlockScope.PROCEDURE_PREFIX + proc.findFirstChildOfClass(SelectorNode.class).getId())
+            ParamsNode destinationParams = typeSystem.getSymbolTable().getSubScope(currentBlockId, BlockScope.PROCEDURE_PREFIX + proc.getTargetId())
                     .getNode().findFirstChildOfClass(ParamsNode.class);
 
             AbstractNode destinationChild = destinationParams.getChild();

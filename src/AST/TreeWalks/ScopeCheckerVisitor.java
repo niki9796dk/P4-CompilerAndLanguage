@@ -78,11 +78,11 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                 break;
 
             case PROCEDURE_CALL:
-                SelectorNode childSelector = node.findFirstChildOfClass(SelectorNode.class);
+                String targetId = ((ProcedureCallNode) node).getTargetId();
 
-                Scope scope = this.getCurrentBlockScope().getProcedureScope(childSelector.getId());
+                Scope scope = this.getCurrentBlockScope().getProcedureScope(targetId);
                 if (scope == null) {
-                    throw new IllegalProcedureCallScopeException(node, "No such procedure: " + childSelector.getId());
+                    throw new IllegalProcedureCallScopeException(node, "No such procedure: " + targetId);
                 }
                 break;
 
@@ -99,11 +99,12 @@ public class ScopeCheckerVisitor extends ScopeTracker {
             case SELECTOR:
                 boolean ignoreSelector = node.getParent() instanceof ProcedureCallNode;
 
-                if ("this".equals(id)) {
+                if (ignoreSelector) {
+                    // Do nothing.
+
+                } else if ("this".equals(id)) {
                     this.verifyChannelVariable(childId, node);
 
-                } else if (ignoreSelector) {
-                    // Do nothing.
                 } else if (!(node.getParent() instanceof SelectorNode)) {
                     try {
                         // Is it a variable?
