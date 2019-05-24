@@ -477,13 +477,13 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case CHANNEL_OUT_TYPE:
                 return new ChannelDeclaration(nodeId);
 
-            case GROUP:
-            case CHAIN:
             case ASSIGN:
-                break;
+                return new Selector(((NamedIdNode) node.getChild()).getId());
 
             // No action enums
             case ROOT:
+            case GROUP:
+            case CHAIN:
 
             default:
                 throw new UnexpectedNodeException(node);
