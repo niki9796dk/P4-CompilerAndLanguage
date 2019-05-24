@@ -33,6 +33,8 @@ class ScopeCheckerVisitorTest {
         this.blockNode = new BlockNode("blockNodeId", new ComplexSymbolFactory.Location(-1, -1));
         this.blueprintNode = new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1));
 
+        this.blockNode.adoptChildren(this.blueprintNode);
+
         // Insert into symbol table
         this.symbolTable.openBlockScope(this.blockNode);
         this.symbolTable.openSubScope(this.blueprintNode);
@@ -82,6 +84,10 @@ class ScopeCheckerVisitorTest {
     void preTestBlueprint() {
         BlueprintNode blueprintNode = new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1));
         this.symbolTable.openSubScope(blueprintNode);
+
+
+        BlockNode daddy = new BlockNode("ParentBlock", new ComplexSymbolFactory.Location(-1, -1));
+        daddy.adoptChildren(blueprintNode);
 
         this.scopeCheckerVisitor.pre(1, blueprintNode);
 

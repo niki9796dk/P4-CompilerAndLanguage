@@ -87,7 +87,9 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                 break;
 
             case BLUEPRINT:
-                String parentBlockId = ((NamedIdNode) node.getParent()).getId();
+                String parentBlockId = ((NamedIdNode) node
+                        .getParent())
+                        .getId();
                 if (this.typeSystem.isPredefined(parentBlockId)) {
                     throw new IllegalBlockNameException(node, "The block name: " + parentBlockId + " is a reserved name.");
                 }
