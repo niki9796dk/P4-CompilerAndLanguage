@@ -10,12 +10,19 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.ProcedureNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.TreeWalks.Exceptions.UnexpectedNodeException;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.NullaryAbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnaryAbstractOperation;
 import SemanticAnalysis.Datastructures.ModeEnum;
 import SymbolTableImplementation.*;
 import TypeChecker.Exceptions.IncorrectAssignmentTypesException;
 import TypeChecker.Exceptions.ParamsTypeInconsistencyException;
 import TypeChecker.Exceptions.ShouldNotHappenException;
 import TypeChecker.Exceptions.TypeInconsistencyException;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 public class TypeSystem {
     private SymbolTableInterface symbolTable;
@@ -56,6 +63,92 @@ public class TypeSystem {
                 this.symbolTable
                 .getBlockScope(blockId)
                 .getNode();
+    }
+
+    /**
+     *  List of predefined operations
+     */
+    private static final HashSet<String> OPERATIONS_2_1 = new HashSet<>(Arrays.asList(
+            // Matrix arithmetic operations
+            "Multiplication",
+            // Unitwise Arithmetic operations
+            "_Addition", "_Multiplication", "_Subtraction", "_Division"));
+
+    private static final HashSet<String> OPERATIONS_1_1 = new HashSet<>(Arrays.asList(
+            // Activation functions
+            "_Sigmoid", "_Tanh", "_Relu",
+            // Matrix operations
+            "Transpose"));
+
+    /**
+     * List of Predefined Sources
+     */
+    private static final HashSet<String> SOURCES = new HashSet<>(Arrays.asList(
+            "Source", "FixedSource"));
+
+    /**
+     * Check if an operation keyword is one of the final predefined operations.
+     *
+     * @param operation The operation Keyword
+     * @return whether the operation is valid.
+     */
+    public boolean isPredefinedOperation(String operation) {
+        return OPERATIONS_1_1.contains(operation) || OPERATIONS_2_1.contains(operation);
+    }
+
+    /**
+     * Check if a source keyword is a one of the final predefined operations.
+     *
+     * @param source The source Keyword
+     * @return whether the source is valid.
+     */
+    public boolean isPredefinedSource(String source) {
+        return SOURCES.contains(source);
+    }
+
+
+    public List<String> getOperationInChannelIds(NamedIdNode node){
+        return getOperationInChannelIds(node.getId());
+    }
+
+    public List<String> getOperationInChannelIds(String id){
+        if (OPERATIONS_1_1.contains(id)){
+            return Arrays.asList(UnaryAbstractOperation.UNARY_IN_CHANNEL);
+        } else if (OPERATIONS_2_1.contains(id)){
+            return Arrays.asList(BinaryAbstractOperation.BINARY_IN_A_CHANNEL, BinaryAbstractOperation.BINARY_IN_B_CHANNEL);
+        } else {
+            throw new IllegalArgumentException("Asked for operation in channel of non-operation");
+        }
+    }
+
+    public List<String> getOperationOrSourceOutChannelIds(AbstractNode node){
+        return getOperationOrSourceOutChannelIds(((NamedIdNode) node).getId());
+    }
+
+    public List<String> getOperationOrSourceOutChannelIds(String id){
+        if (OPERATIONS_1_1.contains(id)){
+            return Arrays.asList(UnaryAbstractOperation.UNARY_OUT_CHANNEL);
+        } else if (OPERATIONS_2_1.contains(id)) {
+            return Arrays.asList(BinaryAbstractOperation.BINARY_OUT_CHANNEL);
+        } else if (SOURCES.contains(id)){
+            return Arrays.asList(NullaryAbstractOperation.NULLARY_OUT_CHANNEL);
+        } else {
+            throw new IllegalArgumentException("Asked for operation/source out channel of something that is neither: " + id);
+        }
+    }
+
+    public boolean isValidPredefinedElementChannelPair(AbstractNode element, AbstractNode channel){
+        return isValidPredefinedElementChannelPair(((NamedIdNode) element).getId(), ((NamedIdNode) channel).getId());
+    }
+
+    public boolean isValidPredefinedElementChannelPair(String elementId, String channelId){
+        if (isPredefinedOperation(elementId)){
+            return getOperationInChannelIds(elementId).contains(channelId) || getOperationOrSourceOutChannelIds(elementId).contains(channelId);
+        } else if (isPredefinedSource(elementId)) {
+            return getOperationOrSourceOutChannelIds(elementId).contains(channelId);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -224,8 +317,8 @@ public class TypeSystem {
     private AbstractNode getOriginOfBuildStatement(BuildNode node, String blockScopeId, String subScopeId, ModeEnum mode) {
         String buildId = node.getId();
 
-        boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
-        boolean isPredefinedSource = this.symbolTable.isPredefinedSource(buildId);
+        boolean isPredefinedOperation = this.isPredefinedOperation(buildId);
+        boolean isPredefinedSource = this.isPredefinedSource(buildId);
         boolean isLocalVariable = this.getVariableFromIdentifier(buildId, blockScopeId, subScopeId) != null;
         boolean isDefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
 
@@ -358,10 +451,10 @@ public class TypeSystem {
     private NodeEnum getTypeOfBuildStatement(AbstractNode node, String blockScope, String subScope) {
         String id = this.getIdFromNode(node);
 
-        if (this.symbolTable.isPredefinedOperation(id)) {
+        if (this.isPredefinedOperation(id)) {
             return NodeEnum.OPERATION_TYPE;
 
-        } else if (this.symbolTable.isPredefinedSource(id)) {
+        } else if (this.isPredefinedSource(id)) {
             return NodeEnum.SOURCE_TYPE;
 
         } else {
@@ -411,7 +504,7 @@ public class TypeSystem {
         } else if (isNotChildOfSelector) {
             VariableEntry variable = this.getVariableFromIdentifier(nodeId, blockScopeId, subScopeId);
 
-            String value = this.getSubTypeOfNode(variable.getSubType(this.getNumberFromNode(node)), blockScopeId, subScopeId);
+            String elementId = this.getSubTypeOfNode(variable.getSubType(this.getNumberFromNode(node)), blockScopeId, subScopeId);
             String childId = this.getIdFromNode(node.getChild());
 
             NodeEnum superType = variable.getSuperType();
@@ -419,8 +512,8 @@ public class TypeSystem {
             switch (superType) {
                 case BLOCK_TYPE:
                     // Extract the sub scope, and assert that it's not null.
-                    Scope subScope = this.symbolTable.getSubScope(value, BlockScope.CHANNELS);
-                    this.assertNotNull(subScope, "No such block defined '" + value + "' - " + node);
+                    Scope subScope = this.symbolTable.getSubScope(elementId, BlockScope.CHANNELS);
+                    this.assertNotNull(subScope, "No such block defined '" + elementId + "' - " + node);
 
                     // Extract the variable, and assert that it's not null.
                     VariableEntry variableEntryBlock = subScope.getVariable(childId);
@@ -433,16 +526,15 @@ public class TypeSystem {
                     return this.translateExternalChannelTypes(type);
 
                 case OPERATION_TYPE:
-                    // TODO: Somehow include the operations in the symbol table instead of this BS.
-                    if ("A".equals(childId) || "B".equals(childId)) {
+                    if (this.getOperationInChannelIds(elementId).contains(childId)) {
                         return NodeEnum.CHANNEL_IN_TYPE;
 
-                    } else if ("out".equals(childId)) {
+                    } else if (this.getOperationOrSourceOutChannelIds(elementId).contains(childId)) {
                         return NodeEnum.CHANNEL_OUT_TYPE;
 
                     } else {
                         // SHOULD NOT HAPPEN HERE!!! THIS SHOULD HAVE BEEN CAUGHT IN THE SCOPE CHECKING
-                        throw new ShouldNotHappenException("The operation '" + value + "' does not have a channel named '" + childId + "'");
+                        throw new ShouldNotHappenException("The operation '" + elementId + "' does not have a channel named '" + childId + "'");
                     }
 
             }

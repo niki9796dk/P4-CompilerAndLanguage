@@ -3,12 +3,14 @@ package SymbolTableImplementation;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.NullaryAbstractOperation;
+import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnaryAbstractOperation;
 import Enums.AnsiColor;
 import ScopeChecker.Exceptions.NoSuchVariableDeclaredException;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,25 +29,6 @@ public class SymbolTable implements SymbolTableInterface {
      */
     public SymbolTable() {
     }
-
-    /**
-     *  List of predefined operations
-     */
-    private static final HashSet<String> OPERATIONS = new HashSet<>(Arrays.asList(
-            // Matrix arithmetic operations
-            "Multiplication",
-            // Unitwise Arithmetic operations
-            "_Addition", "_Multiplication", "_Subtraction", "_Division",
-            // Activation functions
-            "_Sigmoid", "_Tanh", "_Relu",
-            // Matrix operations
-            "Transpose"));
-
-    /**
-     * List of Predefined Sources
-     */
-    private static final HashSet<String> SOURCES = new HashSet<>(Arrays.asList(
-            "Source", "FixedSource"));
 
     /**
      * Get the list of main blocks
@@ -71,7 +54,6 @@ public class SymbolTable implements SymbolTableInterface {
     @Override
     public void openBlockScope(BlockNode node) {
         String blockId = node.getId();
-        List<String> blockchain = new LinkedList<>();
 
         this.blockTable.setEntry(blockId, new BlockScope(blockId, node));
     }
@@ -188,27 +170,7 @@ public class SymbolTable implements SymbolTableInterface {
         return this.blockTable.getLatest();
     }
 
-    /**
-     * Check if an operation keyword is one of the final predefined operations.
-     *
-     * @param operation The operation Keyword
-     * @return whether the operation is valid.
-     */
-    @Override
-    public boolean isPredefinedOperation(String operation) {
-        return OPERATIONS.contains(operation);
-    }
 
-    /**
-     * Check if a source keyword is a one of the final predefined operations.
-     *
-     * @param source The source Keyword
-     * @return whether the source is valid.
-     */
-    @Override
-    public boolean isPredefinedSource(String source) {
-        return SOURCES.contains(source);
-    }
 
     /**
      * The to string method.

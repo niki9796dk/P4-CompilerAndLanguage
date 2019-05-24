@@ -156,14 +156,14 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
         if (calleeIsNotBlockOrProc) {
             // Operation case
-            if (this.typeSystem.getSymbolTable().isPredefinedOperation(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
+            if (this.typeSystem.isPredefinedOperation(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
                 ParamsNode opParams = callerNode.findFirstChildOfClass(ParamsNode.class);
                 if (opParams != null){
                     throw new ParamsSizeInconsistencyException("Operations can't have parameters. This is not the case in: " + callerNode);
                 }
 
                 // Source case
-            } else if (this.typeSystem.getSymbolTable().isPredefinedSource(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
+            } else if (this.typeSystem.isPredefinedSource(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
                 ParamsNode sourceParams = callerNode.findFirstChildOfClass(ParamsNode.class);
 
                 if (sourceParams == null){
@@ -208,8 +208,8 @@ public class TypeCheckerVisitor extends ScopeTracker {
             String nodeId = this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope);
 
             // Verify that we are building an block, and not anything else. TODO: How about operation and source params?
-            boolean isNotOperation = !this.typeSystem.getSymbolTable().isPredefinedOperation(nodeId);
-            boolean isNotSource = !this.typeSystem.getSymbolTable().isPredefinedSource(nodeId);
+            boolean isNotOperation = !this.typeSystem.isPredefinedOperation(nodeId);
+            boolean isNotSource = !this.typeSystem.isPredefinedSource(nodeId);
 
             // Return the block blueprint node, if the callee is a block
             if (isNotOperation && isNotSource) {

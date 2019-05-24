@@ -98,30 +98,36 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                     // Do nothing.
                 } else if (!(node.getParent() instanceof SelectorNode)) {
                     try {
+                        // Is it a variable?
                         this.verifyCurrentScopeVariable(id);
 
-                        if (node.getChild() != null){
-                            SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId());
-                            dummy.setNumber(node.getNumber());
-                            String theBlock = this.typeSystem.getSubTypeOfNode(dummy, currentBlockScope, currentSubScope);
+                    } catch (NoSuchVariableDeclaredException e) {
+                        // Else is it a channel of the current block?
+                        this.verifyChannelVariable(id);
+                    }
 
-                            boolean isOperation = this.typeSystem.getSymbolTable().isPredefinedOperation(theBlock);
-                            boolean isSource = this.typeSystem.getSymbolTable().isPredefinedSource(theBlock);
+                    // Else if it is a dot.notation
+                    if (node.getChild() != null){
+                        SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId());
+                        dummy.setNumber(node.getNumber());
+                        String theBlock = this.typeSystem.getSubTypeOfNode(dummy, currentBlockScope, currentSubScope);
 
-                            if (!isOperation && !isSource) {
-                                BlockScope blockScope = this.typeSystem.getSymbolTable().getBlockScope(theBlock);
-                                if (blockScope
-                                        .getChannelDeclarationScope()
-                                        .getVariable(childId) == null) {
-                                    throw new NoSuchVariableDeclaredException("The channel is not there");
-                                }
-                            } else {
-                                // TODO: Operation or source input/output existence verification
+                        boolean isOperation = this.typeSystem.isPredefinedOperation(theBlock);
+                        boolean isSource = this.typeSystem.isPredefinedSource(theBlock);
+                        boolean isBlock = !isOperation && !isSource;
+
+                        if (isBlock) {
+                            BlockScope blockScope = this.typeSystem.getSymbolTable().getBlockScope(theBlock);
+                            if (blockScope
+                                    .getChannelDeclarationScope()
+                                    .getVariable(childId) == null) {
+                                throw new NoSuchVariableDeclaredException("The channel is not there");
+                            }
+                        } else {
+                            if (!typeSystem.isValidPredefinedElementChannelPair(theBlock, ((NamedIdNode) node.getChild()).getId())){
+                                throw new NoSuchVariableDeclaredException(theBlock + " does not have channel: " + node.getChild());
                             }
                         }
-
-                    } catch (NoSuchVariableDeclaredException e) {
-                        this.verifyChannelVariable(id);
                     }
                 }
                 break;
@@ -179,8 +185,8 @@ public class ScopeCheckerVisitor extends ScopeTracker {
      */
     private boolean isNotADefinedBuildableElement(String buildId) {
         boolean isADefinedBlock = this.symbolTable.getBlockScope(buildId) != null;
-        boolean isPredefinedOperation = this.symbolTable.isPredefinedOperation(buildId);
-        boolean isPredefinedSource = this.symbolTable.isPredefinedSource(buildId);
+        boolean isPredefinedOperation = this.typeSystem.isPredefinedOperation(buildId);
+        boolean isPredefinedSource = this.typeSystem.isPredefinedSource(buildId);
 
         return !(isADefinedBlock || isPredefinedOperation || isPredefinedSource);
     }

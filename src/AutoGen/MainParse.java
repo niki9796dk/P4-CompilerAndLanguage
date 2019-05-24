@@ -5,6 +5,7 @@ import java.io.*;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.TreeWalks.*;
 import SymbolTableImplementation.SymbolTable;
+import TypeChecker.TypeSystem;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;

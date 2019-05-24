@@ -118,7 +118,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
     private void addBuildBlockToSet(BuildNode node) {
         String buildSubType = this.typeSystem.getSubTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
-        if (this.symbolTable.isPredefinedSource(buildSubType) || this.symbolTable.isPredefinedOperation(buildSubType)) {
+        if (this.typeSystem.isPredefinedSource(buildSubType) || this.typeSystem.isPredefinedOperation(buildSubType)) {
             return; // Simply ignore this case.
         }
 

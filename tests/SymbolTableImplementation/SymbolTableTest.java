@@ -7,6 +7,7 @@ import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import Enums.AnsiColor;
+import TypeChecker.TypeSystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +20,7 @@ class SymbolTableTest {
 
     // Fields
     private SymbolTable s;
+    private TypeSystem t;
     private BlockNode n;
     private NamedIdNode n2;
     private NamedIdNode n3;
@@ -31,6 +33,7 @@ class SymbolTableTest {
     @BeforeEach
     void beforeEach() {
         this.s = new SymbolTable();
+        this.t = new TypeSystem(s);
         this.n = new BlockNode("n");
         this.n2 = new SizeTypeNode("n2");
         this.n3 = new SizeTypeNode("n3");
@@ -148,19 +151,19 @@ class SymbolTableTest {
 
     @Test
     void isPredefinedOperation() {
-        assertTrue(this.s.isPredefinedOperation("Multiplication"));
-        assertTrue(this.s.isPredefinedOperation("_Addition"));
-        assertTrue(this.s.isPredefinedOperation("_Multiplication"));
-        assertTrue(this.s.isPredefinedOperation("_Subtraction"));
-        assertTrue(this.s.isPredefinedOperation("_Division"));
-        assertTrue(this.s.isPredefinedOperation("_Sigmoid"));
-        assertTrue(this.s.isPredefinedOperation("_Tanh"));
-        assertTrue(this.s.isPredefinedOperation("_Relu"));
-        assertTrue(this.s.isPredefinedOperation("Transpose"));
+        assertTrue(this.t.isPredefinedOperation("Multiplication"));
+        assertTrue(this.t.isPredefinedOperation("_Addition"));
+        assertTrue(this.t.isPredefinedOperation("_Multiplication"));
+        assertTrue(this.t.isPredefinedOperation("_Subtraction"));
+        assertTrue(this.t.isPredefinedOperation("_Division"));
+        assertTrue(this.t.isPredefinedOperation("_Sigmoid"));
+        assertTrue(this.t.isPredefinedOperation("_Tanh"));
+        assertTrue(this.t.isPredefinedOperation("_Relu"));
+        assertTrue(this.t.isPredefinedOperation("Transpose"));
 
-        assertFalse(this.s.isPredefinedOperation("Division"));
-        assertFalse(this.s.isPredefinedOperation("_Transpose"));
-        assertFalse(this.s.isPredefinedOperation("Lizard"));
+        assertFalse(this.t.isPredefinedOperation("Division"));
+        assertFalse(this.t.isPredefinedOperation("_Transpose"));
+        assertFalse(this.t.isPredefinedOperation("Lizard"));
     }
 
     @Test
