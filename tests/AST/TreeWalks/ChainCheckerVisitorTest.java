@@ -42,14 +42,6 @@ class ChainCheckerVisitorTest {
 
     @Disabled
     @Test
-    void pre_build() {
-        BuildNode buildNode = new BuildNode("blockNodeId", new ComplexSymbolFactory.Location(-1, -1));
-        this.chainCheckerVisitor.pre(0, buildNode);
-        assertTrue(this.chainCheckerVisitor.getBuildNodes().contains(buildNode));
-    }
-
-    @Disabled
-    @Test
     void pre_chain() {
         ChainNode chainNode = new ChainNode(new ComplexSymbolFactory.Location(-1, -1));
         BlockNode blockNode = new BlockNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
