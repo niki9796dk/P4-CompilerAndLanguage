@@ -1,0 +1,8 @@
+block Source {
+	mychannel:in input;
+	mychannel:out output;
+	
+	blueprint() {
+		input -> output;
+	}
+}
