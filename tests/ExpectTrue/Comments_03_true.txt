@@ -1,0 +1,8 @@
+block Main {
+	mychannel:in input;
+	mychannel:out output;
+	
+	blueprint() {
+		this.input -> build _Sigmoid(/*Random comment*/) -> this.output;
+	}
+}
