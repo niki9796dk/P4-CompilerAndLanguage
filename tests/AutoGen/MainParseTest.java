@@ -160,6 +160,7 @@ class MainParseTest {
     private Class<Block> getBlockClassFromFile(File file) throws ClassNotFoundException {
         return  (Class<Block>) Class.forName(file.getPath()
                 .replace('/', '.')
+                .replace('\\', '.')
                 .replaceAll("src.", "")
                 .replaceAll(".class", ""));
     }
