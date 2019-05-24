@@ -252,8 +252,7 @@ public class FlowChecker {
                     .getNode().findFirstChildOfClass(MyInChannelNode.class).getId();
         }
     }
-
-
+    
     /**
      */
     private void addAllChannelsOfBlockInstance(BuildNode instance, BlockScope theBlock) {
