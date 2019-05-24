@@ -106,6 +106,9 @@ public class TypeSystem {
         return SOURCES.contains(source);
     }
 
+    public boolean isPredefined(String name) {
+        return this.isPredefinedOperation(name) || this.isPredefinedSource(name);
+    }
 
     public List<String> getOperationInChannelIds(NamedIdNode node){
         return getOperationInChannelIds(node.getId());

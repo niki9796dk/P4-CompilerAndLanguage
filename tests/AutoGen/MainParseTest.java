@@ -1,9 +1,6 @@
 package AutoGen;
 
-import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
-import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
-import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
-import CompilerExceptions.ScopeExceptions.VariableAlreadyDeclaredException;
+import CompilerExceptions.ScopeExceptions.*;
 import CompilerExceptions.SemanticExceptions.*;
 import CompilerExceptions.TypeExceptions.*;
 import DataStructures.Pair;
@@ -68,6 +65,7 @@ class MainParseTest {
                 new Pair<>("VariableAlreadyDeclaredException/", VariableAlreadyDeclaredException.class),
                 new Pair<>("NoSuchVariableDeclaredException/", NoSuchVariableDeclaredException.class),
                 new Pair<>("NoSuchBlockDeclaredException/", NoSuchBlockDeclaredException.class),
+                new Pair<>("IllegalBlockNameException/", IllegalBlockNameException.class),
         };
 
         return multipleExpectFalse(mainPath, pathExceptionPair);

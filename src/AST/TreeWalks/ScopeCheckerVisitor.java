@@ -6,6 +6,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.Name
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import CompilerExceptions.ScopeExceptions.IllegalBlockNameException;
 import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
 import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
@@ -86,6 +87,12 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                 break;
 
             case BLUEPRINT:
+                String parentBlockId = ((NamedIdNode) node.getParent()).getId();
+                if (this.typeSystem.isPredefined(parentBlockId)) {
+                    throw new IllegalBlockNameException(node, "The block name: " + parentBlockId + " is a reserved name.");
+                }
+                break;
+
             case CHANNEL_DECLARATIONS:
                 break;
 
