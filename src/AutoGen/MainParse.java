@@ -24,7 +24,7 @@ public class MainParse {
             if (e instanceof CompilerException) {
                 AbstractNode errorNode = ((CompilerException) e).getErrorNode();
 
-                System.out.println("Error happend at " + errorNode.getLineNumber() + ":" + errorNode.getColumn() + ".\n Cause - " + e.getMessage());
+                System.out.println("Error happened at " + errorNode.getLineNumber() + ":" + errorNode.getColumn() + ".\n Cause - " + e.getMessage());
             } else {
                 System.out.println("Unknown error occurred:\n " + e.getMessage());
             }

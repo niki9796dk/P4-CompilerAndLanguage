@@ -26,20 +26,22 @@ public class CodeGenRunTest {
         // TODO: Fix error where class is not found on initial run of test
         compileTrueFiles();
 
+        // Get the java compiler and compile all the code-generated java files into .class files
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-
         compiler.run(null, null, null, getAllBlockPaths());
 
         File codeGenTrueFolder = new File("src" + File.separator + "AutoGen" + File.separator + "CodeGen"  + File.separator);
-
         File[] subDirectories = new File(codeGenTrueFolder.getPath()).listFiles(File::isDirectory);
 
+        // Make empty stream of dynamic tests to use later
         Stream<DynamicTest> testStream = Stream.empty();
 
+        // Go through all directories with class files in them
         for(File subDir : subDirectories) {
-            List<File> filesIndir = Arrays.asList(Objects.requireNonNull(subDir.listFiles()));
+            List<File> filesInDir = Arrays.asList(Objects.requireNonNull(subDir.listFiles()));
 
-            Stream<DynamicTest> testInDir = filesIndir.stream()
+            // Make a stream of all class files to run (Valid main blocks)
+            Stream<DynamicTest> testInDir = filesInDir.stream()
                     .filter(file -> file.getName().contains(".class"))
                     .filter(this::isValidMainBlock)
                     .map(file -> DynamicTest.dynamicTest("Testing [" + subDir.getName() + "]: '" + file.getName() + "'",
@@ -61,7 +63,10 @@ public class CodeGenRunTest {
             programFiles.addAll(Arrays.asList(Objects.requireNonNull(subdir.listFiles())));
         }
 
-        return programFiles.stream().map(File::getPath).filter(string -> string.endsWith(".java")).toArray(String[]::new);
+        return programFiles.stream()
+                .map(File::getPath)
+                .filter(string -> string.endsWith(".java"))
+                .toArray(String[]::new);
     }
 
     private void testAutoGenBlock(Class<Block> blockClass) {
