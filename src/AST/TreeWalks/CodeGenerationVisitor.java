@@ -118,7 +118,6 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 }
                 break;
 
-
             case BUILD:         // Also handled by other enums
                 if (node.getParent() instanceof ChainNode) {
                     // Generate unique var name
