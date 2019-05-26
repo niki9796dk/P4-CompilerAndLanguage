@@ -208,7 +208,7 @@ public class FlowChecker {
             // "this" case
             return currentBlockId + ((NamedIdNode) followToBase.getChild()).getId();
 
-        } else if (followToBase.getNodeEnum().equals(NodeEnum.BUILD)) {
+        } else if (followToBase.getNodeEnum().equals(NodeEnum.BUILD) || followToBase.getNodeEnum().equals(NodeEnum.DRAW)) {
             // pipe case
             String idPortion;
 
