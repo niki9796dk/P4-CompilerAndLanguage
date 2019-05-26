@@ -1,10 +1,7 @@
 package CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes;
 
 import CodeGeneration.DataFlow.Network.Nodes.Block;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNode;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
-import CodeGeneration.utility.Print;
-import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public class FeedforwardBounce extends AbstractBounceNode {

@@ -55,13 +55,13 @@ public class CodeGenerationVisitor extends ScopeTracker {
     private String programFileName;
 
     // Constants
-    private static String EXPORT_PATH = "src"+File.separator+"AutoGen"+ File.separator+"CodeGen"+File.separator;
+    private static String EXPORT_PATH = "src" + File.separator + "AutoGen" + File.separator + "CodeGen" + File.separator;
     private static String EXPORT_PACKAGE = "AutoGen.CodeGen";
 
     // Constructor:
     public CodeGenerationVisitor(SymbolTable symbolTable, String programFileName) {
         super(symbolTable);
-        this.programFileName = programFileName;
+        this.programFileName = programFileName.replaceFirst("[.][^.]+$", "");
     }
 
     /**
@@ -161,7 +161,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
         switch (node.getNodeEnum()) {
             // No action enums
             case ROOT:
-                String exportPackagePath = EXPORT_PATH + programFileName + "/";
+                String exportPackagePath = EXPORT_PATH + programFileName + File.separator;
 
                 try {
                     if (!Files.exists(Paths.get(EXPORT_PATH))) {

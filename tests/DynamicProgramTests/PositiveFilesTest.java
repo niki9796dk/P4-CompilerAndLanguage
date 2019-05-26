@@ -1,5 +1,7 @@
-package AutoGen;
+package DynamicProgramTests;
 
+import AutoGen.MainParse;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
@@ -22,6 +24,6 @@ public class PositiveFilesTest {
 
         return trueFiles.stream()
                 .map(file -> DynamicTest.dynamicTest("Testing: '" + file.getName() + "'",
-                        () -> assertTrue(MainParse.parseFile(file.getPath()))));
+                        () -> Assertions.assertTrue(MainParse.compileProgram(file.getPath()))));
     }
 }

@@ -2,8 +2,6 @@ package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Nu
 
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.IllegalMethodException;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
-import CodeGeneration.utility.Print;
-import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import org.junit.jupiter.api.BeforeEach;

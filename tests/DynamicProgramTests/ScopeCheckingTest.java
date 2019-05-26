@@ -1,4 +1,4 @@
-package AutoGen;
+package DynamicProgramTests;
 
 import CompilerExceptions.ScopeExceptions.*;
 import DataStructures.Pair;
@@ -21,6 +21,6 @@ public class ScopeCheckingTest {
                 new Pair<>("IllegalBlockNameException/", IllegalBlockNameException.class),
         };
 
-        return MainParseTest.multipleExpectFalse(mainPath, pathExceptionPair);
+        return ExpectFalseHelper.multipleExpectFalse(mainPath, pathExceptionPair);
     }
 }

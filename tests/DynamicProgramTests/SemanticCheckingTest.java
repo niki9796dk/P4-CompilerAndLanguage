@@ -1,4 +1,4 @@
-package AutoGen;
+package DynamicProgramTests;
 
 import CompilerExceptions.SemanticExceptions.*;
 import DataStructures.Pair;
@@ -22,6 +22,6 @@ public class SemanticCheckingTest {
                 new Pair<>("IncorrectChannelUsageException/", IncorrectChannelUsageException.class),
         };
 
-        return MainParseTest.multipleExpectFalse(mainPath, pathExceptionPair);
+        return ExpectFalseHelper.multipleExpectFalse(mainPath, pathExceptionPair);
     }
 }

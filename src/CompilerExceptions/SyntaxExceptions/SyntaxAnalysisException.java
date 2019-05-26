@@ -1,4 +1,4 @@
-package AutoGen;
+package CompilerExceptions.SyntaxExceptions;
 
 /**
  * An exception used for unit testing of a scanner.

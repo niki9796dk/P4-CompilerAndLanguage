@@ -44,7 +44,7 @@ parser code {:
                 super.unrecovered_syntax_error(cur_token);
             } catch (Exception e) {
                 // Rethrow exception as a SyntaxAnalysisException instead of a generic "Exception", to identify in testing.
-                throw new AutoGen.SyntaxAnalysisException(e);
+                throw new CompilerExceptions.SyntaxExceptions.SyntaxAnalysisException(e);
             }
         }
 

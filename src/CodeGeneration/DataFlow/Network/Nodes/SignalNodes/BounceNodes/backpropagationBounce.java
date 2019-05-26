@@ -2,11 +2,9 @@ package CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes;
 
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
-import CodeGeneration.utility.Print;
+import CodeGeneration.Utility.Print;
 import Enums.AnsiColor;
-import LinearAlgebra.Statics.Matrices;
 import LinearAlgebra.Types.Matrices.Matrix;
-import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
 import MachineLearning.NeuralNetwork.Trainer.Costs.CostFunction;
 import MachineLearning.NeuralNetwork.Trainer.Costs.MSECost;
 

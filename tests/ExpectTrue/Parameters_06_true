@@ -63,7 +63,7 @@ block B2 {
     mychannel:out out;
 
     blueprint (blueprint blue) {
-        this.in -> -> build _Sigmoid() build blue() -> this.out;
+        this.in -> build _Sigmoid() -> build blue() -> this.out;
     }
 }
 

@@ -7,7 +7,6 @@ import AST.TreeWalks.*;
 import CompilerExceptions.CompilerException;
 import Enums.AnsiColor;
 import SymbolTableImplementation.SymbolTable;
-import TypeChecker.TypeSystem;
 import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
@@ -25,7 +24,7 @@ public class MainParse {
             if (e instanceof CompilerException) {
                 AbstractNode errorNode = ((CompilerException) e).getErrorNode();
 
-                System.out.println("Error happend at " + errorNode.getLineNumber() + ":" + errorNode.getColumn() + ".\n Cause - " + e.getMessage());
+                System.out.println("Error happened at " + errorNode.getLineNumber() + ":" + errorNode.getColumn() + ".\n Cause - " + e.getMessage());
             } else {
                 System.out.println("Unknown error occurred:\n " + e.getMessage());
             }
@@ -37,14 +36,14 @@ public class MainParse {
         });
 
         if (args.length != 1) {
-            parseFile("data" + File.separator + "input");
+            compileProgram("data" + File.separator + "input");
         } else {
 
-            parseFile(args[0]);
+            compileProgram(args[0]);
         }
     }
 
-    public static boolean parseFile(String path) throws Exception {
+    public static boolean compileProgram(String path) throws Exception {
         ComplexSymbolFactory csf = new ComplexSymbolFactory();
         // create a buffering scanner wrapper
         ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)),csf));

@@ -1,7 +1,6 @@
-package CodeGeneration.utility;
+package CodeGeneration.Utility;
 
 import Enums.AnsiColor;
-//Hi!
 
 /**
  * Contains static interfaces connect allow simplified and prettier prints into the console.
@@ -27,7 +26,6 @@ public class Print {
         this.color = c;
         this.name = name;
         this.indent = (this.getPrefix()).replaceAll(".(?![^\\[]*\\])|\\[", " ");
-
     }
 
     private String getPrefix() {
