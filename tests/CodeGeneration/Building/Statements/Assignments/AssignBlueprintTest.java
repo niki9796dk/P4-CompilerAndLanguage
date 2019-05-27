@@ -3,7 +3,7 @@ package CodeGeneration.Building.Statements.Assignments;
 import CodeGeneration.Building.Statements.Instantiations.InitBlueprint;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AssignBlueprintTest {
 

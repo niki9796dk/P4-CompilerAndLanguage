@@ -5,7 +5,7 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Una
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class BlockTest {
 
@@ -15,7 +15,7 @@ class BlockTest {
         assertNotNull(block.getFirstInput());
         assertNotNull(block.getFirstOutput());
 
-        Source source = new Source(MatrixBuilder.buildConstant(1,1,1));
+        Source source = new Source(MatrixBuilder.buildConstant(1, 1, 1));
 
         source.getFirstOutput().tether(block.getFirstInput());
 

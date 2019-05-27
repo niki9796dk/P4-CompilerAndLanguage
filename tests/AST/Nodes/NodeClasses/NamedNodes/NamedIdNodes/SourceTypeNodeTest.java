@@ -7,7 +7,7 @@ import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SourceTypeNodeTest {
     private SourceTypeNode sourceTypeNode;
@@ -33,11 +33,11 @@ class SourceTypeNodeTest {
     }
 
     @Test
-    void sizeConstructor(){
-        Source source = new Source(new Pair<>(3,2));
+    void sizeConstructor() {
+        Source source = new Source(new Pair<>(3, 2));
 
-        assertEquals(3,source.getResult().getRows());
-        assertEquals(2,source.getResult().getColumns());
+        assertEquals(3, source.getResult().getRows());
+        assertEquals(2, source.getResult().getColumns());
     }
 
 }

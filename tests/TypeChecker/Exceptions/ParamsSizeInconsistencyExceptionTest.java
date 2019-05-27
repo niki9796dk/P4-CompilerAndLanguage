@@ -4,7 +4,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
 import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParamsSizeInconsistencyExceptionTest {
     @Test

@@ -3,10 +3,8 @@ package CodeGeneration.DataFlow.Blocks;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operation;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Division;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
@@ -23,12 +21,12 @@ class A_HalfTest {
 
 
         Source source = new Source(
-                MatrixBuilder.buildConstant(2,2,4)
+                MatrixBuilder.buildConstant(2, 2, 4)
         );
 
-        Matrix expected = MatrixBuilder.buildConstant(2,2,2);
+        Matrix expected = MatrixBuilder.buildConstant(2, 2, 2);
 
-        source.connectTo(block000, Source.NULLARY_OUT_CHANNEL,"A");
+        source.connectTo(block000, Source.NULLARY_OUT_CHANNEL, "A");
 
         source.acceptReadySignal();
 

@@ -253,10 +253,6 @@ public class FlowChecker {
         }
     }
 
-
-    /**
-     *
-     */
     private void addAllChannelsOfBlockInstance(BuildNode instance, BlockScope theBlock) {
         // Get all channels
         Scope channelDeclarationScope = theBlock.getChannelDeclarationScope();

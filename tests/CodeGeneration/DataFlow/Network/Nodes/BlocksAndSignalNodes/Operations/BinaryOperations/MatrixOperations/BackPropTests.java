@@ -14,11 +14,10 @@ import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BackPropTests {
 
@@ -80,7 +79,7 @@ class BackPropTests {
 
         operation.operationBackpropagation(s1.getOutputChannel(), s2.getOutputChannel(), operation.getOutputChannel());
 
-        int expectedIndex = (r.getCurrentRepetition()-1) * 2;
+        int expectedIndex = (r.getCurrentRepetition() - 1) * 2;
 
         assertEquals(expectedCosts.get(expectedIndex + 0), operation.getResultBackpropagation(operation.getInputChannels().get(BinaryAbstractOperation.BINARY_IN_A_CHANNEL)));
         assertEquals(expectedCosts.get(expectedIndex + 1), operation.getResultBackpropagation(operation.getInputChannels().get(BinaryAbstractOperation.BINARY_IN_B_CHANNEL)));

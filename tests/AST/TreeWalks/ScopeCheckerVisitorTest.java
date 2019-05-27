@@ -77,7 +77,7 @@ class ScopeCheckerVisitorTest {
 
         this.scopeCheckerVisitor.pre(1, procedureNode);
 
-        assertEquals(this.symbolTable.getSubScope("blockNodeId" ,"PROC_procedureNodeId"), this.scopeCheckerVisitor.getCurrentSubScope());
+        assertEquals(this.symbolTable.getSubScope("blockNodeId", "PROC_procedureNodeId"), this.scopeCheckerVisitor.getCurrentSubScope());
     }
 
     @Test
@@ -91,7 +91,7 @@ class ScopeCheckerVisitorTest {
 
         this.scopeCheckerVisitor.pre(1, blueprintNode);
 
-        assertEquals(this.symbolTable.getSubScope("blockNodeId" ,"Blueprint"), this.scopeCheckerVisitor.getCurrentSubScope());
+        assertEquals(this.symbolTable.getSubScope("blockNodeId", "Blueprint"), this.scopeCheckerVisitor.getCurrentSubScope());
     }
 
     @Test
@@ -101,7 +101,7 @@ class ScopeCheckerVisitorTest {
 
         this.scopeCheckerVisitor.pre(1, channelDeclarationsNode);
 
-        assertEquals(this.symbolTable.getSubScope("blockNodeId" ,"ChannelDeclaration"), this.scopeCheckerVisitor.getCurrentSubScope());
+        assertEquals(this.symbolTable.getSubScope("blockNodeId", "ChannelDeclaration"), this.scopeCheckerVisitor.getCurrentSubScope());
     }
 
     @Test

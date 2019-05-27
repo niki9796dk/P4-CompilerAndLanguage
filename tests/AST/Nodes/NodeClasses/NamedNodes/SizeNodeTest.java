@@ -1,8 +1,6 @@
 package AST.Nodes.NodeClasses.NamedNodes;
 
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import java_cup.runtime.ComplexSymbolFactory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

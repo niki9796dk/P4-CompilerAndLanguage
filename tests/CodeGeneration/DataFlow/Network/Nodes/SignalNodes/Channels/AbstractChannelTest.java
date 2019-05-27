@@ -115,7 +115,7 @@ class AbstractChannelTest {
         Channel lChannel001 = new ListChannel();
         Channel lChannel002 = new ListChannel();
 
-        assertThrows(NullPointerException.class,()-> lChannel000.setSource(null));
+        assertThrows(NullPointerException.class, () -> lChannel000.setSource(null));
 
 
         lChannel002.setSource(lChannel001);

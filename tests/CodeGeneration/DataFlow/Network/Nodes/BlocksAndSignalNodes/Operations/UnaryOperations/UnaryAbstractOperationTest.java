@@ -11,7 +11,6 @@ import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
@@ -80,7 +79,7 @@ class UnaryAbstractOperationTest {
         new Source(input).connectTo(op, Source.NULLARY_OUT_CHANNEL, UnaryAbstractOperation.UNARY_IN_CHANNEL);
         op.performOperation();
 
-        assertEquals(op.getResult(),results.get(i));
+        assertEquals(op.getResult(), results.get(i));
     }
 
     @RepeatedTest(4)
@@ -88,7 +87,7 @@ class UnaryAbstractOperationTest {
         int i = r.getCurrentRepetition() - 1;
         UnaryAbstractOperation op = operations.get(i);
 
-        assertThrows(IllegalArgumentException.class, ()-> op.addNewInputLabel("in1",new ListChannel()));
+        assertThrows(IllegalArgumentException.class, () -> op.addNewInputLabel("in1", new ListChannel()));
         op.addNewInputLabel(UnaryAbstractOperation.UNARY_IN_CHANNEL, new ListChannel());
 
     }

@@ -2,7 +2,7 @@ package DynamicProgramTests;
 
 import AutoGen.MainParse;
 import DataStructures.Pair;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DynamicTest;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExpectFalseHelper {
     static Stream<DynamicTest> multipleExpectFalse(String mainPath, Pair<String, Class>[] pathExceptionPair) {
@@ -47,7 +47,7 @@ class ExpectFalseHelper {
                 ))
                 .filter((File::isFile))
                 .collect(Collectors.toList()
-        );
+                );
 
         return falseFiles.stream()
                 .map(file -> DynamicTest.dynamicTest("Testing: '" + file.getName() + "'",

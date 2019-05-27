@@ -4,7 +4,6 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.RootNode;
 import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
-import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
 import SymbolTableImplementation.SymbolTableInterface;
 import java_cup.runtime.ComplexSymbolFactory;

@@ -28,7 +28,8 @@ class ListParametersTest {
         assertTrue(this.listParameters.getParameterList().contains(this.parameter));
     }
 
-    @Test // Assert that the list does not contain a parameter, which wasn't addded
+    @Test
+        // Assert that the list does not contain a parameter, which wasn't addded
     void getParameterList() {
         assertFalse(this.listParameters.getParameterList().contains(this.parameter));
     }
@@ -38,7 +39,8 @@ class ListParametersTest {
         assertNotNull(this.listParameters.toCallParameters());
     }
 
-    @Test // With parameter
+    @Test
+        // With parameter
     void toCallParameters02() {
         this.listParameters.addParameter(this.parameter);
         assertNotNull(this.listParameters.toCallParameters());
@@ -49,7 +51,8 @@ class ListParametersTest {
         assertNotNull(this.listParameters.toString());
     }
 
-    @Test // With parameter
+    @Test
+        // With parameter
     void toString02() {
         this.listParameters.addParameter(this.parameter);
         assertNotNull(this.listParameters.toString());

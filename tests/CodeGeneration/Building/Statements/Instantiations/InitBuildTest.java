@@ -4,7 +4,7 @@ import CodeGeneration.Building.Statements.Selectors.Selector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class InitBuildTest {
 
@@ -15,7 +15,7 @@ class InitBuildTest {
     private static final String DEFAULT_ID = "id";
 
     @BeforeEach
-    void beforeEach( ){
+    void beforeEach() {
         this.initBuild = new InitBuild(DEFAULT_ID, new Selector(DEFAULT_ID));
     }
 
