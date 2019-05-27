@@ -307,7 +307,7 @@ public class TypeSystem {
                     return this.getOriginOfBuildStatement((BuildNode) node, blockScopeId, subScopeId, mode);
                 }
             case ASSIGN:
-                return this.followNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId, mode); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+                return this.followNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId, mode);
 
             case SELECTOR:
                 return this.followSelector((SelectorNode) node, blockScopeId, subScopeId, mode);
@@ -447,7 +447,7 @@ public class TypeSystem {
                 return this.getTypeOfBuildStatement(node, blockScopeId, subScopeId);
 
             case ASSIGN:
-                return this.getSuperTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+                return this.getSuperTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId);
 
             case SELECTOR:
                 return this.getSuperTypeOfSelector(node, blockScopeId, subScopeId);

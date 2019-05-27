@@ -220,7 +220,7 @@ bluetype 			    ::= BLUEPRINT:b
                         ;
 // CONTENT
 content			        ::= statement:st SEMICOLON content:ct
-                        {: // TODO: Fix this future me. (Expand to if else chain)
+                        {:
                            RESULT = (st != null && ct != null) ? st.makeSibling(ct) : ((st != null) ? (st) : (ct)); :}
 					    |
                         ;

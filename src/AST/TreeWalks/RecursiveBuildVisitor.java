@@ -63,7 +63,6 @@ public class RecursiveBuildVisitor extends ScopeTracker {
                 break;
 
             case BUILD:
-                // TODO: Add procedure call
                 this.handleBuildPre(node);
                 break;
 

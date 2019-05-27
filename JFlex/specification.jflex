@@ -67,8 +67,6 @@ Multi_Line_Comment = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 
 %%
 
-// TODO: Add size
-
 <YYINITIAL>{
 
 /* keywords */
