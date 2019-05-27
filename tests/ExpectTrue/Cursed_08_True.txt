@@ -1,0 +1,25 @@
+// Test of legal but cursed sequences
+
+block main {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(){
+        this.in -> block b = build cursed_8();
+        (b.one, b.three) -> operation o = build Multiplication();
+        (b.two, o) -> build Multiplication() -> this.out;
+    }
+}
+
+block cursed_8 {
+    mychannel:in in;
+    mychannel:out one;
+    mychannel:out two;
+    mychannel:out three;
+
+    blueprint(){
+        this.in -> build _Tanh() -> this.two;
+        build Source([1,1]) -> this.one;
+        build Source([1,1]) -> this.three;
+    }
+}
