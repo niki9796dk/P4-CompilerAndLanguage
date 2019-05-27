@@ -6,15 +6,14 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
-import CompilerExceptions.UnexpectedNodeException;
-import SymbolTableImplementation.SymbolTable;
 import CompilerExceptions.TypeExceptions.ChannelPlacementTypeException;
 import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;
 import CompilerExceptions.TypeExceptions.ParamsTypeInconsistencyException;
 import CompilerExceptions.TypeExceptions.TypeInconsistencyException;
+import CompilerExceptions.UnexpectedNodeException;
+import SymbolTableImplementation.SymbolTable;
 
 public class TypeCheckerVisitor extends ScopeTracker {
 

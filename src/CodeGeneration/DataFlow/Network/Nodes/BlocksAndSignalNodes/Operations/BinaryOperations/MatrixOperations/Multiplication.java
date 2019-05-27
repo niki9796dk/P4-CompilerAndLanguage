@@ -2,11 +2,9 @@ package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Bi
 
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
-import DataStructures.Pair;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class Multiplication extends BinaryAbstractOperation {
     /**

@@ -1,12 +1,8 @@
 package CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels;
 
 import CodeGeneration.DataFlow.Network.Nodes.SignalNode;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
-import LinearAlgebra.Types.Matrices.Matrix;
-import LinearAlgebra.Types.Matrices.MatrixBuilder;
 
-import javax.print.DocFlavor;
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * A channel that uses list implementation (**!!!!!And not a list of channels!!!!!**)

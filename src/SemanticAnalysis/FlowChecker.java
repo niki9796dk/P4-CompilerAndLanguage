@@ -7,12 +7,12 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
-import SemanticAnalysis.Datastructures.ProcCall;
 import CompilerExceptions.SemanticExceptions.IncorrectChannelUsageException;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import SemanticAnalysis.Datastructures.ProcCall;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
-import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
 import java_cup.runtime.ComplexSymbolFactory;
 

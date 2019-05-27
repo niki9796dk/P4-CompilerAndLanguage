@@ -1,15 +1,16 @@
 package AutoGen;
 
-import java.io.*;
-
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.TreeWalks.*;
 import CompilerExceptions.CompilerException;
 import Enums.AnsiColor;
 import SymbolTableImplementation.SymbolTable;
-import java_cup.runtime.*;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ScannerBuffer;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 
 public class MainParse {

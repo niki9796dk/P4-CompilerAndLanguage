@@ -3,13 +3,16 @@ package AST.TreeWalks;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.NodeClasses.NamedNodes.*;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
-import CompilerExceptions.UnexpectedNodeException;
+import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
+import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
+import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyInChannelNode;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.MyOutChannelNode;
 import CompilerExceptions.SemanticExceptions.ChainConnectionMismatchException;
 import CompilerExceptions.SemanticExceptions.GroupConnectionMismatchException;
-import SymbolTableImplementation.*;
 import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import CompilerExceptions.UnexpectedNodeException;
+import SymbolTableImplementation.SymbolTable;
 
 /**
  * The visitor used for the semantic analysis phase of the compiler (Excluding type- and scope checking).

@@ -2,19 +2,8 @@ package CodeGeneration.DataFlow.Executions;
 
 import AutoGen.CodeGen.ANN;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNode;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNode;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes.FeedforwardBounce;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes.backpropagationBounce;
-import LinearAlgebra.Statics.Matrices;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
-import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.SigmoidActivation;
-import MachineLearning.NeuralNetwork.Trainer.Costs.MSECost;
-import MachineLearning.NeuralNetwork.Trainer.DataStructure.DefaultData;
-import MachineLearning.NeuralNetwork.Trainer.Trainer;
-import MachineLearning.NeuralNetwork.Trainer.TrainingMethods.MiniBatch;
-import MachineLearning.NeuralNetwork.Trainer.TrainingMethods.TrainingMethod;
 
 public class MainBlock {
     public static void main(String[] args) {

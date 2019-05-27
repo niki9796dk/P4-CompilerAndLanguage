@@ -3,12 +3,12 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import CompilerExceptions.UnexpectedNodeException;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
-import SemanticAnalysis.Datastructures.SetStack;
 import CompilerExceptions.SemanticExceptions.BuildRecursionException;
-import SymbolTableImplementation.*;
 import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import CompilerExceptions.UnexpectedNodeException;
+import SemanticAnalysis.Datastructures.SetStack;
+import SymbolTableImplementation.SymbolTable;
 import TypeChecker.TypeSystem;
 
 /**

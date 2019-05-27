@@ -2,16 +2,19 @@ package AST.TreeWalks;
 
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
-import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
 import CompilerExceptions.ScopeExceptions.IllegalBlockNameException;
 import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
 import CompilerExceptions.ScopeExceptions.NoSuchVariableDeclaredException;
 import CompilerExceptions.UnexpectedNodeException;
-import SymbolTableImplementation.*;
+import SymbolTableImplementation.BlockScope;
+import SymbolTableImplementation.Scope;
+import SymbolTableImplementation.SymbolTable;
+import SymbolTableImplementation.VariableEntry;
 import java_cup.runtime.ComplexSymbolFactory;
 
 /**

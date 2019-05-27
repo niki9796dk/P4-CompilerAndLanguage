@@ -4,7 +4,10 @@ import CodeGeneration.DataFlow.Network.Nodes.SignalNode;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import LinearAlgebra.Types.Matrices.Matrix;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class AbstractChannel implements Channel {
     protected boolean ready = false;

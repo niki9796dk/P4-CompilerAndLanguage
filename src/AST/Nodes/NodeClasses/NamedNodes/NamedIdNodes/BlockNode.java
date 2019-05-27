@@ -4,8 +4,6 @@ import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import java_cup.runtime.ComplexSymbolFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**

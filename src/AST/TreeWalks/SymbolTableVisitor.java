@@ -1,16 +1,16 @@
 package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import CompilerExceptions.ScopeExceptions.ScopeBoundsViolationException;
-import CompilerExceptions.UnexpectedNodeException;
 import AST.Visitor;
+import CompilerExceptions.ScopeExceptions.ScopeBoundsViolationException;
 import CompilerExceptions.ScopeExceptions.VariableAlreadyDeclaredException;
+import CompilerExceptions.UnexpectedNodeException;
 import SymbolTableImplementation.Scope;
-import SymbolTableImplementation.SymbolTableInterface;
 import SymbolTableImplementation.SymbolTable;
+import SymbolTableImplementation.SymbolTableInterface;
 import SymbolTableImplementation.VariableEntry;
 
 public class SymbolTableVisitor implements Visitor {

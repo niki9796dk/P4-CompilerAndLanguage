@@ -1,10 +1,10 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation;
 
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.AbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.IllegalMethodException;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
+import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import LinearAlgebra.Types.Matrices.Matrix;
 
 public abstract class NullaryAbstractOperation extends AbstractOperation {
