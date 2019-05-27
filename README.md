@@ -7,7 +7,7 @@ Add the four .jar dependencies in the libraries-folder as libraries in the proje
 - java-cup-11b.jar
 - java-cup-11b-runtime.jar
 - jflex-full-1.7.0.jar
-- LinearAlgebra.jar
+- LinearAlgebra.jar (Raonox - https://github.com/niki9796dk/Raonox)
 
 ## Building the project
 The compiler is dependent on JFlex and Cup for generating the scanner and parser based on the specification-files in JFlex/specification.jflex and Cup/specification.cup.
