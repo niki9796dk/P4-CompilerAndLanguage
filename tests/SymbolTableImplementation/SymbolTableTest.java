@@ -139,7 +139,7 @@ class SymbolTableTest {
 
     @Test
     void getSubScope() {
-        assertEquals(null, s.getSubScope("", ""));
+        assertNull(s.getSubScope("", ""));
     }
 
 

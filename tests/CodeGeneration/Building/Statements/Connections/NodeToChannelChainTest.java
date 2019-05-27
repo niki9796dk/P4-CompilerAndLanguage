@@ -17,7 +17,6 @@ class NodeToChannelChainTest {
     @BeforeEach
     void beforeEach() {
         this.nodeToChannelChain = new NodeToChannelChain(DEFAULT_ID, DEFAULT_ID);
-        NodeToChannelChain nodeToChannelChain02 = new NodeToChannelChain(new Selector(DEFAULT_ID), new Selector(DEFAULT_ID));
     }
 
     @Test

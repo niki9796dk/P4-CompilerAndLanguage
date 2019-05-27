@@ -36,7 +36,7 @@ public class CodeGenRunTest {
 
         ClassLoader classLoader;
         try {
-            classLoader = new URLClassLoader(new URL[]{new File("src"+File.separator).toURI().toURL()});
+            classLoader = new URLClassLoader(new URL[]{new File("src" + File.separator).toURI().toURL()});
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -127,10 +127,6 @@ public class CodeGenRunTest {
 
         return  (Class<Block>) Class.forName(file.getPath()
                 .replace(File.separatorChar, '.')
-                /*
-                .replace('/', '.')
-                .replace('\\', '.')
-                */
                 .replaceAll("src.", "")
                 .replaceAll(".class", ""), false, classLoader);
     }

@@ -17,7 +17,6 @@ class TetherChannelsTest {
     @BeforeEach
     void beforeEach() {
         this.tetherChannels = new TetherChannels(DEFAULT_STRING, DEFAULT_STRING);
-        TetherChannels tetherChannels02 = new TetherChannels(new Selector(DEFAULT_STRING), new Selector(DEFAULT_STRING));
     }
 
     @Test

@@ -95,26 +95,6 @@ class BinaryAbstractOperationTest {
 
     }
 
-    @RepeatedTest(4)
-    void performOperationBackprop(RepetitionInfo r) {
-        //Todo: This test
-        /*
-        int i = r.getCurrentRepetition();
-        BinaryAbstractOperation op = operations.get(i);
-        Matrix expected = expectedResultsOperations.get(i);
-
-        in1.connectTo(op, "out", "in1");
-        in2.connectTo(op, "out", "in2");
-
-        op.connectTo(new FillerNode(),"out","in");
-
-        op.performOperation();
-        Matrix result = op.getOutputChannel().getResultBackpropagation();
-
-        Print.echo(AnsiColor.PURPLE, "┄──────────┄\n" + result + "\n┄──────────┄");
-         */
-    }
-
     @RepeatedTest(5)
     void getOutputChannel(RepetitionInfo r) {
         int i = r.getCurrentRepetition()-1;

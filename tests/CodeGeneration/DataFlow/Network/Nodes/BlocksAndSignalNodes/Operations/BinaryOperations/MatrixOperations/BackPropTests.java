@@ -85,20 +85,4 @@ class BackPropTests {
         assertEquals(expectedCosts.get(expectedIndex + 0), operation.getResultBackpropagation(operation.getInputChannels().get(BinaryAbstractOperation.BINARY_IN_A_CHANNEL)));
         assertEquals(expectedCosts.get(expectedIndex + 1), operation.getResultBackpropagation(operation.getInputChannels().get(BinaryAbstractOperation.BINARY_IN_B_CHANNEL)));
     }
-
-    @Test
-    void operation() {
-    }
-
-    @Test
-    void operationBackpropagation() {
-    }
-
-    @Test
-    void calculateIn1Derivatives() {
-    }
-
-    @Test
-    void calculateIn2Derivatives() {
-    }
 }
