@@ -41,6 +41,17 @@ public abstract class AbstractNode implements Node {
       return this.column;
    }
 
+   @Override
+   public boolean hasAncestorOfClass(Class parentClass) {
+      if (parentClass.isInstance(this)) {
+         return true;
+      } else if (this.getParent() != null) {
+         return this.getParent().hasAncestorOfClass(parentClass);
+      }
+
+      return false;
+   }
+
    /** Join the end of this sibling's list with the supplied sibling's list
     * @param sib The sibling to add to the end of the list.
     * @return The last sibling of the input parameter "sib"

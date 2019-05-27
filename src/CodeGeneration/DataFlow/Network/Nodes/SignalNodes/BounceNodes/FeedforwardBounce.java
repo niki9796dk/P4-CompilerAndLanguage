@@ -27,6 +27,7 @@ public class FeedforwardBounce extends AbstractBounceNode {
     @Override
     public void acceptReadyBackpropagationSignal() {
         // Perform the required bounce logic
+        this.touchCounter++;
 
         // Do not rebounce, otherwise a stackOverflow will happen.
     }

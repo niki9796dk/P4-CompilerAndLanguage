@@ -87,12 +87,11 @@ public abstract class AbstractChannel implements Channel {
 
     @Override
     public boolean isSource() {
-        if (this.source instanceof Channel) {
-            return (this.ready = ((Channel) this.source).isReady());
-
-        } else {
+        if (this.source == null) {
             return false;
         }
+
+        return (this.ready = this.ready || (this.source).isSource()); // This.ready for short circuiting.
     }
 
     @Override

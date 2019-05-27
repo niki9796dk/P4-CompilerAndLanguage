@@ -20,6 +20,10 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
      */
     @Override
     public Matrix getResult() {
+        if (this.result == null) {
+            throw new NullPointerException("A result from a " + this.getClass().getSimpleName() + " operation was null.");
+        }
+
         //forward.say("getResult() -> this.result = " + this.result);
         return result;
     }

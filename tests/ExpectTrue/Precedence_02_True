@@ -17,6 +17,7 @@ block Test {
     mychannel:out output;
 
     blueprint() {
-        this.input -> build _Sigmoid() -> this.output;
+        operation a;
+        this.input -> a = build _Sigmoid() -> a = build _Tanh() -> this.output;
     }
 }

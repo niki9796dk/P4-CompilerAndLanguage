@@ -1,0 +1,23 @@
+block main {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint () {
+        this.in -> block b = build SubBlock();
+        (b.out_1, b.out_2) -> build Multiplication() -> this.out;
+    }
+}
+
+block SubBlock {
+    mychannel:in in;
+    mychannel:out out_1;
+    mychannel:out out_2;
+
+    blueprint () {
+        source s_1 = build Source([1, 1]);
+        source s_2 = build Source([1, 1]);
+
+        this.in -> this.out_1;
+        (s_1, s_2) -> build Multiplication() -> this.out_2;
+    }
+}

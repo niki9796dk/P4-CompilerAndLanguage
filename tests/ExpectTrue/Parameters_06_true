@@ -13,12 +13,12 @@ block B1 {
     mychannel:in in;
     mychannel:out out;
 
-    blueprint (blueprint ToBuild) {
+    blueprint (blueprint ToBuild) { // ToBuild is B2
         level1(ToBuild);
     }
 
     // ######## LEVEL 1 ########
-    procedure level1(blueprint ToBuild) {
+    procedure level1(blueprint ToBuild) { // ToBuild is B2
         operation o = build _Addition();
         level2(ToBuild, draw B2, o.A);
         level1_(ToBuild, o.B);
@@ -27,12 +27,12 @@ block B1 {
 
     procedure level1_(blueprint ToBuild, channel:in next) {
         source s = build Source([1,1]);
-        block b = build ToBuild(draw B3);
+        block b = build ToBuild(draw _Tanh);
         s -> b -> next;
     }
 
     // ######## LEVEL 2 ########
-    procedure level2(blueprint ToBuild1, blueprint ToBuild2, channel:in next) {
+    procedure level2(blueprint ToBuild1, blueprint ToBuild2, channel:in next) { // Both ToBuild is B2
         operation o = build Multiplication();
         level3(ToBuild1, ToBuild2, draw B2, o.A);
         level3_(ToBuild1, ToBuild2, draw B2, o.B);
@@ -45,7 +45,7 @@ block B1 {
     }
 
     // ######## LEVEL 3 ########
-    procedure level3(blueprint ToBuild1, blueprint ToBuild2, blueprint ToBuild3, channel:in next) {
+    procedure level3(blueprint ToBuild1, blueprint ToBuild2, blueprint ToBuild3, channel:in next) { // All ToBuild is B2
         this.in -> build ToBuild1(draw B3) -> build ToBuild2(draw B3) -> build ToBuild3(draw B3) -> next;
     }
 

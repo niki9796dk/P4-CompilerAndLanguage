@@ -232,20 +232,51 @@ public abstract class AbstractBlock implements Block {
     public void train(Matrix inputData, Matrix targetData, int iterations, double learningRate) {
         AbstractBlock.configuration = new BlockConfiguration(inputData.getRows(), iterations);
 
-        BounceNode feedForward = new FeedforwardBounce(inputData);
-        BounceNode backProp = new backpropagationBounce(targetData);
+        FeedforwardBounce feedForward = new FeedforwardBounce(inputData);
+        backpropagationBounce backProp = new backpropagationBounce(targetData);
 
         feedForward.connectToMainBlock(this);
         backProp.connectToMainBlock(this);
 
         for (int i = 0; i < iterations; i++) {
+            // Send the feedforward signal
             feedForward.acceptReadySignal();
+
+            // Check if there were sufficient flow - Throw an exception if not.
+            this.verifySignalFlow(feedForward, backProp);
         }
 
         feedForward.releaseFromMainBlock();
         backProp.releaseFromMainBlock();
 
         AbstractBlock.configuration = null;
+    }
+
+    private void verifySignalFlow(FeedforwardBounce feedForward, backpropagationBounce backProp) {
+        boolean signalReachTheEnd = backProp.hasBeenTouched();
+        boolean signalReturnedToStart = feedForward.hasBeenTouched();
+        int backPropTouches = backProp.getTotalTouches();
+        int feedforwardTouches = feedForward.getTotalTouches();
+
+        if (!(signalReachTheEnd && signalReturnedToStart)) {
+            String errorMsg;
+            if (signalReachTheEnd) {
+                errorMsg = "The signal could only reach the end, but not return to the start!?!?";
+            } else if (signalReturnedToStart) {
+                errorMsg = "The signal somehow returned back home, but could not reach the end!?!?";
+            } else {
+                errorMsg = "The signal died mid way!?!?";
+            }
+
+            throw new RuntimeException("There is not sufficient flow! - " + errorMsg);
+
+        } else if (backPropTouches != 1 || feedforwardTouches != 1) {
+            throw new RuntimeException("There was flow though the whole network... But the ends were touched a few times too many: FF[" + feedforwardTouches + "] and BP[" + backPropTouches + "]... They should both be 1." );
+        }
+
+        // Let the bouncers forget they were touched, to allow for future similar events.
+        feedForward.forgetTouch();
+        backProp.forgetTouch();
     }
 
     @Override

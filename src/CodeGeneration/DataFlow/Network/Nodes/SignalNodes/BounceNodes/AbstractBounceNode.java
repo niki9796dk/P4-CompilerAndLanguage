@@ -7,6 +7,8 @@ import LinearAlgebra.Types.Matrices.Matrix;
 
 public abstract class AbstractBounceNode implements BounceNode {
 
+    protected int touchCounter = 0;
+
     @Override
     public Matrix getResult() {
         throw new NullPointerException("This node cannot have feedforward results");
@@ -20,5 +22,20 @@ public abstract class AbstractBounceNode implements BounceNode {
     @Override
     public boolean isSource() {
         return false;
+    }
+
+    @Override
+    public boolean hasBeenTouched() {
+        return this.touchCounter > 0;
+    }
+
+    @Override
+    public void forgetTouch() {
+        this.touchCounter = 0;
+    }
+
+    @Override
+    public int getTotalTouches() {
+        return this.touchCounter;
     }
 }

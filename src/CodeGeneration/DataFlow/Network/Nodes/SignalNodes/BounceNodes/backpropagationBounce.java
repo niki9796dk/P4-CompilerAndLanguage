@@ -27,6 +27,7 @@ public class backpropagationBounce extends AbstractBounceNode {
     @Override
     public void acceptReadySignal() {
         // Perform the required bounce logic
+        this.touchCounter++;
         //print.say("Signal has reached the end.");
 
         // Rebounce

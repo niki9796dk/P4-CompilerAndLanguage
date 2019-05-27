@@ -9,6 +9,7 @@ import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DrawNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import CompilerExceptions.UnexpectedNodeException;
 import CodeGeneration.Building.BlockClass;
 import CodeGeneration.Building.CodeScope;
@@ -157,6 +158,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
         super.post(printLevel, abstractNode);
 
         NamedNode node = (NamedNode) abstractNode;
+        String nodeId = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : null;
 
         switch (node.getNodeEnum()) {
             // No action enums
@@ -188,9 +190,12 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 }
             break;
 
+            case PROCEDURE_CALL:
+                this.currentCodeScope.addStatement(this.getStatementFromNode(node));
+                break;
+
             case GROUP:
             case PARAMS:
-            case SELECTOR:
             case DRAW:
             case BUILD:
             case SIZE:
@@ -209,33 +214,39 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case CHANNEL_DECLARATIONS:
                 break;
 
-            case PROCEDURE_CALL:
-                this.currentCodeScope.addStatement(this.getStatementFromNode(node));
-                break;
-
             case CHAIN:
                 this.handleChainNode((ChainNode) node);
                 break;
 
+            case SELECTOR:
+                if (node.getParent() instanceof ChainNode && !isChannel(node)) {
+                    // Generate unique var name
+                    String uniqueVarName = this.generateUniqueVariableName(node);
+                    String assignId = ((NamedIdNode) node).getId();
+
+                    // Add statements to reflect the new variables declaration
+                    this.currentCodeScope.addStatement(this.getChainAssignTempVarDeclaStatement(assignId, uniqueVarName, node));
+                    this.currentCodeScope.addStatement(new AssignVar(uniqueVarName, assignId));
+
+                    // Store the placeholder var for later retrieval
+                    this.placeholderVars.put(node.getNumber(), uniqueVarName);
+                }
+                break;
+
             case ASSIGN:
-                NamedIdNode leftNode = (NamedIdNode) node.getChild();
-                AbstractNode rightNode = leftNode.getSib();
+                this.handleAssignment(node);
 
-                String leftVar = leftNode.getId();
+                if (node.hasAncestorOfClass(ChainNode.class)) {
+                    // Generate unique var name
+                    String uniqueVarName = this.generateUniqueVariableName(node);
+                    String assignId = ((NamedIdNode) node.getChild()).getId();
 
-                if (rightNode instanceof BuildNode) {
-                    Statement buildStatement = this.getStatementFromNode(rightNode);
-                    Scope subScope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
+                    // Add statements to reflect the new variables declaration
+                    this.currentCodeScope.addStatement(this.getChainAssignTempVarDeclaStatement(assignId, uniqueVarName, node));
+                    this.currentCodeScope.addStatement(new AssignVar(uniqueVarName, assignId));
 
-                    this.currentCodeScope.addStatement(new AssignBuild(subScope, leftVar, buildStatement));
-                } else if (rightNode instanceof SelectorNode) {
-                    this.currentCodeScope.addStatement(new AssignVar(leftVar, this.getStatementFromNode(rightNode).toString()));
-                } else if (rightNode instanceof DrawNode) {
-                    this.currentCodeScope.addStatement(new AssignBlueprint(leftVar, (InitBlueprint) this.getStatementFromNode(rightNode)));
-                } else if (rightNode instanceof SizeNode) {
-                    this.currentCodeScope.addStatement(new AssignSize(leftVar, (InitSize) this.getStatementFromNode(rightNode)));
-                } else {
-                    throw new IllegalArgumentException("Did not expect this: " + rightNode);
+                    // Store the placeholder var for later retrieval
+                    this.placeholderVars.put(node.getNumber(), uniqueVarName);
                 }
                 break;
 
@@ -244,8 +255,74 @@ public class CodeGenerationVisitor extends ScopeTracker {
         }
     }
 
+    private Statement getChainAssignTempVarDeclaStatement(String assignId, String uniqueVarName, AbstractNode errorNode) {
+        NodeEnum superType = this.getCurrentSubScope().getVariable(assignId).getSuperType();
+
+        switch (superType) {
+            case BLOCK_TYPE:
+                return new BlockDeclaration(uniqueVarName);
+
+            case BLUEPRINT_TYPE:
+                return new BlueprintDeclaration(uniqueVarName);
+
+            case OPERATION_TYPE:
+                return new OperationDeclaration(uniqueVarName);
+
+            case SIZE_TYPE:
+                return new SizeDeclaration(uniqueVarName);
+
+            case SOURCE_TYPE:
+                return new SourceDeclaration(uniqueVarName);
+
+            case CHANNEL_IN_MY:
+            case CHANNEL_OUT_MY:
+            case CHANNEL_IN_TYPE:
+            case CHANNEL_OUT_TYPE:
+                return new ChannelDeclaration(uniqueVarName);
+
+            default:
+                throw new ShouldNotHappenException(errorNode, "Unexpected type of assignment");
+        }
+    }
+
+    private void handleAssignment(AbstractNode node) {
+        NamedIdNode leftNode = (NamedIdNode) node.getChild();
+        AbstractNode rightNode = leftNode.getSib();
+
+        String leftVar = leftNode.getId();
+
+        if (rightNode instanceof BuildNode) {
+            Statement buildStatement = this.getStatementFromNode(rightNode);
+            Scope subScope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
+
+            this.currentCodeScope.addStatement(new AssignBuild(subScope, leftVar, buildStatement));
+        } else if (rightNode instanceof SelectorNode) {
+            this.currentCodeScope.addStatement(new AssignVar(leftVar, this.getStatementFromNode(rightNode).toString()));
+        } else if (rightNode instanceof DrawNode) {
+            this.currentCodeScope.addStatement(new AssignBlueprint(leftVar, (InitBlueprint) this.getStatementFromNode(rightNode)));
+        } else if (rightNode instanceof SizeNode) {
+            this.currentCodeScope.addStatement(new AssignSize(leftVar, (InitSize) this.getStatementFromNode(rightNode)));
+        } else {
+            throw new IllegalArgumentException("Did not expect this: " + rightNode);
+        }
+    }
+
     private String generateUniqueVariableName(Node node) {
-        String nodeId = ((NamedIdNode) node).getId();
+        String nodeId;
+        if (node instanceof NamedIdNode) {
+            nodeId = ((NamedIdNode) node).getId();
+
+            if (node.getParent() instanceof ChainNode) {
+                nodeId += "_ChainTemp";
+            }
+
+        } else if (node instanceof AssignNode) {
+            nodeId = ((NamedIdNode) node.getChild()).getId() + "_ChainTemp";
+
+        } else {
+            throw new RuntimeException("Unexpected node: " + node);
+        }
+
         Scope currentScope = this.symbolTable.getSubScope(this.currentBlockScope, this.currentSubScope);
 
         String uniqueVar;
@@ -253,7 +330,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
             int randomNumber = Math.abs(ThreadLocalRandom.current().nextInt());
 
             uniqueVar = "_" + nodeId + "_" + randomNumber;
-        } while (currentScope.getVariable(uniqueVar) != null);
+        } while (currentScope.getVariable(uniqueVar) != null && !this.placeholderVars.containsValue(uniqueVar));
 
         return uniqueVar;
     }
@@ -280,35 +357,35 @@ public class CodeGenerationVisitor extends ScopeTracker {
 
         int groupElems = groupNode.countChildren();
 
-        List<Statement> groupElements = new ArrayList<>(groupElems);
+        Statement[] groupElements = new Statement[groupElems];
 
         AbstractNode groupElement = groupNode.getChild();
         for (int i = 0; i < groupElems; i++) {
-            groupElements.add(this.getStatementFromNode(groupElement));
+            groupElements[i] = this.getStatementFromNode(groupElement);
             groupElement = groupElement.getSib();
         }
 
-        this.currentCodeScope.addStatement(new GroupChain(this.getCurrentSubScope(), rightStatement, groupElements.toArray(new Statement[0])));
+        this.currentCodeScope.addStatement(new GroupChain(this.getCurrentSubScope(), rightStatement, groupElements));
     }
 
     private void singleConnect(AbstractNode leftNode, AbstractNode rightNode) {
-        leftNode = this.transformIfAssign(leftNode);
-        rightNode = this.transformIfAssign(rightNode);
+        AbstractNode leftNodeCompare = this.transformIfAssign(leftNode);
+        AbstractNode rightNodeCompare = this.transformIfAssign(rightNode);
 
         Statement leftStatement = this.getStatementFromNode(leftNode);
         Statement rightStatement = this.getStatementFromNode(rightNode);
 
-        if ((this.isBlockOperationSource(leftNode) || this.isChannel(leftNode)) && this.isBlockOperationSource(rightNode)) {
+        if ((this.isBlockOperationSource(leftNodeCompare) || this.isChannel(leftNodeCompare)) && this.isBlockOperationSource(rightNodeCompare)) {
             this.currentCodeScope.addStatement(new GroupChain(this.getCurrentSubScope(), rightStatement, leftStatement));
 
-        } else if (this.isChannel(leftNode) && this.isChannel(rightNode)) {
+        } else if (this.isChannel(leftNodeCompare) && this.isChannel(rightNodeCompare)) {
             this.currentCodeScope.addStatement(new TetherChannels(leftStatement, rightStatement));
 
-        } else if (this.isBlockOperationSource(leftNode) && isChannel(rightNode)) {
+        } else if (this.isBlockOperationSource(leftNodeCompare) && isChannel(rightNodeCompare)) {
             this.currentCodeScope.addStatement(new NodeToChannelChain(leftStatement, rightStatement));
 
         } else {
-            throw new RuntimeException("Left: " + leftNode + " - Right: " + rightNode);
+            throw new RuntimeException("Left: " + leftNodeCompare + " - Right: " + rightNodeCompare);
         }
 
     }
@@ -424,20 +501,23 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 }
 
             case SELECTOR:
+                String placeHolderVar = this.placeholderVars.get(node.getNumber());
+                String primarySelectorId = placeHolderVar == null ? nodeId : placeHolderVar;
+
                 if (node.getChild() instanceof SelectorNode) {
-                    return new DotSelector(nodeId, ((NamedIdNode) node.getChild()).getId());
+                    return new DotSelector(primarySelectorId, ((NamedIdNode) node.getChild()).getId());
                 } else {
                     boolean isLocalVariable = this.getCurrentSubScope().getVariable(nodeId) != null;
 
                     if (isLocalVariable) {
-                        return new Selector(nodeId);
+                        return new Selector(primarySelectorId);
                     } else {
                         NodeEnum nodeSuperType = this.typeSystem.getSuperTypeOfNode(node, this.currentBlockScope, this.currentSubScope);
 
                         if (nodeSuperType == NodeEnum.CHANNEL_IN_MY || nodeSuperType == NodeEnum.CHANNEL_OUT_MY) {
                             return new DotSelector("this", nodeId);
                         } else {
-                            return new Selector(nodeId);
+                            return new Selector(primarySelectorId);
                         }
                     }
                 }
@@ -481,7 +561,11 @@ public class CodeGenerationVisitor extends ScopeTracker {
                 return new ChannelDeclaration(nodeId);
 
             case ASSIGN:
-                return new Selector(((NamedIdNode) node.getChild()).getId());
+                if (this.placeholderVars.containsKey(node.getNumber())) {
+                    return new Selector(this.placeholderVars.get(node.getNumber()));    // Get the placeholder var
+                } else {
+                    return new Selector(((NamedIdNode) node.getChild()).getId());       // Get the original variable name
+                }
 
             // No action enums
             case ROOT:

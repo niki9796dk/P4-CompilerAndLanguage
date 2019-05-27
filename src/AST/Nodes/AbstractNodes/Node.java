@@ -12,6 +12,8 @@ public interface Node {
 
     int getColumn();
 
+    boolean hasAncestorOfClass(Class<AbstractNode> parentClass);
+
     /** Join the end of this sibling's list with the supplied sibling's list
      * @param sib The sibling to add to the end of the list.
      * @return The last sibling of the input parameter "sib"
