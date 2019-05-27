@@ -2,18 +2,15 @@ package AST.TreeWalks;
 
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
-import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
-import AST.Nodes.NodeClasses.NamedNodes.ChannelDeclarationsNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
+import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.SpecialNodes.UnexpectedNode;
 import CompilerExceptions.UnexpectedNodeException;
 import SymbolTableImplementation.SymbolTable;
 import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ChainCheckerVisitorTest {
 

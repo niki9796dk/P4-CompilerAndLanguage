@@ -3,13 +3,13 @@ package AST.TreeWalks;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import CompilerExceptions.UnexpectedNodeException;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
 import SemanticAnalysis.Datastructures.HashSetStack;
 import SemanticAnalysis.Datastructures.SetStack;
 import CompilerExceptions.SemanticExceptions.BuildRecursionException;
-import SymbolTableImplementation.*;
 import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import CompilerExceptions.UnexpectedNodeException;
+import SymbolTableImplementation.SymbolTable;
 import TypeChecker.TypeSystem;
 
 /**
@@ -43,12 +43,10 @@ public class RecursiveBuildVisitor extends ScopeTracker {
             // No action enums
             case BLOCK:
             case BLUEPRINT:
-            case PROCEDURE:
             case CHANNEL_DECLARATIONS:
             case ROOT:
             case GROUP:
             case CHAIN:
-            case PROCEDURE_CALL:
             case PARAMS:
             case SELECTOR:
             case DRAW:
@@ -63,8 +61,15 @@ public class RecursiveBuildVisitor extends ScopeTracker {
             case SOURCE_TYPE:
             case BLUEPRINT_TYPE:
             case OPERATION_TYPE:
+            case PROCEDURE:
                 break;
 
+            case PROCEDURE_CALL:
+                if (!procedureStack.push(node.toString() + getParamAsString(node)))
+                {
+                    throw new BuildRecursionException(node, "Recursive procedures! - " + node);
+                }
+                break;
             case BUILD:
                 this.handleBuildPre(node);
                 break;
@@ -100,7 +105,6 @@ public class RecursiveBuildVisitor extends ScopeTracker {
             case ASSIGN:
             case BLOCK:
             case BLUEPRINT:
-            case PROCEDURE:
             case CHANNEL_DECLARATIONS:
             case CHANNEL_IN_MY:
             case CHANNEL_OUT_MY:
@@ -113,6 +117,9 @@ public class RecursiveBuildVisitor extends ScopeTracker {
             case OPERATION_TYPE:
                 break;
 
+            case PROCEDURE:
+                procedureStack.pop();
+                break;
             case BUILD:
                 // Once done, pop the newly added build
                 this.handleBuildPost(node);
@@ -174,8 +181,6 @@ public class RecursiveBuildVisitor extends ScopeTracker {
 
         this.buildStack.pop();
     }
-
-    
 
     /**
      * Convert a build node into a string representation of it's ID and the subtype of it's params.

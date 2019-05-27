@@ -1,11 +1,8 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations;
 
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import LinearAlgebra.Types.Matrices.ConstantMatrix;
 import LinearAlgebra.Types.Matrices.Matrix;
-
-import java.util.HashMap;
 
 public class _Division extends BinaryAbstractOperation {
     /**

@@ -1,7 +1,6 @@
 package AST.Nodes.NodeClasses.NamedNodes;
 
 import AST.Enums.NodeEnum;
-import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import java_cup.runtime.ComplexSymbolFactory;
 

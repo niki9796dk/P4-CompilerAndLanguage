@@ -1,12 +1,10 @@
 package CodeGeneration.Building.CodeScopes;
 
-import CodeGeneration.Building.ParameterCollection;
 import CodeGeneration.Building.Statement;
 import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDeclarationIn;
 import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDeclarationOut;
 import CodeGeneration.Building.Statements.Selectors.Selector;
 import CodeGeneration.Building.Statements.VariableDeclarations.BlockDeclaration;
-import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

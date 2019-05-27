@@ -7,12 +7,12 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.ChainNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
-import SemanticAnalysis.Datastructures.ProcCall;
 import CompilerExceptions.SemanticExceptions.IncorrectChannelUsageException;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import SemanticAnalysis.Datastructures.ProcCall;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTableInterface;
-import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import TypeChecker.TypeSystem;
 import java_cup.runtime.ComplexSymbolFactory;
 
@@ -58,13 +58,13 @@ public class FlowChecker {
 
     public FlowChecker evaluateBlock(AbstractNode node) {
         // This is really useful for debugging.
-        int i = 0;
-        for (String s : inConnections) {
-            System.out.print(inConnections.get(i) + " -> " + outConnections.get(i) + " :::: ");
-            i++;
-        }
-        System.out.println(System.lineSeparator() + inConnectPoints);
-        System.out.println(outConnectPoints);
+//        int i = 0;
+//        for (String s : inConnections) {
+//            System.out.print(inConnections.get(i) + " -> " + outConnections.get(i) + " :::: ");
+//            i++;
+//        }
+//        System.out.println(System.lineSeparator() + inConnectPoints);
+//        System.out.println(outConnectPoints);
 
         for (String connectedOut : outConnections) {
             boolean firstTimeInConnected = outConnectPoints.remove(connectedOut);
@@ -253,10 +253,6 @@ public class FlowChecker {
         }
     }
 
-
-    /**
-     *
-     */
     private void addAllChannelsOfBlockInstance(BuildNode instance, BlockScope theBlock) {
         // Get all channels
         Scope channelDeclarationScope = theBlock.getChannelDeclarationScope();

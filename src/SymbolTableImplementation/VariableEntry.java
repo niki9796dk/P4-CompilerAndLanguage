@@ -37,7 +37,7 @@ public class VariableEntry {
      * @return The Enum representing the node
      */
     public NodeEnum getSuperType() {
-        return this.getNode().getNodeEnum(); // TODO: Ændre til en anden klasse af enums... Så vi også kan have primitive med.
+        return this.getNode().getNodeEnum();
     }
 
     /**

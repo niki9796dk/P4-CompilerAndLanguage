@@ -7,11 +7,11 @@ import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
-import CompilerExceptions.UnexpectedNodeException;
 import CompilerExceptions.ScopeExceptions.IllegalProcedureCallScopeException;
-import SymbolTableImplementation.*;
 import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;
 import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import CompilerExceptions.UnexpectedNodeException;
+import SymbolTableImplementation.*;
 import java_cup.runtime.ComplexSymbolFactory;
 
 /**

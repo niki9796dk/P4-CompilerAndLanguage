@@ -1,9 +1,6 @@
 package CodeGeneration.DataFlow.Network.Nodes.Blocks;
 
 
-
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import CodeGeneration.DataFlow.Executions.MainBlock;
 import CodeGeneration.DataFlow.Network.Node;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operation;
@@ -12,7 +9,6 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Bin
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Addition;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Subtraction;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
-import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnitWiseOperations._Sigmoid;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes.FeedforwardBounce;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
@@ -23,6 +19,7 @@ import MachineLearning.NeuralNetwork.Trainer.Costs.CostFunction;
 import MachineLearning.NeuralNetwork.Trainer.Costs.MSECost;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AbstractBlockTest {
@@ -165,7 +162,7 @@ class AbstractBlockTest {
         assertThrows(IllegalCallerException.class, () -> {
             Block block1 = new Multiplication();
             block1.getOutputChannels().put("key", new ListChannel());
-            block1.evaluateInput(Matrices.randomMatrix(2,2));
+            block1.evaluateInput(Matrices.randomMatrix(2, 2));
         });
     }
 

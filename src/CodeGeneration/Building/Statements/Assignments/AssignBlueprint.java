@@ -2,7 +2,6 @@ package CodeGeneration.Building.Statements.Assignments;
 
 import CodeGeneration.Building.Statement;
 import CodeGeneration.Building.Statements.Instantiations.InitBlueprint;
-import CodeGeneration.Building.Statements.Instantiations.InitBuild;
 
 public class AssignBlueprint implements Statement {
 

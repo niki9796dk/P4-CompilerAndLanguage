@@ -1,11 +1,6 @@
 package CodeGeneration.Building.Statements.Instantiations;
 
 import CodeGeneration.Building.Statement;
-import CodeGeneration.Building.Statements.Calls.CallParams;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class InitBuild implements Statement {
 

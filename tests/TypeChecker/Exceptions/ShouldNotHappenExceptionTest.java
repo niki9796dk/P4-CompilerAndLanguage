@@ -4,7 +4,7 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
 import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ShouldNotHappenExceptionTest {
     @Test

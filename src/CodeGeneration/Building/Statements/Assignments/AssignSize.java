@@ -1,7 +1,6 @@
 package CodeGeneration.Building.Statements.Assignments;
 
 import CodeGeneration.Building.Statement;
-import CodeGeneration.Building.Statements.Instantiations.InitBlueprint;
 import CodeGeneration.Building.Statements.Instantiations.InitSize;
 
 public class AssignSize implements Statement {

@@ -2,9 +2,9 @@ package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Un
 
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import LinearAlgebra.Types.Matrices.Matrix;
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction;
-import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 
 import java.util.HashMap;
 

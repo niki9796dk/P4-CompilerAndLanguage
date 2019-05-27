@@ -97,14 +97,14 @@ class BinaryAbstractOperationTest {
 
     @RepeatedTest(5)
     void getOutputChannel(RepetitionInfo r) {
-        int i = r.getCurrentRepetition()-1;
+        int i = r.getCurrentRepetition() - 1;
         BinaryAbstractOperation op = operations.get(i);
 
         assertNotNull(op.getOutputChannel());
     }
 
     @Test
-    void addInput(){
+    void addInput() {
         assertThrows(IllegalArgumentException.class, () -> operations.get(0).addNewInputLabel("in3", new ListChannel()));
         operations.get(0).addNewInputLabel(BinaryAbstractOperation.BINARY_IN_A_CHANNEL, new ListChannel());
         operations.get(0).addNewInputLabel(BinaryAbstractOperation.BINARY_IN_A_CHANNEL, new ListChannel());

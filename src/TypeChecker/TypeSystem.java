@@ -11,13 +11,16 @@ import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.BinaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.NullaryAbstractOperation;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.UnaryOperations.UnaryAbstractOperation;
-import CompilerExceptions.UnexpectedNodeException;
-import SemanticAnalysis.Datastructures.ModeEnum;
-import SymbolTableImplementation.*;
 import CompilerExceptions.TypeExceptions.IncorrectAssignmentTypesException;
 import CompilerExceptions.TypeExceptions.ParamsTypeInconsistencyException;
 import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
 import CompilerExceptions.TypeExceptions.TypeInconsistencyException;
+import CompilerExceptions.UnexpectedNodeException;
+import SemanticAnalysis.Datastructures.ModeEnum;
+import SymbolTableImplementation.BlockScope;
+import SymbolTableImplementation.Scope;
+import SymbolTableImplementation.SymbolTableInterface;
+import SymbolTableImplementation.VariableEntry;
 import java_cup.runtime.ComplexSymbolFactory;
 
 import java.util.Arrays;
@@ -304,7 +307,7 @@ public class TypeSystem {
                     return this.getOriginOfBuildStatement((BuildNode) node, blockScopeId, subScopeId, mode);
                 }
             case ASSIGN:
-                return this.followNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId, mode); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+                return this.followNode(numberedNode.getChild().getSib(), blockScopeId, subScopeId, mode);
 
             case SELECTOR:
                 return this.followSelector((SelectorNode) node, blockScopeId, subScopeId, mode);
@@ -444,7 +447,7 @@ public class TypeSystem {
                 return this.getTypeOfBuildStatement(node, blockScopeId, subScopeId);
 
             case ASSIGN:
-                return this.getSuperTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId); // TODO: Maybe rethink this... Since an assignment dont really have a type? Does it?
+                return this.getSuperTypeOfNode(numberedNode.getChild(), blockScopeId, subScopeId);
 
             case SELECTOR:
                 return this.getSuperTypeOfSelector(node, blockScopeId, subScopeId);

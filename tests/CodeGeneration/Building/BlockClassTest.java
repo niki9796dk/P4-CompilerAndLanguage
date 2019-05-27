@@ -45,7 +45,8 @@ class BlockClassTest {
         assertNotNull(this.blockClass.toString());
     }
 
-    @Test // With procedure
+    @Test
+        // With procedure
     void toString02() {
         this.blockClass.addProcedure(new SimpleCodeScope(DEFAULT_STRING));
         assertNotNull(this.blockClass.toString());

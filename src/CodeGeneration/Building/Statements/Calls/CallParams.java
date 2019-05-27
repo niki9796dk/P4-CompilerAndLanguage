@@ -1,12 +1,10 @@
 package CodeGeneration.Building.Statements.Calls;
 
 import AST.Enums.NodeEnum;
-import CodeGeneration.Building.Parameter;
 import CodeGeneration.Building.Statement;
 import CodeGeneration.Building.Statements.Selectors.Selector;
 import SymbolTableImplementation.Scope;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

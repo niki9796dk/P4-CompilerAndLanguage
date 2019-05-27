@@ -19,14 +19,14 @@ class BlockScopeTest {
     BlockNode node;
 
     @BeforeEach
-    void beforeEach(){
+    void beforeEach() {
         node = new BlockNode("BuildNode", new ComplexSymbolFactory.Location(-1, -1));
-        b = new BlockScope("b",node);
+        b = new BlockScope("b", node);
     }
 
     @Test
     void getId() {
-        assertEquals(b.getId(),"b");
+        assertEquals(b.getId(), "b");
     }
 
     @Test
@@ -38,45 +38,45 @@ class BlockScopeTest {
 
     @Test
     void getNode() {
-        assertSame(b.getNode(),node);
+        assertSame(b.getNode(), node);
     }
 
     @Test
     void openScope() {
-        b.openScope("firstScope",new BuildNode("buildNode", new ComplexSymbolFactory.Location(-1, -1)));
-        assertEquals(b.getScope().getEntry("firstScope").getId(),"firstScope");
+        b.openScope("firstScope", new BuildNode("buildNode", new ComplexSymbolFactory.Location(-1, -1)));
+        assertEquals(b.getScope().getEntry("firstScope").getId(), "firstScope");
     }
 
     @Test
     void getLatestSubScope() {
-        b.openScope("firstScope",new BuildNode("buildNode", new ComplexSymbolFactory.Location(-1, -1)));
-        assertSame(b.getScope().getEntry("firstScope"),b.getLatestSubScope());
+        b.openScope("firstScope", new BuildNode("buildNode", new ComplexSymbolFactory.Location(-1, -1)));
+        assertSame(b.getScope().getEntry("firstScope"), b.getLatestSubScope());
     }
 
     @Test
     void getChannelDeclarationScope() {
         assertNull(b.getChannelDeclarationScope());
-        b.openScope("ChannelDeclaration",new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1)));
-        assertEquals(b.getChannelDeclarationScope().getId(),"ChannelDeclaration");
+        b.openScope("ChannelDeclaration", new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1)));
+        assertEquals(b.getChannelDeclarationScope().getId(), "ChannelDeclaration");
     }
 
     @Test
     void getBlueprintScope() {
         assertNull(b.getBlueprintScope());
-        b.openScope("Blueprint",new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1)));
-        assertEquals(b.getBlueprintScope().getId(),"Blueprint");
+        b.openScope("Blueprint", new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1)));
+        assertEquals(b.getBlueprintScope().getId(), "Blueprint");
     }
 
     @Test
     void getProcedureScope() {
         assertNull(b.getProcedureScope("TEST"));
-        b.openScope("PROC_TEST",new ProcedureNode("TEST", new ComplexSymbolFactory.Location(-1, -1)));
-        assertEquals(b.getProcedureScope("TEST").getId(),"PROC_TEST");
+        b.openScope("PROC_TEST", new ProcedureNode("TEST", new ComplexSymbolFactory.Location(-1, -1)));
+        assertEquals(b.getProcedureScope("TEST").getId(), "PROC_TEST");
     }
 
     @Test
     void toString000() {
-        assertEquals(AnsiColor.removeColor(b.toString()),"BlockScope b:\n" +
+        assertEquals(AnsiColor.removeColor(b.toString()), "BlockScope b:\n" +
                 "\t\t\tEmpty");
     }
 }

@@ -6,15 +6,14 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.GroupNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import AST.Nodes.NodeClasses.NamedNodes.ProcedureCallNode;
-import CompilerExceptions.UnexpectedNodeException;
-import SymbolTableImplementation.SymbolTable;
 import CompilerExceptions.TypeExceptions.ChannelPlacementTypeException;
 import CompilerExceptions.TypeExceptions.ParamsSizeInconsistencyException;
 import CompilerExceptions.TypeExceptions.ParamsTypeInconsistencyException;
 import CompilerExceptions.TypeExceptions.TypeInconsistencyException;
+import CompilerExceptions.UnexpectedNodeException;
+import SymbolTableImplementation.SymbolTable;
 
 public class TypeCheckerVisitor extends ScopeTracker {
 
@@ -67,7 +66,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
             case GROUP:
             case PARAMS:
-            case DRAW:  // TODO: Maybe we should check whatever we draw is a block... But this should also be checked in the scope checker
+            case DRAW:
             case SIZE:
             case SELECTOR:
             case ROOT:
@@ -211,7 +210,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
             // Get the callee ID
             String nodeId = this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope);
 
-            // Verify that we are building an block, and not anything else. TODO: How about operation and source params?
+            // Verify that we are building an block, and not anything else.
             boolean isNotOperation = !this.typeSystem.isPredefinedOperation(nodeId);
             boolean isNotSource = !this.typeSystem.isPredefinedSource(nodeId);
 

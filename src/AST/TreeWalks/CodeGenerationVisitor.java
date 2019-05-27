@@ -9,8 +9,6 @@ import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BuildNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DrawNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.SelectorNode;
-import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
-import CompilerExceptions.UnexpectedNodeException;
 import CodeGeneration.Building.BlockClass;
 import CodeGeneration.Building.CodeScope;
 import CodeGeneration.Building.CodeScopes.SimpleCodeScope;
@@ -34,6 +32,8 @@ import CodeGeneration.Building.Statements.MyChannelDeclarations.BlockChannelDecl
 import CodeGeneration.Building.Statements.Selectors.DotSelector;
 import CodeGeneration.Building.Statements.Selectors.Selector;
 import CodeGeneration.Building.Statements.VariableDeclarations.*;
+import CompilerExceptions.TypeExceptions.ShouldNotHappenException;
+import CompilerExceptions.UnexpectedNodeException;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 import SymbolTableImplementation.SymbolTable;
@@ -44,7 +44,10 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CodeGenerationVisitor extends ScopeTracker {

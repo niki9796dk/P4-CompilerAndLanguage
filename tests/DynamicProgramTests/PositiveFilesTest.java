@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class PositiveFilesTest {
     private static final String CODE_GEN_FOLDER = "src" + File.separator + "AutoGen" + File.separator + "CodeGen";
 

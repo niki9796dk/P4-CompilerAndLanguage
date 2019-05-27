@@ -1,15 +1,13 @@
 package SymbolTableImplementation;
 
-import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
-import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.DummyNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import AST.Nodes.NodeClasses.NamedNodes.SizeNode;
 import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class VariableEntryOrDefaultTest {
 

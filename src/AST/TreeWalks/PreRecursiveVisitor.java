@@ -4,10 +4,10 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
-import CompilerExceptions.UnexpectedNodeException;
-import SemanticAnalysis.Datastructures.HashSetStack;
 import CompilerExceptions.SemanticExceptions.NoMainBlockException;
 import CompilerExceptions.SemanticExceptions.SemanticProblemException;
+import CompilerExceptions.UnexpectedNodeException;
+import SemanticAnalysis.Datastructures.HashSetStack;
 import SymbolTableImplementation.SymbolTable;
 
 import java.util.HashSet;

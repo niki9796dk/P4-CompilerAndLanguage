@@ -2,17 +2,13 @@ package CodeGeneration.Building.Statements.Calls;
 
 import AST.Nodes.NodeClasses.NamedNodes.BlueprintNode;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode;
-import CodeGeneration.Building.Statement;
-import CodeGeneration.Building.StatementCollections.ListStatements;
 import CodeGeneration.Building.Statements.Selectors.Selector;
 import SymbolTableImplementation.Scope;
 import java_cup.runtime.ComplexSymbolFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CallParamsTest {
 

@@ -3,7 +3,8 @@ package CodeGeneration.DataFlow.Network.Nodes.Blocks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class BlockConfigurationTest {
 
@@ -48,6 +49,7 @@ class BlockConfigurationTest {
         this.blockConfiguration.setLearningRate(LEARNING_RATE_V2);
         assertNotEquals(LEARNING_RATE, this.blockConfiguration.getLearningRate());
     }
+
     @Test
     void setLearningRate02() {
         this.blockConfiguration.setLearningRate(LEARNING_RATE_V2);
