@@ -19,12 +19,6 @@ import SymbolTableImplementation.SymbolTable;
  */
 public class ChainCheckerVisitor extends ScopeTracker {
 
-    // Fields:
-
-    // Constants:
-    private static final int UNARY_INPUT = 1;
-    private static final int BINARY_INPUT = 2;
-
     /**
      * The constructor
      *
