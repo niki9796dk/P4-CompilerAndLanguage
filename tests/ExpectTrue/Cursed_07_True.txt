@@ -1,0 +1,21 @@
+// Test of legal but cursed sequences
+
+block cursed_7 {
+    mychannel:in in;
+    mychannel:out out;
+
+    blueprint(){
+        this.in -> block b = build Test() -> b = build Test() -> b = build Test() -> b = build Test();
+        b -> b = build Test() -> b = build Test() -> b = build Test() -> b = build Test() -> b = build Test();
+        b -> b = build Test() -> b = build Test() -> b = build Test() -> b = build Test() -> this.out;
+    }
+}
+
+block Test {
+    mychannel:in input;
+    mychannel:out output;
+
+    blueprint() {
+        this.input -> build _Sigmoid() -> this.output;
+    }
+}
