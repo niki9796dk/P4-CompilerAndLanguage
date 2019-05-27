@@ -18,8 +18,10 @@ import MachineLearning.NeuralNetwork.Trainer.TrainingMethods.TrainingMethod;
 
 public class MainBlock {
     public static void main(String[] args) {
+        // Imported from src/AutoGen/CodeGen
         Block block = new ANN();
 
+        // XOR logic gate data
         Matrix input = new MatrixBuilder(4, 2, true)
                 .setRow(0, 0, 0)
                 .setRow(1, 0, 1)
@@ -34,36 +36,10 @@ public class MainBlock {
                 .setRow(3, 0)
                 .build();
 
-        /*
-        Matrix input = Matrices.randomMatrix(1000, 1000, 1337);
-        Matrix target = Matrices.randomMatrix(1000, 1000, 1337);
-        */
-        long start, end, total;
-        int iter = 10000;
-        start = System.currentTimeMillis();
-        block.train(input, target, iter);
-        end = System.currentTimeMillis();
+        int iterations = 10000;
+
+        block.train(input, target, iterations, 0.2);
 
         System.out.println(block.evaluateInput(input));
-
-        total = end - start;
-
-        System.out.println("Flow: " + total);
-
-
-//        MachineLearning.NeuralNetwork.ANN.ANN network = new MachineLearning.NeuralNetwork.ANN.ANN(1000, 1000, 9, 1000, new SigmoidActivation());
-//
-//        TrainingMethod trainingMethod = new MiniBatch(0.2, 100, new MSECost());
-//        Trainer trainer = new Trainer(network, trainingMethod);
-//
-//        start = System.currentTimeMillis();
-//        trainer.startTraining(new DefaultData(input), new DefaultData(target), iter);
-//        end = System.currentTimeMillis();
-//
-//        total = end - start;
-//
-//        System.out.println("Lib: " + total);
-
-        //System.out.println("Final prediction => " + block.getFirstOutput().getResult());;
     }
 }
