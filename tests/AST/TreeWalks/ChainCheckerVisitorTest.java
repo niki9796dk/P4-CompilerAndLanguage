@@ -40,56 +40,11 @@ class ChainCheckerVisitorTest {
         this.chainCheckerVisitor.pre(0, this.blueprintNode);
     }
 
-    @Disabled
-    @Test
-    void pre_chain() {
-        ChainNode chainNode = new ChainNode(new ComplexSymbolFactory.Location(-1, -1));
-        BlockNode blockNode = new BlockNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
-        MyInChannelNode myInChannelNode = new MyInChannelNode("in", new ComplexSymbolFactory.Location(-1, -1));
-        MyOutChannelNode myOutChannelNode = new MyOutChannelNode("out", new ComplexSymbolFactory.Location(-1, -1));
-        ChannelDeclarationsNode channelDeclarationsNode = new ChannelDeclarationsNode(new ComplexSymbolFactory.Location(-1, -1));
-        channelDeclarationsNode.adoptChildren(myInChannelNode, myOutChannelNode);
-
-        symbolTableInterface.openBlockScope(blockNode);
-        symbolTableInterface.openSubScope(channelDeclarationsNode);
-
-        BlockTypeNode blockTypeNode = new BlockTypeNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
-        symbolTableInterface.getLatestBlockScope().getLatestSubScope().setVariable(blockTypeNode);
-
-
-        SelectorNode selectorNode1 = new SelectorNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
-        SelectorNode selectorNode2 = new SelectorNode("blockNodeA", new ComplexSymbolFactory.Location(-1, -1));
-        selectorNode1.adoptChildren(blockTypeNode);
-        selectorNode2.adoptChildren(blockTypeNode);
-
-        chainNode.adoptChildren(selectorNode1, selectorNode2);
-
-        symbolTableInterface.openBlockScope(blockNode);
-
-        this.chainCheckerVisitor.pre(0, chainNode);
-
-        assertTrue(true);
-    }
-
-    @Test
-    void pre_chain_exception() {
-
-    }
-
-    @Test
-    void pre_default() {
-
-    }
-
     @Test
     void preUnexpectedNode() {
         AbstractNode unexpectedNode = new UnexpectedNode("unexpectedNodeId");
 
         assertThrows(UnexpectedNodeException.class, () -> chainCheckerVisitor.pre(1, unexpectedNode));
-    }
-
-    @Test
-    void post() {
     }
 
     @Test

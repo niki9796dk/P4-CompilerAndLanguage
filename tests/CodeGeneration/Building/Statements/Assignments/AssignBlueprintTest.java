@@ -9,7 +9,6 @@ class AssignBlueprintTest {
 
     // Fields:
     private AssignBlueprint assignBlueprint01;
-    private AssignBlueprint assignBlueprint02;
 
     private InitBlueprint initBlueprint;
 
@@ -21,7 +20,6 @@ class AssignBlueprintTest {
     void constructors() {
         this.initBlueprint = new InitBlueprint(INIT_BUILD);
         this.assignBlueprint01 = new AssignBlueprint(LEFT_VAR, this.initBlueprint);
-        this.assignBlueprint02 = new AssignBlueprint(LEFT_VAR, INIT_BUILD);
     }
 
     @Test

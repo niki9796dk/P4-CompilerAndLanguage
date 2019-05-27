@@ -23,7 +23,6 @@ class GroupChainTest {
     void beforeEach() {
         Scope scope = new Scope(DEFAULT_ID, new BlockNode(DEFAULT_ID, new ComplexSymbolFactory.Location(-1, -1)));
         this.groupChain = new GroupChain(scope, new Selector(DEFAULT_ID), new ArrayList<>());
-        GroupChain groupChain02 = new GroupChain(scope, new Selector(DEFAULT_ID));
     }
 
     @Test

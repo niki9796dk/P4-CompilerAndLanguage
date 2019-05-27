@@ -27,7 +27,6 @@ class CallParamsTest {
         Scope scope = new Scope(DEFAULT_ID, new BlueprintNode(new ComplexSymbolFactory.Location(-1, -1)));
         scope.setVariable(new BlockNode(DEFAULT_ID, new ComplexSymbolFactory.Location(-1, -1)));
         this.callParams01 = new CallParams(scope, new Selector(DEFAULT_ID));
-        CallParams callParams02 = new CallParams(scope, new ArrayList<>());
     }
 
     @Test

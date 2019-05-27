@@ -3,6 +3,7 @@ package DynamicProgramTests;
 import AutoGen.MainParse;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import LinearAlgebra.Statics.Matrices;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
@@ -12,6 +13,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +25,33 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CodeGenRunTest {
     private static final String TRUE_FOLDER = "tests" + File.separator + "ExpectTrue" + File.separator;
     private static final String CODE_GEN_FOLDER = "src" + File.separator + "AutoGen" + File.separator + "CodeGen";
+
+    @AfterAll
+    static void cleanCodeGenSubDirectories() throws NoSuchFileException {
+        File dir = new File(CODE_GEN_FOLDER);
+
+        File[] subDirectories = new File(dir.getPath()).listFiles(File::isDirectory);
+
+        List<File> programFiles = new ArrayList<>();
+
+        for(File subdir : subDirectories) {
+            programFiles.addAll(Arrays.asList(Objects.requireNonNull(subdir.listFiles())));
+        }
+
+        // Delete all files
+        for(File file : programFiles) {
+            if (!file.delete()) {
+                throw new NoSuchFileException("Unable to delete file: " + file.getPath());
+            }
+        }
+
+        // Delete all directories
+        for(File subDir : subDirectories) {
+            if (!subDir.delete()) {
+                throw new NoSuchFileException("Unable to delete sub-directory: " + subDir.getPath());
+            }
+        }
+    }
 
     // Test all positive files
     @TestFactory
@@ -36,7 +65,7 @@ public class CodeGenRunTest {
 
         ClassLoader classLoader;
         try {
-            classLoader = new URLClassLoader(new URL[]{new File("src"+File.separator).toURI().toURL()});
+            classLoader = new URLClassLoader(new URL[]{new File("src" + File.separator).toURI().toURL()});
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -127,10 +156,6 @@ public class CodeGenRunTest {
 
         return  (Class<Block>) Class.forName(file.getPath()
                 .replace(File.separatorChar, '.')
-                /*
-                .replace('/', '.')
-                .replace('\\', '.')
-                */
                 .replaceAll("src.", "")
                 .replaceAll(".class", ""), false, classLoader);
     }

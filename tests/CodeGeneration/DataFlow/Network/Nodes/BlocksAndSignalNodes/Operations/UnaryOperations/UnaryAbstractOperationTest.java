@@ -63,10 +63,6 @@ class UnaryAbstractOperationTest {
 
     }
 
-    @Test
-    void performOperation() {
-    }
-
     @RepeatedTest(4)
     void getOutputChannel(RepetitionInfo r) {
         int i = r.getCurrentRepetition() - 1;
@@ -85,14 +81,6 @@ class UnaryAbstractOperationTest {
         op.performOperation();
 
         assertEquals(op.getResult(),results.get(i));
-    }
-
-    @Test
-    void performBackpropagationOperation() {
-    }
-
-    @Test
-    void operationBackpropagation() {
     }
 
     @RepeatedTest(4)
