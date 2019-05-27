@@ -19,3 +19,5 @@ To allow running these, an ant-script needs to be added and run prior to compila
 - An instance of a block-class can be trained with the "train"-method, and later evaluated with the "evaluateInput"-method. 
 - An example of using a block-class can be found in src/CodeGeneration/DataFlow/Executions/MainBlock.java.
 
+## Documentation
+A large part of the code-base is documented using the Javadoc-standard which should help increase readability and maintainability. The generated index-page can be found in the JavaDoc.zip folder.
