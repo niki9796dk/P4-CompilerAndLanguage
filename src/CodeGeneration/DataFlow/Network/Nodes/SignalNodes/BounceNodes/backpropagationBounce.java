@@ -2,15 +2,11 @@ package CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNodes;
 
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
-import CodeGeneration.Utility.Print;
-import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 import MachineLearning.NeuralNetwork.Trainer.Costs.CostFunction;
 import MachineLearning.NeuralNetwork.Trainer.Costs.MSECost;
 
 public class backpropagationBounce extends AbstractBounceNode {
-    private static Print print = new Print(AnsiColor.BLUE, "BackpropagationBouncer").mute();
-
     private Channel source;
     private Matrix outputs;
     private Matrix derivatives;

@@ -152,8 +152,6 @@ public class CodeGenRunTest {
 
     @SuppressWarnings("unchecked")
     private Class<Block> getBlockClassFromFile(File file, ClassLoader classLoader) throws ClassNotFoundException {
-        System.out.println(file.getName() + "  " + file.getPath() + "  " + file.exists() + "  ");
-
         return (Class<Block>) Class.forName(file.getPath()
                 .replace(File.separatorChar, '.')
                 .replaceAll("src.", "")
