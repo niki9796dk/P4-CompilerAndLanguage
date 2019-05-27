@@ -20,4 +20,5 @@ To allow running these, an ant-script needs to be added and run prior to compila
 - An example of using a block-class can be found in src/CodeGeneration/DataFlow/Executions/MainBlock.java.
 
 ## Documentation
-A large part of the code-base is documented using the Javadoc-standard which should help increase readability and maintainability. The generated index-page can be found in the JavaDoc.zip folder.
+A large part of the code-base is documented using the Javadoc-standard which should help increase readability and maintainability. The generated index-page can be found in the Documentation/JavaDoc.zip folder.\
+The design, implementation, and general creation of the compiler is described in the project report in Documentation/LanguageReportDocumentation.pdf
