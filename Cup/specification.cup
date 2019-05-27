@@ -110,9 +110,6 @@ start with prog;
 prog                    ::= blocks:bs
                         {:
                             AbstractNode prog = createRootNode().adoptChildren(bs);
-
-                            //System.out.println("\nAST\n");
-                            //prog.walkTree(new PrintTree(System.out));
                         :}
                         ;
 
@@ -345,7 +342,7 @@ groupcon			    ::= elementlist:elemlist RPAR CONNECTION:c elementpar:elem chaine
                                 AbstractNode conn = new ChainNode(cxleft).adoptChildren(group, elem);
                                 RESULT = new StorageNode(group, conn);
                             }
-                         :}
+                        :}
                         ;
 // ELEMENTS
 element			        ::= nodeelement:elem
@@ -374,7 +371,7 @@ nonnodeelement          ::= DRAW:d ID:id
                         {: RESULT = sc; :}
                         ;
 
-nodeselectors            ::= ID:id1 DOT ID:id2
+nodeselectors           ::= ID:id1 DOT ID:id2
                         {: RESULT = new SelectorNode(id1, id1xleft).adoptChildren(new SelectorNode(id2, id2xleft)); :}
                         | THIS:t DOT ID:id
                         {: RESULT = new SelectorNode("this", txleft).adoptChildren(new SelectorNode(id, idxleft)); :}
@@ -650,7 +647,7 @@ pparams			        ::= type:type ID:id pextparams:next
                             AbstractNode param = ((NamedIdNode) type).setId(id);
 
                             RESULT = (next != null) ? param.makeSibling(next) : param;
-                         :}
+                        :}
 					    |
                         ;
 pextparams		        ::= COMMA pparams:par

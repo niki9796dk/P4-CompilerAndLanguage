@@ -58,13 +58,6 @@ public class FlowChecker {
 
     public FlowChecker evaluateBlock(AbstractNode node) {
         // This is really useful for debugging.
-//        int i = 0;
-//        for (String s : inConnections) {
-//            System.out.print(inConnections.get(i) + " -> " + outConnections.get(i) + " :::: ");
-//            i++;
-//        }
-//        System.out.println(System.lineSeparator() + inConnectPoints);
-//        System.out.println(outConnectPoints);
 
         for (String connectedOut : outConnections) {
             boolean firstTimeInConnected = outConnectPoints.remove(connectedOut);
