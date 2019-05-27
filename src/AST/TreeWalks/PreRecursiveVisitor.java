@@ -137,6 +137,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
 
     /**
      * Method used to start the no build cycle check, for all potential main blocks
+     *
      * @throws SemanticProblemException is there is build recursion within the block.
      */
     private void assertNoBuildCycles() {
@@ -146,6 +147,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
     /**
      * Helper function for block recursion checking - Used for simplification.
      * Will throw an exception if no potential main blocks is present.
+     *
      * @param potentialMainBlocks A list of potential main blocks
      * @throws NoMainBlockException if no potential blocks is present in the list.
      */
@@ -159,6 +161,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
      * Loops all block definition, and find all those whoes blueprint does not take any parameters.
      * Blocks with no build parameters are called potential main blocks, since these are the blocks that are fully static
      * and does not depend on anything else than them self to supply data, to any sub block.
+     *
      * @return A list of potential main blocks.
      */
     private List<BlockNode> findPotentialMainBlocks() {
@@ -184,6 +187,7 @@ public class PreRecursiveVisitor extends ScopeTracker {
     /**
      * Checks if a single given block is a potential main block, by verifying that it does not have any build parameters
      * for it's blueprint
+     *
      * @param block The block to check
      * @return Returns true if the block does not have any build parameters, and false if it has more than zero (0).
      */

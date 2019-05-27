@@ -143,11 +143,11 @@ public abstract class AbstractBlock implements Block {
         if (inputKeys.size() != nodes.length)
             throw new IllegalArgumentException("The amount of group connections MUST match the amount of inputs.");
 
-        for (Node node : nodes){
+        for (Node node : nodes) {
             Channel channel;
 
-            if(node instanceof Channel) channel = (Channel) node;
-            else if(node instanceof Block) channel = ((Block) node).getFirstOutput();
+            if (node instanceof Channel) channel = (Channel) node;
+            else if (node instanceof Block) channel = ((Block) node).getFirstOutput();
             else throw new IllegalArgumentException("Input must be a block or channel in the current implementation");
 
             channel.tether(inputKeys.pollFirst());
@@ -164,7 +164,7 @@ public abstract class AbstractBlock implements Block {
         Channel[] channels = new Channel[blocks.length];
 
         int i = 0;
-        for(Block block: blocks)
+        for (Block block : blocks)
             channels[i++] = block.getOutputChannels().values().iterator().next();
 
         return this.receiveGroupConnection(channels);
@@ -271,7 +271,7 @@ public abstract class AbstractBlock implements Block {
             throw new RuntimeException("There is not sufficient flow! - " + errorMsg);
 
         } else if (backPropTouches != 1 || feedforwardTouches != 1) {
-            throw new RuntimeException("There was flow though the whole network... But the ends were touched a few times too many: FF[" + feedforwardTouches + "] and BP[" + backPropTouches + "]... They should both be 1." );
+            throw new RuntimeException("There was flow though the whole network... But the ends were touched a few times too many: FF[" + feedforwardTouches + "] and BP[" + backPropTouches + "]... They should both be 1.");
         }
 
         // Let the bouncers forget they were touched, to allow for future similar events.

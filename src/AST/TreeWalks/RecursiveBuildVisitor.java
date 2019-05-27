@@ -25,8 +25,8 @@ public class RecursiveBuildVisitor extends ScopeTracker {
     }
 
     /**
-     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
-     * @param node The node which is being visited.
+     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param node       The node which is being visited.
      */
     @Override
     public void pre(int printLevel, AbstractNode node) {
@@ -125,6 +125,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
      * Method to handle a BuildNode.
      * Will check if whatever it is we are building is a block, and then store the call in a call stack
      * and if the same call is still within the stack (no pop) it means there is an recursion, and an exception is thrown.
+     *
      * @param node the BuildNode to follow.
      */
     private void handleBuildPre(AbstractNode node) {
@@ -155,6 +156,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
     /**
      * Method to handle a BuildNode.
      * Will check if whatever it is we are building is a block, and then pop the call in a call stack
+     *
      * @param node the BuildNode to follow.
      */
     private void handleBuildPost(AbstractNode node) {
@@ -173,6 +175,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
 
     /**
      * Convert a build node into a string representation of it's ID and the subtype of it's params.
+     *
      * @param buildNode The BuildNode to convert.
      * @return A string representation of build call.
      */
@@ -186,6 +189,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
     /**
      * Helper method for converting the build node into a string.
      * Will convert the parameter part of the string representation, by loop all parameters and storing their subtypes.
+     *
      * @param buildNode The BuildNode to convert.
      * @return A string representation of the parameter part of the BuildNode.
      */
@@ -214,6 +218,7 @@ public class RecursiveBuildVisitor extends ScopeTracker {
     /**
      * Helper method for converting the build node into a string.
      * Will convert a single parameter into it's string representation.
+     *
      * @param param The single parameter node to convert.
      * @return A string representation of a single parameter.
      */

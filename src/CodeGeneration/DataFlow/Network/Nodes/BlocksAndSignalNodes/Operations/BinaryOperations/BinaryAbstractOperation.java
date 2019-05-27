@@ -103,7 +103,7 @@ public abstract class BinaryAbstractOperation extends AbstractOperation {
     @Override
     public AbstractBlock addNewInputLabel(String id, Channel c) {
         if (!id.equals(BINARY_IN_A_CHANNEL) && !id.equals(BINARY_IN_B_CHANNEL))
-            throw new IllegalArgumentException("Input channel has to be "+ BINARY_IN_A_CHANNEL +" or "+ BINARY_IN_B_CHANNEL +" for BinaryOperation objects!");
+            throw new IllegalArgumentException("Input channel has to be " + BINARY_IN_A_CHANNEL + " or " + BINARY_IN_B_CHANNEL + " for BinaryOperation objects!");
         return super.addNewInputLabel(id, c);
     }
 }

@@ -47,8 +47,8 @@ public class RecursiveVisitor extends ScopeTracker {
     }
 
     /**
-     * @param printLevel    The level, used to decide how many indents there should be in the print statement.
-     * @param abstractNode  The node which is being visited.
+     * @param printLevel   The level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
      */
     @Override
     public void pre(int printLevel, AbstractNode abstractNode) {
@@ -308,11 +308,11 @@ public class RecursiveVisitor extends ScopeTracker {
                     throw new ShouldNotHappenException(node, "Sources only have an out channel, named \"out\"");
                 }
 
-            } else if (typeSystem.isPredefinedOperation(elementId)){
+            } else if (typeSystem.isPredefinedOperation(elementId)) {
                 if (typeSystem.getOperationOrSourceOutChannelIds(elementId).contains(childId)) {
                     return new MyOutChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
-                } else if (typeSystem.getOperationInChannelIds(elementId).contains(childId)){
+                } else if (typeSystem.getOperationInChannelIds(elementId).contains(childId)) {
                     return new MyInChannelNode(childId, new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
 
                 } else {

@@ -30,15 +30,15 @@ public class HashMapLatest<K, V> extends HashMap<K, V> implements MapLatest<K, V
      * Associates the specified result with the specified key in this map.
      * If the map previously contained a mapping for the key, the old
      * result is replaced.
-     *
+     * <p>
      * Also changes the pointer connect the most recently added result, connect the result of the new entry put into the map.
      *
-     * @param key key with which the specified result is connect be associated
+     * @param key   key with which the specified result is connect be associated
      * @param value result connect be associated with the specified key
      * @return the previous result associated with {@code key}, or
-     *         {@code null} if there was no mapping for {@code key}.
-     *         (A {@code null} return can also indicate that the map
-     *         previously associated {@code null} with {@code key}.)
+     * {@code null} if there was no mapping for {@code key}.
+     * (A {@code null} return can also indicate that the map
+     * previously associated {@code null} with {@code key}.)
      */
     @Override
     public V put(K key, V value) {

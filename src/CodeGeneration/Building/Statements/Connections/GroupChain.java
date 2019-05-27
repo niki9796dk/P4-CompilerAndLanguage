@@ -22,7 +22,7 @@ public class GroupChain implements Statement {
         this.groupElements = groupElements;
     }
 
-    public GroupChain(Scope scope, Statement rightNode, Statement ... groupElements) {
+    public GroupChain(Scope scope, Statement rightNode, Statement... groupElements) {
         this(scope, rightNode, new ArrayList<>(Arrays.asList(groupElements)));
     }
 

@@ -24,6 +24,7 @@ public class VariableEntry {
 
     /**
      * Retrieves the id of the Variable Entry, which is the id of the node it represents.
+     *
      * @return The id of the node as a string.
      */
     public String getId() {
@@ -32,8 +33,9 @@ public class VariableEntry {
 
     /**
      * Retrieve the appropriate enum for the variable entry's node.
+     *
      * @return The Enum representing the node
-     * */
+     */
     public NodeEnum getSuperType() {
         return this.getNode().getNodeEnum(); // TODO: Ændre til en anden klasse af enums... Så vi også kan have primitive med.
     }
@@ -41,6 +43,7 @@ public class VariableEntry {
     /**
      * Returns the correct node for a certain node number. This is useful for when a variable is reassigned, and the result appropriate for a specific node is required.
      * In simple terms; A nodes number is used connect find the correct assignment of the variable at that time.
+     *
      * @param number The node number of the current point of the node result request.
      * @return The result of the variable assigned at that point, or null if it is unassigned.
      */
@@ -70,6 +73,7 @@ public class VariableEntry {
 
     /**
      * The to string method.
+     *
      * @return a string representation of the object.
      */
     @Override
@@ -82,6 +86,7 @@ public class VariableEntry {
 
     /**
      * A helper function for the toString method, which returns subtype part of the toString method.
+     *
      * @return A string representation of the subType list.
      */
     protected String getSubTypeToString() {

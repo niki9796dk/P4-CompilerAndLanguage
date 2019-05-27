@@ -16,6 +16,7 @@ public class GroupConnectionMismatchException extends SemanticProblemException {
 
     /**
      * Constructor for custom exception message - Calls super
+     *
      * @param message The exception message
      */
     public GroupConnectionMismatchException(AbstractNode node, String message) {

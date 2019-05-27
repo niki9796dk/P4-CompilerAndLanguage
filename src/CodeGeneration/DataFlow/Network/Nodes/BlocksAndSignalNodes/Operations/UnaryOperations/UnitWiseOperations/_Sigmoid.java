@@ -6,7 +6,7 @@ import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.SigmoidActivation;
 
 public class _Sigmoid extends UnaryFunctionAbstractOperation {
-    private static ActivationFunction function = new SigmoidActivation();
+    private static final ActivationFunction function = new SigmoidActivation();
 
     @Override
     protected ActivationFunction getFunction() {

@@ -85,6 +85,7 @@ public class Scope {
 
     /**
      * Retrieve a variable entry within the id of the input node.
+     *
      * @param node A namedIdNode
      * @return The variable entry with the specified id, or Null if no such entry exists.
      */
@@ -94,6 +95,7 @@ public class Scope {
 
     /**
      * Retrieve a variable entry within the id of the input node. This method will typecast the node into a NamedIdNode.
+     *
      * @param node A node.
      * @return The variable entry with the specified id, or Null if no such entry exists.
      */
@@ -110,11 +112,11 @@ public class Scope {
         return node;
     }
 
-    public List<AbstractNode> getAllChildrenOfType(NodeEnum nodeEnum){
+    public List<AbstractNode> getAllChildrenOfType(NodeEnum nodeEnum) {
         List<AbstractNode> children = new LinkedList<>();
 
-        for (AbstractNode child = node.getChild(); child != null; child = child.getSib()){
-            if (((NamedNode) child).getNodeEnum().equals(nodeEnum)){
+        for (AbstractNode child = node.getChild(); child != null; child = child.getSib()) {
+            if (((NamedNode) child).getNodeEnum().equals(nodeEnum)) {
                 children.add(child);
             }
         }
@@ -124,6 +126,7 @@ public class Scope {
 
     /**
      * The to string method.
+     *
      * @return a string representation of the object.
      */
     @Override

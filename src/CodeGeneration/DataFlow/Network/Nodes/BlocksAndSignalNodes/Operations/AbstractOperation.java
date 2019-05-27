@@ -115,7 +115,7 @@ public abstract class AbstractOperation extends AbstractBlock implements Operati
 
     @Override
     public Matrix getResultBackpropagation(Channel channel) {
-        if(!this.getInputs().contains(channel)) {
+        if (!this.getInputs().contains(channel)) {
             throw new IllegalArgumentException("Channel is not a part of this operations inputs! >:(");
         }
 

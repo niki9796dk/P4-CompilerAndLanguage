@@ -7,6 +7,7 @@ import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * A node representing a call to a specific procedure
+ *
  * @see ParamsNode
  */
 public class ProcedureCallNode extends NamedNode {
@@ -14,10 +15,10 @@ public class ProcedureCallNode extends NamedNode {
         super("ProcedureCall", NodeEnum.PROCEDURE_CALL, location);
     }
 
-    public String getTargetId(){
+    public String getTargetId() {
         SelectorNode idNode = this.findFirstChildOfClass(SelectorNode.class);
 
-        if ("this".equals(idNode.getId())){
+        if ("this".equals(idNode.getId())) {
             idNode = idNode.findFirstChildOfClass(SelectorNode.class);
         }
 

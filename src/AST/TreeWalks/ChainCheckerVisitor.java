@@ -24,6 +24,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * The constructor
+     *
      * @param symbolTable A symbol table, used for the scope tracker.
      */
     public ChainCheckerVisitor(SymbolTable symbolTable) {
@@ -32,8 +33,9 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * The preorder walk of the visistor
-     * @param printLevel    the level, used to decide how many indents there should be in the print statement.
-     * @param node          The node which is being visited.
+     *
+     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     * @param node       The node which is being visited.
      */
     @Override
     public void pre(int printLevel, AbstractNode node) {
@@ -78,8 +80,9 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * The post order walk of the visitor
-     * @param printLevel    the level, used to decide how many indents there should be in the print statement.
-     * @param abstractNode  The node which is being visited.
+     *
+     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
+     * @param abstractNode The node which is being visited.
      */
     @Override
     public void post(int printLevel, AbstractNode abstractNode) {
@@ -129,6 +132,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Verify every child connection within a chain.
+     *
      * @param chainNode The chain node to verify.
      */
     private void verifyChain(ChainNode chainNode) {
@@ -142,7 +146,8 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Verifies that a connection between two nodes, is acceptable in terms of channel sizes.
-     * @param leftNode The left side node of the chain: ->
+     *
+     * @param leftNode  The left side node of the chain: ->
      * @param rightNode The right side node of the chain: ->
      */
     private void verifyConnection(AbstractNode leftNode, AbstractNode rightNode) {
@@ -163,6 +168,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Verifies that a group connection size matches whatever it connects to.
+     *
      * @param groupNode The group node, from which we compare
      * @param rightNode The right side node, from which the group node connects to.
      */
@@ -183,6 +189,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
     /**
      * Asserts that the right side node of a group connection is of the correct type.
      * This should never be a problem, since it should have been caught in the type checker
+     *
      * @param rightNode The node to verify
      * @throws ShouldNotHappenException Is Thrown if the wrong type is connected to by the group.
      */
@@ -200,6 +207,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Counts the amount of in channels in a given right side node, of either type operation or block.
+     *
      * @param rightNode The node to count channels from
      * @return The amount of in channels in the given node.
      */
@@ -230,6 +238,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Counts the amount of in channels in a given right side node, of either type operation or block.
+     *
      * @param rightNode The node to count channels from
      * @return The amount of in channels in the given node.
      */
@@ -257,6 +266,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Counts the amount of mychannel:in declaration is present in a block, and returns that integer value.
+     *
      * @param rightNode The block, from which should be counted from.
      * @return The amount of mychannel:in declarations in the given block
      */
@@ -272,6 +282,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Counts the amount of mychannel:out declaration is present in a block, and returns that integer value.
+     *
      * @param rightNode The block, from which should be counted from.
      * @return The amount of mychannel:out declarations in the given block
      */
@@ -287,6 +298,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Counts and return the amount of in channels within an operation.
+     *
      * @param rightNode The operation node
      * @return The amount of in channels within the operation.
      */
@@ -314,6 +326,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
     /**
      * Counts and return the amount of out channels within an operation.
+     *
      * @param rightNode The operation node
      * @return The amount of out channels within the operation.
      */

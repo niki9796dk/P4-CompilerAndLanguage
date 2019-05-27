@@ -6,6 +6,7 @@ import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * A node for a local variable within the blueprints scope.
+ *
  * @see AST.Nodes.NodeClasses.NamedNodes.BlueprintNode
  */
 public class BlueprintTypeNode extends NamedIdNode {

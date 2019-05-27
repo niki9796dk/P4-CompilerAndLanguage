@@ -6,6 +6,7 @@ import java_cup.runtime.ComplexSymbolFactory;
 
 /**
  * A node representing the blueprint of a block.
+ *
  * @see AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.BlockNode
  */
 public class BlueprintNode extends NamedNode {

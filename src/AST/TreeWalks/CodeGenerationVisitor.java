@@ -56,8 +56,8 @@ public class CodeGenerationVisitor extends ScopeTracker {
     private String programFileName;
 
     // Constants
-    private static String EXPORT_PATH = "src" + File.separator + "AutoGen" + File.separator + "CodeGen" + File.separator;
-    private static String EXPORT_PACKAGE = "AutoGen.CodeGen";
+    private static final String EXPORT_PATH = "src" + File.separator + "AutoGen" + File.separator + "CodeGen" + File.separator;
+    private static final String EXPORT_PACKAGE = "AutoGen.CodeGen";
 
     // Constructor:
     public CodeGenerationVisitor(SymbolTable symbolTable, String programFileName) {
@@ -158,7 +158,6 @@ public class CodeGenerationVisitor extends ScopeTracker {
         super.post(printLevel, abstractNode);
 
         NamedNode node = (NamedNode) abstractNode;
-        String nodeId = (node instanceof NamedIdNode) ? ((NamedIdNode) node).getId() : null;
 
         switch (node.getNodeEnum()) {
             // No action enums
@@ -188,7 +187,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
                         throw new RuntimeException(e);
                     }
                 }
-            break;
+                break;
 
             case PROCEDURE_CALL:
                 this.currentCodeScope.addStatement(this.getStatementFromNode(node));
@@ -463,7 +462,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
             case BLUEPRINT_TYPE:
                 return new BlueprintDeclaration(nodeId);
 
-                // Init enums
+            // Init enums
             case SIZE:
                 SizeNode sizeNode = (SizeNode) node;
                 return new InitSize(sizeNode.first, sizeNode.second);
@@ -567,7 +566,7 @@ public class CodeGenerationVisitor extends ScopeTracker {
                     return new Selector(((NamedIdNode) node.getChild()).getId());       // Get the original variable name
                 }
 
-            // No action enums
+                // No action enums
             case ROOT:
             case GROUP:
             case CHAIN:
@@ -580,6 +579,6 @@ public class CodeGenerationVisitor extends ScopeTracker {
     }
 
     private BlockClass getLastBlock() {
-        return this.blockClasses.get(this.blockClasses.size()-1);
+        return this.blockClasses.get(this.blockClasses.size() - 1);
     }
 }

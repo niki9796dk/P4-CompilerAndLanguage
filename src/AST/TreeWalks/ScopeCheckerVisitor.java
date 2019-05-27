@@ -33,7 +33,8 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
     /**
      * The preorder walk for the visitor.
-     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     *
+     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
      * @param abstractNode The node which is being visited.
      */
     @Override
@@ -118,7 +119,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                     }
 
                     // Else if it is a dot.notation
-                    if (node.getChild() != null){
+                    if (node.getChild() != null) {
                         SelectorNode dummy = new SelectorNode(((SelectorNode) node).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
                         dummy.setNumber(node.getNumber());
                         String theBlock = this.typeSystem.getSubTypeOfNode(dummy, currentBlockScope, currentSubScope);
@@ -135,7 +136,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
                                 throw new NoSuchVariableDeclaredException(node, "The channel is not there");
                             }
                         } else {
-                            if (!typeSystem.isValidPredefinedElementChannelPair(theBlock, ((NamedIdNode) node.getChild()).getId())){
+                            if (!typeSystem.isValidPredefinedElementChannelPair(theBlock, ((NamedIdNode) node.getChild()).getId())) {
                                 throw new NoSuchVariableDeclaredException(node, theBlock + " does not have channel: " + node.getChild());
                             }
                         }
@@ -149,7 +150,8 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
     /**
      * The post order walk for the visitor
-     * @param printLevel the level, used to decide how many indents there should be in the print statement.
+     *
+     * @param printLevel   the level, used to decide how many indents there should be in the print statement.
      * @param abstractNode The node which is being visited.
      */
     @Override
@@ -191,6 +193,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
     /**
      * Checks if a build id is not a buildable element such as a Source, Operation or Block.
+     *
      * @param buildId The id to check.
      * @return false if the element is buildable or true if it's not.
      */
@@ -204,6 +207,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
     /**
      * Check if a build id is not a local blueprint variable.
+     *
      * @param buildId The build id to check.
      * @return false if it's not a local blueprint variable, and true if it is.
      */
@@ -222,6 +226,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
     /**
      * Verifies that an id is a channel variable, and throws an exception if it's not.
+     *
      * @param id the channel id to check.
      * @throws NoSuchVariableDeclaredException if the id is not a channel.
      */
@@ -233,6 +238,7 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
     /**
      * Verify that an id is a variable in the current local scope, and throws an exception if it's not.
+     *
      * @param id The variable id to check
      * @throws NoSuchVariableDeclaredException if the id is not a local variable.
      */
@@ -244,9 +250,10 @@ public class ScopeCheckerVisitor extends ScopeTracker {
 
     /**
      * Helper function used to simplify checking if a variable entry is null, and throw an exception if it is.
+     *
      * @param variable The variable entry to compare.
      * @param subScope The subscope the variable entry was extracted from - Used for error messages.
-     * @param id The variable id the variable entry was extracted with - Used for error messages .
+     * @param id       The variable id the variable entry was extracted with - Used for error messages .
      */
     private void checkIfNull(VariableEntry variable, String subScope, String id, AbstractNode errorNode) {
         if (variable == null) {

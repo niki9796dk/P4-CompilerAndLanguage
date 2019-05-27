@@ -10,7 +10,8 @@ import java_cup.runtime.ComplexSymbolFactory;
 public class UnexpectedNode extends NamedNode {
     /**
      * Constructs a temporary node without any enum.
-     * @param name  The unique name of the node.
+     *
+     * @param name The unique name of the node.
      */
     public UnexpectedNode(String name) {
         super(name, NodeEnum.NONEXISTENT, new ComplexSymbolFactory.Location(-1, -1));

@@ -9,7 +9,7 @@ public abstract class BlockChannelDeclaration implements Statement {
 
     @Override
     public String toString() {
-        return "(\""+ this.channelId +"\", new ListChannel())";
+        return "(\"" + this.channelId + "\", new ListChannel())";
     }
 }
 

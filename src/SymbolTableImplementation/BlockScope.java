@@ -28,6 +28,7 @@ public class BlockScope {
 
     /**
      * Create a BlockScope with a unique Id for a specific node. Created with empty scope contents.
+     *
      * @param id   The identifying ID of the block scope.
      * @param node The BlockNode which this Blockscope will contain the scope of.
      */
@@ -68,7 +69,8 @@ public class BlockScope {
 
     /**
      * This will open a new scope within the BlockScope, therefore adding it to the scopes of the object.
-     * @param id The unique identifier of the new scope. It will only be retrievable if it follows the id naming conventions of the blockscope.
+     *
+     * @param id   The unique identifier of the new scope. It will only be retrievable if it follows the id naming conventions of the blockscope.
      * @param node The node which the new scope is a scope of.
      */
     public void openScope(String id, NamedNode node) {
@@ -106,6 +108,7 @@ public class BlockScope {
 
     /**
      * The to string method.
+     *
      * @return a string representation of the object.
      */
     @Override

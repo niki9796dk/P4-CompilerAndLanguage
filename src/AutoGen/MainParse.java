@@ -14,7 +14,7 @@ import java_cup.runtime.ScannerBuffer;
 
 public class MainParse {
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
 
         Thread.currentThread().setUncaughtExceptionHandler((t, e) -> {
             System.out.println("\n\n");
@@ -46,15 +46,15 @@ public class MainParse {
     public static boolean compileProgram(String path) throws Exception {
         ComplexSymbolFactory csf = new ComplexSymbolFactory();
         // create a buffering scanner wrapper
-        ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)),csf));
+        ScannerBuffer lexer = new ScannerBuffer(new AutoGen.Lexer(new BufferedReader(new FileReader(path)), csf));
 
-        String nameOfFile = path.subSequence(path.lastIndexOf(File.separator)+1, path.length()).toString();
+        String nameOfFile = path.subSequence(path.lastIndexOf(File.separator) + 1, path.length()).toString();
 
         // start parsing
-        AutoGen.Parser p = new AutoGen.Parser(lexer,csf);
+        AutoGen.Parser p = new AutoGen.Parser(lexer, csf);
         //System.out.println("Parser runs: ");
         AutoGen.Parser.newScope();
-        Symbol symbol = p.parse();
+        p.parse();
 
         System.out.println("##################################");
         AbstractNode prog = p.getRootNode();

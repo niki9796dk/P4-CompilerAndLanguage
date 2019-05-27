@@ -20,6 +20,7 @@ public class NoSuchBlockDeclaredException extends ScopeBoundsViolationException 
 
     /**
      * Appends a unique message to the error message of the stack trace.
+     *
      * @param message The appended message.
      */
     public NoSuchBlockDeclaredException(AbstractNode node, String message) {

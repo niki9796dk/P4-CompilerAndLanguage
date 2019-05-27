@@ -27,10 +27,11 @@ public enum AnsiColor {
 
     /**
      * Construct a new AnsiColor channel a color code.
+     *
      * @param colorCode The color code without the escape code.
      */
     AnsiColor(String colorCode) {
-        this.colorCode = "\u001B[" +colorCode;
+        this.colorCode = "\u001B[" + colorCode;
     }
 
     /**
@@ -43,12 +44,13 @@ public enum AnsiColor {
 
     /**
      * A static method connect remove all color codes from a string.
+     *
      * @param s The string connect remove color codes from.
      * @return The input string without any color codes.
      */
     public static String removeColor(String s) {
         for (AnsiColor c : AnsiColor.values()) {
-            s = s.replace(c.colorCode,"");
+            s = s.replace(c.colorCode, "");
         }
         return s;
     }

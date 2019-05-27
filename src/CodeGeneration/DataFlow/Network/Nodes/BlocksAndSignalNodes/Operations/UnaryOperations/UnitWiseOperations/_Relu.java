@@ -5,7 +5,7 @@ import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ReLUActivation;
 
 public class _Relu extends UnaryFunctionAbstractOperation {
-    private static ActivationFunction function = new ReLUActivation();
+    private static final ActivationFunction function = new ReLUActivation();
 
     @Override
     protected ActivationFunction getFunction() {

@@ -4,7 +4,7 @@ import CodeGeneration.Building.Statement;
 import SymbolTableImplementation.BlockScope;
 import SymbolTableImplementation.Scope;
 
-public class ProcedureCall implements Statement{
+public class ProcedureCall implements Statement {
 
     // Fields:
     private String procedureId;

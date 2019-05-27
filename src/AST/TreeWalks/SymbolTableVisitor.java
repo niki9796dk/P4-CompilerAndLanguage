@@ -19,6 +19,7 @@ public class SymbolTableVisitor implements Visitor {
 
     /**
      * A getter for the generated symbol table.
+     *
      * @return The generated symbol table instance.
      */
     public SymbolTableInterface getSymbolTableInterface() {
@@ -48,19 +49,19 @@ public class SymbolTableVisitor implements Visitor {
                 // Not relevant
                 break;
 
-                // Open block scope
+            // Open block scope
             case BLOCK:
                 symbolTableInterface.openBlockScope((BlockNode) node);
                 break;
 
-                // Open sub scopes
+            // Open sub scopes
             case BLUEPRINT:
             case PROCEDURE:
             case CHANNEL_DECLARATIONS:
                 symbolTableInterface.openSubScope(node);
                 break;
 
-                // Insert variables
+            // Insert variables
             case CHANNEL_IN_MY:
             case CHANNEL_OUT_MY:
             case CHANNEL_IN_TYPE:
@@ -115,7 +116,7 @@ public class SymbolTableVisitor implements Visitor {
             case OPERATION_TYPE:
                 break;
 
-                // Im special
+            // Im special
             case ASSIGN:
                 symbolTableInterface.reassignVariable(node);
                 break;
@@ -127,6 +128,7 @@ public class SymbolTableVisitor implements Visitor {
 
     /**
      * Checks if a variable is already defined within the symbol table, and if it is, and exception is thrown.
+     *
      * @param node The node with the ID to check
      * @throws ScopeBoundsViolationException thrown if the variable id is already declared.
      */

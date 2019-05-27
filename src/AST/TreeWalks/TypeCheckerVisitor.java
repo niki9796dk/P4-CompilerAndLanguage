@@ -20,6 +20,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Type checker visitor constructor
+     *
      * @param symbolTableInterface A symbol table used as reference.
      */
     public TypeCheckerVisitor(SymbolTable symbolTableInterface) {
@@ -28,7 +29,8 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * The pre order walk type checking of the abstract syntax tree.
-     * @param printLevel (NOT USED) the level, used to decide how many indents there should be in the print statement.
+     *
+     * @param printLevel   (NOT USED) the level, used to decide how many indents there should be in the print statement.
      * @param abstractNode The node to type check.
      */
     @Override
@@ -88,7 +90,8 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * The post order walk type checking of the abstract syntax tree.
-     * @param printLevel (NOT USED) The level, used to decide how many indents there should be in the print statement.
+     *
+     * @param printLevel   (NOT USED) The level, used to decide how many indents there should be in the print statement.
      * @param abstractNode The node to type check
      */
     @Override
@@ -133,6 +136,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Method used to type check an assignment node,
+     *
      * @param node The assignment node to typecheck
      */
     private void typecheckAssignments(AbstractNode node) {
@@ -144,6 +148,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Method used to typecheck build and procedure call nodes.
+     *
      * @param callerNode The build / procedure call node to type check.
      */
     private void typecheckBuildAndProcCalls(NamedNode callerNode) {
@@ -154,23 +159,23 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
         if (calleeIsNotBlockOrProc) {
             // Operation case
-            if (this.typeSystem.isPredefinedOperation(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
+            if (this.typeSystem.isPredefinedOperation(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))) {
                 ParamsNode opParams = callerNode.findFirstChildOfClass(ParamsNode.class);
-                if (opParams != null){
+                if (opParams != null) {
                     throw new ParamsSizeInconsistencyException(callerNode, "Operations can't have parameters. This is not the case in: " + callerNode);
                 }
 
                 // Source case
-            } else if (this.typeSystem.isPredefinedSource(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))){
+            } else if (this.typeSystem.isPredefinedSource(this.typeSystem.getSubTypeOfNode(callerNode, this.currentBlockScope, this.currentSubScope))) {
                 ParamsNode sourceParams = callerNode.findFirstChildOfClass(ParamsNode.class);
 
-                if (sourceParams == null){
+                if (sourceParams == null) {
                     throw new ParamsSizeInconsistencyException(callerNode, "Sources need exactly one [parameter] of type Size. This is not the case in: " + callerNode);
 
-                } else if (this.typeSystem.getSuperTypeOfNode(sourceParams.getChild(), currentBlockScope, currentSubScope) != NodeEnum.SIZE_TYPE){
+                } else if (this.typeSystem.getSuperTypeOfNode(sourceParams.getChild(), currentBlockScope, currentSubScope) != NodeEnum.SIZE_TYPE) {
                     throw new ParamsSizeInconsistencyException(callerNode, "Sources need exactly one parameter [of type Size]. This is not the case in: " + callerNode);
 
-                } else if (sourceParams.getChild().getSib() != null){
+                } else if (sourceParams.getChild().getSib() != null) {
                     throw new ParamsSizeInconsistencyException(callerNode, "Sources need [exactly one] parameter of type Size. This is not the case in: " + callerNode);
 
                 }
@@ -189,8 +194,9 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Finds and returns the callee node from a procedure call or build statement.
+     *
      * @param callerNode The ProcedureCallNode / BuildNode caller who's callee we want to find.
-     * @return (AbstractNode|null) The callee node, either an BlockNode or an ProcedureNode depending on the caller node type.
+     * @return (AbstractNode | null) The callee node, either an BlockNode or an ProcedureNode depending on the caller node type.
      * Returns null if the caller node is not of type build or procedure call.
      */
     private AbstractNode findCalleeBlockNodeFromCaller(NamedNode callerNode) {
@@ -222,6 +228,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
     /**
      * The method used to type check a chain.
      * The method will iterate all the elements of the chain, and check that the node is allowed in it's given position.
+     *
      * @param node The chain node to type check.
      */
     private void typeCheckChain(AbstractNode node) {
@@ -244,14 +251,15 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Method used to verify that two parameter lists all contain the same amount of elements and that they match in type.
-     * @param node The caller node, from which the parameters lists was extracted - Only used for error messages.
+     *
+     * @param node         The caller node, from which the parameters lists was extracted - Only used for error messages.
      * @param formalParams The formal parameter node
      * @param actualParams The actual parameter node
      */
     private void typeCheckParamLists(AbstractNode node, ParamsNode formalParams, ParamsNode actualParams) {
         // Evaluate states
         boolean actualParamsIsNull = actualParams == null;
-        boolean formalParamsIsNull =  formalParams == null;
+        boolean formalParamsIsNull = formalParams == null;
 
         boolean callerAndCalleeBothHaveParams = !(actualParamsIsNull || formalParamsIsNull);    // Both false
         boolean callerOrCalleeIsMissingParams = actualParamsIsNull ^ formalParamsIsNull;        // XOR
@@ -282,13 +290,14 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
         }
         // else {
-            // No params was given and nor was any expected.
-            // Simply dont do anything then.
+        // No params was given and nor was any expected.
+        // Simply dont do anything then.
         // }
     }
 
     /**
      * Verify that a node is allowed as an input type node.
+     *
      * @param node The node to verify
      */
     private void verifyInputType(AbstractNode node) {
@@ -319,6 +328,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Verify that a node is allowed as an middle type node.
+     *
      * @param node The node to verify
      */
     private void verifyMiddleType(AbstractNode node) {
@@ -336,6 +346,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Verify that a node is allowed as an output type node.
+     *
      * @param node The node to verify
      */
     private void verifyOutputType(AbstractNode node) {
@@ -356,18 +367,20 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Assert that two parameter nodes have the same amount of parameter children, else throw an exception
+     *
      * @param actualParams The actual params
      * @param formalParams The formal params
      * @throws ParamsSizeInconsistencyException Is thrown if there is a size mismatch in the param nodes.
      */
     private void assertEqualParameterCount(ParamsNode actualParams, ParamsNode formalParams) {
         if (actualParams.countChildren() != formalParams.countChildren()) {
-            throw new ParamsSizeInconsistencyException(actualParams, "Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]" );
+            throw new ParamsSizeInconsistencyException(actualParams, "Parameter count inconsistency: " + formalParams + " Formal[" + formalParams.countChildren() + "] vs. " + actualParams + " Actual[" + actualParams.countChildren() + "]");
         }
     }
 
     /**
      * Returns the type of a given node, by sending it through the type system.
+     *
      * @param node The node to extract the type of
      * @return The type of the given node
      * @throws TypeInconsistencyException Is thrown if the node is a typeless node.
@@ -381,6 +394,7 @@ public class TypeCheckerVisitor extends ScopeTracker {
 
     /**
      * Asserts that a given type is not null, and if it is an exception is thrown.
+     *
      * @param node The node the type is extracted from.
      * @param type The type extracted from the node.
      * @throws TypeInconsistencyException Is thrown if the node is a typeless node.

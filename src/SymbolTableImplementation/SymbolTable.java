@@ -32,6 +32,7 @@ public class SymbolTable implements SymbolTableInterface {
 
     /**
      * Get the list of main blocks
+     *
      * @return List of main blocks
      */
     public List<BlockNode> getMainBlocks() {
@@ -40,6 +41,7 @@ public class SymbolTable implements SymbolTableInterface {
 
     /**
      * Store the list of main blocks
+     *
      * @param mainBlocks The list of main blocks.
      */
     public void setMainBlocks(List<BlockNode> mainBlocks) {
@@ -97,6 +99,7 @@ public class SymbolTable implements SymbolTableInterface {
 
     /**
      * Evaluates a node, and return the appropriate scope id for it to open.
+     *
      * @param node The node which started the openScope method.
      * @return The name of the scope to open.
      */
@@ -105,7 +108,7 @@ public class SymbolTable implements SymbolTableInterface {
             case CHANNEL_DECLARATIONS:
                 return BlockScope.CHANNELS;
 
-            case BLUEPRINT: 
+            case BLUEPRINT:
                 return BlockScope.BLUEPRINT;
 
             case PROCEDURE:
@@ -143,7 +146,7 @@ public class SymbolTable implements SymbolTableInterface {
                 this.blockTable.getLatest().getScope()       // Get latest block scope
                         .getLatest().getVariable(leftSideId);    // Get latest subscope and the specific variable
 
-        if (variableEntry == null){
+        if (variableEntry == null) {
             throw new NoSuchVariableDeclaredException(assignNode, "The right side of this assignment was not declared: " + assignNode);
         }
 
@@ -171,9 +174,9 @@ public class SymbolTable implements SymbolTableInterface {
     }
 
 
-
     /**
      * The to string method.
+     *
      * @return a string representation of the object.
      */
     @Override

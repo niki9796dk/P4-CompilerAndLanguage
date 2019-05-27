@@ -31,11 +31,11 @@ public class Layer extends AbstractBlock {
             this.addNewInputLabel("in", new ListChannel());
             this.addNewOutputLabel("out", new ListChannel());
             Source weights;
-            weights = (Source) new Source(new Pair<Integer, Integer>(1, 1));
+            weights = new Source(new Pair<Integer, Integer>(1, 1));
             Source bias;
-            bias = (Source) new Source(new Pair<Integer, Integer>(1, 1));
+            bias = new Source(new Pair<Integer, Integer>(1, 1));
             Operation mult;
-            mult = (Operation) new Multiplication();
+            mult = new Multiplication();
             mult.receiveGroupConnection(this.getChannel("in"), weights);
             Block __Addition_514727072;
             __Addition_514727072 = new _Addition();

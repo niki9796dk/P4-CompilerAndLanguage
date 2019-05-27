@@ -42,14 +42,14 @@ public class ListParameters implements ParameterCollection {
 
                 if (asCall) {
                     String[] split = parString.split(" ");
-                    parString = split[split.length-1];
+                    parString = split[split.length - 1];
                 }
 
                 builder.append(parString)
                         .append(", ");
             }
 
-            builder.delete(builder.length()-2, builder.length()); // Remove last ", " sequence
+            builder.delete(builder.length() - 2, builder.length()); // Remove last ", " sequence
         }
 
         builder.append(")"); // Append params end

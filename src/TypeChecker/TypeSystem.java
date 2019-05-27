@@ -33,6 +33,7 @@ public class TypeSystem {
 
     /**
      * Returns the symbol table within the type system
+     *
      * @return (SymbolTableInterface) A SymbolTableInterface object.
      */
     public SymbolTableInterface getSymbolTable() {
@@ -41,32 +42,34 @@ public class TypeSystem {
 
     /**
      * Get's a procedure node from the symbol table
+     *
      * @param blockScope The current block scope to fetch the procedure from
-     * @param procedure The procedure ID
+     * @param procedure  The procedure ID
      * @return (ProcedureNode) A ProcedureNode
      */
     public ProcedureNode getProcedure(String blockScope, String procedure) {
         return (ProcedureNode)
                 this.symbolTable
-                .getBlockScope(blockScope)
-                .getProcedureScope(procedure)
-                .getNode();
+                        .getBlockScope(blockScope)
+                        .getProcedureScope(procedure)
+                        .getNode();
     }
 
     /**
      * Get's a block node from the symbol table
+     *
      * @param blockId The block scope ID.
      * @return (BlockNode) A BlockNode from the symbol table.
      */
     public BlockNode getBlock(String blockId) {
         return (BlockNode)
                 this.symbolTable
-                .getBlockScope(blockId)
-                .getNode();
+                        .getBlockScope(blockId)
+                        .getNode();
     }
 
     /**
-     *  List of predefined operations
+     * List of predefined operations
      */
     private static final HashSet<String> OPERATIONS_2_1 = new HashSet<>(Arrays.asList(
             // Matrix arithmetic operations
@@ -110,42 +113,42 @@ public class TypeSystem {
         return this.isPredefinedOperation(name) || this.isPredefinedSource(name);
     }
 
-    public List<String> getOperationInChannelIds(NamedIdNode node){
+    public List<String> getOperationInChannelIds(NamedIdNode node) {
         return getOperationInChannelIds(node.getId());
     }
 
-    public List<String> getOperationInChannelIds(String id){
-        if (OPERATIONS_1_1.contains(id)){
+    public List<String> getOperationInChannelIds(String id) {
+        if (OPERATIONS_1_1.contains(id)) {
             return Arrays.asList(UnaryAbstractOperation.UNARY_IN_CHANNEL);
-        } else if (OPERATIONS_2_1.contains(id)){
+        } else if (OPERATIONS_2_1.contains(id)) {
             return Arrays.asList(BinaryAbstractOperation.BINARY_IN_A_CHANNEL, BinaryAbstractOperation.BINARY_IN_B_CHANNEL);
         } else {
             throw new IllegalArgumentException("Asked for operation in channel of non-operation");
         }
     }
 
-    public List<String> getOperationOrSourceOutChannelIds(AbstractNode node){
+    public List<String> getOperationOrSourceOutChannelIds(AbstractNode node) {
         return getOperationOrSourceOutChannelIds(((NamedIdNode) node).getId());
     }
 
-    public List<String> getOperationOrSourceOutChannelIds(String id){
-        if (OPERATIONS_1_1.contains(id)){
+    public List<String> getOperationOrSourceOutChannelIds(String id) {
+        if (OPERATIONS_1_1.contains(id)) {
             return Arrays.asList(UnaryAbstractOperation.UNARY_OUT_CHANNEL);
         } else if (OPERATIONS_2_1.contains(id)) {
             return Arrays.asList(BinaryAbstractOperation.BINARY_OUT_CHANNEL);
-        } else if (SOURCES.contains(id)){
+        } else if (SOURCES.contains(id)) {
             return Arrays.asList(NullaryAbstractOperation.NULLARY_OUT_CHANNEL);
         } else {
             throw new IllegalArgumentException("Asked for operation/source out channel of something that is neither: " + id);
         }
     }
 
-    public boolean isValidPredefinedElementChannelPair(AbstractNode element, AbstractNode channel){
+    public boolean isValidPredefinedElementChannelPair(AbstractNode element, AbstractNode channel) {
         return isValidPredefinedElementChannelPair(((NamedIdNode) element).getId(), ((NamedIdNode) channel).getId());
     }
 
-    public boolean isValidPredefinedElementChannelPair(String elementId, String channelId){
-        if (isPredefinedOperation(elementId)){
+    public boolean isValidPredefinedElementChannelPair(String elementId, String channelId) {
+        if (isPredefinedOperation(elementId)) {
             return getOperationInChannelIds(elementId).contains(channelId) || getOperationOrSourceOutChannelIds(elementId).contains(channelId);
         } else if (isPredefinedSource(elementId)) {
             return getOperationOrSourceOutChannelIds(elementId).contains(channelId);
@@ -156,10 +159,11 @@ public class TypeSystem {
 
     /**
      * Asserts that two nodes have the same type, and throws an exception if this condition is not held.
-     * @param leftNode The first node to compare
-     * @param rightNode The second node to compare
+     *
+     * @param leftNode          The first node to compare
+     * @param rightNode         The second node to compare
      * @param currentBlockScope The current block scope to type check from
-     * @param currentSubScope The current sub scope to type check from
+     * @param currentSubScope   The current sub scope to type check from
      */
     public void assertEqualSuperTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope) {
         try {
@@ -171,11 +175,12 @@ public class TypeSystem {
 
     /**
      * Asserts that two nodes have the same type, and throws an exception if this condition is not held.
-     * @param leftNode The first node to compare
-     * @param rightNode The second node to compare
+     *
+     * @param leftNode          The first node to compare
+     * @param rightNode         The second node to compare
      * @param currentBlockScope The current block scope to type check from
-     * @param currentSubScope The current sub scope to type check from
-     * @param errorMsgPrefix The error msg prefix.
+     * @param currentSubScope   The current sub scope to type check from
+     * @param errorMsgPrefix    The error msg prefix.
      */
     public void assertEqualSuperTypes(AbstractNode leftNode, AbstractNode rightNode, String currentBlockScope, String currentSubScope, String errorMsgPrefix) {
         // Get the types of both left and right node.
@@ -184,7 +189,7 @@ public class TypeSystem {
 
         // Then compare them.
         if (leftNodeType != rightNodeType) {
-            throw new ParamsTypeInconsistencyException(leftNode, errorMsgPrefix + ": " + leftNode + "("+ leftNodeType +") = " + rightNode + "("+ rightNodeType +")");
+            throw new ParamsTypeInconsistencyException(leftNode, errorMsgPrefix + ": " + leftNode + "(" + leftNodeType + ") = " + rightNode + "(" + rightNodeType + ")");
         }
     }
 
@@ -229,7 +234,7 @@ public class TypeSystem {
                 return ((NamedIdNode) this.followNode(node, blockScopeId, subScopeId)).getId();
             case SELECTOR:
                 AbstractNode base = this.followNode(node, blockScopeId, subScopeId);
-                if (base instanceof SelectorNode){
+                if (base instanceof SelectorNode) {
                     return this.getSuperTypeOfNode(base, blockScopeId, subScopeId).toString();
                 } else {
                     return ((NamedIdNode) base).getId();
@@ -240,25 +245,25 @@ public class TypeSystem {
         }
     }
 
-    public AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId){
+    public AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId) {
         return followNode(node, blockScopeId, subScopeId, ModeEnum.DEFAULT);
     }
 
-    public AbstractNode followNodeToBuild(AbstractNode node, String blockScopeId, String subScopeId){
+    public AbstractNode followNodeToBuild(AbstractNode node, String blockScopeId, String subScopeId) {
         return followNode(node, blockScopeId, subScopeId, ModeEnum.BLOCK_SEEKER);
     }
 
-    public AbstractNode followNodeToBuildOfChannel(AbstractNode node, String blockScopeId, String subScopeId){
+    public AbstractNode followNodeToBuildOfChannel(AbstractNode node, String blockScopeId, String subScopeId) {
         return followNode(node, blockScopeId, subScopeId, ModeEnum.CHANNEL_INSTANCE);
     }
 
     /**
-     * @param node The node to evaluate
+     * @param node         The node to evaluate
      * @param blockScopeId The current block scope to type check from
-     * @param subScopeId The current sub scope to type check from
-    * @param subScopeId The current sub scope to type check from
+     * @param subScopeId   The current sub scope to type check from
+     * @param subScopeId   The current sub scope to type check from
      */
-    private AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId, ModeEnum mode){
+    private AbstractNode followNode(AbstractNode node, String blockScopeId, String subScopeId, ModeEnum mode) {
         NumberedNode numberedNode = (NumberedNode) node;
 
         switch (numberedNode.getNodeEnum()) {
@@ -293,7 +298,7 @@ public class TypeSystem {
                 return node;
 
             case BUILD:
-                if (mode.equals(ModeEnum.BLOCK_SEEKER) || mode.equals(ModeEnum.CHANNEL_INSTANCE)){
+                if (mode.equals(ModeEnum.BLOCK_SEEKER) || mode.equals(ModeEnum.CHANNEL_INSTANCE)) {
                     return node;
                 } else {
                     return this.getOriginOfBuildStatement((BuildNode) node, blockScopeId, subScopeId, mode);
@@ -303,7 +308,7 @@ public class TypeSystem {
 
             case SELECTOR:
                 return this.followSelector((SelectorNode) node, blockScopeId, subScopeId, mode);
-                // returns a selectornode in dot.notation cases
+            // returns a selectornode in dot.notation cases
 
             default:
                 throw new UnexpectedNodeException(numberedNode.getNodeEnum());
@@ -312,9 +317,10 @@ public class TypeSystem {
 
     /**
      * Gets and returns the sub type of a given build statement.
-     * @param node The build node
+     *
+     * @param node         The build node
      * @param blockScopeId The current block scope, from which we will compare from
-     * @param subScopeId The current sub scope, from which we will compare from
+     * @param subScopeId   The current sub scope, from which we will compare from
      * @return The sub type of the build statement.
      */
     private AbstractNode getOriginOfBuildStatement(BuildNode node, String blockScopeId, String subScopeId, ModeEnum mode) {
@@ -341,15 +347,16 @@ public class TypeSystem {
             return node;
 
         } else {
-            throw new ShouldNotHappenException(node, "We are building something which is not defined? Should have been caught in the scope checker! - " + node +  " : " + buildId);
+            throw new ShouldNotHappenException(node, "We are building something which is not defined? Should have been caught in the scope checker! - " + node + " : " + buildId);
         }
     }
 
     /**
      * Returns the sub type of a SelectorNode
+     *
      * @param selectorNode The selector node from which the sub type should be extracted
-     * @param blockScope The current block scope of the node
-     * @param subScope The current sub scope of then node
+     * @param blockScope   The current block scope of the node
+     * @param subScope     The current sub scope of then node
      * @return The subtype as a string.
      */
     private AbstractNode followSelector(SelectorNode selectorNode, String blockScope, String subScope, ModeEnum mode) {
@@ -366,12 +373,12 @@ public class TypeSystem {
             //
 
 
-            if (selectorVariable != null){
+            if (selectorVariable != null) {
                 subtypeNode = selectorVariable.getSubType(selectorNode.getNumber());
 
                 // If we are specifically looking for the origin of a channel variable, and we just reached a myChannel, the selector we just checked is the parameter variable that we need.
-                if (mode.equals(ModeEnum.CHANNEL_INSTANCE)){
-                    if (subtypeNode.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || subtypeNode.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)){
+                if (mode.equals(ModeEnum.CHANNEL_INSTANCE)) {
+                    if (subtypeNode.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY) || subtypeNode.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY)) {
                         return selectorNode;
                     }
                 }
@@ -395,10 +402,11 @@ public class TypeSystem {
 
     /**
      * Evaluates the super type of a given node, and returns that type in the form of a NodeEnum.
-     * @param node The node to evaluate
+     *
+     * @param node         The node to evaluate
      * @param blockScopeId The current block scope to type check from
-     * @param subScopeId The current sub scope to type check from
-     * @return (NodeEnum|null) The type of the given node, as a NodeEnum. Returns null, if the given node does not have a designated type.
+     * @param subScopeId   The current sub scope to type check from
+     * @return (NodeEnum | null) The type of the given node, as a NodeEnum. Returns null, if the given node does not have a designated type.
      */
     public NodeEnum getSuperTypeOfNode(AbstractNode node, String blockScopeId, String subScopeId) {
         NumberedNode numberedNode = (NumberedNode) node;
@@ -448,6 +456,7 @@ public class TypeSystem {
 
     /**
      * Returns the type of a build statement. It will check weather the build ID, is a operation, source or a block - In that order.
+     *
      * @param node The build node to check
      * @return (NodeEnum) The type of the build statement
      */
@@ -488,10 +497,11 @@ public class TypeSystem {
 
     /**
      * Evaluates the type of a selector statement, and returns the type of whatever the selector is pointing to.
-     * @param node The SelectorNode to evaluate
+     *
+     * @param node         The SelectorNode to evaluate
      * @param blockScopeId The current block scope to evaluate from
-     * @param subScopeId The current sub scope to evaluate from
-     * @return (NodeEnum|null) The type of node, the selector is pointing at.
+     * @param subScopeId   The current sub scope to evaluate from
+     * @return (NodeEnum | null) The type of node, the selector is pointing at.
      */
     private NodeEnum getSuperTypeOfSelector(AbstractNode node, String blockScopeId, String subScopeId) {
         String nodeId = this.getIdFromNode(node);
@@ -552,7 +562,8 @@ public class TypeSystem {
 
     /**
      * Helper function, for asserting that an object is not null, and throw an exception if it is.
-     * @param object The object to evaluate
+     *
+     * @param object   The object to evaluate
      * @param errorMsg The error messages to throw if the object is null.
      * @throws ShouldNotHappenException Is thrown if the object is null.
      */
@@ -565,6 +576,7 @@ public class TypeSystem {
     /**
      * Translates the super type of an external channel into the correct internal channel type.
      * eg. mychannel:in -> channel:in
+     *
      * @param type The type of the external channel
      * @return The translated super type.
      */
@@ -582,9 +594,10 @@ public class TypeSystem {
 
     /**
      * Returns the type of a selector, which is known to point at a local variable and not anything else (eg. procedures, mychannels...)
-     * @param node The selector node to evaluate
+     *
+     * @param node         The selector node to evaluate
      * @param blockScopeId The current block scope to evaluate from
-     * @param subScopeId The current sub scope to evaluate from
+     * @param subScopeId   The current sub scope to evaluate from
      * @return (NodeEnum) The type of the local variable that the selector is pointing at.
      */
     private NodeEnum getTypeOfSelectorVariable(AbstractNode node, String blockScopeId, String subScopeId) {
@@ -617,6 +630,7 @@ public class TypeSystem {
 
     /**
      * Typecasts an abstract node to an NamedIdNode, and then returns the id from that node.
+     *
      * @param abstractNode The node to extract the ID from.
      * @return (String) The id of the node
      */
@@ -626,6 +640,7 @@ public class TypeSystem {
 
     /**
      * Typecasts an abstract node to an NumberedNode, and then returns the number from that node.
+     *
      * @param abstractNode The node to extract the number from.
      * @return (int) The number of the node
      */
@@ -635,20 +650,22 @@ public class TypeSystem {
 
     /**
      * Returns the super type of a variable from the "global" scope, which is the channel declaration scope
-     * @param identifier The variable identifier to select
+     *
+     * @param identifier   The variable identifier to select
      * @param blockScopeId The current block scope to fetch from
-     * @return (NodeEnum|null) Returns the super type of a variable within the "global" scope of the block. Returns null if the variable does not exist in the scope.
+     * @return (NodeEnum | null) Returns the super type of a variable within the "global" scope of the block. Returns null if the variable does not exist in the scope.
      */
     private NodeEnum getTypeFromGlobal(String identifier, String blockScopeId) {
         return this.getType(identifier, blockScopeId, BlockScope.CHANNELS);
     }
 
     /**
-     Returns the super type of a variable from the "local" scope, which is the current sub scope.
-     * @param identifier The variable identifier to select
+     * Returns the super type of a variable from the "local" scope, which is the current sub scope.
+     *
+     * @param identifier   The variable identifier to select
      * @param blockScopeId The current block scope to fetch from
-     * @param subScopeId The current sub scope to fetch from
-     * @return (NodeEnum|null) Returns the super type of a variable within the "local" scope. Returns null if the variable does not exist in the scope.
+     * @param subScopeId   The current sub scope to fetch from
+     * @return (NodeEnum | null) Returns the super type of a variable within the "local" scope. Returns null if the variable does not exist in the scope.
      */
     private NodeEnum getTypeFromLocal(String identifier, String blockScopeId, String subScopeId) {
         return this.getType(identifier, blockScopeId, subScopeId);
@@ -656,10 +673,11 @@ public class TypeSystem {
 
     /**
      * Returns the super type of a variable in a given block scope and sub scope.
-     * @param identifier The variable identifier to select
+     *
+     * @param identifier   The variable identifier to select
      * @param blockScopeId The current block scope to fetch from
-     * @param subScopeId The current sub scope to fetch from
-     * @return (NodeEnum|null) Returns the super type of a variable within the selected sub scope. Returns null if the variable does not exist in the sub scope.
+     * @param subScopeId   The current sub scope to fetch from
+     * @return (NodeEnum | null) Returns the super type of a variable within the selected sub scope. Returns null if the variable does not exist in the sub scope.
      */
     private NodeEnum getType(String identifier, String blockScopeId, String subScopeId) {
         VariableEntry variable = this.getVariableFromIdentifier(identifier, blockScopeId, subScopeId);
@@ -668,10 +686,11 @@ public class TypeSystem {
 
     /**
      * Returns the variable from a given block and sub scope from an identifier
-     * @param identifier The variable identifier
+     *
+     * @param identifier   The variable identifier
      * @param blockScopeId The current block scope to fetch from
-     * @param subScopeId The current sub scope to fetch from
-     * @return (NodeEnum|null) Returns the variable from the selector in the given scope. Returns null if the variable does not exist.
+     * @param subScopeId   The current sub scope to fetch from
+     * @return (NodeEnum | null) Returns the variable from the selector in the given scope. Returns null if the variable does not exist.
      */
     private VariableEntry getVariableFromIdentifier(String identifier, String blockScopeId, String subScopeId) {
         return this.symbolTable

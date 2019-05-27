@@ -30,10 +30,11 @@ public enum Operation {
      * Key: Keyword of the operation as a string.
      * Value: The operation with the specified keyword.
      */
-    private static HashMap<String, Operation> operations = Operation.createMap();
+    private static final HashMap<String, Operation> operations = Operation.createMap();
 
     /**
      * Construct a new operation with a specific single keyword string.
+     *
      * @param keyword The keyword of the operation.
      */
     Operation(String keyword) {
@@ -43,9 +44,9 @@ public enum Operation {
     /**
      * @return A map containing all operations as entries, with the value being the keyword of the operation.
      */
-    private static HashMap<String, Operation> createMap(){
+    private static HashMap<String, Operation> createMap() {
         HashMap<String, Operation> values = new HashMap<>();
-        for(Operation operation: Operation.values()){
+        for (Operation operation : Operation.values()) {
             values.put(operation.keyword, operation);
         }
         return values;
@@ -55,7 +56,7 @@ public enum Operation {
      * @param keyword A string which represents an operations keyword.
      * @return True if the operation exists within the list of Enums, and otherwise it will return false. This method is case sensitive.
      */
-    public static boolean isValid(String keyword){
+    public static boolean isValid(String keyword) {
         return Operation.operations.containsKey(keyword);
     }
 }

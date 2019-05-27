@@ -5,5 +5,6 @@ import java.util.List;
 
 public interface StatementCollection {
     void addStatement(Statement statement);
+
     Collection<Statement> getStatementList();
 }

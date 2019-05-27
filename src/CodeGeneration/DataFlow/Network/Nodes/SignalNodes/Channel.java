@@ -10,6 +10,7 @@ public interface Channel extends SignalNode {
     boolean isReady();
 
     void sendReadySignals();
+
     void sendReadyBackpropagationSignals();
 
     SignalNode setSource(SignalNode channel);
@@ -27,5 +28,6 @@ public interface Channel extends SignalNode {
     }
 
     void clearSource();
+
     void clearTargets();
 }

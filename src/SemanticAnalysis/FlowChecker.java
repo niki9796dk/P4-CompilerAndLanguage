@@ -43,12 +43,12 @@ public class FlowChecker {
         this.procStack = new Stack<>();
     }
 
-    public static void setup(SymbolTableInterface symbolTableInterface){
+    public static void setup(SymbolTableInterface symbolTableInterface) {
         typeSystem = new TypeSystem(symbolTableInterface);
         flowStack = new Stack<>();
     }
 
-    public static FlowChecker startBlock(String currentBlockScope){
+    public static FlowChecker startBlock(String currentBlockScope) {
         FlowChecker flow = new FlowChecker(currentBlockScope);
 
         flowStack.push(flow);
@@ -56,29 +56,29 @@ public class FlowChecker {
         return flow;
     }
 
-    public FlowChecker evaluateBlock(AbstractNode node){
+    public FlowChecker evaluateBlock(AbstractNode node) {
         // This is really useful for debugging.
         int i = 0;
-        for (String s : inConnections){
+        for (String s : inConnections) {
             System.out.print(inConnections.get(i) + " -> " + outConnections.get(i) + " :::: ");
             i++;
         }
         System.out.println(System.lineSeparator() + inConnectPoints);
         System.out.println(outConnectPoints);
 
-        for (String connectedOut : outConnections){
+        for (String connectedOut : outConnections) {
             boolean firstTimeInConnected = outConnectPoints.remove(connectedOut);
 
-            if (!firstTimeInConnected){
+            if (!firstTimeInConnected) {
                 throw new IncorrectChannelUsageException(node, "In channel " + connectedOut + " connected at multiple points, or not at all.");
             }
         }
 
-        for (String connectedIn : inConnections){
+        for (String connectedIn : inConnections) {
             inConnectPoints.remove(connectedIn);
         }
 
-        if (!inConnectPoints.isEmpty() || !outConnectPoints.isEmpty()){
+        if (!inConnectPoints.isEmpty() || !outConnectPoints.isEmpty()) {
             throw new IncorrectChannelUsageException(node, "Not all channel connection points in " + currentBlockId + " are used:"
                     + System.lineSeparator() + inConnectPoints
                     + System.lineSeparator() + outConnectPoints);
@@ -88,13 +88,13 @@ public class FlowChecker {
         return flowStack.empty() ? null : flowStack.peek();
     }
 
-    public void addBuild(BuildNode buildInstance, String currentSubScope){
+    public void addBuild(BuildNode buildInstance, String currentSubScope) {
         String builtThingId = ((NamedIdNode) typeSystem.followNode(buildInstance, currentBlockId, currentSubScope)).getId();
         BlockScope blockBuilt = typeSystem.getSymbolTable().getBlockScope(builtThingId);
         boolean isSource = typeSystem.isPredefinedSource(builtThingId);
         boolean isOperation = typeSystem.isPredefinedOperation(builtThingId);
 
-        if (isSource){
+        if (isSource) {
             // Handle Source
             List<String> outChannelIds = typeSystem.getOperationOrSourceOutChannelIds(builtThingId);
 
@@ -102,7 +102,7 @@ public class FlowChecker {
                 inConnectPoints.add(buildInstance + id);
             }
 
-        } else if (isOperation){
+        } else if (isOperation) {
             // Handle Operation
             List<String> outChannelIds = typeSystem.getOperationOrSourceOutChannelIds(builtThingId);
             List<String> inChannelIds = typeSystem.getOperationInChannelIds(builtThingId);
@@ -114,7 +114,7 @@ public class FlowChecker {
                 outConnectPoints.add(buildInstance + id);
             }
 
-        } else if (blockBuilt != null){
+        } else if (blockBuilt != null) {
             // Handle Block
             addAllChannelsOfBlockInstance(buildInstance, blockBuilt);
 
@@ -123,10 +123,10 @@ public class FlowChecker {
         }
     }
 
-    public void addChain(ChainNode chain, String currentSubScope){
+    public void addChain(ChainNode chain, String currentSubScope) {
         boolean isGroupChain = ((NamedNode) chain.getChild()).getNodeEnum().equals(NodeEnum.GROUP);
 
-        if (isGroupChain){
+        if (isGroupChain) {
             // Group case
             AbstractNode chainSecondElement = chain.getChild().getSib();
             Iterator<String> secondElementInputs = getInChannelIdsOfNode(chainSecondElement, currentSubScope);
@@ -148,7 +148,7 @@ public class FlowChecker {
     }
 
     @SuppressWarnings("Duplicates")
-    private void chainLink(NamedNode chainChildWithSib, String currentSubScope){
+    private void chainLink(NamedNode chainChildWithSib, String currentSubScope) {
         NamedIdNode followToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(chainChildWithSib, currentBlockId, currentSubScope));
         NamedIdNode followToBase = ((NamedIdNode) typeSystem.followNode(chainChildWithSib, currentBlockId, currentSubScope));
         boolean isThis = ("this").equals(followToBase.getId());
@@ -157,7 +157,7 @@ public class FlowChecker {
         String inString;
         String outString;
 
-        if (isThis){
+        if (isThis) {
             // "this" case
             inString = currentBlockId + ((NamedIdNode) followToBase.getChild()).getId();
 
@@ -199,12 +199,12 @@ public class FlowChecker {
         addConnections(inString, outString);
     }
 
-    private String chainLinkOut(NamedNode outPartOfChain, String currentSubScope){
+    private String chainLinkOut(NamedNode outPartOfChain, String currentSubScope) {
         NamedIdNode followToBuild = ((NamedIdNode) typeSystem.followNodeToBuild(outPartOfChain, currentBlockId, currentSubScope));
         NamedIdNode followToBase = ((NamedIdNode) typeSystem.followNode(followToBuild, currentBlockId, currentSubScope));
         boolean isThis = ("this").equals(followToBase.getId());
 
-        if (isThis){
+        if (isThis) {
             // "this" case
             return currentBlockId + ((NamedIdNode) followToBase.getChild()).getId();
 
@@ -212,16 +212,16 @@ public class FlowChecker {
             // pipe case
             String idPortion;
 
-            if (typeSystem.isPredefinedSource(followToBase.getId())){
+            if (typeSystem.isPredefinedSource(followToBase.getId())) {
                 // Source case
                 throw new ShouldNotHappenException(outPartOfChain, "A chain entering a Source??");
-            } else if (typeSystem.isPredefinedOperation(followToBase.getId())){
+            } else if (typeSystem.isPredefinedOperation(followToBase.getId())) {
                 // Operation case
                 List<String> inChannelIds = typeSystem.getOperationInChannelIds(followToBase);
                 idPortion = inChannelIds.get(0);
             } else {
                 // Block case
-                 idPortion = typeSystem.getSymbolTable().getBlockScope(followToBase.getId()).getChannelDeclarationScope().getNode().findFirstChildOfClass(MyInChannelNode.class).getId();
+                idPortion = typeSystem.getSymbolTable().getBlockScope(followToBase.getId()).getChannelDeclarationScope().getNode().findFirstChildOfClass(MyInChannelNode.class).getId();
             }
 
             return followToBuild + idPortion;
@@ -255,6 +255,7 @@ public class FlowChecker {
 
 
     /**
+     *
      */
     private void addAllChannelsOfBlockInstance(BuildNode instance, BlockScope theBlock) {
         // Get all channels
@@ -262,7 +263,7 @@ public class FlowChecker {
 
         // For all channel nodes add the channel id to the list
         for (NamedIdNode node = (NamedIdNode) channelDeclarationScope.getNode().getChild(); node != null; node = (NamedIdNode) node.getSib()) {
-            switch (node.getNodeEnum()){
+            switch (node.getNodeEnum()) {
                 case CHANNEL_IN_MY:
                     outConnectPoints.add(instance + node.getId());
                     break;
@@ -284,7 +285,7 @@ public class FlowChecker {
 
         // For all channel nodes add the channel id to the list
         for (NamedIdNode node = (NamedIdNode) channelDeclarationScope.getNode().getChild(); node != null; node = (NamedIdNode) node.getSib()) {
-            switch (node.getNodeEnum()){
+            switch (node.getNodeEnum()) {
                 case CHANNEL_IN_MY:
                     inConnectPoints.add(currentBlockId + node.getId());
                     break;
@@ -297,10 +298,10 @@ public class FlowChecker {
         }
     }
 
-    private AbstractNode follow_SelectorDotSelectorSafe(AbstractNode node, String currentSubScope){
+    private AbstractNode follow_SelectorDotSelectorSafe(AbstractNode node, String currentSubScope) {
         AbstractNode affasffs = typeSystem.followNodeToBuild(node, currentBlockId, currentSubScope);
 
-        if (affasffs instanceof SelectorNode){
+        if (affasffs instanceof SelectorNode) {
             SelectorNode dummy = new SelectorNode(((SelectorNode) affasffs).getId(), new ComplexSymbolFactory.Location(node.getLineNumber(), node.getColumn()));
             dummy.setNumber(((SelectorNode) affasffs).getNumber());
 
@@ -311,15 +312,15 @@ public class FlowChecker {
     }
 
     @SuppressWarnings("Duplicates")
-    private void linkFromGroupMember(AbstractNode in, String out, String currentSubScope){
+    private void linkFromGroupMember(AbstractNode in, String out, String currentSubScope) {
         NamedIdNode followedToBuild = (NamedIdNode) typeSystem.followNodeToBuild(in, currentBlockId, currentSubScope);
         NamedIdNode followToBase = (NamedIdNode) typeSystem.followNode(in, currentBlockId, currentSubScope);
         boolean isSource = typeSystem.isPredefinedSource(followToBase.getId());
         boolean isOperation = typeSystem.isPredefinedOperation(followToBase.getId());
         String inString;
 
-        if (followedToBuild.getNodeEnum().equals(NodeEnum.SELECTOR)){
-            if (followToBase.getId().equals("this")){
+        if (followedToBuild.getNodeEnum().equals(NodeEnum.SELECTOR)) {
+            if (followToBase.getId().equals("this")) {
                 // this. case
                 inString = currentBlockId + ((NamedIdNode) followToBase.getChild()).getId();
 
@@ -332,12 +333,12 @@ public class FlowChecker {
 
             }
 
-        } else if (isSource || isOperation){
+        } else if (isSource || isOperation) {
             // Source, Operation case
             List<String> outChannelIds = typeSystem.getOperationOrSourceOutChannelIds(followToBase);
             inString = followToBase + outChannelIds.get(0);
 
-        } else if (followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY) || followedToBuild.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY)){
+        } else if (followToBase.getNodeEnum().equals(NodeEnum.CHANNEL_OUT_MY) || followedToBuild.getNodeEnum().equals(NodeEnum.CHANNEL_IN_MY)) {
             // Own channel case
             AbstractNode parameterVariable = typeSystem.followNodeToBuildOfChannel(in, currentBlockId, currentSubScope);
 
@@ -379,7 +380,7 @@ public class FlowChecker {
 
         } else if (followedToBase.getNodeEnum().equals(NodeEnum.SELECTOR)) {
             // .notation case
-            if (followedToBase.getId().equals("this")){
+            if (followedToBase.getId().equals("this")) {
                 // this. case
                 inChannels.add(currentBlockId + ((NamedIdNode) followedToBase.getChild()).getId());
 
@@ -390,10 +391,10 @@ public class FlowChecker {
             }
 
         } else {
-             for(AbstractNode inChannel : typeSystem.getSymbolTable()
+            for (AbstractNode inChannel : typeSystem.getSymbolTable()
                     .getBlockScope(followedToBase.getId())
-                    .getChannelDeclarationScope().getAllChildrenOfType(NodeEnum.CHANNEL_IN_MY)){
-                 inChannels.add(followedToBuild + ((NamedIdNode) inChannel).getId());
+                    .getChannelDeclarationScope().getAllChildrenOfType(NodeEnum.CHANNEL_IN_MY)) {
+                inChannels.add(followedToBuild + ((NamedIdNode) inChannel).getId());
             }
         }
 
@@ -404,20 +405,20 @@ public class FlowChecker {
         return currentBlockId;
     }
 
-    private void addConnections(String in, String out){
+    private void addConnections(String in, String out) {
         inConnections.add(in);
         outConnections.add(out);
     }
 
-    private BlockNode blockNodeOfMyChannel(AbstractNode channel){
+    private BlockNode blockNodeOfMyChannel(AbstractNode channel) {
         return (BlockNode) channel.getParent().getParent();
     }
 
-    public void pushProcCall(ProcCall procCall){
+    public void pushProcCall(ProcCall procCall) {
         procStack.push(procCall);
     }
 
-    public void popProcCall(){
+    public void popProcCall() {
         procStack.pop();
     }
 }

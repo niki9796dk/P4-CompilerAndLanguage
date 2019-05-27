@@ -20,6 +20,6 @@ public class TetherChannels implements Statement {
 
     @Override
     public String toString() {
-        return left + ".tether("+ right +")";
+        return left + ".tether(" + right + ")";
     }
 }

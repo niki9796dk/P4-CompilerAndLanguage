@@ -17,6 +17,7 @@ public class SemanticProblemException extends CompilerException {
 
     /**
      * Constructor for custom exception message - Calls super
+     *
      * @param message The exception message
      */
     public SemanticProblemException(AbstractNode node, String message) {

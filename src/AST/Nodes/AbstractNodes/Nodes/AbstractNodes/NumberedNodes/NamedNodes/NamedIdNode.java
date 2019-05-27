@@ -16,8 +16,9 @@ public abstract class NamedIdNode extends NamedNode {
 
     /**
      * Construct a node with a name, id, and an appropriate class enum.
-     * @param name The name of the node.
-     * @param id The unique id of the node.
+     *
+     * @param name     The name of the node.
+     * @param id       The unique id of the node.
      * @param nodeEnum An enum appropriate for a non-abstract class extending this class.
      */
     public NamedIdNode(String name, String id, NodeEnum nodeEnum, ComplexSymbolFactory.Location location) {
@@ -27,6 +28,7 @@ public abstract class NamedIdNode extends NamedNode {
 
     /**
      * Get the unique id of the node as a string.
+     *
      * @return The id as a string.
      */
     public String getId() {
@@ -35,8 +37,9 @@ public abstract class NamedIdNode extends NamedNode {
 
     /**
      * Set the unique id of the node channel a string.
+     *
      * @param id What connect set the unique ID as channel a string.
-     * @return  a reference connect this object.
+     * @return a reference connect this object.
      */
     public AbstractNode setId(String id) {
         this.id = id;

@@ -103,7 +103,7 @@ public class Print {
      * @return The coloured string.
      */
     public static String echo(AnsiColor c, Object s) {
-        String out = c + ((s == null)? "\uD835\uDC75\uD835\uDC7C\uD835\uDC73\uD835\uDC73" : s.toString()) + AnsiColor.RESET;
+        String out = c + ((s == null) ? "\uD835\uDC75\uD835\uDC7C\uD835\uDC73\uD835\uDC73" : s.toString()) + AnsiColor.RESET;
         System.out.println(out);
         return out;
     }

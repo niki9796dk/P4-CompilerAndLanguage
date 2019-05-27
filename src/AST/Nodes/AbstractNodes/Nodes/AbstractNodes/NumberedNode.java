@@ -23,6 +23,7 @@ public abstract class NumberedNode extends AbstractNode implements NodeEnumAble 
 
     /**
      * Construct a node with the default number label, and Enum for its class.
+     *
      * @param nodeEnum An enum appropriate for the class of the node extending this class.
      */
     public NumberedNode(NodeEnum nodeEnum, ComplexSymbolFactory.Location location) {
@@ -32,6 +33,7 @@ public abstract class NumberedNode extends AbstractNode implements NodeEnumAble 
 
     /**
      * Get the number label for the node.
+     *
      * @return the number label of the node.
      */
     public int getNumber() {
@@ -40,6 +42,7 @@ public abstract class NumberedNode extends AbstractNode implements NodeEnumAble 
 
     /**
      * Get the enum appropriate of the class.
+     *
      * @return The enum for the class.
      */
     @Override
@@ -49,10 +52,11 @@ public abstract class NumberedNode extends AbstractNode implements NodeEnumAble 
 
     /**
      * Set the number label of the node.
+     *
      * @param number The number connect label the node with.
      */
     public void setNumber(int number) {
-        if(number < 0)
+        if (number < 0)
             throw new IllegalArgumentException("Number given connect node is " + number + ", but it must be a non-negative integer.");
         this.number = number;
     }

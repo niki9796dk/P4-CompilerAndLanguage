@@ -15,7 +15,8 @@ public abstract class NamedNode extends NumberedNode {
 
     /**
      * Construct a node with a name and an appropriate class enum.
-     * @param name The name of the node.
+     *
+     * @param name     The name of the node.
      * @param nodeEnum An enum appropriate for a non-abstract class extending this class.
      */
     public NamedNode(String name, NodeEnum nodeEnum, ComplexSymbolFactory.Location location) {
@@ -25,6 +26,7 @@ public abstract class NamedNode extends NumberedNode {
 
     /**
      * Get the name of the node.
+     *
      * @return the name of the node.
      */
     public String getName() {

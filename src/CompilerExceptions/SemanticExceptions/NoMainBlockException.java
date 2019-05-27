@@ -16,6 +16,7 @@ public class NoMainBlockException extends SemanticProblemException {
 
     /**
      * Constructor for custom exception message - Calls super
+     *
      * @param message The exception message
      */
     public NoMainBlockException(AbstractNode node, String message) {

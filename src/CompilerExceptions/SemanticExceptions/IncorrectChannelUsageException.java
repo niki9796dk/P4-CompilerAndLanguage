@@ -16,6 +16,7 @@ public class IncorrectChannelUsageException extends SemanticProblemException {
 
     /**
      * Constructor for custom exception message - Calls super
+     *
      * @param message The exception message
      */
     public IncorrectChannelUsageException(AbstractNode node, String message) {

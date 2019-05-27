@@ -4,6 +4,7 @@ import java.util.Map;
 
 /**
  * An extension of the Map interface. Ths further specifies the getLatest method.
+ *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
  * @see Map

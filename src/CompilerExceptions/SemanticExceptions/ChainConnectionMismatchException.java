@@ -16,6 +16,7 @@ public class ChainConnectionMismatchException extends SemanticProblemException {
 
     /**
      * Constructor for custom exception message - Calls super
+     *
      * @param message The exception message
      */
     public ChainConnectionMismatchException(AbstractNode node, String message) {

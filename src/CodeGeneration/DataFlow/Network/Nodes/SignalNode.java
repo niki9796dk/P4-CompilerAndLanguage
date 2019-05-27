@@ -10,8 +10,10 @@ public interface SignalNode extends Node {
     boolean isSource();
 
     void acceptReadySignal();
+
     void acceptReadyBackpropagationSignal();
 
     Matrix getResult();
+
     Matrix getResultBackpropagation(Channel channel); //Have parameter?
 }

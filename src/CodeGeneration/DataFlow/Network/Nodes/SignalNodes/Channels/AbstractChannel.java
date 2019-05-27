@@ -60,7 +60,7 @@ public abstract class AbstractChannel implements Channel {
     public Matrix getResultBackpropagation(Channel ignored) {
         LinkedList<SignalNode> signalNodes = new LinkedList<>(this.getTargets());
 
-        if(signalNodes.isEmpty()) {
+        if (signalNodes.isEmpty()) {
             throw new RuntimeException("No targets!");
         }
 
@@ -118,7 +118,7 @@ public abstract class AbstractChannel implements Channel {
     public void acceptReadyBackpropagationSignal() {
 
         for (SignalNode target : targets) {
-            if(!target.isReadyBackpropagation()) {
+            if (!target.isReadyBackpropagation()) {
                 return;
             }
         }

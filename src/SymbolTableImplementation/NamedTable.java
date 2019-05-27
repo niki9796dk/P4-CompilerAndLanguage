@@ -42,7 +42,8 @@ public class NamedTable<T> {
     /**
      * Associates the specified result with the specified key in this Table.
      * If the map previously contained a mapping for the key, the old result is replaced by the specified result.
-     * @param name The key of the new result.
+     *
+     * @param name  The key of the new result.
      * @param entry The result to map to the key.
      * @return the previous result associated with the key, or null if there was no mapping for the key.
      */
@@ -52,6 +53,7 @@ public class NamedTable<T> {
 
     /**
      * The to string method.
+     *
      * @return a string representation of the object.
      */
     @Override

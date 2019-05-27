@@ -12,6 +12,7 @@ public interface Block extends Node {
     boolean hasOutputChannel(String id);
 
     Block connectTo(Block toBlock, String fromChannel, String toChannel);
+
     Block connectTo(Channel channel);
 
     Block receiveGroupConnection(Node... nodes);
@@ -23,18 +24,21 @@ public interface Block extends Node {
     Channel getChannel(String channelId);
 
     Matrix evaluateInput(Matrix inputData);
+
     void train(Matrix inputData, Matrix targetData, int iterations, double learningRate);
+
     void train(Matrix inputData, Matrix targetData, int iterations);
 
     Map<String, Channel> getInputChannels();
+
     Map<String, Channel> getOutputChannels();
 
 
-    default Channel getFirstOutput(){
+    default Channel getFirstOutput() {
         return this.getOutputChannels().values().iterator().next();
     }
 
-    default Channel getFirstInput(){
+    default Channel getFirstInput() {
         return this.getInputChannels().values().iterator().next();
     }
 

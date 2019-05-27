@@ -22,6 +22,7 @@ public class ScopeBoundsViolationException extends CompilerException {
 
     /**
      * Writes an unique message connect the error message of the stack trace.
+     *
      * @param message The new message.
      */
     public ScopeBoundsViolationException(AbstractNode node, String message) {

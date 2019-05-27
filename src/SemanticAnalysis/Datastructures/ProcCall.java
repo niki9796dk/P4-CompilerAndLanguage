@@ -26,12 +26,12 @@ public class ProcCall {
 
         ParamsNode params = proc.findFirstChildOfClass(ParamsNode.class);
 
-        if (params != null){
+        if (params != null) {
             ParamsNode destinationParams = typeSystem.getSymbolTable().getSubScope(currentBlockId, BlockScope.PROCEDURE_PREFIX + proc.getTargetId())
                     .getNode().findFirstChildOfClass(ParamsNode.class);
 
             AbstractNode destinationChild = destinationParams.getChild();
-            for (AbstractNode child = params.getChild(); child != null; child = child.getSib(), destinationChild = destinationChild.getSib()){
+            for (AbstractNode child = params.getChild(); child != null; child = child.getSib(), destinationChild = destinationChild.getSib()) {
                 NamedIdNode toBuild = (NamedIdNode) typeSystem.followNodeToBuild(child, currentBlockId, currentSubScope);
                 String buildToString = toBuild.toString();
 
@@ -40,7 +40,7 @@ public class ProcCall {
                 if (isThis) {
                     buildToString = currentBlockId;
 
-                } else if (toBuild.getNodeEnum().equals(NodeEnum.SELECTOR) && toBuild.getChild() != null){
+                } else if (toBuild.getNodeEnum().equals(NodeEnum.SELECTOR) && toBuild.getChild() != null) {
                     // Channel case
                     SelectorNode select = new SelectorNode(toBuild.getId(), new ComplexSymbolFactory.Location(proc.getLineNumber(), proc.getColumn()));
                     select.setNumber(toBuild.getNumber());
@@ -58,11 +58,11 @@ public class ProcCall {
         return proc;
     }
 
-    public String getBuildOfParameter(NamedIdNode node){
+    public String getBuildOfParameter(NamedIdNode node) {
         return getBuildOfParameter(node.getId());
     }
 
-    public String getBuildOfParameter(String parameterId){
+    public String getBuildOfParameter(String parameterId) {
         return parametersBuild.get(parameterId);
     }
 }

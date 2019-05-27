@@ -6,7 +6,7 @@ import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.ActivationFunction
 import MachineLearning.NeuralNetwork.ANN.ActivactionFunctions.TanhActivation;
 
 public class _Tanh extends UnaryFunctionAbstractOperation {
-    private static ActivationFunction function = new TanhActivation();
+    private static final ActivationFunction function = new TanhActivation();
 
     @Override
     protected ActivationFunction getFunction() {

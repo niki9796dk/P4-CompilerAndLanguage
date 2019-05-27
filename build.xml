@@ -3,7 +3,7 @@
 
     <property file="build.properties"/>
 
-    <taskdef classname="jflex.anttask.JFlexTask" name="jflex" classpath="libraries/jflex-full-1.7.0.jar" />
+    <taskdef name="jflex" classname="jflex.anttask.JFlexTask" classpath="libraries/jflex-full-1.7.0.jar" />
     <taskdef name="cup" classname="java_cup.anttask.CUPTask" classpath="libraries/java-cup-11b.jar"/>
 
     <path id="lib">
@@ -18,32 +18,17 @@
         <delete file="src/AutoGen/Parser.java" />
         <delete file="src/AutoGen/sym.java" />
 
-        <!-- Generate new lexer and parser -->
-        <jflex file="${jflexLexerSpecificationPath}"
+        <!-- Generate new lexer -->
+        <jflex description="Generate new lexer-file"
+               file="${jflexLexerSpecificationPath}"
                destdir="src/"
                nobak="true" />
 
-        <cup srcfile="${cupParserSpecificationPath}"
+        <!-- Generate new parser -->
+        <cup description="Generate new parser-file"
+             srcfile="${cupParserSpecificationPath}"
              destdir="src/AutoGen"
              package="AutoGen" locations="true" interface="true" parser="Parser" xmlactions="false" force="true"  />
-
-        <!--
-        Dette compiler bare vores projekt, hvilket ikke er nødvendigt.
-        Og dermed behøver vi heller ikke at slette alle .class filer.
-
-        <javac  srcdir="src/AutoGen"
-                destdir="src/"
-                includeantruntime="false"
-                sourcepath="">
-                <classpath refid="lib"/>
-        </javac>
-
-
-        <delete>
-            <fileset dir="src" includes="**/*.class"/>
-        </delete>
-        -->
-
     </target>
 
     <target name="Clean Codegen classes">
@@ -53,31 +38,5 @@
     <target name="Clean Codegen all">
         <delete dir="src/AutoGen/CodeGen" excludes="ANN.java, Layer.java" includeemptydirs="true"/>
     </target>
-
-    <!--
-    Gamle metoder som KUN er her i tilfælde af at v<target name="Clean Codegen">
-        <delete dir="src/AutoGen/CodeGen" excludes="ANN.java, Layer.java" includeemptydirs="true"/>
-    </target>
-i en dag skulle bruge dem igen...
-
-    <target name="clean">
-        <delete>
-            <fileset dir="src" includes="**/*.class"/>
-        </delete>
-
-    </target>
-
-
-    <target name="run" depends="compile">
-        <java classname="AutoGen.MainParse">
-            <arg result='${inputFilePath}'/>
-            <classpath refid="lib"/>
-            <classpath location="src"/>
-        </java>
-
-        <antcall target="clean" />
-
-    </target>
-    -->
 
 </project>

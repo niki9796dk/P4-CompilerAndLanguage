@@ -28,25 +28,25 @@ public class CodeGenRunTest {
 
     @AfterAll
     static void cleanCodeGenSubDirectories() throws NoSuchFileException {
-        File dir = new File(CODE_GEN_FOLDER);
+        File codeGenDir = new File(CODE_GEN_FOLDER);
 
-        File[] subDirectories = new File(dir.getPath()).listFiles(File::isDirectory);
+        File[] subDirectories = new File(codeGenDir.getPath()).listFiles(File::isDirectory);
 
         List<File> programFiles = new ArrayList<>();
 
-        for(File subdir : subDirectories) {
+        for (File subdir : subDirectories) {
             programFiles.addAll(Arrays.asList(Objects.requireNonNull(subdir.listFiles())));
         }
 
         // Delete all files
-        for(File file : programFiles) {
+        for (File file : programFiles) {
             if (!file.delete()) {
                 throw new NoSuchFileException("Unable to delete file: " + file.getPath());
             }
         }
 
         // Delete all directories
-        for(File subDir : subDirectories) {
+        for (File subDir : subDirectories) {
             if (!subDir.delete()) {
                 throw new NoSuchFileException("Unable to delete sub-directory: " + subDir.getPath());
             }
@@ -55,7 +55,7 @@ public class CodeGenRunTest {
 
     // Test all positive files
     @TestFactory
-    Stream<DynamicTest> codeGenRun_TRUE()  {
+    Stream<DynamicTest> codeGenRun_TRUE() {
         // Compile all trueFiles to test that they can be run
         this.compileTrueFiles();
 
@@ -77,7 +77,7 @@ public class CodeGenRunTest {
         Stream<DynamicTest> testStream = Stream.empty();
 
         // Go through all directories with class files in them
-        for(File subDir : subDirectories) {
+        for (File subDir : subDirectories) {
             List<File> filesInDir = Arrays.asList(Objects.requireNonNull(subDir.listFiles()));
 
             // Make a stream of all class files to run (Valid main blocks)
@@ -99,7 +99,7 @@ public class CodeGenRunTest {
         File[] subDirectories = new File(dir.getPath()).listFiles(File::isDirectory);
 
         List<File> programFiles = new ArrayList<>();
-        for(File subdir : subDirectories) {
+        for (File subdir : subDirectories) {
             programFiles.addAll(Arrays.asList(Objects.requireNonNull(subdir.listFiles())));
         }
 
@@ -152,9 +152,9 @@ public class CodeGenRunTest {
 
     @SuppressWarnings("unchecked")
     private Class<Block> getBlockClassFromFile(File file, ClassLoader classLoader) throws ClassNotFoundException {
-        System.out.println(file.getName() + "  "  + file.getPath() + "  " + file.exists() + "  ");
+        System.out.println(file.getName() + "  " + file.getPath() + "  " + file.exists() + "  ");
 
-        return  (Class<Block>) Class.forName(file.getPath()
+        return (Class<Block>) Class.forName(file.getPath()
                 .replace(File.separatorChar, '.')
                 .replaceAll("src.", "")
                 .replaceAll(".class", ""), false, classLoader);
