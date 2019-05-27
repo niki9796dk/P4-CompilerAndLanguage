@@ -1,6 +1,6 @@
 # P4-CompilerAndLanguage
 
-A compiler for the Flow-language which is used to implement data-flow models, and artificial neural network models in particular
+A compiler for the Flow-language which is used to implement data-flow models, and artificial neural network models in particular. (Project language level: Java 11)
 
 ## Dependencies
 Add the four .jar dependencies in the libraries-folder as libraries in the project:
