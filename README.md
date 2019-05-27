@@ -4,9 +4,9 @@ A compiler for the Flow-language which is used to implement data-flow models, an
 
 ## Dependencies
 Add the four .jar dependencies in the libraries-folder as libraries in the project:
-- java-cup-11b.jar
-- java-cup-11b-runtime.jar
-- jflex-full-1.7.0.jar
+- java-cup-11b.jar (CUP - https://versioncontrolseidl.in.tum.de/parsergenerators/cup)
+- java-cup-11b-runtime.jar (CUP Runtime - https://versioncontrolseidl.in.tum.de/parsergenerators/cup)
+- jflex-full-1.7.0.jar (JFlex - https://github.com/jflex-de/jflex)
 - LinearAlgebra.jar (Raonox - https://github.com/niki9796dk/Raonox)
 
 ## Building the project
