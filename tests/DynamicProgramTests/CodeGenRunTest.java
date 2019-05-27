@@ -27,9 +27,7 @@ public class CodeGenRunTest {
     // Test all positive files
     @TestFactory
     Stream<DynamicTest> codeGenRun_TRUE()  {
-
         // Compile all trueFiles to test that they can be run
-        // TODO: Fix error where class is not found on initial run of test
         this.compileTrueFiles();
 
         // Get the java compiler and compile all the code-generated java files into .class files
