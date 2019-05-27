@@ -3,6 +3,7 @@ package AST.TreeWalks;
 import AST.Enums.NodeEnum;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNode;
 import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
+import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNodes.NamedIdNode;
 import AST.Nodes.NodeClasses.NamedNodes.*;
 import AST.Nodes.NodeClasses.NamedNodes.NamedIdNodes.*;
 import CompilerExceptions.UnexpectedNodeException;
@@ -216,7 +217,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
         switch (superType) {
             case OPERATION_TYPE:
-                return this.countInChannelsOfOperation(rightNode);
+                return typeSystem.getOperationInChannelIds(rightNode).size();
 
             case BLOCK_TYPE:
                 return this.countInChannelsOfBlock(rightNode);
@@ -247,7 +248,7 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
         switch (superType) {
             case OPERATION_TYPE:
-                return this.countOutChannelsOfOperation(rightNode);
+                return typeSystem.getOperationOrSourceOutChannelIds(rightNode).size();
 
             case BLOCK_TYPE:
                 return this.countOutChannelsOfBlock(rightNode);
@@ -294,44 +295,5 @@ public class ChainCheckerVisitor extends ScopeTracker {
 
         // Count the amount of children of type MyInChannel
         return channelDeclaNode.countChildrenInstanceOf(MyOutChannelNode.class);
-    }
-
-    /**
-     * Counts and return the amount of in channels within an operation.
-     *
-     * @param rightNode The operation node
-     * @return The amount of in channels within the operation.
-     */
-    private int countInChannelsOfOperation(AbstractNode rightNode) {
-        switch (this.typeSystem.getSubTypeOfNode(rightNode, this.currentBlockScope, this.currentSubScope)) {
-            case "Addition":
-            case "Multiplication":
-            case "Subtraction":
-            case "_Addition":
-            case "_Multiplication":
-            case "_Subtraction":
-            case "_Division":
-                return BINARY_INPUT;
-
-            case "_Sigmoid":
-            case "_Tanh":
-            case "_Relu":
-            case "Transpose":
-                return UNARY_INPUT;
-
-            default:
-                throw new ShouldNotHappenException(rightNode, "We were checking a non exsistent operation for it's channels: " + rightNode);
-        }
-    }
-
-    /**
-     * Counts and return the amount of out channels within an operation.
-     *
-     * @param rightNode The operation node
-     * @return The amount of out channels within the operation.
-     */
-    private int countOutChannelsOfOperation(AbstractNode rightNode) {
-        AbstractNode followNode = typeSystem.followNode(rightNode, currentBlockScope, currentSubScope);
-        return typeSystem.getOperationOrSourceOutChannelIds(followNode).size();
     }
 }

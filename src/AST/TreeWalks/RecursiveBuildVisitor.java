@@ -5,6 +5,7 @@ import AST.Nodes.AbstractNodes.Nodes.AbstractNodes.NumberedNodes.NamedNode;
 import AST.Nodes.NodeClasses.NamedNodes.ParamsNode;
 import CompilerExceptions.UnexpectedNodeException;
 import CompilerExceptions.ScopeExceptions.NoSuchBlockDeclaredException;
+import SemanticAnalysis.Datastructures.HashSetStack;
 import SemanticAnalysis.Datastructures.SetStack;
 import CompilerExceptions.SemanticExceptions.BuildRecursionException;
 import SymbolTableImplementation.*;
@@ -17,10 +18,12 @@ import TypeChecker.TypeSystem;
 public class RecursiveBuildVisitor extends ScopeTracker {
 
     private SetStack<String> buildStack;
+    private SetStack<String> procedureStack;
 
     public RecursiveBuildVisitor(SetStack<String> buildStack, SymbolTable symbolTable) {
         super(symbolTable);
         this.buildStack = buildStack;
+        this.procedureStack = new HashSetStack<>();
         this.typeSystem = new TypeSystem(symbolTable);
     }
 
@@ -63,7 +66,6 @@ public class RecursiveBuildVisitor extends ScopeTracker {
                 break;
 
             case BUILD:
-                // TODO: Add procedure call
                 this.handleBuildPre(node);
                 break;
 
@@ -172,6 +174,8 @@ public class RecursiveBuildVisitor extends ScopeTracker {
 
         this.buildStack.pop();
     }
+
+    
 
     /**
      * Convert a build node into a string representation of it's ID and the subtype of it's params.

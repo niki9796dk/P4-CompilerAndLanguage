@@ -32,6 +32,6 @@ public class GroupChain implements Statement {
 
     @Override
     public String toString() {
-        return rightNode + ".receiveGroupConnection" + this.translateGroup(); // TODO: FIX
+        return rightNode + ".receiveGroupConnection" + this.translateGroup();
     }
 }

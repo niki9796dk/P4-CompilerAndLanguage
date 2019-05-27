@@ -113,8 +113,8 @@ public class TypeSystem {
         return this.isPredefinedOperation(name) || this.isPredefinedSource(name);
     }
 
-    public List<String> getOperationInChannelIds(NamedIdNode node) {
-        return getOperationInChannelIds(node.getId());
+    public List<String> getOperationInChannelIds(AbstractNode node) {
+        return getOperationInChannelIds(((NamedIdNode) node).getId());
     }
 
     public List<String> getOperationInChannelIds(String id) {
