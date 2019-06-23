@@ -1,35 +1,41 @@
-block ANN {
-    mychannel:in in;
-    mychannel:out out;
+block Network {
+	mychannel:in in;
+	mychannel:out out;
 
-    blueprint() {
-        this.in -> build Layer(draw Layer2) -> this.out;
-    }
+	blueprint() {
+		// Build the two layers of the network
+		block layer1 = build Layer(draw _Sigmoid, [2,2], [4,2]);
+		block layer2 = build Layer(draw _Sigmoid, [2,1], [4,1]);
+
+		// Connect the dataflow
+		this.in -> layer1 -> layer2 -> this.out;
+	}
 }
 
 block Layer {
-    mychannel:in in;
-    mychannel:out out;
+	mychannel:in in;
+	mychannel:out out;
 
-    blueprint(blueprint blue) {
-        this.in -> build blue(draw Test) -> this.out;
-    }
+	blueprint(blueprint actiFunc, size layerSize, size biasSize) {
+		// Build weight and bias matrices.
+		source weights = build Source(layerSize);
+		source bias = build Source(biasSize);
+
+		// Multiply the input with the weights
+		operation mult = build Multiplication();
+		(this.in, weights) -> mult;
+
+		// Add bias to result
+		operation add = build _Addition();
+		(mult.out, bias) -> add;
+
+		// Send through activation function
+		operation acti = build actiFunc();
+		add -> acti;
+
+		// Connect the end result to the output of the layer
+		acti -> this.out;
+	}
 }
 
-block Layer2 {
-    mychannel:in in;
-    mychannel:out out;
 
-    blueprint(blueprint blue) {
-        this.in -> build blue() -> this.out;
-    }
-}
-
-block Test {
-    mychannel:in in;
-    mychannel:out out;
-
-    blueprint() {
-        this.in -> this.out;
-    }
-}

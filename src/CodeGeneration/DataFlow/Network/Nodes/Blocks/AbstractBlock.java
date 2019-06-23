@@ -1,5 +1,6 @@
 package CodeGeneration.DataFlow.Network.Nodes.Blocks;
 
+import AutoGen.myMain;
 import CodeGeneration.DataFlow.Network.Node;
 import CodeGeneration.DataFlow.Network.Nodes.Block;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.BounceNode;
@@ -233,7 +234,7 @@ public abstract class AbstractBlock implements Block {
 
     @Override
     public void train(Matrix inputData, Matrix targetData, int iterations, double learningRate) {
-        AbstractBlock.configuration = new BlockConfiguration(inputData.getRows(), iterations);
+        AbstractBlock.configuration = new BlockConfiguration(inputData.getRows(), learningRate);
 
         FeedforwardBounce feedForward = new FeedforwardBounce(inputData);
         backpropagationBounce backProp = new backpropagationBounce(targetData);
@@ -242,6 +243,10 @@ public abstract class AbstractBlock implements Block {
         backProp.connectToMainBlock(this);
 
         for (int i = 0; i < iterations; i++) {
+            if (i != 0 /*(iterations - 1)*/) {
+                myMain.LAST = false;
+            }
+
             // Send the feedforward signal
             feedForward.acceptReadySignal();
 

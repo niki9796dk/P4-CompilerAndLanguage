@@ -7,8 +7,6 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Bin
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Addition;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
-import CodeGeneration.Utility.Print;
-import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
 import org.junit.jupiter.api.Test;
@@ -45,7 +43,6 @@ class A_plus_B_mult_BTest {
         source001.acceptReadySignal();
 
 
-        Print.echo(AnsiColor.PURPLE, "" + block000.getOutputChannels().get("out").getResult());
 
         assertEquals(expected, block000.getOutputChannels().get("out").getResult());
     }

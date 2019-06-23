@@ -7,7 +7,6 @@ import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.Bin
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.BinaryOperations.UnitWiseOperations._Subtraction;
 import CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation.Source;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannel;
-import CodeGeneration.Utility.Print;
 import Enums.AnsiColor;
 import LinearAlgebra.Types.Matrices.Matrix;
 import LinearAlgebra.Types.Matrices.MatrixBuilder;
@@ -90,7 +89,6 @@ class BinaryAbstractOperationTest {
         op.performOperation();
         Matrix result = op.getOutputChannel().getResult();
 
-        Print.echo(AnsiColor.PURPLE, op.getOutputChannel().getResult().toString());
         assertEquals(result, expected);
 
     }

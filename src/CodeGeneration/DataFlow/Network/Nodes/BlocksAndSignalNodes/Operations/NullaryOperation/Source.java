@@ -1,5 +1,6 @@
 package CodeGeneration.DataFlow.Network.Nodes.BlocksAndSignalNodes.Operations.NullaryOperation;
 
+import AutoGen.myMain;
 import CodeGeneration.DataFlow.Network.Nodes.Blocks.AbstractBlock;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channel;
 import CodeGeneration.DataFlow.Network.Nodes.SignalNodes.Channels.ListChannelSource;
@@ -25,7 +26,7 @@ public class Source extends NullaryAbstractOperation {
 
     public Source(Pair<Integer, Integer> size) {
         this();
-        this.result = Matrices.randomMatrix(size.getKey(), size.getValue(), 0, 1);
+        this.result = Matrices.randomMatrix(size.getKey(), size.getValue(), -1, 1);
     }
 
     /**
@@ -67,6 +68,14 @@ public class Source extends NullaryAbstractOperation {
                 .mult(learningRate);                    // Multiply with learning rate
 
         this.result = this.result.sub(derivatives);
+
+        if (false) {
+            System.out.println("Rows: " + totalInputLines);
+            System.out.println("LR: " + learningRate);
+            System.out.println("Last outBack value:\n" + this.getOutputChannel().getResultBackpropagation().compDivision(totalInputLines) + "\n");
+            System.out.println("Last Deri value:\n" + derivatives + "\n");
+            System.out.println("##########");
+        }
     }
 
 }
