@@ -243,10 +243,6 @@ public abstract class AbstractBlock implements Block {
         backProp.connectToMainBlock(this);
 
         for (int i = 0; i < iterations; i++) {
-            if (i != 0 /*(iterations - 1)*/) {
-                myMain.LAST = false;
-            }
-
             // Send the feedforward signal
             feedForward.acceptReadySignal();
 

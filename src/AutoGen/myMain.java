@@ -15,8 +15,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class myMain {
-    public static boolean LAST = true;
-
     public static void main(String[] args) {
         // Create input data
         Matrix input = new MatrixBuilder(new double[][]{

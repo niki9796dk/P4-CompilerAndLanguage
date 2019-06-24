@@ -68,14 +68,6 @@ public class Source extends NullaryAbstractOperation {
                 .mult(learningRate);                    // Multiply with learning rate
 
         this.result = this.result.sub(derivatives);
-
-        if (false) {
-            System.out.println("Rows: " + totalInputLines);
-            System.out.println("LR: " + learningRate);
-            System.out.println("Last outBack value:\n" + this.getOutputChannel().getResultBackpropagation().compDivision(totalInputLines) + "\n");
-            System.out.println("Last Deri value:\n" + derivatives + "\n");
-            System.out.println("##########");
-        }
     }
 
 }
